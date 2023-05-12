@@ -13,6 +13,7 @@ using System.Net;
 using System.Deployment.Internal;
 using RiskierTrafficStops.Outcomes;
 using static RiskierTrafficStops.Outcomes.Yell;
+using static RiskierTrafficStops.Logger;
 
 namespace RiskierTrafficStops
 {
@@ -59,17 +60,18 @@ namespace RiskierTrafficStops
                 if (Chance < 10 && !HasEventHappend)
                 {
                     HasEventHappend = true;
-                    if (ChosenEnum == Scenarios.Shoot)
+                    Normal("Main.cs", $"Chosen Scenario: {ChosenEnum.ToString()}");
+                    switch (ChosenEnum)
                     {
-                        GetOutAndShoot.GOASOutcome(handle, Weapon);
-                    }
-                    else if (ChosenEnum == Scenarios.Yell)
-                    {
-                        Yell.YellOutcome(handle);
-                    }
-                    else if (ChosenEnum == Scenarios.Run)
-                    {
-                        Flee.FleeOutcome(handle);
+                        case Scenarios.Shoot:
+                            GetOutAndShoot.GOASOutcome(handle, Weapon);
+                            break;
+                        case Scenarios.Yell:
+                            Yell.YellOutcome(handle);
+                            break;
+                        case Scenarios.Run:
+                            Flee.FleeOutcome(handle);
+                            break;
                     }
                 }
             }
