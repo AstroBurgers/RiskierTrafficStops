@@ -24,6 +24,7 @@ namespace RiskierTrafficStops
             Yell,
             Shoot,
             Run,
+            YellInCar,
         }
 
         internal static Random rndm = new Random();
@@ -71,6 +72,9 @@ namespace RiskierTrafficStops
                             break;
                         case Scenarios.Run:
                             Flee.FleeOutcome(handle);
+                            break;
+                        case Scenarios.YellInCar:
+
                             break;
                     }
                 }
