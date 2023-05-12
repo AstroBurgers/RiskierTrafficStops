@@ -55,6 +55,7 @@
     <Compile Include="Outcomes\Flee.cs" />
     <Compile Include="Outcomes\GetOutAndShoot.cs" />
     <Compile Include="Outcomes\Yell.cs" />
+    <Compile Include="Outcomes\YellInCar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

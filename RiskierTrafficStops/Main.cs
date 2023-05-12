@@ -25,6 +25,7 @@ namespace RiskierTrafficStops
             Shoot,
             Run,
             YellInCar,
+            RevEngine,
         }
 
         internal static Random rndm = new Random();
@@ -51,29 +52,31 @@ namespace RiskierTrafficStops
 
         private static void Events_OnPulloverOfficerApproachDriver(LHandle handle)
         {
-            if (!HasEventHappend)
+            if (!HasEventHappend && !Functions.IsCalloutRunning())
             {
                 HasEventHappend = true;
                 string Weapon = WeaponList[rndm.Next(WeaponList.Length)];
                 Scenarios[] ScenarioList = (Scenarios[])Enum.GetValues(typeof(Scenarios));
                 ChosenEnum = ScenarioList[rndm.Next(ScenarioList.Length)];
                 int Chance = rndm.Next(1, 101);
-                if (Chance < 10 && !HasEventHappend)
+                if (Chance < 10)
                 {
-                    HasEventHappend = true;
                     Normal("Main.cs", $"Chosen Scenario: {ChosenEnum.ToString()}");
                     switch (ChosenEnum)
-                    {
-                        case Scenarios.Shoot:
-                            GetOutAndShoot.GOASOutcome(handle, Weapon);
-                            break;
+                    {                        
                         case Scenarios.Yell:
                             Yell.YellOutcome(handle);
+                            break;
+                        case Scenarios.Shoot:
+                            GetOutAndShoot.GOASOutcome(handle, Weapon);
                             break;
                         case Scenarios.Run:
                             Flee.FleeOutcome(handle);
                             break;
                         case Scenarios.YellInCar:
+                            YellInCar.YICEventHandler(handle);
+                            break;
+                        case Scenarios.RevEngine:
 
                             break;
                     }
