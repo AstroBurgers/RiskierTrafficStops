@@ -105,7 +105,7 @@ namespace RiskierTrafficStops.Outcomes
         }
         internal static void KeyPressed()
         {
-            Game.DisplayHelp("Its your code you know what to fucking do you fucking retard. If you forgot go hang yourself right the fuck now.");
+            Game.DisplayHelp($"~BLIP_INFO_ICON~ Press Y To to have the suspect get back in their vehicle");
             while (!GenericBoolean)
             {
                 GameFiber.Yield();

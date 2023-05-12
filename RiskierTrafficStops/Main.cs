@@ -77,7 +77,7 @@ namespace RiskierTrafficStops
                             YellInCar.YICEventHandler(handle);
                             break;
                         case Scenarios.RevEngine:
-
+                            Rev.ROutcome(handle);
                             break;
                     }
                 }

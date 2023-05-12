@@ -76,5 +76,23 @@ namespace RiskierTrafficStops
             "weapon_militaryrifle",
             "weapon_tacticalrifle",
         };
+
+        /// <summary>
+        /// Makes a ped rev their vehicles engine, the int list parameters each need a minimum and maximum value
+        /// </summary>
+        internal static void RevEngine(Ped driver, Vehicle SuspectVehicle, int[] timeBetweenRevs, int[] timeForRevsToLast, int TotalNumberOfRevs)
+        {
+            Random rndm = new Random();
+            Game.LogTrivial("Immersive Ambient Events: Starting Rev Engine method.");
+            for (int i = 0; i < TotalNumberOfRevs; i++)
+            {
+                GameFiber.Yield();
+                int time = rndm.Next(timeForRevsToLast[0], timeForRevsToLast[1]) * 1000;
+                driver.Tasks.PerformDrivingManeuver(SuspectVehicle, VehicleManeuver.RevEngine, time);
+                GameFiber.Wait(time);
+                int time2 = rndm.Next(timeBetweenRevs[0], timeBetweenRevs[1]) * 1000;
+                GameFiber.Wait(time2);
+            }
+        }
     }
 }
