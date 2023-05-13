@@ -26,6 +26,7 @@ namespace RiskierTrafficStops
             Run,
             YellInCar,
             RevEngine,
+            RamIntoYou,
         }
 
         internal static Random rndm = new Random();
@@ -40,6 +41,7 @@ namespace RiskierTrafficStops
         {
             if (onDuty)
             {
+                Game.DisplayNotification("commonmenu", "shop_box_tickb", "RiskierTrafficStops", "~b~By Astro", "Watch your back out there officer");
                 Events.OnPulloverOfficerApproachDriver += Events_OnPulloverOfficerApproachDriver;
                 Events.OnPulloverEnded += Events_OnPulloverEnded;
             }
@@ -52,23 +54,32 @@ namespace RiskierTrafficStops
 
         private static void Events_OnPulloverOfficerApproachDriver(LHandle handle)
         {
-            if (!HasEventHappend && !Functions.IsCalloutRunning())
+            GameFiber.StartNew(delegate
+            {
+                ChooseEvent(handle);
+            });
+        }
+
+        internal static void ChooseEvent(LHandle handle)
+        {
+            GetOutAndShoot.GOASOutcome(handle);
+            /*if (!HasEventHappend && !Functions.IsCalloutRunning())
             {
                 HasEventHappend = true;
                 string Weapon = WeaponList[rndm.Next(WeaponList.Length)];
                 Scenarios[] ScenarioList = (Scenarios[])Enum.GetValues(typeof(Scenarios));
                 ChosenEnum = ScenarioList[rndm.Next(ScenarioList.Length)];
                 int Chance = rndm.Next(1, 101);
-                if (Chance < 10)
+                if (Chance < 15)
                 {
                     Normal("Main.cs", $"Chosen Scenario: {ChosenEnum.ToString()}");
                     switch (ChosenEnum)
-                    {                        
+                    {
                         case Scenarios.Yell:
                             Yell.YellOutcome(handle);
                             break;
                         case Scenarios.Shoot:
-                            GetOutAndShoot.GOASOutcome(handle, Weapon);
+                            GetOutAndShoot.GOASOutcome(handle);
                             break;
                         case Scenarios.Run:
                             Flee.FleeOutcome(handle);
@@ -79,11 +90,13 @@ namespace RiskierTrafficStops
                         case Scenarios.RevEngine:
                             Rev.ROutcome(handle);
                             break;
+                        case Scenarios.RamIntoYou:
+                            RamIntoYou.RIYOutcome(handle);
+                            break;
                     }
                 }
-            }
+            }*/
         }
-
         public override void Finally()
         {
             Events.OnPulloverOfficerApproachDriver -= Events_OnPulloverOfficerApproachDriver;

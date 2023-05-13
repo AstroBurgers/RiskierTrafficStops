@@ -16,34 +16,25 @@ using System.Runtime.Serialization;
 
 namespace RiskierTrafficStops.Outcomes
 {
-    internal class YellInCar
+    internal class RamIntoYou
     {
-        internal static List<string> Voicelines = new List<string>()
-        {
-            "FIGHT",
-            "GENERIC_INSULT_HIGH",
-            "GENERIC_CURSE_MED",
-            "CHALLENGE_THREATEN",
-            "GENERIC_CURSE_HIGH",
-            "GENERIC_INSULT_HIGH_01",
-        };
-
+        
         internal static Ped Suspect;
         internal static Vehicle suspectVehicle;
+        internal static LHandle PursuitLHandle;
         internal static Random rndm = new Random();
 
-        internal static void YICEventHandler(LHandle handle)
+        internal static void RIYOutcome(LHandle handle)
         {
-            Normal("YellInCar.cs", "Setting up Suspect and Suspect Vehicle");
+            Normal("RamIntoYou.cs", "Setting up Suspect and Suspect Vehicle");
             Suspect = Functions.GetPulloverSuspect(handle);
             suspectVehicle = Suspect.CurrentVehicle;
             Suspect.BlockPermanentEvents = true;
             suspectVehicle.IsPersistent = true;
 
-            Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Count)]);
-            GameFiber.WaitUntil(() => !Suspect.IsAnySpeechPlaying);
-            Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Count)]);
-            GameFiber.WaitUntil(() => !Suspect.IsAnySpeechPlaying);
+            Suspect.Tasks.DriveToPosition(MainPlayer.LastVehicle.Position, 100f, VehicleDrivingFlags.Reverse, 0.1f);
+            GameFiber.Wait(6500);
+            SetupPursuit(true, Suspect);
         }
     }
 }

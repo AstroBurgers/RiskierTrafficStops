@@ -24,47 +24,129 @@ namespace RiskierTrafficStops.Outcomes
         internal static Random rndm = new Random();
         internal static LHandle PursuitLHandle;
 
-        internal static void GOASOutcome(LHandle handle, String weapon)
+        internal static void GOASOutcome(LHandle handle)
         {
             Normal("GetOutAndShoot.cs", "Setting up Suspect and Suspect Vehicle");
             Suspect = Functions.GetPulloverSuspect(handle);
             suspectVehicle = Suspect.CurrentVehicle;
             Suspect.BlockPermanentEvents = true;
             suspectVehicle.IsPersistent = true;
-
-            if (!Suspect.Inventory.HasLoadedWeapon)
+            List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
+            Game.DisplayNotification(PedsInVehicle.Count.ToString());
+            foreach (Ped i in PedsInVehicle)
             {
-                Normal("GetOutAndShoot.cs", $"Giving Suspect weapon: {weapon}");
-                Suspect.Inventory.GiveNewWeapon(weapon, 100, true);
+                string Weapon = WeaponList[rndm.Next(WeaponList.Length)];
+                if (!i.Inventory.HasLoadedWeapon)
+                {
+                    Normal("GetOutAndShoot.cs", $"Giving Suspect weapon: {Weapon}");
+                    i.Inventory.GiveNewWeapon(Weapon, 100, true);
+                }
             }
-
-            Normal("GetOutAndShoot.cs", "Making Suspect leave vehicle");
-            Suspect.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
-            Normal("GetOutAndShoot.cs", "Setting Suspect relationship group");
-            Suspect.RelationshipGroup = SuspectRelateGroup;
             SuspectRelateGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
             SuspectRelateGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
-
-            Normal("GetOutAndShoot.cs", "Giving Suspect FightAgainstClosestHatedTarget Task");
-            Suspect.Tasks.FightAgainstClosestHatedTarget(40f, 7000).WaitForCompletion(7000);
-
-            if (Suspect.IsAlive && Suspect.Exists())
+            foreach (Ped i in PedsInVehicle)
             {
-                int Chance = rndm.Next(1, 101);
-
-                if (Chance < 45)
+                GameFiber.StartNew(delegate
                 {
-                    Normal("GetOutAndShoot.cs", "Making Suspect enter vehicle");
-                    Suspect.Tasks.EnterVehicle(suspectVehicle, -1, 2f).WaitForCompletion();
-                    Normal("GetOutAndShoot.cs", "Setting up pursuit");
-                    PursuitLHandle = SetupPursuit(true, Suspect);
-                }
-                else if(Chance > 45)
-                {
-                    Normal("GetOutAndShoot.cs", "Giving Suspect FightAgainstClosestHatedTarget Task");
-                    Suspect.Tasks.FightAgainstClosestHatedTarget(40f, -1);
-                }
+                    try
+                    {
+                        Normal("GetOutAndShoot.cs", "Setting Suspect relationship group");
+                        i.RelationshipGroup = SuspectRelateGroup;
+                        Normal("GetOutAndShoot.cs", "Making Suspect leave vehicle");
+                        i.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
+                        Normal("GetOutAndShoot.cs", "Giving Suspect FightAgainstClosestHatedTarget Task");
+                        i.Tasks.FightAgainstClosestHatedTarget(40f, 7000).WaitForCompletion(7000);
+                    }
+                    catch (Exception TheseHands)
+                    {
+                        string ThrowHands = TheseHands.ToString();
+                        Error("GetOutAndShoot.cs", $"{ThrowHands}");
+                    }
+                });
             }
+
+            GameFiber.Wait(7000);
+
+            int Chance = rndm.Next(1, 101);
+            bool PursuitCreated = false;
+            int Seat = -2;
+
+            foreach (Ped i in PedsInVehicle)
+            {
+                GameFiber.StartNew(delegate
+                {
+                    try
+                    {
+
+                        if (Chance < 45)
+                        {
+                            Normal("GetOutAndShoot.cs", "Making Suspect enter vehicle");
+                            i.Tasks.EnterVehicle(suspectVehicle, (Seat + 1), 2f);
+                            GameFiber.Wait(2000);
+                            Normal("GetOutAndShoot.cs", "Setting up pursuit");
+                            if (!PursuitCreated)
+                            {
+                                PursuitLHandle = SetupPursuitWithList(true, PedsInVehicle);
+                                PursuitCreated = true;
+                            }
+                            else
+                            {
+                                Functions.AddPedToPursuit(PursuitLHandle, i);
+                            }
+                        }
+                        else if (Chance > 45)
+                        {
+                            Normal("GetOutAndShoot.cs", "Giving Suspect FightAgainstClosestHatedTarget Task");
+                            Functions.ForceEndCurrentPullover();
+                            i.Tasks.FightAgainstClosestHatedTarget(40f, -1);
+                        }
+                    }
+                    catch (Exception TheseHands)
+                    {
+                        string ThrowHands = TheseHands.ToString();
+                        Error("GetOutAndShoot.cs", $"{ThrowHands}");
+                    }
+                });
+            }
+
+            /*for (int i = 0; i < PedsInVehicle.Count; i++)
+            {
+                GameFiber.StartNew(delegate
+                {
+                    try
+                    {
+
+                        if (Chance < 45)
+                        {
+                            Normal("GetOutAndShoot.cs", "Making Suspect enter vehicle");
+                            PedsInVehicle[i].Tasks.EnterVehicle(suspectVehicle, (i - 1));
+                            GameFiber.Wait(2000);
+                            Normal("GetOutAndShoot.cs", "Setting up pursuit");
+                            if (!PursuitCreated)
+                            {
+                                PursuitLHandle = SetupPursuitWithList(true, PedsInVehicle);
+                                PursuitCreated = true;
+                            }
+                            else
+                            {
+                                Functions.AddPedToPursuit(PursuitLHandle, PedsInVehicle[i]);
+                            }
+                        }
+                        else if (Chance > 45)
+                        {
+                            Normal("GetOutAndShoot.cs", "Giving Suspect FightAgainstClosestHatedTarget Task");
+                            Functions.ForceEndCurrentPullover();
+                            PedsInVehicle[i].Tasks.FightAgainstClosestHatedTarget(40f, -1);
+                        }
+                    }
+                    catch (Exception TheseHands)
+                    {
+                        string ThrowHands = TheseHands.ToString();
+                        Error("GetOutAndShoot.cs", $"{ThrowHands}");
+                    }
+                });
+
+            }*/
         }
     }
 }

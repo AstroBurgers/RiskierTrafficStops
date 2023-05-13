@@ -38,6 +38,7 @@ namespace RiskierTrafficStops.Outcomes
 
             if (Chance > 25)
             {
+                Functions.ForceEndCurrentPullover();
                 SetupPursuit(true, Suspect);
             }
         }

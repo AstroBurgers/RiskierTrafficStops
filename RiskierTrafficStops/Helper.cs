@@ -1,5 +1,6 @@
 ﻿using LSPD_First_Response.Mod.API;
 using Rage;
+using Rage.Native;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,27 @@ namespace RiskierTrafficStops
             {
                 GameFiber.Yield();
                 Functions.AddPedToPursuit(PursuitLHandle, Suspect);
+            }
+            return PursuitLHandle;
+        }
+
+        internal static LHandle SetupPursuitWithList(bool IsSuspectsPulledOver, List<Ped> SuspectList)
+        {
+            if (IsSuspectsPulledOver)
+            {
+                Functions.ForceEndCurrentPullover();
+            }
+            LHandle PursuitLHandle = Functions.CreatePursuit();
+
+            Functions.SetPursuitIsActiveForPlayer(PursuitLHandle, true);
+
+            for (int i = 0; i < SuspectList.Count; i++)
+            {
+                GameFiber.Yield();
+                if (SuspectList[i].Exists())
+                {
+                    Functions.AddPedToPursuit(PursuitLHandle, SuspectList[i]);
+                }
             }
             return PursuitLHandle;
         }
@@ -93,6 +115,21 @@ namespace RiskierTrafficStops
                 int time2 = rndm.Next(timeBetweenRevs[0], timeBetweenRevs[1]) * 1000;
                 GameFiber.Wait(time2);
             }
+        }
+
+        internal static List<Ped> GetAllVehicleOccupants(Vehicle vehicle)
+        {
+            int seatCount = NativeFunction.Natives.GET_VEHICLE_NUMBER_OF_PASSENGERS<int>(vehicle, true, false);
+            List<Ped> occupantList = new List<Ped>();
+            for (int i = -1; i < seatCount; i++)
+            {
+                if (!vehicle.IsSeatFree(i))
+                {
+                    Ped ped = vehicle.GetPedOnSeat(i);
+                    occupantList.Add(ped);
+                }
+            }
+            return occupantList;
         }
     }
 }
