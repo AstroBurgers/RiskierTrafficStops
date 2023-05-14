@@ -77,12 +77,12 @@ namespace RiskierTrafficStops.Outcomes
                 {
                     Suspect.Inventory.GiveNewWeapon("weapon_switchblade", -1, true);
 
-                    Normal("GetOutAndShoot.cs", "Setting Suspect relationship group");
+                    Normal("Yell.cs", "Setting Suspect relationship group");
                     Suspect.RelationshipGroup = SuspectRelateGroup;
                     SuspectRelateGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
                     SuspectRelateGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
 
-                    Normal("GetOutAndShoot.cs", "Giving Suspect FightAgainstClosestHatedTarget Task");
+                    Normal("Yell.cs", "Giving Suspect FightAgainstClosestHatedTarget Task");
                     Suspect.Tasks.FightAgainstClosestHatedTarget(40f, -1);
                 }
 

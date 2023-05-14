@@ -39,7 +39,7 @@ namespace RiskierTrafficStops.Outcomes
             else if (Chance > 50)
             {
                 Suspect.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
-                SetupPursuit(true, Suspect);
+                PursuitLHandle = SetupPursuit(true, Suspect);
             }
         }
     }

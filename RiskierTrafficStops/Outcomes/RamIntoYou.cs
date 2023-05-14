@@ -18,7 +18,7 @@ namespace RiskierTrafficStops.Outcomes
 {
     internal class RamIntoYou
     {
-        
+
         internal static Ped Suspect;
         internal static Vehicle suspectVehicle;
         internal static LHandle PursuitLHandle;
@@ -26,15 +26,18 @@ namespace RiskierTrafficStops.Outcomes
 
         internal static void RIYOutcome(LHandle handle)
         {
+
             Normal("RamIntoYou.cs", "Setting up Suspect and Suspect Vehicle");
             Suspect = Functions.GetPulloverSuspect(handle);
             suspectVehicle = Suspect.CurrentVehicle;
             Suspect.BlockPermanentEvents = true;
             suspectVehicle.IsPersistent = true;
-
+            
+            List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
+            
             Suspect.Tasks.DriveToPosition(MainPlayer.LastVehicle.Position, 100f, VehicleDrivingFlags.Reverse, 0.1f);
             GameFiber.Wait(6500);
-            SetupPursuit(true, Suspect);
+            PursuitLHandle = SetupPursuitWithList(true, PedsInVehicle);
         }
     }
 }

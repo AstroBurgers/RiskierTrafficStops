@@ -62,15 +62,14 @@ namespace RiskierTrafficStops
 
         internal static void ChooseEvent(LHandle handle)
         {
-            GetOutAndShoot.GOASOutcome(handle);
-            /*if (!HasEventHappend && !Functions.IsCalloutRunning())
+            if (!HasEventHappend && !Functions.IsCalloutRunning())
             {
                 HasEventHappend = true;
                 string Weapon = WeaponList[rndm.Next(WeaponList.Length)];
                 Scenarios[] ScenarioList = (Scenarios[])Enum.GetValues(typeof(Scenarios));
                 ChosenEnum = ScenarioList[rndm.Next(ScenarioList.Length)];
                 int Chance = rndm.Next(1, 101);
-                if (Chance < 15)
+                if (Chance < 200)
                 {
                     Normal("Main.cs", $"Chosen Scenario: {ChosenEnum.ToString()}");
                     switch (ChosenEnum)
@@ -95,7 +94,7 @@ namespace RiskierTrafficStops
                             break;
                     }
                 }
-            }*/
+            }
         }
         public override void Finally()
         {
