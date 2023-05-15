@@ -42,6 +42,7 @@ namespace RiskierTrafficStops
             if (onDuty)
             {
                 Game.DisplayNotification("commonmenu", "shop_box_tickb", "RiskierTrafficStops", "~b~By Astro", "Watch your back out there officer");
+                Settings.INIFile();
                 Events.OnPulloverOfficerApproachDriver += Events_OnPulloverOfficerApproachDriver;
                 Events.OnPulloverEnded += Events_OnPulloverEnded;
             }
@@ -62,14 +63,15 @@ namespace RiskierTrafficStops
 
         internal static void ChooseEvent(LHandle handle)
         {
-            if (!HasEventHappend && !Functions.IsCalloutRunning())
+            GetOutAndShoot.GOASOutcome(handle);
+            /*if (!HasEventHappend && !Functions.IsCalloutRunning())
             {
                 HasEventHappend = true;
                 string Weapon = WeaponList[rndm.Next(WeaponList.Length)];
                 Scenarios[] ScenarioList = (Scenarios[])Enum.GetValues(typeof(Scenarios));
                 ChosenEnum = ScenarioList[rndm.Next(ScenarioList.Length)];
                 int Chance = rndm.Next(1, 101);
-                if (Chance < 200)
+                if (Chance < Settings.Chance)
                 {
                     Normal("Main.cs", $"Chosen Scenario: {ChosenEnum.ToString()}");
                     switch (ChosenEnum)
@@ -94,7 +96,7 @@ namespace RiskierTrafficStops
                             break;
                     }
                 }
-            }
+            }*/
         }
         public override void Finally()
         {

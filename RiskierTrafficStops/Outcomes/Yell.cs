@@ -105,11 +105,11 @@ namespace RiskierTrafficStops.Outcomes
         }
         internal static void KeyPressed()
         {
-            Game.DisplayHelp($"~BLIP_INFO_ICON~ Press Y To to have the suspect get back in their vehicle");
+            Game.DisplayHelp($"~BLIP_INFO_ICON~ Press {Settings.GetBackIn.ToString()} To to have the suspect get back in their vehicle");
             while (!GenericBoolean)
             {
                 GameFiber.Yield();
-                if (Game.IsKeyDown(Keys.Y))
+                if (Game.IsKeyDown(Settings.GetBackIn))
                 {
                     GenericBoolean = true;
                     Suspect.Tasks.EnterVehicle(suspectVehicle, -1);

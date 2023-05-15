@@ -126,7 +126,10 @@ namespace RiskierTrafficStops
                 if (!vehicle.IsSeatFree(i))
                 {
                     Ped ped = vehicle.GetPedOnSeat(i);
-                    occupantList.Add(ped);
+                    if (ped.Exists())
+                    {
+                        occupantList.Add(ped);
+                    }
                 }
             }
             return occupantList;

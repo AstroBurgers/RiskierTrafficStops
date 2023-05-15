@@ -59,7 +59,10 @@
     <Compile Include="Outcomes\Yell.cs" />
     <Compile Include="Outcomes\YellInCar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="RiskierTrafficStops.ini" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
