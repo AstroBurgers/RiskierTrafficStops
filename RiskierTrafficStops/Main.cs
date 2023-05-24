@@ -32,6 +32,7 @@ namespace RiskierTrafficStops
         internal static Random rndm = new Random();
         internal static bool HasEventHappend = false;
         internal static Scenarios ChosenEnum;
+        internal static int Chance;
         public override void Initialize()
         {
             Functions.OnOnDutyStateChanged += Functions_OnOnDutyStateChanged;
@@ -41,7 +42,6 @@ namespace RiskierTrafficStops
         {
             if (onDuty)
             {
-                Game.DisplayNotification("commonmenu", "shop_box_tickb", "RiskierTrafficStops", "~b~By Astro", "Watch your back out there officer");
                 Settings.INIFile();
                 Events.OnPulloverOfficerApproachDriver += Events_OnPulloverOfficerApproachDriver;
                 Events.OnPulloverEnded += Events_OnPulloverEnded;
@@ -63,14 +63,12 @@ namespace RiskierTrafficStops
 
         internal static void ChooseEvent(LHandle handle)
         {
-            GetOutAndShoot.GOASOutcome(handle);
-            /*if (!HasEventHappend && !Functions.IsCalloutRunning())
+            Chance = rndm.Next(1, 101);
+            if (!HasEventHappend && !Functions.IsCalloutRunning())
             {
                 HasEventHappend = true;
-                string Weapon = WeaponList[rndm.Next(WeaponList.Length)];
                 Scenarios[] ScenarioList = (Scenarios[])Enum.GetValues(typeof(Scenarios));
                 ChosenEnum = ScenarioList[rndm.Next(ScenarioList.Length)];
-                int Chance = rndm.Next(1, 101);
                 if (Chance < Settings.Chance)
                 {
                     Normal("Main.cs", $"Chosen Scenario: {ChosenEnum.ToString()}");
@@ -96,11 +94,12 @@ namespace RiskierTrafficStops
                             break;
                     }
                 }
-            }*/
+            }
         }
         public override void Finally()
         {
             Events.OnPulloverOfficerApproachDriver -= Events_OnPulloverOfficerApproachDriver;
+            Events.OnPulloverEnded -= Events_OnPulloverEnded;
         }
     }
 }

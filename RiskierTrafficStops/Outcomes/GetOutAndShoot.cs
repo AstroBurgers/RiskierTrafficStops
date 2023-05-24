@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Deployment.Internal;
-
+using System.Runtime.CompilerServices;
 
 namespace RiskierTrafficStops.Outcomes
 {
@@ -23,6 +23,8 @@ namespace RiskierTrafficStops.Outcomes
         internal static RelationshipGroup SuspectRelateGroup = new RelationshipGroup("Suspect");
         internal static Random rndm = new Random();
         internal static LHandle PursuitLHandle;
+
+        internal static List<GameFiber> GameFibers = new List<GameFiber> { };
 
         internal static void GOASOutcome(LHandle handle)
         {
@@ -63,37 +65,20 @@ namespace RiskierTrafficStops.Outcomes
                 }
                 SuspectRelateGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
                 SuspectRelateGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
-                foreach (Ped i in PedsInVehicle)
+                /*for (int i = 0; i < PedsInVehicle.Count; i++)
                 {
                     GameFiber.StartNew(delegate
                     {
-                        try
-                        {
-                            if (i.Exists())
-                            {
-                                Normal("GetOutAndShoot.cs", "Setting Suspect relationship group");
-                                i.RelationshipGroup = SuspectRelateGroup;
-                                Normal("GetOutAndShoot.cs", "Making Suspect leave vehicle");
-                                i.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
-                                Normal("GetOutAndShoot.cs", "Giving Suspect FightAgainstClosestHatedTarget Task");
-                                i.Tasks.FightAgainstClosestHatedTarget(40f, 7000).WaitForCompletion(7000);
-                            }
-
-                        }
-                        catch (System.Threading.ThreadAbortException TheseHands)
-                        {
-                            string ThrowHands = TheseHands.ToString();
-                            Error("GetOutAndShoot.cs", $"{ThrowHands}");
-                        }
-                        catch (Exception TheseHands)
-                        {
-                            string ThrowHands = TheseHands.ToString();
-                            Error("GetOutAndShoot.cs", $"{ThrowHands}");
-                        }
+                        GetPedOutOfVehicle(PedsInVehicle[i]);
                     });
+                }*/
+
+                foreach (Ped i in PedsInVehicle)
+                {
+                    GameFiber.StartNew(() => GetPedOutOfVehicle(i));
                 }
 
-                GameFiber.Wait(7000);
+                GameFiber.Wait(7010);
 
                 int Chance = rndm.Next(1, 101);
                 bool PulloverEnded = false;
@@ -153,11 +138,40 @@ namespace RiskierTrafficStops.Outcomes
                 int Seat = -2;
                 foreach (Ped i in PedList)
                 {
-                    i.Tasks.EnterVehicle(suspectVehicle, (Seat + 1), 2f);
+                    if (i.Exists())
+                    {
+                        i.Tasks.EnterVehicle(suspectVehicle, (Seat + 1), 2f);
+                        Normal("GetOutAnShoot.cs", $"{PedList.IndexOf(i)}");
+                    }
                 }
 
-                GameFiber.WaitUntil(() => PedList.Last().IsInAnyVehicle(true));
                 PursuitLHandle = SetupPursuitWithList(true, PedList);
+            }
+            catch (System.Threading.ThreadAbortException TheseHands)
+            {
+                string ThrowHands = TheseHands.ToString();
+                Error("GetOutAndShoot.cs", $"{ThrowHands}");
+            }
+            catch (Exception TheseHands)
+            {
+                string ThrowHands = TheseHands.ToString();
+                Error("GetOutAndShoot.cs", $"{ThrowHands}");
+            }
+        }
+
+        internal static void GetPedOutOfVehicle(Ped ped)
+        {
+            try
+            {
+                if (ped.Exists())
+                {
+                    Normal("GetOutAndShoot.cs", "Setting Suspect relationship group");
+                    ped.RelationshipGroup = SuspectRelateGroup;
+                    Normal("GetOutAndShoot.cs", "Making Suspect leave vehicle");
+                    ped.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
+                    Normal("GetOutAndShoot.cs", "Giving Suspect FightAgainstClosestHatedTarget Task");
+                    ped.Tasks.FightAgainstClosestHatedTarget(40f, 7000).WaitForCompletion(7000);
+                }
             }
             catch (System.Threading.ThreadAbortException TheseHands)
             {
