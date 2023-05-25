@@ -65,13 +65,6 @@ namespace RiskierTrafficStops.Outcomes
                 }
                 SuspectRelateGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
                 SuspectRelateGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
-                /*for (int i = 0; i < PedsInVehicle.Count; i++)
-                {
-                    GameFiber.StartNew(delegate
-                    {
-                        GetPedOutOfVehicle(PedsInVehicle[i]);
-                    });
-                }*/
 
                 foreach (Ped i in PedsInVehicle)
                 {
