@@ -39,7 +39,6 @@ namespace RiskierTrafficStops.Outcomes
         internal static Vehicle suspectVehicle;
         internal static RelationshipGroup SuspectRelateGroup = new RelationshipGroup("Suspect");
         internal static Random rndm = new Random();
-        internal static LHandle PursuitLHandle;
         internal static YellScen ChosenEnum;
         internal static bool GenericBoolean = false;
 
@@ -47,7 +46,7 @@ namespace RiskierTrafficStops.Outcomes
         {
             try
             {
-                Normal("Yell.cs", "Setting up Suspect and Suspect Vehicle");
+                Debug("Setting up Suspect and Suspect Vehicle");
                 Suspect = Functions.GetPulloverSuspect(handle);
                 suspectVehicle = Suspect.CurrentVehicle;
                 Suspect.BlockPermanentEvents = true;
@@ -77,12 +76,12 @@ namespace RiskierTrafficStops.Outcomes
                 {
                     Suspect.Inventory.GiveNewWeapon("weapon_switchblade", -1, true);
 
-                    Normal("Yell.cs", "Setting Suspect relationship group");
+                    Debug("Setting Suspect relationship group");
                     Suspect.RelationshipGroup = SuspectRelateGroup;
                     SuspectRelateGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
                     SuspectRelateGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
 
-                    Normal("Yell.cs", "Giving Suspect FightAgainstClosestHatedTarget Task");
+                    Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
                     Suspect.Tasks.FightAgainstClosestHatedTarget(40f, -1);
                 }
 
@@ -100,7 +99,7 @@ namespace RiskierTrafficStops.Outcomes
             catch(Exception TheseHands)
             {
                 string ThrowHands = TheseHands.ToString();
-                Error("Yell.cs", $"{ThrowHands}");
+                Error($"{ThrowHands}");
             }
         }
         internal static void KeyPressed()
