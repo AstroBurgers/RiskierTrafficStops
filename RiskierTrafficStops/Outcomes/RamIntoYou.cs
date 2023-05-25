@@ -27,7 +27,7 @@ namespace RiskierTrafficStops.Outcomes
         internal static void RIYOutcome(LHandle handle)
         {
 
-            Normal("RamIntoYou.cs", "Setting up Suspect and Suspect Vehicle");
+            Debug("Setting up Suspect and Suspect Vehicle");
             Suspect = Functions.GetPulloverSuspect(handle);
             suspectVehicle = Suspect.CurrentVehicle;
             Suspect.BlockPermanentEvents = true;

@@ -7,21 +7,26 @@ namespace RiskierTrafficStops
 {
     internal static class Logger
     {
-        internal static string defaultInfo = "RiskierTrafficStops[{0}][{1}]: {2}";
+        internal static string defaultInfo = "[{0}] RiskierTrafficStops: {1}";
 
-        internal static void Normal(string logLocation, string msg)
+        internal static void Normal(string msg)
         {
-            Game.LogTrivial(String.Format(defaultInfo, "NORMAL", logLocation, msg));
+            Game.LogTrivial(String.Format(defaultInfo, "NORMAL", msg));
         }
 
-        internal static void Warning(string logLocation, string msg)
+        internal static void Warning(string msg)
         {
-            Game.LogTrivial(String.Format(defaultInfo, "~y~WARNING~w~", logLocation, msg));
+            Game.LogTrivial(String.Format(defaultInfo, "WARNING", msg));
         }
 
-        internal static void Error(string logLocation, string msg)
+        internal static void Error(string msg)
         {
-            Game.LogTrivial(String.Format(defaultInfo, "~r~ERROR~w~", logLocation, msg));
+            Game.LogTrivial(String.Format(defaultInfo, "ERROR", msg));
+        }
+
+        internal static void Debug(string msg)
+        {
+            Game.LogTrivial(String.Format(defaultInfo, "DEBUG", msg));
         }
     }
 }

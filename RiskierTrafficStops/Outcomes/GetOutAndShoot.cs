@@ -30,13 +30,13 @@ namespace RiskierTrafficStops.Outcomes
         {
             try
             {
-                Normal("GetOutAndShoot.cs", "Setting up Suspect and Suspect Vehicle");
+                Debug("Setting up Suspect and Suspect Vehicle");
                 Suspect = Functions.GetPulloverSuspect(handle);
                 suspectVehicle = Suspect.CurrentVehicle;
                 Suspect.BlockPermanentEvents = true;
                 suspectVehicle.IsPersistent = true;
                 List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
-                Normal("GetOutAndShoot.cs", $"[DEBUG] Peds In Vehicle: {PedsInVehicle.Count}");
+                Debug($"Peds In Vehicle: {PedsInVehicle.Count}");
                 foreach (Ped i in PedsInVehicle)
                 {
                     try
@@ -46,7 +46,7 @@ namespace RiskierTrafficStops.Outcomes
                         {
                             if (!i.Inventory.HasLoadedWeapon)
                             {
-                                Normal("GetOutAndShoot.cs", $"Giving Suspect weapon: {Weapon}");
+                                Debug($"Giving Suspect weapon: {Weapon}");
                                 i.Inventory.GiveNewWeapon(Weapon, 100, true);
                             }
 
@@ -55,12 +55,12 @@ namespace RiskierTrafficStops.Outcomes
                     catch (System.Threading.ThreadAbortException TheseHands)
                     {
                         string ThrowHands = TheseHands.ToString();
-                        Error("GetOutAndShoot.cs", $"{ThrowHands}");
+                        Error($"{ThrowHands}");
                     }
                     catch (Exception TheseHands)
                     {
                         string ThrowHands = TheseHands.ToString();
-                        Error("GetOutAndShoot.cs", $"{ThrowHands}");
+                        Error($"{ThrowHands}");
                     }
                 }
                 SuspectRelateGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
@@ -83,13 +83,13 @@ namespace RiskierTrafficStops.Outcomes
 
                         if (Chance < 45)
                         {
-                            Normal("GetOutAndShoot.cs", "Making Suspect enter vehicle");
+                            Debug("Making Suspect enter vehicle");
                             PursuitOutcome(PedsInVehicle);
                             break;
                         }
                         else if (Chance > 45)
                         {
-                            Normal("GetOutAndShoot.cs", "Giving Suspect FightAgainstClosestHatedTarget Task");
+                            Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
                             if (!PulloverEnded)
                             {
                                 Functions.ForceEndCurrentPullover();
@@ -102,24 +102,24 @@ namespace RiskierTrafficStops.Outcomes
                     catch (System.Threading.ThreadAbortException TheseHands)
                     {
                         string ThrowHands = TheseHands.ToString();
-                        Error("GetOutAndShoot.cs", $"{ThrowHands}");
+                        Error($"{ThrowHands}");
                     }
                     catch (Exception TheseHands)
                     {
                         string ThrowHands = TheseHands.ToString();
-                        Error("GetOutAndShoot.cs", $"{ThrowHands}");
+                        Error($"{ThrowHands}");
                     }
                 }
             }
             catch (System.Threading.ThreadAbortException TheseHands)
             {
                 string ThrowHands = TheseHands.ToString();
-                Error("GetOutAndShoot.cs", $"{ThrowHands}");
+                Error($"{ThrowHands}");
             }
             catch (Exception TheseHands)
             {
                 string ThrowHands = TheseHands.ToString();
-                Error("GetOutAndShoot.cs", $"{ThrowHands}");
+                Error($"{ThrowHands}");
             }
             
         }
@@ -134,7 +134,7 @@ namespace RiskierTrafficStops.Outcomes
                     if (i.Exists())
                     {
                         i.Tasks.EnterVehicle(suspectVehicle, (Seat + 1), 2f);
-                        Normal("GetOutAnShoot.cs", $"{PedList.IndexOf(i)}");
+                        Debug($"{PedList.IndexOf(i)}");
                     }
                 }
 
@@ -143,12 +143,12 @@ namespace RiskierTrafficStops.Outcomes
             catch (System.Threading.ThreadAbortException TheseHands)
             {
                 string ThrowHands = TheseHands.ToString();
-                Error("GetOutAndShoot.cs", $"{ThrowHands}");
+                Error($"{ThrowHands}");
             }
             catch (Exception TheseHands)
             {
                 string ThrowHands = TheseHands.ToString();
-                Error("GetOutAndShoot.cs", $"{ThrowHands}");
+                Error($"{ThrowHands}");
             }
         }
 
@@ -158,23 +158,23 @@ namespace RiskierTrafficStops.Outcomes
             {
                 if (ped.Exists())
                 {
-                    Normal("GetOutAndShoot.cs", "Setting Suspect relationship group");
+                    Normal("Setting Suspect relationship group");
                     ped.RelationshipGroup = SuspectRelateGroup;
-                    Normal("GetOutAndShoot.cs", "Making Suspect leave vehicle");
+                    Normal("Making Suspect leave vehicle");
                     ped.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
-                    Normal("GetOutAndShoot.cs", "Giving Suspect FightAgainstClosestHatedTarget Task");
+                    Normal("Giving Suspect FightAgainstClosestHatedTarget Task");
                     ped.Tasks.FightAgainstClosestHatedTarget(40f, 7000).WaitForCompletion(7000);
                 }
             }
             catch (System.Threading.ThreadAbortException TheseHands)
             {
                 string ThrowHands = TheseHands.ToString();
-                Error("GetOutAndShoot.cs", $"{ThrowHands}");
+                Error($"{ThrowHands}");
             }
             catch (Exception TheseHands)
             {
                 string ThrowHands = TheseHands.ToString();
-                Error("GetOutAndShoot.cs", $"{ThrowHands}");
+                Error($"{ThrowHands}");
             }
         }
     }

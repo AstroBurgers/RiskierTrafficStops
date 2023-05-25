@@ -26,7 +26,7 @@ namespace RiskierTrafficStops.Outcomes
 
         internal static void ROutcome(LHandle handle)
         {
-            Normal("RevEngine.cs", "Setting up Suspect and Suspect Vehicle");
+            Debug("Setting up Suspect and Suspect Vehicle");
             Suspect = Functions.GetPulloverSuspect(handle);
             suspectVehicle = Suspect.CurrentVehicle;
             Suspect.BlockPermanentEvents = true;

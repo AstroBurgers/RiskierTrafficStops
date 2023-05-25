@@ -71,7 +71,7 @@ namespace RiskierTrafficStops
                 ChosenEnum = ScenarioList[rndm.Next(ScenarioList.Length)];
                 if (Chance < Settings.Chance)
                 {
-                    Normal("Main.cs", $"Chosen Scenario: {ChosenEnum.ToString()}");
+                    Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
                     switch (ChosenEnum)
                     {
                         case Scenarios.Yell:
