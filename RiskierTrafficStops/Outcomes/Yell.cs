@@ -64,6 +64,7 @@ namespace RiskierTrafficStops.Outcomes
                 Suspect = Functions.GetPulloverSuspect(handle);
                 suspectVehicle = Suspect.CurrentVehicle;
                 Suspect.BlockPermanentEvents = true;
+                Suspect.IsPersistent = true;
                 suspectVehicle.IsPersistent = true;
 
                 Suspect.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);

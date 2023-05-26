@@ -67,7 +67,8 @@ namespace RiskierTrafficStops
             if (!HasEventHappend && !Functions.IsCalloutRunning())
             {
                 HasEventHappend = true;
-                Scenarios[] ScenarioList = (Scenarios[])Enum.GetValues(typeof(Scenarios));
+                Yell.YellOutcome(handle);
+                /*Scenarios[] ScenarioList = (Scenarios[])Enum.GetValues(typeof(Scenarios));
                 ChosenEnum = ScenarioList[rndm.Next(ScenarioList.Length)];
                 if (Chance < Settings.Chance)
                 {
@@ -93,7 +94,7 @@ namespace RiskierTrafficStops
                             RamIntoYou.RIYOutcome(handle);
                             break;
                     }
-                }
+                }*/
             }
         }
         public override void Finally()
