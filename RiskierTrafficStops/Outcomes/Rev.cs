@@ -32,7 +32,7 @@ namespace RiskierTrafficStops.Outcomes
             Suspect.BlockPermanentEvents = true;
             suspectVehicle.IsPersistent = true;
 
-            RevEngine(Suspect, suspectVehicle, new int[] { 2, 6 }, new int[] { 2, 6 }, 4);
+            RevEngine(Suspect, suspectVehicle, new int[] { 2, 6 }, new int[] { 2, 6 }, 3);
 
             int Chance = rndm.Next(1, 101);
 
