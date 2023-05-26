@@ -42,6 +42,20 @@ namespace RiskierTrafficStops.Outcomes
         internal static YellScen ChosenEnum;
         internal static bool GenericBoolean = false;
 
+        internal static String[] meleeWeapons = new String[]
+        {
+            "weapon_dagger",
+            "weapon_bat",
+            "weapon_bottle",
+            "weapon_crowbar",
+            "weapon_hammer",
+            "weapon_hatchet",
+            "weapon_knife",
+            "weapon_switchblade",
+            "weapon_machete",
+            "weapon_wrench",
+        };
+
         internal static void YellOutcome(LHandle handle)
         {
             try
@@ -74,7 +88,7 @@ namespace RiskierTrafficStops.Outcomes
 
                 else if (ChosenEnum == YellScen.PullKnife)
                 {
-                    Suspect.Inventory.GiveNewWeapon("weapon_switchblade", -1, true);
+                    Suspect.Inventory.GiveNewWeapon(meleeWeapons[rndm.Next(meleeWeapons.Length)], -1, true);
 
                     Debug("Setting Suspect relationship group");
                     Suspect.RelationshipGroup = SuspectRelateGroup;
@@ -96,7 +110,7 @@ namespace RiskierTrafficStops.Outcomes
                     }
                 }
             }
-            catch(Exception TheseHands)
+            catch (Exception TheseHands)
             {
                 string ThrowHands = TheseHands.ToString();
                 Error($"{ThrowHands}");
