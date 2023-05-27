@@ -38,6 +38,7 @@ namespace RiskierTrafficStops.Outcomes
             
             Suspect.Tasks.DriveToPosition(MainPlayer.LastVehicle.Position, 100f, VehicleDrivingFlags.Reverse, 0.1f);
             GameFiber.Wait(6500);
+            Suspect.Tasks.Clear();
             PursuitLHandle = SetupPursuitWithList(true, PedsInVehicle);
         }
     }
