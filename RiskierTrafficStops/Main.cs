@@ -98,6 +98,7 @@ namespace RiskierTrafficStops
                 {
                     while (!HasEventHappend)
                     {
+                        GameFiber.Yield();
                         TimesRan += 1;
                         if (TimesRan > 6)
                         {

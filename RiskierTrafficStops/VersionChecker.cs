@@ -17,7 +17,10 @@ namespace RiskierTrafficStops
 
             try
             {
-                var receivedVersion = webClient.DownloadString("https://www.lcpdfr.com/downloads/gta5mods/scripts/44036-riskier-traffic-stops/").Trim();
+                var receivedVersion = webClient
+     .DownloadString(
+         "https://www.lcpdfr.com/applications/downloadsng/interface/api.php?do=checkForUpdates&fileId=44036&textOnly=1")
+     .Trim();
                 Logger.Debug($"Recieved Version: {receivedVersion} | Local Version: {CurrentVersion}");
                 pluginUpToDate = receivedVersion == CurrentVersion;
                 webSuccess = true;
@@ -27,7 +30,6 @@ namespace RiskierTrafficStops
                 string ThrowHands = TheseHands.ToString();
                 Logger.Error(ThrowHands);
                 Logger.Error("Please check your internet connection");
-                throw;
             }
             finally
             {
