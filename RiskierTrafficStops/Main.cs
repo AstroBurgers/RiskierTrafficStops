@@ -188,7 +188,8 @@ namespace RiskierTrafficStops
         }
         public override void Finally()
         {
-            Game.DisplayNotification();
+            Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Hope you had a good patrol!");
+            Normal("Unloaded succesfully");
             Events.OnPulloverOfficerApproachDriver -= Events_OnPulloverOfficerApproachDriver;
             Events.OnPulloverDriverStopped -= Events_OnPulloverDriverStopped;
             Events.OnPulloverStarted -= Events_OnPulloverStarted;
