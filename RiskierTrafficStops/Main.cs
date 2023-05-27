@@ -81,7 +81,8 @@ namespace RiskierTrafficStops
 
         private static void Events_OnPulloverDriverStopped(LHandle handle)
         {
-            GameFiber.StartNew(() => ChooseEvent(handle));
+            if (!HasEventHappend) { GameFiber.StartNew(() => ChooseEvent(handle)); }
+
         }
 
         private static void Events_OnPulloverEnded(LHandle pullover, bool normalEnding)
@@ -91,7 +92,7 @@ namespace RiskierTrafficStops
 
         private static void Events_OnPulloverOfficerApproachDriver(LHandle handle)
         {
-            GameFiber.StartNew(() => ChooseEvent(handle));
+            if (!HasEventHappend) { GameFiber.StartNew(() => ChooseEvent(handle)); }
         }
 
         internal static void ChooseEvent(LHandle handle)
@@ -115,8 +116,8 @@ namespace RiskierTrafficStops
                                     if (Settings.Yell)
                                     {
                                         Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
-                                        HasEventHappend = true;
                                         Yell.YellOutcome(handle);
+                                        HasEventHappend = true;
                                     }
                                     else
                                     {
@@ -129,8 +130,9 @@ namespace RiskierTrafficStops
                                     if (Settings.GOAS)
                                     {
                                         Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
-                                        HasEventHappend = true;
                                         GetOutAndShoot.GOASOutcome(handle);
+                                        HasEventHappend = true;
+
                                     }
                                     else
                                     {
@@ -143,8 +145,8 @@ namespace RiskierTrafficStops
                                     if (Settings.Flee)
                                     {
                                         Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
-                                        HasEventHappend = true;
                                         Flee.FleeOutcome(handle);
+                                        HasEventHappend = true;
                                     }
                                     else
                                     {
@@ -157,8 +159,8 @@ namespace RiskierTrafficStops
                                     if (Settings.YIC)
                                     {
                                         Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
-                                        HasEventHappend = true;
                                         YellInCar.YICEventHandler(handle);
+                                        HasEventHappend = true;
                                     }
                                     else
                                     {
@@ -171,8 +173,8 @@ namespace RiskierTrafficStops
                                     if (Settings.Rev)
                                     {
                                         Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
-                                        HasEventHappend = true;
                                         Rev.ROutcome(handle);
+                                        HasEventHappend = true;
                                     }
                                     else
                                     {
@@ -185,8 +187,8 @@ namespace RiskierTrafficStops
                                     if (Settings.Ram)
                                     {
                                         Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
-                                        HasEventHappend = true;
                                         RamIntoYou.RIYOutcome(handle);
+                                        HasEventHappend = true;
                                     }
                                     else
                                     {
