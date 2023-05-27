@@ -44,6 +44,8 @@ namespace RiskierTrafficStops
             if (onDuty)
             {
                 Settings.INIFile();
+                Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Watch you back out there officer!");
+                Normal("Loaded succesfully");
                 Events.OnPulloverOfficerApproachDriver += Events_OnPulloverOfficerApproachDriver;
                 Events.OnPulloverDriverStopped += Events_OnPulloverDriverStopped;
                 Events.OnPulloverStarted += Events_OnPulloverStarted;
