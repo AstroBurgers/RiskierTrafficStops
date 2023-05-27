@@ -61,12 +61,12 @@ namespace RiskierTrafficStops
             ChosenEnum = ScenarioList[rndm.Next(ScenarioList.Length)];
             if (Chance < Settings.Chance)
             {
-                Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
                 switch (ChosenEnum)
                 {
                     case Scenarios.Run:
                         if (Settings.Flee)
                         {
+                            Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
                             GameFiber.WaitUntil(() => MainPlayer.CurrentVehicle.IsSirenOn);
                             Flee.FleeOutcome(handle);
                         }
@@ -82,7 +82,6 @@ namespace RiskierTrafficStops
         private static void Events_OnPulloverDriverStopped(LHandle handle)
         {
             if (!HasEventHappend) { GameFiber.StartNew(() => ChooseEvent(handle)); }
-
         }
 
         private static void Events_OnPulloverEnded(LHandle pullover, bool normalEnding)
