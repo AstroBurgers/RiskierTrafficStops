@@ -40,8 +40,6 @@ namespace RiskierTrafficStops.Outcomes
                 Debug($"Peds In Vehicle: {PedsInVehicle.Count}");
                 foreach (Ped i in PedsInVehicle)
                 {
-                    try
-                    {
                         string Weapon = WeaponList[rndm.Next(WeaponList.Length)];
                         if (i.Exists())
                         {
@@ -52,17 +50,6 @@ namespace RiskierTrafficStops.Outcomes
                             }
 
                         }
-                    }
-                    catch (System.Threading.ThreadAbortException TheseHands)
-                    {
-                        string ThrowHands = TheseHands.ToString();
-                        Error($"{ThrowHands}");
-                    }
-                    catch (Exception TheseHands)
-                    {
-                        string ThrowHands = TheseHands.ToString();
-                        Error($"{ThrowHands}");
-                    }
                 }
                 SuspectRelateGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
                 SuspectRelateGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
