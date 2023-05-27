@@ -34,7 +34,7 @@ namespace RiskierTrafficStops.Outcomes
             int Chance = rndm.Next(1, 101);
             if (Chance < 50)
             {
-                SetupPursuit(true, Suspect);
+                PursuitLHandle = SetupPursuit(true, Suspect);
             }
 
             else if (Chance > 50)
