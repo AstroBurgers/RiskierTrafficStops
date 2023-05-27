@@ -65,7 +65,15 @@ namespace RiskierTrafficStops
                 switch (ChosenEnum)
                 {
                     case Scenarios.Run:
-                        Flee.FleeOutcome(handle);
+                        if (Settings.Flee)
+                        {
+                            GameFiber.WaitUntil(() => MainPlayer.CurrentVehicle.IsSirenOn);
+                            Flee.FleeOutcome(handle);
+                        }
+                        else
+                        {
+                            Normal("Chosen event is disabled");
+                        }
                         break;
                 }
             }
@@ -93,7 +101,6 @@ namespace RiskierTrafficStops
             {
                 ChosenEnum = ScenarioList[rndm.Next(ScenarioList.Length)];
                 int TimesRan = 0;
-                Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
                 if (Chance < Settings.Chance)
                 {
                     while (!HasEventHappend)
@@ -107,6 +114,7 @@ namespace RiskierTrafficStops
                                 case Scenarios.Yell:
                                     if (Settings.Yell)
                                     {
+                                        Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
                                         HasEventHappend = true;
                                         Yell.YellOutcome(handle);
                                     }
@@ -120,6 +128,7 @@ namespace RiskierTrafficStops
                                 case Scenarios.Shoot:
                                     if (Settings.GOAS)
                                     {
+                                        Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
                                         HasEventHappend = true;
                                         GetOutAndShoot.GOASOutcome(handle);
                                     }
@@ -133,6 +142,7 @@ namespace RiskierTrafficStops
                                 case Scenarios.Run:
                                     if (Settings.Flee)
                                     {
+                                        Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
                                         HasEventHappend = true;
                                         Flee.FleeOutcome(handle);
                                     }
@@ -146,6 +156,7 @@ namespace RiskierTrafficStops
                                 case Scenarios.YellInCar:
                                     if (Settings.YIC)
                                     {
+                                        Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
                                         HasEventHappend = true;
                                         YellInCar.YICEventHandler(handle);
                                     }
@@ -159,6 +170,7 @@ namespace RiskierTrafficStops
                                 case Scenarios.RevEngine:
                                     if (Settings.Rev)
                                     {
+                                        Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
                                         HasEventHappend = true;
                                         Rev.ROutcome(handle);
                                     }
@@ -172,6 +184,7 @@ namespace RiskierTrafficStops
                                 case Scenarios.RamIntoYou:
                                     if (Settings.Ram)
                                     {
+                                        Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
                                         HasEventHappend = true;
                                         RamIntoYou.RIYOutcome(handle);
                                     }
