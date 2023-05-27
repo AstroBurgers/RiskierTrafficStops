@@ -37,7 +37,7 @@ namespace RiskierTrafficStops
                 if (!pluginUpToDate)
                 {
                     Logger.Debug("Plugin is outdated, please up date to the latest version as soon as possible");
-                    Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Plugin is ~r~out of to date!");
+                    Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Plugin is ~r~out of to date, Please update ASAP");
                 }
                 if (pluginUpToDate)
                 {
