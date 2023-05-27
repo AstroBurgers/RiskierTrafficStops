@@ -105,7 +105,7 @@ namespace RiskierTrafficStops
         internal static void RevEngine(Ped driver, Vehicle SuspectVehicle, int[] timeBetweenRevs, int[] timeForRevsToLast, int TotalNumberOfRevs)
         {
             Random rndm = new Random();
-            Game.LogTrivial("Immersive Ambient Events: Starting Rev Engine method.");
+            Logger.Normal("Starting Rev Engine method");
             for (int i = 0; i < TotalNumberOfRevs; i++)
             {
                 GameFiber.Yield();
