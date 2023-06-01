@@ -42,19 +42,6 @@ namespace RiskierTrafficStops.Outcomes
         internal static YellScen ChosenEnum;
         internal static bool GenericBoolean = false;
 
-        internal static String[] meleeWeapons = new String[]
-        {
-            "weapon_dagger",
-            "weapon_bat",
-            "weapon_bottle",
-            "weapon_crowbar",
-            "weapon_hammer",
-            "weapon_hatchet",
-            "weapon_knife",
-            "weapon_switchblade",
-            "weapon_machete",
-            "weapon_wrench",
-        };
 
         internal static void YellOutcome(LHandle handle)
         {

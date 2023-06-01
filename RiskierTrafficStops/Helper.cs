@@ -100,6 +100,24 @@ namespace RiskierTrafficStops
         };
 
         /// <summary>
+        /// List of all viable melee Weapons
+        /// </summary>
+
+        internal static String[] meleeWeapons = new String[]
+{
+            "weapon_dagger",
+            "weapon_bat",
+            "weapon_bottle",
+            "weapon_crowbar",
+            "weapon_hammer",
+            "weapon_hatchet",
+            "weapon_knife",
+            "weapon_switchblade",
+            "weapon_machete",
+            "weapon_wrench",
+};
+
+        /// <summary>
         /// Makes a ped rev their vehicles engine, the int list parameters each need a minimum and maximum value
         /// </summary>
         internal static void RevEngine(Ped driver, Vehicle SuspectVehicle, int[] timeBetweenRevs, int[] timeForRevsToLast, int TotalNumberOfRevs)
