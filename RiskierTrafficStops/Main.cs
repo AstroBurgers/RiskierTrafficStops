@@ -56,7 +56,7 @@ namespace RiskierTrafficStops
 
         private static void Events_OnPulloverStarted(LHandle handle)
         {
-            Chance = rndm.Next(1, 101);
+            /*Chance = rndm.Next(1, 101);
             Scenarios[] ScenarioList = (Scenarios[])Enum.GetValues(typeof(Scenarios));
             ChosenEnum = ScenarioList[rndm.Next(ScenarioList.Length)];
             if (Chance < Settings.Chance)
@@ -76,7 +76,7 @@ namespace RiskierTrafficStops
                         }
                         break;
                 }
-            }
+            }*/
         }
 
         private static void Events_OnPulloverDriverStopped(LHandle handle)
@@ -96,7 +96,8 @@ namespace RiskierTrafficStops
 
         internal static void ChooseEvent(LHandle handle)
         {
-            Chance = rndm.Next(1, 101);
+            FirstAmendmentAuditor.FAAOutcome(handle);
+            /*Chance = rndm.Next(1, 101);
             if (!HasEventHappend && !Functions.IsCalloutRunning())
             {
                 ChosenEnum = ScenarioList[rndm.Next(ScenarioList.Length)];
@@ -200,7 +201,7 @@ namespace RiskierTrafficStops
                         }
                     }
                 }
-            }
+            }*/
         }
         public override void Finally()
         {

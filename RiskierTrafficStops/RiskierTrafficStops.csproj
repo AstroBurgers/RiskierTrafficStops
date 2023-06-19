@@ -52,7 +52,6 @@
     <Compile Include="Logger.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Helper.cs" />
-    <Compile Include="Outcomes\FirstAmendmentAuditor.cs" />
     <Compile Include="Outcomes\RamIntoYou.cs" />
     <Compile Include="Outcomes\Flee.cs" />
     <Compile Include="Outcomes\GetOutAndShoot.cs" />
