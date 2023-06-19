@@ -8,6 +8,7 @@ using static RiskierTrafficStops.Systems.Helper;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using RiskierTrafficStops.Outcomes;
 using static RiskierTrafficStops.Outcomes.Yell;
 using static RiskierTrafficStops.Systems.Logger;
@@ -25,6 +26,8 @@ namespace RiskierTrafficStops
             RevEngine,
             RamIntoYou,
         }
+
+        internal static List<Scenarios> enabledScenarios = new List<Scenarios>();
 
         internal static Random rndm = new Random(DateTime.Now.Millisecond);
         internal static bool HasEventHappend = false;
@@ -104,7 +107,7 @@ namespace RiskierTrafficStops
         internal static void ChooseEvent(LHandle handle)
         {
             Chance = rndm.Next(1, 101);
-            if (!HasEventHappend && !Functions.IsCalloutRunning())
+            if (!HasEventHappend && !Functions.IsCalloutRunning() && (Chance >= Settings.Chance))
             {
                 ChosenEnum = ScenarioList[rndm.Next(ScenarioList.Length)];
                 int TimesRan = 0;
@@ -193,6 +196,9 @@ namespace RiskierTrafficStops
                                 ChosenEnum = ScenarioList[rndm.Next(ScenarioList.Length)];
                                 Normal("Chosen event is disabled, choosing a new one...");
                             }
+                            break;
+                        default:
+                            Normal("No events enabled (Most Likely)");
                             break;
                     }
                 }
