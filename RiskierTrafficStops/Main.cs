@@ -29,7 +29,7 @@ namespace RiskierTrafficStops
             RamIntoYou,
         }
 
-        internal static Random rndm = new Random();
+        internal static Random rndm = new Random(DateTime.Now.Millisecond);
         internal static bool HasEventHappend = false;
         internal static Scenarios ChosenEnum;
         internal static int Chance;
@@ -56,7 +56,7 @@ namespace RiskierTrafficStops
 
         private static void Events_OnPulloverStarted(LHandle handle)
         {
-            /*Chance = rndm.Next(1, 101);
+            Chance = rndm.Next(1, 101);
             Scenarios[] ScenarioList = (Scenarios[])Enum.GetValues(typeof(Scenarios));
             ChosenEnum = ScenarioList[rndm.Next(ScenarioList.Length)];
             if (Chance < Settings.Chance)
@@ -76,17 +76,17 @@ namespace RiskierTrafficStops
                         }
                         break;
                 }
-            }*/
-        }
-
-        private static void Events_OnPulloverDriverStopped(LHandle handle)
-        {
-            if (!HasEventHappend) { GameFiber.StartNew(() => ChooseEvent(handle)); }
+            }
         }
 
         private static void Events_OnPulloverEnded(LHandle pullover, bool normalEnding)
         {
             HasEventHappend = false;
+        }
+
+        private static void Events_OnPulloverDriverStopped(LHandle handle)
+        {
+            if (!HasEventHappend) { GameFiber.StartNew(() => ChooseEvent(handle)); }
         }
 
         private static void Events_OnPulloverOfficerApproachDriver(LHandle handle)
