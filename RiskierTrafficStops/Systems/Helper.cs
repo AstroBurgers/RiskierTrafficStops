@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RiskierTrafficStops
+namespace RiskierTrafficStops.Systems
 {
     internal class Helper
     {

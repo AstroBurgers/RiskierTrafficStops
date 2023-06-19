@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using Rage;
 
-namespace RiskierTrafficStops
+namespace RiskierTrafficStops.Systems
 {
     internal class VersionChecker
     {
