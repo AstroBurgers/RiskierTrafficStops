@@ -96,7 +96,6 @@ namespace RiskierTrafficStops
 
         internal static void ChooseEvent(LHandle handle)
         {
-            FirstAmendmentAuditor.FAAOutcome(handle);
             /*Chance = rndm.Next(1, 101);
             if (!HasEventHappend && !Functions.IsCalloutRunning())
             {
