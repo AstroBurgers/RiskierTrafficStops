@@ -96,7 +96,7 @@ namespace RiskierTrafficStops
 
         internal static void ChooseEvent(LHandle handle)
         {
-            /*Chance = rndm.Next(1, 101);
+            Chance = rndm.Next(1, 101);
             if (!HasEventHappend && !Functions.IsCalloutRunning())
             {
                 ChosenEnum = ScenarioList[rndm.Next(ScenarioList.Length)];
@@ -200,7 +200,7 @@ namespace RiskierTrafficStops
                         }
                     }
                 }
-            }*/
+            }
         }
         public override void Finally()
         {
