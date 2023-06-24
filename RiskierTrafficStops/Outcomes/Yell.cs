@@ -55,15 +55,14 @@ namespace RiskierTrafficStops.Outcomes
 
                 Suspect.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
                 NativeFunction.Natives.x5AD23D40115353AC(Suspect, MainPlayer, -1);
-                Suspect.PlayAmbientSpeech("FIGHT");
-                GameFiber.WaitUntil(() => !Suspect.IsAnySpeechPlaying);
-                GameFiber.Wait(500);
-                Suspect.PlayAmbientSpeech("GENERIC_INSULT_HIGH");
-                GameFiber.WaitUntil(() => !Suspect.IsAnySpeechPlaying);
-                GameFiber.Wait(500);
-                Suspect.PlayAmbientSpeech("GENERIC_CURSE_MED_03");
-                GameFiber.WaitUntil(() => !Suspect.IsAnySpeechPlaying);
-                GameFiber.Wait(500);
+                int timesSpoken = 0;
+                while (Suspect && timesSpoken < 4)
+                {
+                    GameFiber.Yield();
+                    timesSpoken += 1;
+                    Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Count)]);
+                    GameFiber.WaitUntil(() => !Suspect.IsAnySpeechPlaying);
+                }
 
                 YellScen[] ScenarioList = (YellScen[])Enum.GetValues(typeof(YellScen));
                 ChosenEnum = ScenarioList[rndm.Next(ScenarioList.Length)];
