@@ -30,8 +30,8 @@ namespace RiskierTrafficStops
 
         internal static Random rndm = new Random(DateTime.Now.Millisecond);
         internal static bool HasEventHappend = false;
-        internal static Scenarios ChosenOutcome;
-        internal static int Chance;
+        internal static Scenarios chosenOutcome;
+        internal static int chosenChance;
         internal static Scenarios[] ScenarioList = (Scenarios[])Enum.GetValues(typeof(Scenarios));
         public override void Initialize()
         {
@@ -55,17 +55,17 @@ namespace RiskierTrafficStops
 
         private static void Events_OnPulloverStarted(LHandle handle)
         {
-            Chance = rndm.Next(1, 101);
+            chosenChance = rndm.Next(1, 101);
             Scenarios[] ScenarioList = (Scenarios[])Enum.GetValues(typeof(Scenarios));
-            ChosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
-            if (Chance < Settings.Chance)
+            chosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
+            if (chosenChance < Settings.Chance)
             {
-                switch (ChosenOutcome)
+                switch (chosenOutcome)
                 {
                     case Scenarios.Run:
                         if (Settings.Flee)
                         {
-                            Normal($"Chosen Scenario: {ChosenOutcome.ToString()}");
+                            Normal($"Chosen Scenario: {chosenOutcome.ToString()}");
                             GameFiber.WaitUntil(() => MainPlayer.CurrentVehicle.IsSirenOn);
                             Flee.FleeOutcome(handle);
                         }
@@ -105,12 +105,105 @@ namespace RiskierTrafficStops
 
         internal static void ChooseEvent(LHandle handle)
         {
-            Chance = rndm.Next(1, 101);
-            if (!HasEventHappend && !Functions.IsCalloutRunning() && (Chance >= Settings.Chance))
+            chosenChance = rndm.Next(1, 101);
+            if ((chosenChance <= Settings.Chance) && !HasEventHappend && !Functions.IsCalloutRunning())
             {
-                ChosenOutcome = Settings.enabledScenarios[rndm.Next(Settings.enabledScenarios.Count)];
+                Scenarios[] ScenarioList = (Scenarios[])Enum.GetValues(typeof(Scenarios));
+                chosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
+                int TimesRan = 0;
+                while (TimesRan >= 6)
+                {
+                    GameFiber.Yield();
+                    TimesRan += 1;
+                    switch (chosenOutcome)
+                    {
+                        case Scenarios.Yell:
+                            if (Settings.Yell)
+                            {
+                                Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
+                                Yell.YellOutcome(handle);
+                                HasEventHappend = true;
+                            }
+                            else
+                            {
+                                chosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
+                                Normal("Chosen event is disabled, choosing a new one...");
+                                break;
+                            }
+                            break;
+                        case Scenarios.Shoot:
+                            if (Settings.GOAS)
+                            {
+                                Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
+                                GetOutAndShoot.GOASOutcome(handle);
+                                HasEventHappend = true;
 
-                if (ChosenOutcome == Settings.enabledScenarios[(int)Scenarios.Shoot]) {  }
+                            }
+                            else
+                            {
+                                chosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
+                                Normal("Chosen event is disabled, choosing a new one...");
+                                break;
+                            }
+                            break;
+                        case Scenarios.Run:
+                            if (Settings.Flee)
+                            {
+                                Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
+                                Flee.FleeOutcome(handle);
+                                HasEventHappend = true;
+                            }
+                            else
+                            {
+                                chosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
+                                Normal("Chosen event is disabled, choosing a new one...");
+                                break;
+                            }
+                            break;
+                        case Scenarios.YellInCar:
+                            if (Settings.YIC)
+                            {
+                                Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
+                                YellInCar.YICEventHandler(handle);
+                                HasEventHappend = true;
+                            }
+                            else
+                            {
+                                chosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
+                                Normal("Chosen event is disabled, choosing a new one...");
+                                break;
+                            }
+                            break;
+                        case Scenarios.RevEngine:
+                            if (Settings.Rev)
+                            {
+                                Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
+                                Rev.ROutcome(handle);
+                                HasEventHappend = true;
+                            }
+                            else
+                            {
+                                chosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
+                                Normal("Chosen event is disabled, choosing a new one...");
+                                break;
+                            }
+                            break;
+                        case Scenarios.RamIntoYou:
+                            if (Settings.Ram)
+                            {
+                                Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
+                                RamIntoYou.RIYOutcome(handle);
+                                HasEventHappend = true;
+                            }
+                            else
+                            {
+                                chosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
+                                Normal("Chosen event is disabled, choosing a new one...");
+                                break;
+                            }
+                            break;
+                    }
+                }
             }
         }
     }
