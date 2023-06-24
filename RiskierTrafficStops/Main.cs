@@ -131,12 +131,10 @@ namespace RiskierTrafficStops
                     case Scenarios.RamIntoPlayerVehicle:
                         Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
                         RamIntoYou.RIYOutcome(handle);
-                        
                         break;
                     case Scenarios.ShootAndFlee:
                         Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
                         ShootAndFlee.SAFOutcome(handle);
-                        
                         break;
                     default:
                         Debug("No outcomes Enabled (or some other shit)");
