@@ -67,7 +67,6 @@ namespace RiskierTrafficStops.Outcomes
                 GameFiber.Wait(7010);
 
                 int Chance = rndm.Next(1, 101);
-                bool PulloverEnded = false;
 
                 foreach (Ped i in PedsInVehicle)
                 {
@@ -80,12 +79,10 @@ namespace RiskierTrafficStops.Outcomes
                     else if (Chance >= 45)
                     {
                         Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
-                        if (!PulloverEnded)
+                        if (Functions.IsPlayerPerformingPullover())
                         {
                             Functions.ForceEndCurrentPullover();
-                            PulloverEnded = true;
                         }
-
                         i.Tasks.FightAgainstClosestHatedTarget(40f, -1);
                     }
                 }
