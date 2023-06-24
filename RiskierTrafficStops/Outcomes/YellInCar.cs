@@ -18,15 +18,6 @@ namespace RiskierTrafficStops.Outcomes
 {
     internal class YellInCar
     {
-        internal static List<string> Voicelines = new List<string>()
-        {
-            "FIGHT",
-            "GENERIC_INSULT_HIGH",
-            "GENERIC_CURSE_MED",
-            "CHALLENGE_THREATEN",
-            "GENERIC_CURSE_HIGH",
-            "GENERIC_INSULT_HIGH_01",
-        };
 
         internal static Ped Suspect;
         internal static Vehicle suspectVehicle;
@@ -39,9 +30,9 @@ namespace RiskierTrafficStops.Outcomes
             Suspect.BlockPermanentEvents = true;
             suspectVehicle.IsPersistent = true;
 
-            Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Count)]);
+            Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);
             GameFiber.WaitUntil(() => !Suspect.IsAnySpeechPlaying);
-            Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Count)]);
+            Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);
             GameFiber.WaitUntil(() => !Suspect.IsAnySpeechPlaying);
         }
     }

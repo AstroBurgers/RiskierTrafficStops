@@ -26,16 +26,6 @@ namespace RiskierTrafficStops.Outcomes
             PullOutKnife
         }
 
-        internal static List<string> Voicelines = new List<string>()
-        {
-            "FIGHT",
-            "GENERIC_INSULT_HIGH",
-            "GENERIC_CURSE_MED",
-            "CHALLENGE_THREATEN",
-            "GENERIC_CURSE_HIGH",
-            "GENERIC_INSULT_HIGH_01",
-        };
-
         internal static Ped Suspect;
         internal static Vehicle suspectVehicle;
         internal static RelationshipGroup suspectRelationshipGroup = new RelationshipGroup("Suspect");
@@ -66,7 +56,7 @@ namespace RiskierTrafficStops.Outcomes
                     GameFiber.Yield();
                     timesSpoken += 1;
                     Debug("Suspect Is Yelling");
-                    Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Count)]);
+                    Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);
                     GameFiber.WaitUntil(() => !Suspect.IsAnySpeechPlaying);
                 }
 
@@ -90,7 +80,7 @@ namespace RiskierTrafficStops.Outcomes
                         while (!hasPedGottenBackIntoVehicle)
                         {
                             GameFiber.Yield();
-                            Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Count)]);
+                            Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);
                             GameFiber.WaitUntil(() => !Suspect.IsAnySpeechPlaying);
                         }
                         break;

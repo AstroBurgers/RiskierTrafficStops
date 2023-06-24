@@ -186,5 +186,19 @@ namespace RiskierTrafficStops.Systems
             }
             return occupantList;
         }
+
+        /// <summary>
+        /// Array of Used curse voicelines
+        /// </summary>
+
+        internal static String[] Voicelines = new String[]
+        {
+            "FIGHT",
+            "GENERIC_INSULT_HIGH",
+            "GENERIC_CURSE_MED",
+            "CHALLENGE_THREATEN",
+            "GENERIC_CURSE_HIGH",
+            "GENERIC_INSULT_HIGH_01",
+        };
     }
 }
