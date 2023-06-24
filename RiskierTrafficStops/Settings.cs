@@ -1,9 +1,5 @@
 ﻿using Rage;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using static RiskierTrafficStops.Main;
 
@@ -17,15 +13,18 @@ namespace RiskierTrafficStops
         internal static InitializationFile inifile; // Defining a new INI File
 
         // Event Booleans are enabled
-        internal static bool GOAS = true;
-        internal static bool Ram = true;
-        internal static bool Flee = true;
-        internal static bool Rev = true;
-        internal static bool Yell = true;
-        internal static bool YIC = true;
-        internal static bool SAF = true;
+        internal static bool getOutAndShootEnabled = true;
+        internal static bool ramEnabled = true;
+        internal static bool fleeEnabled = true;
+        internal static bool revEnabled = true;
+        internal static bool yellEnabled = true;
+        internal static bool yellInCarEnabled = true;
+        internal static bool shootAndFleeEnabled = true;
 
-        internal static void INIFile()
+        // Webhook bool
+        internal static bool autoLogEnabled = true;
+
+        internal static void INIFileSetup()
         {
             inifile = new InitializationFile(@"Plugins/Lspdfr/RiskierTrafficStops.ini");
             inifile.Create();
@@ -34,26 +33,27 @@ namespace RiskierTrafficStops
             GetBackIn = inifile.ReadEnum("Settings", "Keybind", GetBackIn);
 
             // Checking if an event is enabled
-            GOAS = inifile.ReadBoolean("Settings", "Get Out And Shoot Outcome enabled", GOAS);
-            Ram = inifile.ReadBoolean("Settings", "Ramming Oucome enabled", Ram);
-            Flee = inifile.ReadBoolean("Settings", "Flee Outcome enabled", Flee);
-            Rev = inifile.ReadBoolean("Settings", "Revving Outcome enabled", Rev);
-            Yell = inifile.ReadBoolean("Settings", "Yelling Outcome enabled", Yell);
-            YIC = inifile.ReadBoolean("Settings", "Yelling Car in Outcome enabled", YIC);
-            SAF = inifile.ReadBoolean("Settings", "Shoot And Flee Outcome enabled", YIC);
+            getOutAndShootEnabled = inifile.ReadBoolean("Settings", "Get Out And Shoot Outcome enabled", getOutAndShootEnabled);
+            ramEnabled = inifile.ReadBoolean("Settings", "Ramming Oucome enabled", ramEnabled);
+            fleeEnabled = inifile.ReadBoolean("Settings", "Flee Outcome enabled", fleeEnabled);
+            revEnabled = inifile.ReadBoolean("Settings", "Revving Outcome enabled", revEnabled);
+            yellEnabled = inifile.ReadBoolean("Settings", "Yelling Outcome enabled", yellEnabled);
+            yellInCarEnabled = inifile.ReadBoolean("Settings", "Yelling Car in Outcome enabled", yellInCarEnabled);
+            shootAndFleeEnabled = inifile.ReadBoolean("Settings", "Shoot And Flee Outcome enabled", yellInCarEnabled);
+            autoLogEnabled = inifile.ReadBoolean("Settings", "Automatic Error Reporting enabled", autoLogEnabled);
 
             FilterOutcomes();
         }
 
         internal static void FilterOutcomes()
         {
-            if (GOAS) { enabledScenarios.Add(Main.Scenarios.Shoot); }
-            if (Ram) { enabledScenarios.Add(Main.Scenarios.RamIntoYou); }
-            if (Flee) { enabledScenarios.Add(Main.Scenarios.Run); }
-            if (Rev) { enabledScenarios.Add(Main.Scenarios.RevEngine); }
-            if (Yell) { enabledScenarios.Add(Main.Scenarios.Yell); }
-            if (YIC) { enabledScenarios.Add(Main.Scenarios.YellInCar); }
-            if (SAF) { enabledScenarios.Add(Main.Scenarios.ShootAndFlee); }
+            if (getOutAndShootEnabled) { enabledScenarios.Add(Main.Scenarios.Shoot); }
+            if (ramEnabled) { enabledScenarios.Add(Main.Scenarios.RamIntoYou); }
+            if (fleeEnabled) { enabledScenarios.Add(Main.Scenarios.Run); }
+            if (revEnabled) { enabledScenarios.Add(Main.Scenarios.RevEngine); }
+            if (yellEnabled) { enabledScenarios.Add(Main.Scenarios.Yell); }
+            if (yellInCarEnabled) { enabledScenarios.Add(Main.Scenarios.YellInCar); }
+            if (shootAndFleeEnabled) { enabledScenarios.Add(Main.Scenarios.ShootAndFlee); }
         }
     }
 }

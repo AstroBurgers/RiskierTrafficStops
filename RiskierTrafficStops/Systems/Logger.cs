@@ -22,7 +22,10 @@ namespace RiskierTrafficStops.Systems
         internal static void Error(Exception ex, string Location)
         {
             Game.LogTrivial(String.Format(defaultInfo, "ERROR", ex.ToString()));
-            PostToDiscord.LogToDiscord(ex, Location);
+            if (Settings.autoLogEnabled)
+            {
+                PostToDiscord.LogToDiscord(ex, Location);
+            }
         }
 
         internal static void Debug(string msg)
