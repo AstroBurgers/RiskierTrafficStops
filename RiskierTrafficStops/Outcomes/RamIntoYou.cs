@@ -18,11 +18,9 @@ namespace RiskierTrafficStops.Outcomes
 {
     internal class RamIntoYou
     {
-
         internal static Ped Suspect;
         internal static Vehicle suspectVehicle;
         internal static LHandle PursuitLHandle;
-        internal static Random rndm = new Random();
 
         internal static void RIYOutcome(LHandle handle)
         {

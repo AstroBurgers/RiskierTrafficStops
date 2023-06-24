@@ -38,7 +38,6 @@ namespace RiskierTrafficStops.Outcomes
         internal static Ped Suspect;
         internal static Vehicle suspectVehicle;
         internal static RelationshipGroup SuspectRelateGroup = new RelationshipGroup("Suspect");
-        internal static Random rndm = new Random();
         internal static YellScen ChosenEnum;
         internal static bool GenericBoolean = false;
 

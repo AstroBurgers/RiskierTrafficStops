@@ -12,6 +12,7 @@ namespace RiskierTrafficStops.Systems
     internal class Helper
     {
         internal static Ped MainPlayer => Game.LocalPlayer.Character;
+        internal static Random rndm = new Random(DateTime.Now.Millisecond);
         internal static LHandle SetupPursuit(bool IsSuspectsPulledOver, params Ped[] Suspects)
         {
             if (IsSuspectsPulledOver)
@@ -97,6 +98,24 @@ namespace RiskierTrafficStops.Systems
             "weapon_compactrifle",
             "weapon_militaryrifle",
             "weapon_tacticalrifle",
+        };
+
+        /// <summary>
+        /// List of all Weapons that can be fired from inside of a vehicle
+        /// </summary>
+
+        internal static String[] pistolList =
+        {
+            "weapon_pistol",
+            "weapon_pistol_mk2",
+            "weapon_combatpistol",
+            "weapon_appistol",
+            "weapon_pistol50",
+            "weapon_snspistol",
+            "weapon_snspistol_mk2",
+            "weapon_heavypistol",
+            "weapon_vintagepistol",
+            "weapon_microsmg",
         };
 
         /// <summary>

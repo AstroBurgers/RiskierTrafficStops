@@ -22,7 +22,6 @@ namespace RiskierTrafficStops.Outcomes
         internal static Ped Suspect;
         internal static Vehicle suspectVehicle;
         internal static LHandle PursuitLHandle;
-        internal static Random rndm = new Random();
 
         internal static void ROutcome(LHandle handle)
         {
