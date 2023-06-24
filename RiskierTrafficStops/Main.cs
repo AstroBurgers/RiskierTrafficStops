@@ -20,12 +20,12 @@ namespace RiskierTrafficStops
     {
         internal enum Scenarios
         {
-            Yell,
-            Shoot,
-            Run,
+            GetOutOfCarAndYell,
+            GetOutAndShoot,
+            FleeFromTrafficStop,
             YellInCar,
             RevEngine,
-            RamIntoYou,
+            RamIntoPlayerVehicle,
             ShootAndFlee,
         }
 
@@ -55,11 +55,11 @@ namespace RiskierTrafficStops
         {
             chosenChance = rndm.Next(1, 101);
             chosenOutcome = Settings.enabledScenarios[rndm.Next(Settings.enabledScenarios.Count)];
-            if (chosenChance < Settings.Chance)
+            if (Settings.onPulloverStarted && chosenChance < Settings.Chance)
             {
                 switch (chosenOutcome)
                 {
-                    case Scenarios.Run:
+                    case Scenarios.FleeFromTrafficStop:
                         Normal($"Chosen Scenario: {chosenOutcome.ToString()}");
                         GameFiber.WaitUntil(() => MainPlayer.CurrentVehicle.IsSirenOn);
                         Flee.FleeOutcome(handle);
@@ -78,12 +78,12 @@ namespace RiskierTrafficStops
 
         private static void Events_OnPulloverDriverStopped(LHandle handle)
         {
-            if (!HasEventHappend) { GameFiber.StartNew(() => ChooseEvent(handle)); }
+            if (Settings.onDriverStopped && !HasEventHappend) { GameFiber.StartNew(() => ChooseEvent(handle)); }
         }
 
         private static void Events_OnPulloverOfficerApproachDriver(LHandle handle)
         {
-            if (!HasEventHappend) { GameFiber.StartNew(() => ChooseEvent(handle)); }
+            if (Settings.onOfficerExitsVehicle && !HasEventHappend) { GameFiber.StartNew(() => ChooseEvent(handle)); }
         }
 
         public override void Finally()
@@ -104,17 +104,17 @@ namespace RiskierTrafficStops
                 chosenOutcome = Settings.enabledScenarios[rndm.Next(Settings.enabledScenarios.Count)];
                 switch (chosenOutcome)
                 {
-                    case Scenarios.Yell:
+                    case Scenarios.GetOutOfCarAndYell:
                         Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
                         Yell.YellOutcome(handle);
                         HasEventHappend = true;
                         break;
-                    case Scenarios.Shoot:
+                    case Scenarios.GetOutAndShoot:
                         Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
                         GetOutAndShoot.GOASOutcome(handle);
                         HasEventHappend = true;
                         break;
-                    case Scenarios.Run:
+                    case Scenarios.FleeFromTrafficStop:
                         Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
                         Flee.FleeOutcome(handle);
                         HasEventHappend = true;
@@ -129,7 +129,7 @@ namespace RiskierTrafficStops
                         Rev.ROutcome(handle);
                         HasEventHappend = true;
                         break;
-                    case Scenarios.RamIntoYou:
+                    case Scenarios.RamIntoPlayerVehicle:
                         Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
                         RamIntoYou.RIYOutcome(handle);
                         HasEventHappend = true;
