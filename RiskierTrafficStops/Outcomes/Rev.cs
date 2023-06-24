@@ -35,7 +35,7 @@ namespace RiskierTrafficStops.Outcomes
 
             int Chance = rndm.Next(1, 101);
 
-            if (Chance > 25)
+            if (Chance >= 25)
             {
                 Functions.ForceEndCurrentPullover();
                 PursuitLHandle = SetupPursuit(true, Suspect);
