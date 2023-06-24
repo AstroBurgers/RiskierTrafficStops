@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Deployment.Internal;
 using System.Runtime.Serialization;
+using System.Configuration;
 
 namespace RiskierTrafficStops.Outcomes
 {
@@ -74,34 +75,35 @@ namespace RiskierTrafficStops.Outcomes
                 chosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
                 Debug($"Chosen Outcome: {chosenOutcome.ToString()}");
 
-                if (chosenOutcome == YellScenarioOutcomes.GetBackInVehicle)
+                if (!Suspect.Exists()) { return; }
+
+                switch (chosenOutcome)
                 {
-                    Suspect.Tasks.EnterVehicle(suspectVehicle, -1);
+                    case YellScenarioOutcomes.GetBackInVehicle:
+                        Suspect.Tasks.EnterVehicle(suspectVehicle, -1);
+                        break;
+                    case YellScenarioOutcomes.PullOutKnife:
+                        Suspect.Inventory.GiveNewWeapon(meleeWeapons[rndm.Next(meleeWeapons.Length)], -1, true);
+
+                        Debug("Setting Suspect relationship group");
+                        Suspect.RelationshipGroup = suspectRelationshipGroup;
+                        suspectRelationshipGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
+                        suspectRelationshipGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
+
+                        Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
+                        Suspect.Tasks.FightAgainstClosestHatedTarget(40f, -1);
+                        break;
+                    case YellScenarioOutcomes.ContinueYelling:
+                        GameFiber.StartNew(KeyPressed);
+                        while (!hasPedGottenBackIntoVehicle)
+                        {
+                            GameFiber.Yield();
+                            Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Count)]);
+                            GameFiber.WaitUntil(() => !Suspect.IsAnySpeechPlaying);
+                        }
+                        break;
                 }
-
-                else if (chosenOutcome == YellScenarioOutcomes.PullOutKnife)
-                {
-                    Suspect.Inventory.GiveNewWeapon(meleeWeapons[rndm.Next(meleeWeapons.Length)], -1, true);
-
-                    Debug("Setting Suspect relationship group");
-                    Suspect.RelationshipGroup = suspectRelationshipGroup;
-                    suspectRelationshipGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
-                    suspectRelationshipGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
-
-                    Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
-                    Suspect.Tasks.FightAgainstClosestHatedTarget(40f, -1);
-                }
-
-                else if (chosenOutcome == YellScenarioOutcomes.ContinueYelling)
-                {
-                    GameFiber.StartNew(KeyPressed);
-                    while (!hasPedGottenBackIntoVehicle)
-                    {
-                        GameFiber.Yield();
-                        Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Count)]);
-                        GameFiber.WaitUntil(() => !Suspect.IsAnySpeechPlaying);
-                    }
-                }
+                
             }
             catch (Exception TheseHands)
             {
