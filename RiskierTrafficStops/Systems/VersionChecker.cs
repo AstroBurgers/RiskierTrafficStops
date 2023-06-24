@@ -22,7 +22,7 @@ namespace RiskierTrafficStops.Systems
      .DownloadString(
          "https://www.lcpdfr.com/applications/downloadsng/interface/api.php?do=checkForUpdates&fileId=44036&textOnly=1")
      .Trim();
-                Logger.Debug($"Recieved Version: {onlineVersion} | Local Version: {CurrentVersion}");
+                Logger.Debug($"Online Version: {onlineVersion} | Installed Version: {CurrentVersion}");
                 pluginUpToDate = onlineVersion == CurrentVersion;
                 webSuccess = true;
             }
