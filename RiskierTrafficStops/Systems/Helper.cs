@@ -13,6 +13,14 @@ namespace RiskierTrafficStops.Systems
     {
         internal static Ped MainPlayer => Game.LocalPlayer.Character;
         internal static Random rndm = new Random(DateTime.Now.Millisecond);
+
+        /// <summary>
+        /// Setup a Pursuit with an Array of suspects
+        /// </summary>
+        /// <param name="IsSuspectsPulledOver"></param>
+        /// <param name="Suspects"></param>
+        /// <returns>PursuitLHandle</returns>
+
         internal static LHandle SetupPursuit(bool IsSuspectsPulledOver, params Ped[] Suspects)
         {
             if (IsSuspectsPulledOver)
@@ -30,6 +38,13 @@ namespace RiskierTrafficStops.Systems
             }
             return PursuitLHandle;
         }
+
+        /// <summary>
+        /// Same as SetupPursuit but with a suspect list
+        /// </summary>
+        /// <param name="IsSuspectsPulledOver">If the suspects are in a traffic stop</param>
+        /// <param name="SuspectList">The list of Suspects, Type=Ped</param>
+        /// <returns>PursuitLHandle</returns>
 
         internal static LHandle SetupPursuitWithList(bool IsSuspectsPulledOver, List<Ped> SuspectList)
         {
