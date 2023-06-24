@@ -25,20 +25,27 @@ namespace RiskierTrafficStops.Outcomes
 
         internal static void ROutcome(LHandle handle)
         {
-            Debug("Setting up Suspect and Suspect Vehicle");
-            Suspect = Functions.GetPulloverSuspect(handle);
-            suspectVehicle = Suspect.CurrentVehicle;
-            Suspect.BlockPermanentEvents = true;
-            suspectVehicle.IsPersistent = true;
-
-            RevEngine(Suspect, suspectVehicle, new int[] { 2, 6 }, new int[] { 2, 6 }, 3);
-
-            int Chance = rndm.Next(1, 101);
-
-            if (Chance >= 25)
+            try
             {
-                Functions.ForceEndCurrentPullover();
-                PursuitLHandle = SetupPursuit(true, Suspect);
+                Debug("Setting up Suspect and Suspect Vehicle");
+                Suspect = Functions.GetPulloverSuspect(handle);
+                suspectVehicle = Suspect.CurrentVehicle;
+                Suspect.BlockPermanentEvents = true;
+                suspectVehicle.IsPersistent = true;
+
+                RevEngine(Suspect, suspectVehicle, new int[] { 2, 6 }, new int[] { 2, 6 }, 3);
+
+                int Chance = rndm.Next(1, 101);
+
+                if (Chance >= 25)
+                {
+                    Functions.ForceEndCurrentPullover();
+                    PursuitLHandle = SetupPursuit(true, Suspect);
+                }
+            }
+            catch (Exception e)
+            {
+                Error(e, "Rev.cs");
             }
         }
     }

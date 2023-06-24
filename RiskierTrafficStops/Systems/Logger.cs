@@ -19,9 +19,10 @@ namespace RiskierTrafficStops.Systems
             Game.LogTrivial(String.Format(defaultInfo, "WARNING", msg));
         }
 
-        internal static void Error(string msg)
+        internal static void Error(Exception ex, string Location)
         {
-            Game.LogTrivial(String.Format(defaultInfo, "ERROR", msg));
+            Game.LogTrivial(String.Format(defaultInfo, "ERROR", ex.ToString()));
+            PostToDiscord.LogToDiscord(ex, Location);
         }
 
         internal static void Debug(string msg)

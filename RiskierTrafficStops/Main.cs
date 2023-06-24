@@ -140,7 +140,7 @@ namespace RiskierTrafficStops
                         HasEventHappend = true;
                         break;
                     default:
-                        Error("No outcomes Enabled (or some other shit)");
+                        Debug("No outcomes Enabled (or some other shit)");
                         break;
                 }
             }

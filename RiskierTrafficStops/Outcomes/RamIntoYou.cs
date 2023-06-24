@@ -24,20 +24,26 @@ namespace RiskierTrafficStops.Outcomes
 
         internal static void RIYOutcome(LHandle handle)
         {
+            try
+            {
+                Debug("Setting up Suspect and Suspect Vehicle");
+                Suspect = Functions.GetPulloverSuspect(handle);
+                suspectVehicle = Suspect.CurrentVehicle;
+                Suspect.BlockPermanentEvents = true;
+                Suspect.IsPersistent = true;
+                suspectVehicle.IsPersistent = true;
 
-            Debug("Setting up Suspect and Suspect Vehicle");
-            Suspect = Functions.GetPulloverSuspect(handle);
-            suspectVehicle = Suspect.CurrentVehicle;
-            Suspect.BlockPermanentEvents = true;
-            Suspect.IsPersistent = true;
-            suspectVehicle.IsPersistent = true;
-            
-            List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
-            
-            Suspect.Tasks.DriveToPosition(MainPlayer.LastVehicle.Position, 100f, VehicleDrivingFlags.Reverse, 0.1f);
-            GameFiber.Wait(6500);
-            Suspect.Tasks.Clear();
-            PursuitLHandle = SetupPursuitWithList(true, PedsInVehicle);
+                List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
+
+                Suspect.Tasks.DriveToPosition(MainPlayer.LastVehicle.Position, 100f, VehicleDrivingFlags.Reverse, 0.1f);
+                GameFiber.Wait(6500);
+                Suspect.Tasks.Clear();
+                PursuitLHandle = SetupPursuitWithList(true, PedsInVehicle);
+            }
+            catch (Exception e)
+            {
+                Error(e, "RamIntoYou.cs");
+            }
         }
     }
 }

@@ -24,28 +24,35 @@ namespace RiskierTrafficStops.Outcomes
 
         internal static void FleeOutcome(LHandle handle)
         {
-            Debug("Setting up Suspect and Suspect Vehicle");
-            Suspect = Functions.GetPulloverSuspect(handle);
-            suspectVehicle = Suspect.CurrentVehicle;
-            Suspect.BlockPermanentEvents = true;
-            Suspect.IsPersistent = true;
-            suspectVehicle.IsPersistent = true;
-
-            List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
-
-            int Chance = rndm.Next(1, 101);
-            if (Chance < 50)
+            try
             {
-                PursuitLHandle = SetupPursuitWithList(true, PedsInVehicle);
-            }
+                Debug("Setting up Suspect and Suspect Vehicle");
+                Suspect = Functions.GetPulloverSuspect(handle);
+                suspectVehicle = Suspect.CurrentVehicle;
+                Suspect.BlockPermanentEvents = true;
+                Suspect.IsPersistent = true;
+                suspectVehicle.IsPersistent = true;
 
-            else if (Chance > 50)
-            {
-                foreach (Ped i in PedsInVehicle)
+                List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
+
+                int Chance = rndm.Next(1, 101);
+                if (Chance < 50)
                 {
-                    i.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
+                    PursuitLHandle = SetupPursuitWithList(true, PedsInVehicle);
                 }
-                PursuitLHandle = SetupPursuitWithList(true, PedsInVehicle);
+
+                else if (Chance > 50)
+                {
+                    foreach (Ped i in PedsInVehicle)
+                    {
+                        i.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
+                    }
+                    PursuitLHandle = SetupPursuitWithList(true, PedsInVehicle);
+                }
+            }
+            catch (Exception e)
+            {
+                Error(e, "Flee.cs");
             }
         }
     }

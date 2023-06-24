@@ -61,6 +61,7 @@
     <Compile Include="Outcomes\YellInCar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Systems\PostToDiscord.cs" />
     <Compile Include="Systems\VersionChecker.cs" />
   </ItemGroup>
   <ItemGroup>

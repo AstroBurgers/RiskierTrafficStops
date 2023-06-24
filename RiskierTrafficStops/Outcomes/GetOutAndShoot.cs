@@ -87,15 +87,13 @@ namespace RiskierTrafficStops.Outcomes
                     }
                 }
             }
-            catch (System.Threading.ThreadAbortException TheseHands)
+            catch (System.Threading.ThreadAbortException e)
             {
-                string ThrowHands = TheseHands.ToString();
-                Error($"{ThrowHands}");
+                Error(e, "GetOutAndShoot.cs");
             }
-            catch (Exception TheseHands)
+            catch (Exception e)
             {
-                string ThrowHands = TheseHands.ToString();
-                Error($"{ThrowHands}");
+                Error(e, "GetOutAndShoot.cs");
             }
 
         }

@@ -48,7 +48,7 @@ namespace RiskierTrafficStops.Outcomes
                 Suspect.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
                 Debug("Making Suspect Face Player");
                 NativeFunction.Natives.x5AD23D40115353AC(Suspect, MainPlayer, -1);
-                
+
                 Debug("Making suspect Yell at Player");
                 int timesSpoken = 0;
                 while (Suspect && timesSpoken < 4)
@@ -85,12 +85,11 @@ namespace RiskierTrafficStops.Outcomes
                         }
                         break;
                 }
-                
+
             }
-            catch (Exception TheseHands)
+            catch (Exception e)
             {
-                string ThrowHands = TheseHands.ToString();
-                Error($"{ThrowHands}");
+                Error(e, "location");
             }
         }
         internal static void KeyPressed()

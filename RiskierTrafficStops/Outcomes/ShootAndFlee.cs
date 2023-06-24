@@ -19,28 +19,35 @@ namespace RiskierTrafficStops.Outcomes
         internal static LHandle PursuitLHandle;
         internal static void SAFOutcome(LHandle handle)
         {
-            Debug("Setting up Suspect");
-
-            Suspect = Functions.GetPulloverSuspect(handle);
-            Debug("Setting up suspectVehicle");
-            suspectVehicle = Suspect.CurrentVehicle;
-            Suspect.BlockPermanentEvents = true;
-            Suspect.IsPersistent = true;
-            suspectVehicle.IsPersistent = true;
-
-            Debug("Adding all suspect in the vehicle to a list");
-
-            List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
-            Debug($"Peds In Vehicle: {PedsInVehicle.Count}");
-
-            int outcome = rndm.Next(1, 101);
-            if (outcome >= 50)
+            try
             {
-                GameFiber.StartNew(() => AllSuspects(PedsInVehicle));
+                Debug("Setting up Suspect");
+
+                Suspect = Functions.GetPulloverSuspect(handle);
+                Debug("Setting up suspectVehicle");
+                suspectVehicle = Suspect.CurrentVehicle;
+                Suspect.BlockPermanentEvents = true;
+                Suspect.IsPersistent = true;
+                suspectVehicle.IsPersistent = true;
+
+                Debug("Adding all suspect in the vehicle to a list");
+
+                List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
+                Debug($"Peds In Vehicle: {PedsInVehicle.Count}");
+
+                int outcome = rndm.Next(1, 101);
+                if (outcome >= 50)
+                {
+                    GameFiber.StartNew(() => AllSuspects(PedsInVehicle));
+                }
+                else if (outcome <= 50)
+                {
+                    GameFiber.StartNew(() => DriverOnly(PedsInVehicle));
+                }
             }
-            else if (outcome <= 50)
+            catch (Exception e)
             {
-                GameFiber.StartNew(() => DriverOnly(PedsInVehicle));
+                Error(e, "ShootAndFlee.cs");
             }
         }
 

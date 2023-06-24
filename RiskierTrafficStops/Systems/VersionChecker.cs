@@ -2,13 +2,14 @@
 using System.Reflection;
 using System.Windows.Forms;
 using Rage;
+using static RiskierTrafficStops.Systems.Logger;
 
 namespace RiskierTrafficStops.Systems
 {
     internal class VersionChecker
     {
         internal static string CurrentVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
-
+        internal static string onlineVersion;
         internal static void CheckForUpdates()
         {
             var webClient = new WebClient();
@@ -17,19 +18,18 @@ namespace RiskierTrafficStops.Systems
 
             try
             {
-                var receivedVersion = webClient
+                onlineVersion = webClient
      .DownloadString(
          "https://www.lcpdfr.com/applications/downloadsng/interface/api.php?do=checkForUpdates&fileId=44036&textOnly=1")
      .Trim();
-                Logger.Debug($"Recieved Version: {receivedVersion} | Local Version: {CurrentVersion}");
-                pluginUpToDate = receivedVersion == CurrentVersion;
+                Logger.Debug($"Recieved Version: {onlineVersion} | Local Version: {CurrentVersion}");
+                pluginUpToDate = onlineVersion == CurrentVersion;
                 webSuccess = true;
             }
-            catch (WebException TheseHands)
+            catch (WebException e)
             {
-                string ThrowHands = TheseHands.ToString();
-                Logger.Error(ThrowHands);
-                Logger.Error("Please check your internet connection");
+                Error(e, "VersionChecker.cs");
+                Debug("Please check your internet connection");
             }
             finally
             {
