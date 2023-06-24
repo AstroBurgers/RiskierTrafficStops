@@ -18,11 +18,11 @@ namespace RiskierTrafficStops.Outcomes
 {
     internal class Yell
     {
-        internal enum YellScen
+        internal enum YellScenarioOutcomes
         {
-            GetIn,
-            YellMore,
-            PullKnife
+            GetBackInVehicle,
+            ContinueYelling,
+            PullOutKnife
         }
 
         internal static List<string> Voicelines = new List<string>()
@@ -37,8 +37,8 @@ namespace RiskierTrafficStops.Outcomes
 
         internal static Ped Suspect;
         internal static Vehicle suspectVehicle;
-        internal static RelationshipGroup SuspectRelateGroup = new RelationshipGroup("Suspect");
-        internal static YellScen ChosenEnum;
+        internal static RelationshipGroup suspectRelationshipGroup = new RelationshipGroup("Suspect");
+        internal static YellScenarioOutcomes chosenOutcome;
         internal static bool hasPedGottenBackIntoVehicle = false;
 
 
@@ -53,39 +53,46 @@ namespace RiskierTrafficStops.Outcomes
                 Suspect.IsPersistent = true;
                 suspectVehicle.IsPersistent = true;
 
+                Debug("Making Suspect Leave Vehicle");
                 Suspect.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
+                Debug("Making Suspect Face Player");
                 NativeFunction.Natives.x5AD23D40115353AC(Suspect, MainPlayer, -1);
+                
+                Debug("Making suspect Yell at Player");
                 int timesSpoken = 0;
                 while (Suspect && timesSpoken < 4)
                 {
                     GameFiber.Yield();
                     timesSpoken += 1;
+                    Debug("Suspect Is Yelling");
                     Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Count)]);
                     GameFiber.WaitUntil(() => !Suspect.IsAnySpeechPlaying);
                 }
 
-                YellScen[] ScenarioList = (YellScen[])Enum.GetValues(typeof(YellScen));
-                ChosenEnum = ScenarioList[rndm.Next(ScenarioList.Length)];
+                Debug("Choosing outome from YellScenarioOutcomes");
+                YellScenarioOutcomes[] ScenarioList = (YellScenarioOutcomes[])Enum.GetValues(typeof(YellScenarioOutcomes));
+                chosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
+                Debug($"Chosen Outcome: {chosenOutcome.ToString()}");
 
-                if (ChosenEnum == YellScen.GetIn)
+                if (chosenOutcome == YellScenarioOutcomes.GetBackInVehicle)
                 {
                     Suspect.Tasks.EnterVehicle(suspectVehicle, -1);
                 }
 
-                else if (ChosenEnum == YellScen.PullKnife)
+                else if (chosenOutcome == YellScenarioOutcomes.PullOutKnife)
                 {
                     Suspect.Inventory.GiveNewWeapon(meleeWeapons[rndm.Next(meleeWeapons.Length)], -1, true);
 
                     Debug("Setting Suspect relationship group");
-                    Suspect.RelationshipGroup = SuspectRelateGroup;
-                    SuspectRelateGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
-                    SuspectRelateGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
+                    Suspect.RelationshipGroup = suspectRelationshipGroup;
+                    suspectRelationshipGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
+                    suspectRelationshipGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
 
                     Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
                     Suspect.Tasks.FightAgainstClosestHatedTarget(40f, -1);
                 }
 
-                else if (ChosenEnum == YellScen.YellMore)
+                else if (chosenOutcome == YellScenarioOutcomes.ContinueYelling)
                 {
                     GameFiber.StartNew(KeyPressed);
                     while (!hasPedGottenBackIntoVehicle)
