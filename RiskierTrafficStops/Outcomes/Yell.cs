@@ -39,7 +39,7 @@ namespace RiskierTrafficStops.Outcomes
         internal static Vehicle suspectVehicle;
         internal static RelationshipGroup SuspectRelateGroup = new RelationshipGroup("Suspect");
         internal static YellScen ChosenEnum;
-        internal static bool GenericBoolean = false;
+        internal static bool hasPedGottenBackIntoVehicle = false;
 
 
         internal static void YellOutcome(LHandle handle)
@@ -89,7 +89,7 @@ namespace RiskierTrafficStops.Outcomes
                 else if (ChosenEnum == YellScen.YellMore)
                 {
                     GameFiber.StartNew(KeyPressed);
-                    while (!GenericBoolean)
+                    while (!hasPedGottenBackIntoVehicle)
                     {
                         GameFiber.Yield();
                         Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Count)]);
@@ -106,12 +106,12 @@ namespace RiskierTrafficStops.Outcomes
         internal static void KeyPressed()
         {
             Game.DisplayHelp($"~BLIP_INFO_ICON~ Press {Settings.GetBackIn.ToString()} To to have the suspect get back in their vehicle");
-            while (!GenericBoolean)
+            while (!hasPedGottenBackIntoVehicle)
             {
                 GameFiber.Yield();
                 if (Game.IsKeyDown(Settings.GetBackIn))
                 {
-                    GenericBoolean = true;
+                    hasPedGottenBackIntoVehicle = true;
                     Suspect.Tasks.EnterVehicle(suspectVehicle, -1);
                 }
             }
