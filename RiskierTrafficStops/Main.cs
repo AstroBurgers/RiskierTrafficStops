@@ -32,12 +32,10 @@ namespace RiskierTrafficStops
         internal static bool HasEventHappend = false;
         internal static Scenarios chosenOutcome;
         internal static int chosenChance;
-        internal static Scenarios[] ScenarioList = (Scenarios[])Enum.GetValues(typeof(Scenarios));
         public override void Initialize()
         {
             Functions.OnOnDutyStateChanged += Functions_OnOnDutyStateChanged;
         }
-
         private static void Functions_OnOnDutyStateChanged(bool onDuty)
         {
             if (onDuty)
@@ -107,37 +105,37 @@ namespace RiskierTrafficStops
                 switch (chosenOutcome)
                 {
                     case Scenarios.Yell:
-                        Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
+                        Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
                         Yell.YellOutcome(handle);
                         HasEventHappend = true;
                         break;
                     case Scenarios.Shoot:
-                        Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
+                        Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
                         GetOutAndShoot.GOASOutcome(handle);
                         HasEventHappend = true;
                         break;
                     case Scenarios.Run:
-                        Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
+                        Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
                         Flee.FleeOutcome(handle);
                         HasEventHappend = true;
                         break;
                     case Scenarios.YellInCar:
-                        Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
+                        Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
                         YellInCar.YICEventHandler(handle);
                         HasEventHappend = true;
                         break;
                     case Scenarios.RevEngine:
-                        Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
+                        Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
                         Rev.ROutcome(handle);
                         HasEventHappend = true;
                         break;
                     case Scenarios.RamIntoYou:
-                        Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
+                        Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
                         RamIntoYou.RIYOutcome(handle);
                         HasEventHappend = true;
                         break;
                     case Scenarios.ShootAndFlee:
-                        Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
+                        Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
                         ShootAndFlee.SAFOutcome(handle);
                         HasEventHappend = true;
                         break;
