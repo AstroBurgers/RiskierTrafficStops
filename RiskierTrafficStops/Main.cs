@@ -128,7 +128,6 @@ namespace RiskierTrafficStops
                             {
                                 chosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
                                 Normal("Chosen event is disabled, choosing a new one...");
-                                break;
                             }
                             break;
                         case Scenarios.Shoot:
@@ -143,7 +142,6 @@ namespace RiskierTrafficStops
                             {
                                 chosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
                                 Normal("Chosen event is disabled, choosing a new one...");
-                                break;
                             }
                             break;
                         case Scenarios.Run:
@@ -157,7 +155,6 @@ namespace RiskierTrafficStops
                             {
                                 chosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
                                 Normal("Chosen event is disabled, choosing a new one...");
-                                break;
                             }
                             break;
                         case Scenarios.YellInCar:
@@ -171,7 +168,6 @@ namespace RiskierTrafficStops
                             {
                                 chosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
                                 Normal("Chosen event is disabled, choosing a new one...");
-                                break;
                             }
                             break;
                         case Scenarios.RevEngine:
@@ -185,7 +181,6 @@ namespace RiskierTrafficStops
                             {
                                 chosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
                                 Normal("Chosen event is disabled, choosing a new one...");
-                                break;
                             }
                             break;
                         case Scenarios.RamIntoYou:
@@ -199,7 +194,6 @@ namespace RiskierTrafficStops
                             {
                                 chosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
                                 Normal("Chosen event is disabled, choosing a new one...");
-                                break;
                             }
                             break;
                     }
