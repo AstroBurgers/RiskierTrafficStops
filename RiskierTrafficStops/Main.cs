@@ -55,7 +55,7 @@ namespace RiskierTrafficStops
         {
             chosenChance = rndm.Next(1, 101);
             chosenOutcome = Settings.enabledScenarios[rndm.Next(Settings.enabledScenarios.Count)];
-            if (Settings.onPulloverStarted && chosenChance < Settings.Chance)
+            if (chosenChance < Settings.Chance)
             {
                 switch (chosenOutcome)
                 {
@@ -79,12 +79,12 @@ namespace RiskierTrafficStops
 
         private static void Events_OnPulloverDriverStopped(LHandle handle)
         {
-            if (Settings.onDriverStopped && !HasEventHappend) { GameFiber.StartNew(() => ChooseEvent(handle)); }
+            if (!HasEventHappend) { GameFiber.StartNew(() => ChooseEvent(handle)); }
         }
 
         private static void Events_OnPulloverOfficerApproachDriver(LHandle handle)
         {
-            if (Settings.onOfficerExitsVehicle && !HasEventHappend) { GameFiber.StartNew(() => ChooseEvent(handle)); }
+            if (!HasEventHappend) { GameFiber.StartNew(() => ChooseEvent(handle)); }
         }
 
         public override void Finally()

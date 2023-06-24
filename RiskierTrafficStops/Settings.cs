@@ -22,11 +22,6 @@ namespace RiskierTrafficStops
         internal static bool yellInCarEnabled = true;
         internal static bool shootAndFleeEnabled = true;
 
-        // Stage Booleans
-        internal static bool onOfficerExitsVehicle = true;
-        internal static bool onDriverStopped = true;
-        internal static bool onPulloverStarted = true;
-
         // Webhook boolean
         internal static bool autoLogEnabled = true;
 
@@ -49,11 +44,6 @@ namespace RiskierTrafficStops
             
             // Reading Auto Log Boolean
             autoLogEnabled = inifile.ReadBoolean("Settings", "Automatic Error Reporting enabled", autoLogEnabled);
-
-            // Reading Stage Booleans
-            onDriverStopped = inifile.ReadBoolean("Settings", "On Driver Stopped", onDriverStopped);
-            onOfficerExitsVehicle = inifile.ReadBoolean("Settings", "On Officer Exits Vehicle", onOfficerExitsVehicle);
-            onPulloverStarted = inifile.ReadBoolean("Settings", "On Pullover Started", onPulloverStarted);
 
             FilterOutcomes();
         }
