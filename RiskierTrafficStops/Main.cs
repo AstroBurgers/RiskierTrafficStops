@@ -26,6 +26,7 @@ namespace RiskierTrafficStops
             YellInCar,
             RevEngine,
             RamIntoYou,
+            ShootAndFlee,
         }
 
         internal static bool HasEventHappend = false;
@@ -54,7 +55,7 @@ namespace RiskierTrafficStops
 
         private static void Events_OnPulloverStarted(LHandle handle)
         {
-            /*chosenChance = rndm.Next(1, 101);
+            chosenChance = rndm.Next(1, 101);
             chosenOutcome = Settings.enabledScenarios[rndm.Next(Settings.enabledScenarios.Count)];
             if (chosenChance < Settings.Chance)
             {
@@ -69,7 +70,7 @@ namespace RiskierTrafficStops
                         Normal("Event not enabled");
                         break;
                 }
-            }*/
+            }
         }
 
         private static void Events_OnPulloverEnded(LHandle pullover, bool normalEnding)
@@ -79,17 +80,12 @@ namespace RiskierTrafficStops
 
         private static void Events_OnPulloverDriverStopped(LHandle handle)
         {
-            //if (!HasEventHappend) { GameFiber.StartNew(() => ChooseEvent(handle)); }
+            if (!HasEventHappend) { GameFiber.StartNew(() => ChooseEvent(handle)); }
         }
 
         private static void Events_OnPulloverOfficerApproachDriver(LHandle handle)
         {
-            if (!HasEventHappend)
-            {
-                ShootAndFlee.SAFOutcome(handle);
-                HasEventHappend = true;
-            }
-            //if (!HasEventHappend) { GameFiber.StartNew(() => ChooseEvent(handle)); }
+            if (!HasEventHappend) { GameFiber.StartNew(() => ChooseEvent(handle)); }
         }
 
         public override void Finally()
@@ -139,6 +135,14 @@ namespace RiskierTrafficStops
                         Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
                         RamIntoYou.RIYOutcome(handle);
                         HasEventHappend = true;
+                        break;
+                    case Scenarios.ShootAndFlee:
+                        Normal($"Chosen Scenario: {ChosenEnum.ToString()}");
+                        ShootAndFlee.SAFOutcome(handle);
+                        HasEventHappend = true;
+                        break;
+                    default:
+                        Error("No outcomes Enabled (or some other shit)");
                         break;
                 }
             }

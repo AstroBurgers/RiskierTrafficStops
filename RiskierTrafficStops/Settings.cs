@@ -23,6 +23,7 @@ namespace RiskierTrafficStops
         internal static bool Rev = true;
         internal static bool Yell = true;
         internal static bool YIC = true;
+        internal static bool SAF = true;
 
         internal static void INIFile()
         {
@@ -39,6 +40,7 @@ namespace RiskierTrafficStops
             Rev = inifile.ReadBoolean("Settings", "Revving Outcome enabled", Rev);
             Yell = inifile.ReadBoolean("Settings", "Yelling Outcome enabled", Yell);
             YIC = inifile.ReadBoolean("Settings", "Yelling Car in Outcome enabled", YIC);
+            SAF = inifile.ReadBoolean("Settings", "Shoot And Flee Outcome enabled", YIC);
 
             FilterOutcomes();
         }
@@ -51,6 +53,7 @@ namespace RiskierTrafficStops
             if (Rev) { enabledScenarios.Add(Main.Scenarios.RevEngine); }
             if (Yell) { enabledScenarios.Add(Main.Scenarios.Yell); }
             if (YIC) { enabledScenarios.Add(Main.Scenarios.YellInCar); }
+            if (SAF) { enabledScenarios.Add(Main.Scenarios.ShootAndFlee); }
         }
     }
 }

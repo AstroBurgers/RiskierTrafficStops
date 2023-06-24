@@ -55,12 +55,12 @@ namespace RiskierTrafficStops.Outcomes
             {
                 if (i.Exists())
                 {
-                    if (!i.Inventory.HasLoadedWeapon) { Debug($"Giving Suspect({i}) weapon: {Weapon}"); i.Inventory.GiveNewWeapon(Weapon, 100, true); }
+                    if (!i.Inventory.HasLoadedWeapon) { Debug($"Giving Suspect weapon: {Weapon}"); i.Inventory.GiveNewWeapon(Weapon, 100, true); }
 
-                    Debug($"Setting Suspect({i}) relationship group");
+                    Debug($"Setting Suspect relationship group");
                     i.RelationshipGroup = SuspectRelateGroup;
-                    Debug($"Giving Suspect({i}) FightAgainstClosestHatedTarget Task");
-                    i.Tasks.FightAgainstClosestHatedTarget(40f, 3750).WaitForCompletion(3750);
+                    Debug($"Giving Suspect FightAgainstClosestHatedTarget Task");
+                    NativeFunction.Natives.TASK_VEHICLE_SHOOT_AT_PED(i, MainPlayer, 20.0f);
                 }
             }
 
@@ -82,7 +82,8 @@ namespace RiskierTrafficStops.Outcomes
             Debug("Setting up Suspect weapon/tasks");
             if (!Suspect.Inventory.HasLoadedWeapon) { Debug("Giving Suspect Weapon"); Suspect.Inventory.Weapons.Add(Weapon); }
             Debug("Giving suspect tasks");
-            Suspect.Tasks.FightAgainstClosestHatedTarget(40f, 3750).WaitForCompletion(3750);
+            NativeFunction.Natives.TASK_VEHICLE_SHOOT_AT_PED(Suspect, MainPlayer, 20.0f);
+            GameFiber.Wait(3750);
             PursuitLHandle = SetupPursuitWithList(true, Peds);
         }
     }

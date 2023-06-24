@@ -30,16 +30,22 @@ namespace RiskierTrafficStops.Outcomes
             Suspect.BlockPermanentEvents = true;
             Suspect.IsPersistent = true;
             suspectVehicle.IsPersistent = true;
+
+            List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
+
             int Chance = rndm.Next(1, 101);
             if (Chance < 50)
             {
-                PursuitLHandle = SetupPursuit(true, Suspect);
+                PursuitLHandle = SetupPursuitWithList(true, PedsInVehicle);
             }
 
             else if (Chance > 50)
             {
-                Suspect.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
-                PursuitLHandle = SetupPursuit(true, Suspect);
+                foreach (Ped i in PedsInVehicle)
+                {
+                    i.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
+                }
+                PursuitLHandle = SetupPursuitWithList(true, PedsInVehicle);
             }
         }
     }
