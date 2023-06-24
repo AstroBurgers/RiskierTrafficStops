@@ -71,14 +71,13 @@ namespace RiskierTrafficStops.Outcomes
 
                 foreach (Ped i in PedsInVehicle)
                 {
-
-                    if (Chance < 45)
+                    if (Chance <= 45)
                     {
                         Debug("Making Suspect enter vehicle");
                         PursuitOutcome(PedsInVehicle);
                         break;
                     }
-                    else if (Chance > 45)
+                    else if (Chance >= 45)
                     {
                         Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
                         if (!PulloverEnded)
