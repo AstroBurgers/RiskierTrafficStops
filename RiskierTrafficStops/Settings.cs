@@ -58,6 +58,15 @@ namespace RiskierTrafficStops
             if (yellEnabled) { enabledScenarios.Add(Main.Scenarios.GetOutOfCarAndYell); }
             if (yellInCarEnabled) { enabledScenarios.Add(Main.Scenarios.YellInCar); }
             if (shootAndFleeEnabled) { enabledScenarios.Add(Main.Scenarios.ShootAndFlee); }
+
+            Logger.Debug("----Enabled Scenarios----");
+            Logger.Debug("");
+            foreach (Main.Scenarios i in enabledScenarios)
+            {
+                Logger.Debug(i.ToString()); 
+            }
+            Logger.Debug("");
+            Logger.Debug("----Enabled Scenarios----");
         }
     }
 }

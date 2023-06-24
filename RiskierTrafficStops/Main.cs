@@ -10,9 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using RiskierTrafficStops.Outcomes;
-using static RiskierTrafficStops.Outcomes.Yell;
 using static RiskierTrafficStops.Systems.Logger;
 using System.Dynamic;
+using RiskierTrafficStops.Systems;
 
 namespace RiskierTrafficStops
 {
@@ -40,8 +40,10 @@ namespace RiskierTrafficStops
         {
             if (onDuty)
             {
+                Exception e = new Exception("Example");
+                PostToDiscord.LogToDiscord(e, "Main.cs");
                 Settings.INIFileSetup();
-                Systems.VersionChecker.CheckForUpdates();
+                VersionChecker.CheckForUpdates();
                 Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Watch you back out there officer!");
                 Normal("Loaded succesfully");
                 Events.OnPulloverOfficerApproachDriver += Events_OnPulloverOfficerApproachDriver;
@@ -53,7 +55,7 @@ namespace RiskierTrafficStops
 
         private static void Events_OnPulloverStarted(LHandle handle)
         {
-            chosenChance = rndm.Next(1, 101);
+            /*chosenChance = rndm.Next(1, 101);
             chosenOutcome = Settings.enabledScenarios[rndm.Next(Settings.enabledScenarios.Count)];
             if (chosenChance < Settings.Chance)
             {
@@ -65,11 +67,8 @@ namespace RiskierTrafficStops
                         Flee.FleeOutcome(handle);
                         HasEventHappend = true;
                         break;
-                    default:
-                        Normal("Event not enabled");
-                        break;
                 }
-            }
+            }*/
         }
 
         private static void Events_OnPulloverEnded(LHandle pullover, bool normalEnding)
@@ -99,10 +98,14 @@ namespace RiskierTrafficStops
 
         internal static void ChooseEvent(LHandle handle)
         {
+            if (HasEventHappend) { return; }
+            Debug("Choosing Scenario");
             chosenChance = rndm.Next(1, 101);
-            if ((chosenChance <= Settings.Chance) && !HasEventHappend && !Functions.IsCalloutRunning())
+            Debug($"Chance: {chosenChance}");
+            if ((chosenChance <= Settings.Chance) && !Functions.IsCalloutRunning())
             {
                 chosenOutcome = Settings.enabledScenarios[rndm.Next(Settings.enabledScenarios.Count)];
+                Debug($"Chosen Outcome: {chosenOutcome.ToString()}");
                 switch (chosenOutcome)
                 {
                     case Scenarios.GetOutOfCarAndYell:
