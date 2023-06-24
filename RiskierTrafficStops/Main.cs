@@ -40,8 +40,6 @@ namespace RiskierTrafficStops
         {
             if (onDuty)
             {
-                Exception e = new Exception("Example");
-                PostToDiscord.LogToDiscord(e, "Main.cs");
                 Settings.INIFileSetup();
                 VersionChecker.CheckForUpdates();
                 Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Watch you back out there officer!");
@@ -98,11 +96,13 @@ namespace RiskierTrafficStops
 
         internal static void ChooseEvent(LHandle handle)
         {
+            Debug($"HasEventHappend: {HasEventHappend}");
             if (HasEventHappend) { return; }
+            HasEventHappend = true;
             Debug("Choosing Scenario");
             chosenChance = rndm.Next(1, 101);
             Debug($"Chance: {chosenChance}");
-            if ((chosenChance <= Settings.Chance) && !Functions.IsCalloutRunning())
+            if ((chosenChance <= Settings.Chance))
             {
                 chosenOutcome = Settings.enabledScenarios[rndm.Next(Settings.enabledScenarios.Count)];
                 Debug($"Chosen Outcome: {chosenOutcome.ToString()}");
@@ -111,37 +111,32 @@ namespace RiskierTrafficStops
                     case Scenarios.GetOutOfCarAndYell:
                         Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
                         Yell.YellOutcome(handle);
-                        HasEventHappend = true;
                         break;
                     case Scenarios.GetOutAndShoot:
                         Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
                         GetOutAndShoot.GOASOutcome(handle);
-                        HasEventHappend = true;
                         break;
                     case Scenarios.FleeFromTrafficStop:
                         Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
                         Flee.FleeOutcome(handle);
-                        HasEventHappend = true;
                         break;
                     case Scenarios.YellInCar:
                         Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
                         YellInCar.YICEventHandler(handle);
-                        HasEventHappend = true;
                         break;
                     case Scenarios.RevEngine:
                         Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
                         Rev.ROutcome(handle);
-                        HasEventHappend = true;
                         break;
                     case Scenarios.RamIntoPlayerVehicle:
                         Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
                         RamIntoYou.RIYOutcome(handle);
-                        HasEventHappend = true;
+                        
                         break;
                     case Scenarios.ShootAndFlee:
                         Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
                         ShootAndFlee.SAFOutcome(handle);
-                        HasEventHappend = true;
+                        
                         break;
                     default:
                         Debug("No outcomes Enabled (or some other shit)");
