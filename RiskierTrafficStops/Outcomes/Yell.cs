@@ -83,15 +83,7 @@ namespace RiskierTrafficStops.Outcomes
                         Suspect.Tasks.EnterVehicle(suspectVehicle, -1);
                         break;
                     case YellScenarioOutcomes.PullOutKnife:
-                        Suspect.Inventory.GiveNewWeapon(meleeWeapons[rndm.Next(meleeWeapons.Length)], -1, true);
-
-                        Debug("Setting Suspect relationship group");
-                        Suspect.RelationshipGroup = suspectRelationshipGroup;
-                        suspectRelationshipGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
-                        suspectRelationshipGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
-
-                        Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
-                        Suspect.Tasks.FightAgainstClosestHatedTarget(40f, -1);
+                        OutcomePullKnife();
                         break;
                     case YellScenarioOutcomes.ContinueYelling:
                         GameFiber.StartNew(KeyPressed);
@@ -123,6 +115,19 @@ namespace RiskierTrafficStops.Outcomes
                     Suspect.Tasks.EnterVehicle(suspectVehicle, -1);
                 }
             }
+        }
+
+        internal static void OutcomePullKnife()
+        {
+            Suspect.Inventory.GiveNewWeapon(meleeWeapons[rndm.Next(meleeWeapons.Length)], -1, true);
+
+            Debug("Setting Suspect relationship group");
+            Suspect.RelationshipGroup = suspectRelationshipGroup;
+            suspectRelationshipGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
+            suspectRelationshipGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
+
+            Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
+            Suspect.Tasks.FightAgainstClosestHatedTarget(40f, -1);
         }
     }
 }
