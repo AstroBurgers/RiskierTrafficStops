@@ -63,6 +63,7 @@ namespace RiskierTrafficStops
                         Normal($"Chosen Scenario: {chosenOutcome.ToString()}");
                         GameFiber.WaitUntil(() => MainPlayer.CurrentVehicle.IsSirenOn);
                         Flee.FleeOutcome(handle);
+                        HasEventHappend = true;
                         break;
                     default:
                         Normal("Event not enabled");
