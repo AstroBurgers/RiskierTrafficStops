@@ -40,7 +40,7 @@ namespace RiskierTrafficStops
         {
             if (onDuty)
             {
-                Settings.INIFile();
+                Settings.INIFileSetup();
                 Systems.VersionChecker.CheckForUpdates();
                 Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Watch you back out there officer!");
                 Normal("Loaded succesfully");
