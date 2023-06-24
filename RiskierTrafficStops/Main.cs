@@ -28,7 +28,6 @@ namespace RiskierTrafficStops
             RamIntoYou,
         }
 
-        internal static Random rndm = new Random(DateTime.Now.Millisecond);
         internal static bool HasEventHappend = false;
         internal static Scenarios chosenOutcome;
         internal static int chosenChance;
@@ -56,23 +55,18 @@ namespace RiskierTrafficStops
         private static void Events_OnPulloverStarted(LHandle handle)
         {
             chosenChance = rndm.Next(1, 101);
-            Scenarios[] ScenarioList = (Scenarios[])Enum.GetValues(typeof(Scenarios));
-            chosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
+            chosenOutcome = Settings.enabledScenarios[rndm.Next(Settings.enabledScenarios.Count)];
             if (chosenChance < Settings.Chance)
             {
                 switch (chosenOutcome)
                 {
                     case Scenarios.Run:
-                        if (Settings.Flee)
-                        {
-                            Normal($"Chosen Scenario: {chosenOutcome.ToString()}");
-                            GameFiber.WaitUntil(() => MainPlayer.CurrentVehicle.IsSirenOn);
-                            Flee.FleeOutcome(handle);
-                        }
-                        else
-                        {
-                            Normal("Chosen event is disabled");
-                        }
+                        Normal($"Chosen Scenario: {chosenOutcome.ToString()}");
+                        GameFiber.WaitUntil(() => MainPlayer.CurrentVehicle.IsSirenOn);
+                        Flee.FleeOutcome(handle);
+                        break;
+                    default:
+                        Normal("Event not enabled");
                         break;
                 }
             }
