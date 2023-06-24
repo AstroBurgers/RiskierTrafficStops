@@ -53,7 +53,7 @@ namespace RiskierTrafficStops.Outcomes
                     string Weapon = WeaponList[rndm.Next(WeaponList.Length)];
                     if (i.Exists())
                     {
-                        if (!i.Inventory.HasLoadedWeapon)
+                        if (!i.Inventory.HasLoadedWeapon) { }
                         {
                             Debug($"Giving Suspect weapon: {Weapon}");
                             i.Inventory.GiveNewWeapon(Weapon, 100, true);

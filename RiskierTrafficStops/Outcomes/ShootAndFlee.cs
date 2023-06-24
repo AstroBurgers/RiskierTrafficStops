@@ -37,20 +37,45 @@ namespace RiskierTrafficStops.Outcomes
 
             SuspectRelateGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
             SuspectRelateGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
+
+            
         }
 
 
         internal static void AllSuspects(List<Ped> Peds)
         {
+            SuspectRelateGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
+            SuspectRelateGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
+
             string Weapon = pistolList[rndm.Next(pistolList.Length)];
             foreach (Ped i in Peds)
             {
                 if (i.Exists())
                 {
-                    Debug($"Giving Suspect weapon: {Weapon}");
-                    i.Inventory.GiveNewWeapon(Weapon, 100, true);
+                    if (!i.Inventory.HasLoadedWeapon) { Debug($"Giving Suspect({i}) weapon: {Weapon}"); i.Inventory.GiveNewWeapon(Weapon, 100, true); }
+
+                    Debug($"Setting Suspect({i}) relationship group");
+                    i.RelationshipGroup = SuspectRelateGroup;
+                    Debug($"Giving Suspect({i}) FightAgainstClosestHatedTarget Task");
+                    i.Tasks.FightAgainstClosestHatedTarget(40f, 3750).WaitForCompletion(3750);
                 }
             }
+
+            Debug("Wating 3750ms");
+
+            GameFiber.Wait(3750);
+
+            PursuitLHandle = SetupPursuitWithList(true, Peds);
+        }
+
+        internal static void DriverOnly()
+        {
+            SuspectRelateGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
+            SuspectRelateGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
+
+            string Weapon = pistolList[rndm.Next(pistolList.Length)];
+
+            
         }
     }
 }
