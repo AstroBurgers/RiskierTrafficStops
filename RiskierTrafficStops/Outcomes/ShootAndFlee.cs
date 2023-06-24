@@ -33,12 +33,15 @@ namespace RiskierTrafficStops.Outcomes
             List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
             Debug($"Peds In Vehicle: {PedsInVehicle.Count}");
 
-            Debug("Setting up SuspectRelateGroup");
-
-            SuspectRelateGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
-            SuspectRelateGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
-
-            
+            int outcome = rndm.Next(1, 101);
+            if (outcome >= 50)
+            {
+                GameFiber.StartNew(() => AllSuspects(PedsInVehicle));
+            }
+            else if (outcome <= 50)
+            {
+                GameFiber.StartNew(() => DriverOnly(PedsInVehicle));
+            }
         }
 
 
@@ -68,14 +71,19 @@ namespace RiskierTrafficStops.Outcomes
             PursuitLHandle = SetupPursuitWithList(true, Peds);
         }
 
-        internal static void DriverOnly()
+        internal static void DriverOnly(List<Ped> Peds)
         {
+            Debug("Setting up SuspectRelateGroup");
             SuspectRelateGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
             SuspectRelateGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
-
+            Debug("Adding Suspect to SuspectRelateGroup");
+            Suspect.RelationshipGroup = SuspectRelateGroup;
             string Weapon = pistolList[rndm.Next(pistolList.Length)];
-
-            
+            Debug("Setting up Suspect weapon/tasks");
+            if (!Suspect.Inventory.HasLoadedWeapon) { Debug("Giving Suspect Weapon"); Suspect.Inventory.Weapons.Add(Weapon); }
+            Debug("Giving suspect tasks");
+            Suspect.Tasks.FightAgainstClosestHatedTarget(40f, 3750).WaitForCompletion(3750);
+            PursuitLHandle = SetupPursuitWithList(true, Peds);
         }
     }
 }
