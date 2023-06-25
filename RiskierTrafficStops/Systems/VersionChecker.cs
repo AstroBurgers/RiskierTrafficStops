@@ -13,7 +13,6 @@ namespace RiskierTrafficStops.Systems
         {
             var webClient = new WebClient();
             var pluginUpToDate = false;
-            var webSuccess = false;
 
             try
             {
@@ -23,7 +22,6 @@ namespace RiskierTrafficStops.Systems
      .Trim();
                 Logger.Debug($"Online Version: {onlineVersion} | Installed Version: {CurrentVersion}");
                 pluginUpToDate = onlineVersion == CurrentVersion;
-                webSuccess = true;
             }
             catch (WebException e)
             {
