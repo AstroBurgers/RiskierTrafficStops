@@ -90,7 +90,7 @@ namespace RiskierTrafficStops.Outcomes
         internal static void KeyPressed()
         {
             Game.DisplayHelp($"~BLIP_INFO_ICON~ Press {Settings.GetBackIn.ToString()} To to have the suspect get back in their vehicle");
-            while (!hasPedGottenBackIntoVehicle)
+            while (Suspect.Exists() && !hasPedGottenBackIntoVehicle)
             {
                 GameFiber.Yield();
                 if (Game.IsKeyDown(Settings.GetBackIn))
@@ -103,15 +103,18 @@ namespace RiskierTrafficStops.Outcomes
 
         internal static void OutcomePullKnife()
         {
-            Suspect.Inventory.GiveNewWeapon(meleeWeapons[rndm.Next(meleeWeapons.Length)], -1, true);
+            if (Suspect.Exists())
+            {
+                Suspect.Inventory.GiveNewWeapon(meleeWeapons[rndm.Next(meleeWeapons.Length)], -1, true);
 
-            Debug("Setting Suspect relationship group");
-            Suspect.RelationshipGroup = suspectRelationshipGroup;
-            suspectRelationshipGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
-            suspectRelationshipGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
+                Debug("Setting Suspect relationship group");
+                Suspect.RelationshipGroup = suspectRelationshipGroup;
+                suspectRelationshipGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
+                suspectRelationshipGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
 
-            Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
-            Suspect.Tasks.FightAgainstClosestHatedTarget(40f, -1);
+                Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
+                Suspect.Tasks.FightAgainstClosestHatedTarget(40f, -1);
+            }
         }
     }
 }
