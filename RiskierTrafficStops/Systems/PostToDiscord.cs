@@ -1,15 +1,7 @@
-﻿using Rage;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 using System.Net;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
-using static RiskierTrafficStops.Systems.Logger;
 
 namespace RiskierTrafficStops.Systems
 {

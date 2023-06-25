@@ -1,18 +1,9 @@
-﻿using System;
-using LSPD_First_Response.Mod.API;
-using LSPD_First_Response;
-using Rage.Native;
+﻿using LSPD_First_Response.Mod.API;
 using Rage;
+using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using static RiskierTrafficStops.Systems.Helper;
 using static RiskierTrafficStops.Systems.Logger;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net;
-using System.Deployment.Internal;
-using System.Runtime.Serialization;
 
 namespace RiskierTrafficStops.Outcomes
 {
@@ -28,10 +19,14 @@ namespace RiskierTrafficStops.Outcomes
             {
                 Debug("Setting up Suspect and Suspect Vehicle");
                 Suspect = Functions.GetPulloverSuspect(handle);
-                suspectVehicle = Suspect.CurrentVehicle;
-                Suspect.BlockPermanentEvents = true;
-                Suspect.IsPersistent = true;
-                suspectVehicle.IsPersistent = true;
+                if (Suspect.Exists() && Suspect.IsInAnyVehicle(false))
+                {
+                    suspectVehicle = Suspect.CurrentVehicle;
+                    Suspect.BlockPermanentEvents = true;
+                    Suspect.IsPersistent = true;
+                    suspectVehicle.IsPersistent = true;
+                }
+
 
                 List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
 
@@ -45,7 +40,10 @@ namespace RiskierTrafficStops.Outcomes
                 {
                     foreach (Ped i in PedsInVehicle)
                     {
-                        i.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
+                        if (i.Exists())
+                        {
+                            i.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
+                        }
                     }
                     if (Functions.IsPlayerPerformingPullover())
                     {

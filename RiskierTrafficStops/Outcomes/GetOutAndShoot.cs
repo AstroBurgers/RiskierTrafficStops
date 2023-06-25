@@ -1,18 +1,9 @@
-﻿using System;
-using LSPD_First_Response.Mod.API;
-using LSPD_First_Response;
-using Rage.Native;
+﻿using LSPD_First_Response.Mod.API;
 using Rage;
+using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using static RiskierTrafficStops.Systems.Helper;
 using static RiskierTrafficStops.Systems.Logger;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net;
-using System.Deployment.Internal;
-using System.Runtime.CompilerServices;
 
 namespace RiskierTrafficStops.Outcomes
 {
@@ -23,8 +14,6 @@ namespace RiskierTrafficStops.Outcomes
         internal static RelationshipGroup SuspectRelateGroup = new RelationshipGroup("Suspect");
         internal static LHandle PursuitLHandle;
 
-        internal static List<GameFiber> GameFibers = new List<GameFiber> { };
-
         internal static void GOASOutcome(LHandle handle)
         {
             try
@@ -33,10 +22,13 @@ namespace RiskierTrafficStops.Outcomes
 
                 Suspect = Functions.GetPulloverSuspect(handle);
                 Debug("Setting up suspectVehicle");
-                suspectVehicle = Suspect.CurrentVehicle;
-                Suspect.BlockPermanentEvents = true;
-                Suspect.IsPersistent = true;
-                suspectVehicle.IsPersistent = true;
+                if (Suspect.Exists())
+                {
+                    suspectVehicle = Suspect.CurrentVehicle;
+                    Suspect.BlockPermanentEvents = true;
+                    Suspect.IsPersistent = true;
+                    suspectVehicle.IsPersistent = true;
+                }
 
                 Debug("Adding all suspect in the vehicle to a list");
 
@@ -53,14 +45,13 @@ namespace RiskierTrafficStops.Outcomes
                     string Weapon = WeaponList[rndm.Next(WeaponList.Length)];
                     if (i.Exists())
                     {
-                        if (!i.Inventory.HasLoadedWeapon) { }
+                        if (!i.Inventory.HasLoadedWeapon && i.Exists())
                         {
                             Debug($"Giving Suspect weapon: {Weapon}");
                             i.Inventory.GiveNewWeapon(Weapon, 100, true);
 
                             GameFiber.StartNew(() => GetPedOutOfVehicle(i));
                         }
-
                     }
                 }
 
@@ -70,13 +61,13 @@ namespace RiskierTrafficStops.Outcomes
 
                 foreach (Ped i in PedsInVehicle)
                 {
-                    if (Chance <= 45)
+                    if (Chance <= 45 && i.Exists())
                     {
                         Debug("Making Suspect enter vehicle");
                         PursuitOutcome(PedsInVehicle);
                         break;
                     }
-                    else if (Chance >= 45)
+                    else if (Chance >= 45 && i.Exists())
                     {
                         Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
                         if (Functions.IsPlayerPerformingPullover())

@@ -1,19 +1,9 @@
-﻿using System;
-using LSPD_First_Response.Mod.API;
-using LSPD_First_Response;
-using Rage.Native;
+﻿using LSPD_First_Response.Mod.API;
 using Rage;
-using System.Collections.Generic;
-using System.Windows.Forms;
+using Rage.Native;
+using System;
 using static RiskierTrafficStops.Systems.Helper;
 using static RiskierTrafficStops.Systems.Logger;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net;
-using System.Deployment.Internal;
-using System.Runtime.Serialization;
-using System.Configuration;
 
 namespace RiskierTrafficStops.Outcomes
 {
@@ -39,10 +29,14 @@ namespace RiskierTrafficStops.Outcomes
             {
                 Debug("Setting up Suspect and Suspect Vehicle");
                 Suspect = Functions.GetPulloverSuspect(handle);
-                suspectVehicle = Suspect.CurrentVehicle;
-                Suspect.BlockPermanentEvents = true;
-                Suspect.IsPersistent = true;
-                suspectVehicle.IsPersistent = true;
+                if (Suspect.Exists())
+                {
+                    suspectVehicle = Suspect.CurrentVehicle;
+                    Suspect.BlockPermanentEvents = true;
+                    Suspect.IsPersistent = true;
+                    suspectVehicle.IsPersistent = true;
+                }
+
 
                 Debug("Making Suspect Leave Vehicle");
                 Suspect.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
@@ -51,7 +45,7 @@ namespace RiskierTrafficStops.Outcomes
 
                 Debug("Making suspect Yell at Player");
                 int timesSpoken = 0;
-                while (Suspect && timesSpoken < 4)
+                while (Suspect.Exists() && timesSpoken < 4)
                 {
                     GameFiber.Yield();
                     timesSpoken += 1;

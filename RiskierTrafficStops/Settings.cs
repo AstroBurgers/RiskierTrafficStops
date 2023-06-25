@@ -41,7 +41,7 @@ namespace RiskierTrafficStops
             yellEnabled = inifile.ReadBoolean("Settings", "Yelling Outcome enabled", yellEnabled);
             yellInCarEnabled = inifile.ReadBoolean("Settings", "Yelling Car in Outcome enabled", yellInCarEnabled);
             shootAndFleeEnabled = inifile.ReadBoolean("Settings", "Shoot And Flee Outcome enabled", yellInCarEnabled);
-            
+
             // Reading Auto Log Boolean
             autoLogEnabled = inifile.ReadBoolean("Settings", "Automatic Error Reporting enabled", autoLogEnabled);
 
@@ -63,7 +63,7 @@ namespace RiskierTrafficStops
             Logger.Debug("");
             foreach (Main.Scenarios i in enabledScenarios)
             {
-                Logger.Debug(i.ToString()); 
+                Logger.Debug(i.ToString());
             }
             Logger.Debug("");
             Logger.Debug("----Enabled Scenarios----");

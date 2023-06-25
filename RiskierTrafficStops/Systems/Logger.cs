@@ -1,5 +1,5 @@
-﻿using System;
-using Rage;
+﻿using Rage;
+using System;
 
 // Rohit said he wanted credit. So credit to Rohit for the code https://github.com/Rohit685/MysteriousCallouts/blob/master/HelperSystems/Logger.cs
 

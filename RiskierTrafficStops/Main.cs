@@ -1,18 +1,10 @@
-﻿using System;
-using LSPD_First_Response.Mod.API;
-using LSPD_First_Response;
-using Rage.Native;
+﻿using LSPD_First_Response.Mod.API;
 using Rage;
-using System.Windows.Forms;
-using static RiskierTrafficStops.Systems.Helper;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using RiskierTrafficStops.Outcomes;
-using static RiskierTrafficStops.Systems.Logger;
-using System.Dynamic;
 using RiskierTrafficStops.Systems;
+using System;
+using static RiskierTrafficStops.Systems.Helper;
+using static RiskierTrafficStops.Systems.Logger;
 
 namespace RiskierTrafficStops
 {

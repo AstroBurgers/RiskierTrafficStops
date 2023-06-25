@@ -1,7 +1,6 @@
-﻿using System.Net;
+﻿using Rage;
+using System.Net;
 using System.Reflection;
-using System.Windows.Forms;
-using Rage;
 using static RiskierTrafficStops.Systems.Logger;
 
 namespace RiskierTrafficStops.Systems
