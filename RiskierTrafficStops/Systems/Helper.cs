@@ -3,6 +3,7 @@ using Rage;
 using Rage.Native;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using static RiskierTrafficStops.Systems.Logger;
 
 namespace RiskierTrafficStops.Systems
@@ -42,23 +43,31 @@ namespace RiskierTrafficStops.Systems
 
         internal static (Ped, Vehicle) GetSuspectAndVehicle(LHandle handle)
         {
-            Debug("Setting up Suspect");
-            driver = Functions.GetPulloverSuspect(handle);
+            Debug("Checking if Handle is null");
+            if (handle != null)
+            {
+                Debug("Handle was not null");
+                Debug("Setting up Suspect");
+                driver = Functions.GetPulloverSuspect(handle);
+            }
+
 
             if (driver.IsInAnyVehicle(false) && !driver.IsInAnyPoliceVehicle && !driver.IsOnBike)
             {
-                
                 Debug("Setting up Suspect Vehicle");
                 driverVehicle = driver.CurrentVehicle;
             }
-            if (driver.Exists())
+            if (driver.Exists() && driverVehicle.Exists())
             {
-                
+                Debug("Setting driver as persistent");
                 driver.IsPersistent = true;
+                Debug("Blocking driver permanent events");
                 driver.BlockPermanentEvents = true;
+                Debug("Setting driver vehicle as Persistent");
                 driverVehicle.IsPersistent = true;
             }
-
+            Debug("Returning driver & driverVehicle");
+            Debug($"{driver}, {driverVehicle}");
             return (driver, driverVehicle);
         }
 
