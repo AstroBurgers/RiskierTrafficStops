@@ -39,19 +39,19 @@ namespace RiskierTrafficStops
                 // Displaying startup Notification
                 Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Watch you back out there officer!");
                 Normal("Loaded succesfully");
-                
+                //Displaying Autolog Notification
                 if (Settings.autoLogEnabled) { Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~Auto Logging Status", "Auto Logging is ~g~Enabled"); }
                 if (!Settings.autoLogEnabled) { Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~Auto Logging Status", "Auto Logging is ~r~Disabled"); }
-                
+                //Subscribing to events
                 Debug("Subscribing to: OnPulloverOfficerApproachDriver");
                 Events.OnPulloverOfficerApproachDriver += Events_OnPulloverOfficerApproachDriver;
-                
+                //\\
                 Debug("Subscribing to: OnPulloverDriverStopped");
                 Events.OnPulloverDriverStopped += Events_OnPulloverDriverStopped;
-                
+                //\\
                 Debug("Subscribing to: OnPulloverStarted");
                 Events.OnPulloverStarted += Events_OnPulloverStarted;
-                
+                //\\
                 Debug("Subscribing to: OnPulloverEnded");
                 Events.OnPulloverEnded += Events_OnPulloverEnded;
             }
@@ -69,6 +69,12 @@ namespace RiskierTrafficStops
                         Normal($"Chosen Scenario: {chosenOutcome}");
                         GameFiber.WaitUntil(() => MainPlayer.CurrentVehicle.IsSirenOn);
                         Flee.FleeOutcome(handle);
+                        HasEventHappend = true;
+                        break;
+                    case Scenarios.ShootAndFlee:
+                        Normal($"Chosen Scenario: {chosenOutcome}");
+                        GameFiber.WaitUntil(() => MainPlayer.CurrentVehicle.IsSirenOn);
+                        ShootAndFlee.SAFOutcome(handle);
                         HasEventHappend = true;
                         break;
                 }
