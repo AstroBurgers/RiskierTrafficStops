@@ -3,6 +3,7 @@ using Rage;
 using Rage.Native;
 using System;
 using System.Collections.Generic;
+using static RiskierTrafficStops.Systems.Logger;
 
 namespace RiskierTrafficStops.Systems
 {
@@ -10,6 +11,9 @@ namespace RiskierTrafficStops.Systems
     {
         internal static Ped MainPlayer => Game.LocalPlayer.Character;
         internal static Random rndm = new Random(DateTime.Now.Millisecond);
+
+        internal static Ped driver;
+        internal static Vehicle driverVehicle;
 
         /// <summary>
         /// Setup a Pursuit with an Array of suspects
@@ -34,6 +38,28 @@ namespace RiskierTrafficStops.Systems
                 Functions.AddPedToPursuit(PursuitLHandle, Suspect);
             }
             return PursuitLHandle;
+        }
+
+        internal static (Ped, Vehicle) GetSuspectAndVehicle(LHandle handle)
+        {
+            Debug("Setting up Suspect");
+            driver = Functions.GetPulloverSuspect(handle);
+
+            if (driver.IsInAnyVehicle(false) && !driver.IsInAnyPoliceVehicle && !driver.IsOnBike)
+            {
+                
+                Debug("Setting up Suspect Vehicle");
+                driverVehicle = driver.CurrentVehicle;
+            }
+            if (driver.Exists())
+            {
+                
+                driver.IsPersistent = true;
+                driver.BlockPermanentEvents = true;
+                driverVehicle.IsPersistent = true;
+            }
+
+            return (driver, driverVehicle);
         }
 
         /// <summary>
