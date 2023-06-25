@@ -73,7 +73,7 @@ namespace RiskierTrafficStops
         {
             if (!HasEventHappend) { GameFiber.StartNew(() => ChooseEvent(handle)); }
         }
-        
+
         private static void Events_OnPulloverOfficerApproachDriver(LHandle handle)
         {
             if (!HasEventHappend) { GameFiber.StartNew(() => ChooseEvent(handle)); }
@@ -88,7 +88,7 @@ namespace RiskierTrafficStops
             Events.OnPulloverStarted -= Events_OnPulloverStarted;
             Events.OnPulloverEnded -= Events_OnPulloverEnded;
         }
-        
+
         internal static void ChooseEvent(LHandle handle)
         {
             chosenChance = rndm.Next(1, 101);

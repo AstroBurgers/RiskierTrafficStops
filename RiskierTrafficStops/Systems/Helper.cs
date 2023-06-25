@@ -181,6 +181,7 @@ namespace RiskierTrafficStops.Systems
                     }
                 }
             }
+            Logger.Debug($"Peds In Vehicle: {occupantList.Count}");
             return occupantList;
         }
 
