@@ -41,6 +41,11 @@ namespace RiskierTrafficStops.Systems
             return PursuitLHandle;
         }
 
+        /// <summary>
+        /// Returns the Driver and its vehicle
+        /// </summary>
+        /// <returns>Ped, Vehicle</returns>
+
         internal static (Ped, Vehicle) GetSuspectAndVehicle(LHandle handle)
         {
             Debug("Checking if Handle is null");
