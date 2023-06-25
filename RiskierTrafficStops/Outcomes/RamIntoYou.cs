@@ -17,12 +17,8 @@ namespace RiskierTrafficStops.Outcomes
         {
             try
             {
-                Debug("Setting up Suspect and Suspect Vehicle");
-                Suspect = Functions.GetPulloverSuspect(handle);
-                suspectVehicle = Suspect.CurrentVehicle;
-                Suspect.BlockPermanentEvents = true;
-                Suspect.IsPersistent = true;
-                suspectVehicle.IsPersistent = true;
+                Suspect = GetSuspectAndVehicle(handle).Item1;
+                suspectVehicle = GetSuspectAndVehicle(handle).Item2;
 
                 List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
 
