@@ -47,6 +47,10 @@ namespace RiskierTrafficStops.Outcomes
                     {
                         i.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
                     }
+                    if (Functions.IsPlayerPerformingPullover())
+                    {
+                        Functions.ForceEndCurrentPullover();
+                    }
                     PursuitLHandle = SetupPursuitWithList(true, PedsInVehicle);
                 }
             }

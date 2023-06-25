@@ -32,6 +32,7 @@ namespace RiskierTrafficStops
         internal static bool HasEventHappend = false;
         internal static Scenarios chosenOutcome;
         internal static int chosenChance;
+        internal static Random rndmerror;
         public override void Initialize()
         {
             Functions.OnOnDutyStateChanged += Functions_OnOnDutyStateChanged;

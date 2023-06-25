@@ -81,6 +81,7 @@ namespace RiskierTrafficStops.Outcomes
                         {
                             GameFiber.Yield();
                             Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);
+                            if (!Suspect.Exists()) { return; }
                             GameFiber.WaitUntil(() => !Suspect.IsAnySpeechPlaying);
                         }
                         break;
