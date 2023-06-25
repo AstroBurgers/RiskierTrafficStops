@@ -57,7 +57,7 @@ namespace RiskierTrafficStops.Outcomes
                 Debug("Choosing outome from YellScenarioOutcomes");
                 YellScenarioOutcomes[] ScenarioList = (YellScenarioOutcomes[])Enum.GetValues(typeof(YellScenarioOutcomes));
                 chosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
-                Debug($"Chosen Outcome: {chosenOutcome.ToString()}");
+                Debug($"Chosen Outcome: {chosenOutcome}");
 
                 if (!Suspect.Exists()) { return; }
 

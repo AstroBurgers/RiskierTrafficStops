@@ -53,7 +53,7 @@ namespace RiskierTrafficStops
                 switch (chosenOutcome)
                 {
                     case Scenarios.FleeFromTrafficStop:
-                        Normal($"Chosen Scenario: {chosenOutcome.ToString()}");
+                        Normal($"Chosen Scenario: {chosenOutcome}");
                         GameFiber.WaitUntil(() => MainPlayer.CurrentVehicle.IsSirenOn);
                         Flee.FleeOutcome(handle);
                         HasEventHappend = true;
@@ -101,31 +101,31 @@ namespace RiskierTrafficStops
                 switch (chosenOutcome)
                 {
                     case Scenarios.GetOutOfCarAndYell:
-                        Normal($"Chosen Scenario: {chosenOutcome.ToString()}");
+                        Normal($"Chosen Scenario: {chosenOutcome}");
                         Yell.YellOutcome(handle);
                         break;
                     case Scenarios.GetOutAndShoot:
-                        Normal($"Chosen Scenario: {chosenOutcome.ToString()}");
+                        Normal($"Chosen Scenario: {chosenOutcome}");
                         GetOutAndShoot.GOASOutcome(handle);
                         break;
                     case Scenarios.FleeFromTrafficStop:
-                        Normal($"Chosen Scenario: {chosenOutcome.ToString()}");
+                        Normal($"Chosen Scenario: {chosenOutcome}");
                         Flee.FleeOutcome(handle);
                         break;
                     case Scenarios.YellInCar:
-                        Normal($"Chosen Scenario: {chosenOutcome.ToString()}");
+                        Normal($"Chosen Scenario: {chosenOutcome}");
                         YellInCar.YICEventHandler(handle);
                         break;
                     case Scenarios.RevEngine:
-                        Normal($"Chosen Scenario: {chosenOutcome.ToString()}");
+                        Normal($"Chosen Scenario: {chosenOutcome}");
                         Rev.ROutcome(handle);
                         break;
                     case Scenarios.RamIntoPlayerVehicle:
-                        Normal($"Chosen Scenario: {chosenOutcome.ToString()}");
+                        Normal($"Chosen Scenario: {chosenOutcome}");
                         RamIntoYou.RIYOutcome(handle);
                         break;
                     case Scenarios.ShootAndFlee:
-                        Normal($"Chosen Scenario: {chosenOutcome.ToString()}");
+                        Normal($"Chosen Scenario: {chosenOutcome}");
                         ShootAndFlee.SAFOutcome(handle);
                         break;
                     default:
