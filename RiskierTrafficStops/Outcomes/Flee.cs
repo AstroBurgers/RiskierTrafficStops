@@ -27,7 +27,6 @@ namespace RiskierTrafficStops.Outcomes
                     suspectVehicle.IsPersistent = true;
                 }
 
-
                 List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
 
                 int Chance = rndm.Next(1, 101);
