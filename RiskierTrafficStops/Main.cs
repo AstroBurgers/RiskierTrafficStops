@@ -53,7 +53,7 @@ namespace RiskierTrafficStops
 
         private static void Events_OnPulloverStarted(LHandle handle)
         {
-            /*chosenChance = rndm.Next(1, 101);
+            chosenChance = rndm.Next(1, 101);
             chosenOutcome = Settings.enabledScenarios[rndm.Next(Settings.enabledScenarios.Count)];
             if (chosenChance < Settings.Chance)
             {
@@ -66,7 +66,7 @@ namespace RiskierTrafficStops
                         HasEventHappend = true;
                         break;
                 }
-            }*/
+            }
         }
 
         private static void Events_OnPulloverEnded(LHandle pullover, bool normalEnding)
@@ -105,35 +105,34 @@ namespace RiskierTrafficStops
             if ((chosenChance <= Settings.Chance))
             {
                 chosenOutcome = Settings.enabledScenarios[rndm.Next(Settings.enabledScenarios.Count)];
-                Debug($"Chosen Outcome: {chosenOutcome.ToString()}");
                 switch (chosenOutcome)
                 {
                     case Scenarios.GetOutOfCarAndYell:
-                        Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
+                        Normal($"Chosen Scenario: {chosenOutcome.ToString()}");
                         Yell.YellOutcome(handle);
                         break;
                     case Scenarios.GetOutAndShoot:
-                        Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
+                        Normal($"Chosen Scenario: {chosenOutcome.ToString()}");
                         GetOutAndShoot.GOASOutcome(handle);
                         break;
                     case Scenarios.FleeFromTrafficStop:
-                        Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
+                        Normal($"Chosen Scenario: {chosenOutcome.ToString()}");
                         Flee.FleeOutcome(handle);
                         break;
                     case Scenarios.YellInCar:
-                        Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
+                        Normal($"Chosen Scenario: {chosenOutcome.ToString()}");
                         YellInCar.YICEventHandler(handle);
                         break;
                     case Scenarios.RevEngine:
-                        Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
+                        Normal($"Chosen Scenario: {chosenOutcome.ToString()}");
                         Rev.ROutcome(handle);
                         break;
                     case Scenarios.RamIntoPlayerVehicle:
-                        Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
+                        Normal($"Chosen Scenario: {chosenOutcome.ToString()}");
                         RamIntoYou.RIYOutcome(handle);
                         break;
                     case Scenarios.ShootAndFlee:
-                        Normal($"Chosen Scenario: {Yell.chosenOutcome.ToString()}");
+                        Normal($"Chosen Scenario: {chosenOutcome.ToString()}");
                         ShootAndFlee.SAFOutcome(handle);
                         break;
                     default:

@@ -89,7 +89,7 @@ namespace RiskierTrafficStops.Outcomes
             }
             catch (Exception e)
             {
-                Error(e, "location");
+                Error(e, "Yell.cs");
             }
         }
         internal static void KeyPressed()
