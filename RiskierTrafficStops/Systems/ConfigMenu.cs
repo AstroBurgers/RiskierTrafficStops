@@ -5,6 +5,7 @@ using RAGENativeUI.PauseMenu;
 using System;
 using System.Drawing;
 using static RiskierTrafficStops.Systems.Logger;
+using static RiskierTrafficStops.Settings;
 
 namespace RiskierTrafficStops.Systems
 {
@@ -82,6 +83,18 @@ namespace RiskierTrafficStops.Systems
             Settings.inifile.Write("Settings", "Automatic Error Reporting enabled", AutoLoggingEnabled.SelectedItem);
             Debug("Finished Appending to INI");
 
+            Debug("Reading new Values...");
+            Chance = inifile.ReadInt32("Settings", "Chance", 15);
+            getOutAndShootEnabled = inifile.ReadBoolean("Settings", "Get Out And Shoot Outcome enabled", getOutAndShootEnabled);
+            ramEnabled = inifile.ReadBoolean("Settings", "Ramming Oucome enabled", ramEnabled);
+            fleeEnabled = inifile.ReadBoolean("Settings", "Flee Outcome enabled", fleeEnabled);
+            revEnabled = inifile.ReadBoolean("Settings", "Revving Outcome enabled", revEnabled);
+            yellEnabled = inifile.ReadBoolean("Settings", "Yelling Outcome enabled", yellEnabled);
+            yellInCarEnabled = inifile.ReadBoolean("Settings", "Yelling Car in Outcome enabled", yellInCarEnabled);
+            shootAndFleeEnabled = inifile.ReadBoolean("Settings", "Shoot And Flee Outcome enabled", yellInCarEnabled);
+            autoLogEnabled = inifile.ReadBoolean("Settings", "Automatic Error Reporting enabled", autoLogEnabled);
+            Debug("Finished reading new vaules");
+
             Debug("----INI Values---");
             Debug("");
             Debug($"Chance: {Settings.Chance}");
@@ -99,6 +112,7 @@ namespace RiskierTrafficStops.Systems
             Debug("Reloading Enabled events...");
             Settings.FilterOutcomes();
             Debug("Finished Reloading Enabled events");
+            Game.DisplayNotification("commonmenu", "shop_tick_icon", "Riskier Traffic Stops", "~b~INI Saving", "Saved to INI ~g~Successfully~w~!");
         }
 
         internal static void MenuPoolProcess()
@@ -112,6 +126,10 @@ namespace RiskierTrafficStops.Systems
 
                     MainMenuPool.ProcessMenus();
                 }
+            }
+            catch (System.Threading.ThreadAbortException e)
+            {
+
             }
             catch (Exception e)
             {
