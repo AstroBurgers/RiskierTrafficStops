@@ -88,7 +88,7 @@ namespace RiskierTrafficStops
             Events.OnPulloverStarted -= Events_OnPulloverStarted;
             Events.OnPulloverEnded -= Events_OnPulloverEnded;
         }
-
+        
         internal static void ChooseEvent(LHandle handle)
         {
             chosenChance = rndm.Next(1, 101);
