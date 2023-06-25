@@ -51,6 +51,7 @@ namespace RiskierTrafficStops
         internal static void FilterOutcomes()
         {
             Logger.Debug("Adding enabled Scenarios to enabledScenarios");
+            enabledScenarios.Clear();
             if (getOutAndShootEnabled) { enabledScenarios.Add(Main.Scenarios.GetOutAndShoot); }
             if (ramEnabled) { enabledScenarios.Add(Main.Scenarios.RamIntoPlayerVehicle); }
             if (fleeEnabled) { enabledScenarios.Add(Main.Scenarios.FleeFromTrafficStop); }

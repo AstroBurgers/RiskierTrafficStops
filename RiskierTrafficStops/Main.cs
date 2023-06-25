@@ -24,17 +24,20 @@ namespace RiskierTrafficStops
         internal static bool HasEventHappend = false;
         internal static Scenarios chosenOutcome;
         internal static int chosenChance;
-
+        internal static bool _onDuty;
         public override void Initialize()
         {
             Functions.OnOnDutyStateChanged += Functions_OnOnDutyStateChanged;
         }
         private static void Functions_OnOnDutyStateChanged(bool onDuty)
         {
+            _onDuty = onDuty;
             if (onDuty)
             {
                 // Setting up INI And checking for updates
                 Settings.INIFileSetup();
+                ConfigMenu.CreateMenu();
+                Game.AddConsoleCommands();
                 VersionChecker.CheckForUpdates();
                 // Displaying startup Notification
                 Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Watch you back out there officer!");
