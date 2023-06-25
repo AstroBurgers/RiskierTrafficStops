@@ -33,15 +33,26 @@ namespace RiskierTrafficStops
         {
             if (onDuty)
             {
+                // Setting up INI And checking for updates
                 Settings.INIFileSetup();
                 VersionChecker.CheckForUpdates();
+                // Displaying startup Notification
                 Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Watch you back out there officer!");
                 Normal("Loaded succesfully");
+                
                 if (Settings.autoLogEnabled) { Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~Auto Logging Status", "Auto Logging is ~g~Enabled"); }
                 if (!Settings.autoLogEnabled) { Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~Auto Logging Status", "Auto Logging is ~r~Disabled"); }
+                
+                Debug("Subscribing to: OnPulloverOfficerApproachDriver");
                 Events.OnPulloverOfficerApproachDriver += Events_OnPulloverOfficerApproachDriver;
+                
+                Debug("Subscribing to: OnPulloverDriverStopped");
                 Events.OnPulloverDriverStopped += Events_OnPulloverDriverStopped;
+                
+                Debug("Subscribing to: OnPulloverStarted");
                 Events.OnPulloverStarted += Events_OnPulloverStarted;
+                
+                Debug("Subscribing to: OnPulloverEnded");
                 Events.OnPulloverEnded += Events_OnPulloverEnded;
             }
         }
