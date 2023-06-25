@@ -11,8 +11,8 @@ namespace RiskierTrafficStops.Systems
         internal static string onlineVersion;
         internal static void CheckForUpdates()
         {
-            var webClient = new WebClient();
-            var pluginUpToDate = false;
+            WebClient webClient = new WebClient();
+            bool pluginUpToDate = false;
 
             try
             {

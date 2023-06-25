@@ -50,7 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Outcomes\ShootAndFlee.cs" />
-    <Compile Include="Systems\GameFiberHelper.cs" />
     <Compile Include="Systems\Logger.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Systems\Helper.cs" />
