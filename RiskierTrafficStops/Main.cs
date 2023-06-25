@@ -37,6 +37,8 @@ namespace RiskierTrafficStops
                 VersionChecker.CheckForUpdates();
                 Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Watch you back out there officer!");
                 Normal("Loaded succesfully");
+                if (Settings.autoLogEnabled) { Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~Auto Logging Status", "Auto Logging is ~g~Enabled"); }
+                if (!Settings.autoLogEnabled) { Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~Auto Logging Status", "Auto Logging is ~r~Disabled"); }
                 Events.OnPulloverOfficerApproachDriver += Events_OnPulloverOfficerApproachDriver;
                 Events.OnPulloverDriverStopped += Events_OnPulloverDriverStopped;
                 Events.OnPulloverStarted += Events_OnPulloverStarted;
@@ -71,7 +73,7 @@ namespace RiskierTrafficStops
         {
             if (!HasEventHappend) { GameFiber.StartNew(() => ChooseEvent(handle)); }
         }
-
+        
         private static void Events_OnPulloverOfficerApproachDriver(LHandle handle)
         {
             if (!HasEventHappend) { GameFiber.StartNew(() => ChooseEvent(handle)); }
@@ -92,16 +94,16 @@ namespace RiskierTrafficStops
             chosenChance = rndm.Next(1, 101);
             Debug($"Chance: {chosenChance}");
             Debug($"HasEventHappend: {HasEventHappend}");
-            
+
             if (HasEventHappend) { return; }
             if (!(chosenChance <= Settings.Chance)) { return; }
-            
+
             HasEventHappend = true;
             Debug("Choosing Scenario");
-            
+
             chosenOutcome = Settings.enabledScenarios[rndm.Next(Settings.enabledScenarios.Count)];
             Debug($"Chosen Outcome: {chosenOutcome}");
-            
+
             switch (chosenOutcome)
             {
                 case Scenarios.GetOutOfCarAndYell:
