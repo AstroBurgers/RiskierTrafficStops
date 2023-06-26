@@ -34,18 +34,9 @@ namespace RiskierTrafficStops.Outcomes
                 foreach (Ped i in PedsInVehicle)
                 {
                     string Weapon = WeaponList[rndm.Next(WeaponList.Length)];
-                    if (!i.Inventory.HasLoadedWeapon && i.Exists())
-                    {
-                        Debug($"Giving Suspect weapon: {Weapon}");
-                        i.Inventory.GiveNewWeapon(Weapon, 100, true);
-
-                        GameFiber.StartNew(() => GetPedOutOfVehicle(i));
-                    }
-                    if (i.Inventory.HasLoadedWeapon && i.Exists())
-                    {
-                        Debug($"Suspect already has a weapon");
-                        GameFiber.StartNew(() => GetPedOutOfVehicle(i));
-                    }
+                    if (!i.Inventory.HasLoadedWeapon) { i.Inventory.GiveNewWeapon(Weapon, 100, true); Debug($"Giving Suspect weapon: {Weapon}"); }
+                    
+                    GameFiber.StartNew(() => GetPedOutOfVehicle(i));
                 }
 
                 GameFiber.Wait(7010);
