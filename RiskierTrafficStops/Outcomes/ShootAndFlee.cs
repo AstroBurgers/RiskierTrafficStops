@@ -74,6 +74,7 @@ namespace RiskierTrafficStops.Outcomes
 
         internal static void DriverOnly(List<Ped> Peds)
         {
+            if (!Suspect.Exists()) { CleanupEvent(Suspect, suspectVehicle); return; }
             Debug("Setting up SuspectRelateGroup");
             SuspectRelateGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
             SuspectRelateGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);

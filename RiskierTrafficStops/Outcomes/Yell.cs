@@ -1,6 +1,7 @@
 ﻿using LSPD_First_Response.Mod.API;
 using Rage;
 using Rage.Native;
+using RiskierTrafficStops.Systems;
 using System;
 using static RiskierTrafficStops.Systems.Helper;
 using static RiskierTrafficStops.Systems.Logger;
@@ -52,8 +53,6 @@ namespace RiskierTrafficStops.Outcomes
                 chosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
                 Debug($"Chosen Outcome: {chosenOutcome}");
 
-                if (!Suspect.Exists()) { return; }
-
                 switch (chosenOutcome)
                 {
                     case YellScenarioOutcomes.GetBackInVehicle:
@@ -64,11 +63,10 @@ namespace RiskierTrafficStops.Outcomes
                         break;
                     case YellScenarioOutcomes.ContinueYelling:
                         GameFiber.StartNew(KeyPressed);
-                        while (!hasPedGottenBackIntoVehicle)
+                        while (!hasPedGottenBackIntoVehicle && Suspect.Exists())
                         {
                             GameFiber.Yield();
                             Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);
-                            if (!Suspect.Exists()) { return; }
                             GameFiber.WaitUntil(() => !Suspect.IsAnySpeechPlaying);
                         }
                         break;

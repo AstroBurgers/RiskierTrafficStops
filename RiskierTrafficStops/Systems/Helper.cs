@@ -87,6 +87,18 @@ namespace RiskierTrafficStops.Systems
             }
         }
 
+        internal static void CleanupEvent(Ped Suspect, Vehicle vehicle)
+        {
+            if (Suspect.Exists())
+            {
+                Suspect.IsPersistent = false;
+            }
+            else if (vehicle.Exists())
+            {
+                vehicle.IsPersistent = false;
+            }
+        }
+
         /// <summary>
         /// Same as SetupPursuit but with a suspect list
         /// </summary>

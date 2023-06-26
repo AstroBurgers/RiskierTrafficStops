@@ -1,8 +1,8 @@
 ﻿using LSPD_First_Response.Mod.API;
 using Rage;
+using RiskierTrafficStops.Systems;
 using System;
 using System.Collections.Generic;
-using static RiskierTrafficStops.Outcomes.Yell;
 using static RiskierTrafficStops.Systems.Helper;
 using static RiskierTrafficStops.Systems.Logger;
 
@@ -42,42 +42,33 @@ namespace RiskierTrafficStops.Outcomes
                 foreach (Ped i in PedsInVehicle)
                 {
                     string Weapon = WeaponList[rndm.Next(WeaponList.Length)];
+                    if (!i.Exists()) { Helper.CleanupEvent(PedsInVehicle, suspectVehicle); return; }
                     if (!i.Inventory.HasLoadedWeapon) { i.Inventory.GiveNewWeapon(Weapon, 100, true); Debug($"Giving Suspect weapon: {Weapon}"); }
-                    
+
                     GameFiber.StartNew(() => GetPedOutOfVehicle(i));
                 }
 
                 GameFiber.Wait(7010);
 
-
-                Debug("Choosing outome from YellScenarioOutcomes");
+                Debug("Choosing outome from shootOutcomes");
                 shootOutcomes[] ScenarioList = (shootOutcomes[])Enum.GetValues(typeof(shootOutcomes));
                 chosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
                 Debug($"Chosen Outcome: {chosenOutcome}");
 
-
-
-                if (!Suspect.Exists()) { return; }
-
-                int Chance = rndm.Next(1, 101);
-
-                foreach (Ped i in PedsInVehicle)
+                switch (chosenOutcome)
                 {
-                    if (Chance <= 45 && i.Exists())
-                    {
-                        Debug("Starting Pursuit");
+                    case shootOutcomes.Flee:
                         PursuitOutcome(PedsInVehicle);
                         break;
-                    }
-                    else if (Chance >= 45 && i.Exists())
-                    {
-                        Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
-                        if (Functions.IsPlayerPerformingPullover())
+                    case shootOutcomes.KeepShooting:
+                        if (Functions.IsPlayerPerformingPullover()) { Functions.ForceEndCurrentPullover(); }
+                        foreach (Ped i in PedsInVehicle)
                         {
-                            Functions.ForceEndCurrentPullover();
+                            if (!i.Exists()) { Helper.CleanupEvent(PedsInVehicle, suspectVehicle); return; }
+                            Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
+                            i.Tasks.FightAgainstClosestHatedTarget(40f, -1);
                         }
-                        i.Tasks.FightAgainstClosestHatedTarget(40f, -1);
-                    }
+                        break;
                 }
             }
             catch (System.Threading.ThreadAbortException)
@@ -96,12 +87,11 @@ namespace RiskierTrafficStops.Outcomes
             int Seat = -2;
             foreach (Ped i in PedList)
             {
-                if (i.Exists())
-                {
-                    Debug("Giving Ped task to enter vehicle");
-                    i.Tasks.EnterVehicle(suspectVehicle, (Seat + 1), 2f);
-                    Debug($"{PedList.IndexOf(i)}");
-                }
+                if (!i.Exists()) { Helper.CleanupEvent(PedList, suspectVehicle); return; }
+
+                Debug("Giving Ped task to enter vehicle");
+                i.Tasks.EnterVehicle(suspectVehicle, (Seat + 1), 2f);
+                Debug($"{PedList.IndexOf(i)}");
             }
 
             PursuitLHandle = SetupPursuitWithList(true, PedList);

@@ -19,6 +19,7 @@ namespace RiskierTrafficStops.Outcomes
                 Suspect = GetSuspectAndVehicle(handle).Item1;
                 suspectVehicle = GetSuspectAndVehicle(handle).Item2;
 
+                if(!Suspect.Exists()) { CleanupEvent(Suspect, suspectVehicle); return; }
                 Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);
                 GameFiber.WaitUntil(() => !Suspect.IsAnySpeechPlaying);
                 Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);

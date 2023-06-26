@@ -1,5 +1,6 @@
 ﻿using LSPD_First_Response.Mod.API;
 using Rage;
+using RiskierTrafficStops.Systems;
 using System;
 using System.Collections.Generic;
 using static RiskierTrafficStops.Systems.Helper;
@@ -33,10 +34,8 @@ namespace RiskierTrafficStops.Outcomes
                 {
                     foreach (Ped i in PedsInVehicle)
                     {
-                        if (i.Exists())
-                        {
-                            i.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
-                        }
+                        if (!i.Exists()) { CleanupEvent(PedsInVehicle, suspectVehicle); return; }
+                        i.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
                     }
                     if (Functions.IsPlayerPerformingPullover())
                     {
