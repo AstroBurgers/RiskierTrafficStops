@@ -2,6 +2,7 @@
 using Rage;
 using System;
 using System.Collections.Generic;
+using static RiskierTrafficStops.Outcomes.Yell;
 using static RiskierTrafficStops.Systems.Helper;
 using static RiskierTrafficStops.Systems.Logger;
 
@@ -13,6 +14,13 @@ namespace RiskierTrafficStops.Outcomes
         internal static Vehicle suspectVehicle;
         internal static RelationshipGroup SuspectRelateGroup = new RelationshipGroup("Suspect");
         internal static LHandle PursuitLHandle;
+        internal static shootOutcomes chosenOutcome;
+
+        internal enum shootOutcomes
+        {
+            Flee,
+            KeepShooting,
+        }
 
         internal static void GOASOutcome(LHandle handle)
         {
@@ -41,13 +49,23 @@ namespace RiskierTrafficStops.Outcomes
 
                 GameFiber.Wait(7010);
 
+
+                Debug("Choosing outome from YellScenarioOutcomes");
+                shootOutcomes[] ScenarioList = (shootOutcomes[])Enum.GetValues(typeof(shootOutcomes));
+                chosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
+                Debug($"Chosen Outcome: {chosenOutcome}");
+
+
+
+                if (!Suspect.Exists()) { return; }
+
                 int Chance = rndm.Next(1, 101);
 
                 foreach (Ped i in PedsInVehicle)
                 {
                     if (Chance <= 45 && i.Exists())
                     {
-                        Debug("Making Suspect enter vehicle");
+                        Debug("Starting Pursuit");
                         PursuitOutcome(PedsInVehicle);
                         break;
                     }
@@ -80,6 +98,7 @@ namespace RiskierTrafficStops.Outcomes
             {
                 if (i.Exists())
                 {
+                    Debug("Giving Ped task to enter vehicle");
                     i.Tasks.EnterVehicle(suspectVehicle, (Seat + 1), 2f);
                     Debug($"{PedList.IndexOf(i)}");
                 }
