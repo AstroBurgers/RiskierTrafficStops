@@ -22,7 +22,6 @@ namespace RiskierTrafficStops.Outcomes
                 suspectVehicle = GetSuspectAndVehicle(handle).Item2;
 
                 Debug("Adding all suspect in the vehicle to a list");
-
                 List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
                 Debug($"Peds In Vehicle: {PedsInVehicle.Count}");
 

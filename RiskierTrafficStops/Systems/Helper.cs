@@ -47,10 +47,8 @@ namespace RiskierTrafficStops.Systems
 
         internal static (Ped, Vehicle) GetSuspectAndVehicle(LHandle handle)
         {
-            Debug("Checking if Handle is null");
             if (handle != null)
             {
-                Debug("Handle was not null");
                 Debug("Setting up Suspect");
                 driver = Functions.GetPulloverSuspect(handle);
             }
@@ -63,15 +61,13 @@ namespace RiskierTrafficStops.Systems
             }
             if (driver.Exists() && driverVehicle.Exists())
             {
-                Debug("Setting driver as persistent");
+                Debug("Setting driver as persistent and Blocking permanent events");
                 driver.IsPersistent = true;
-                Debug("Blocking driver permanent events");
                 driver.BlockPermanentEvents = true;
                 Debug("Setting driver vehicle as Persistent");
                 driverVehicle.IsPersistent = true;
             }
-            Debug("Returning driver & driverVehicle");
-            Debug($"{driver}, {driverVehicle}");
+            Debug($"Returning {driver} & {driverVehicle}");
             return (driver, driverVehicle);
         }
 
