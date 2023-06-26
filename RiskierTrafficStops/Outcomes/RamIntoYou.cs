@@ -27,6 +27,10 @@ namespace RiskierTrafficStops.Outcomes
                 Suspect.Tasks.Clear();
                 PursuitLHandle = SetupPursuitWithList(true, PedsInVehicle);
             }
+            catch (System.Threading.ThreadAbortException)
+            {
+
+            }
             catch (Exception e)
             {
                 Error(e, "RamIntoYou.cs");

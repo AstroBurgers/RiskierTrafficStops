@@ -110,45 +110,56 @@ namespace RiskierTrafficStops
 
         internal static void ChooseEvent(LHandle handle)
         {
-            chosenChance = rndm.Next(1, 101);
-            Debug($"Chance: {chosenChance}");
-            Debug($"HasEventHappend: {HasEventHappend}");
-
-            if (HasEventHappend) { return; }
-            if (!(chosenChance <= Settings.Chance)) { return; }
-
-            HasEventHappend = true;
-            Debug("Choosing Scenario");
-
-            chosenOutcome = Settings.enabledScenarios[rndm.Next(Settings.enabledScenarios.Count)];
-            Debug($"Chosen Outcome: {chosenOutcome}");
-
-            switch (chosenOutcome)
+            try
             {
-                case Scenarios.GetOutOfCarAndYell:
-                    Yell.YellOutcome(handle);
-                    break;
-                case Scenarios.GetOutAndShoot:
-                    GetOutAndShoot.GOASOutcome(handle);
-                    break;
-                case Scenarios.FleeFromTrafficStop:
-                    Flee.FleeOutcome(handle);
-                    break;
-                case Scenarios.YellInCar:
-                    YellInCar.YICEventHandler(handle);
-                    break;
-                case Scenarios.RevEngine:
-                    Rev.ROutcome(handle);
-                    break;
-                case Scenarios.RamIntoPlayerVehicle:
-                    RamIntoYou.RIYOutcome(handle);
-                    break;
-                case Scenarios.ShootAndFlee:
-                    ShootAndFlee.SAFOutcome(handle);
-                    break;
-                default:
-                    Debug("No outcomes Enabled (or some other shit)");
-                    break;
+                chosenChance = rndm.Next(1, 101);
+                Debug($"Chance: {chosenChance}");
+                Debug($"HasEventHappend: {HasEventHappend}");
+
+                if (HasEventHappend) { return; }
+                if (!(chosenChance <= Settings.Chance)) { return; }
+
+                HasEventHappend = true;
+                Debug("Choosing Scenario");
+
+                chosenOutcome = Settings.enabledScenarios[rndm.Next(Settings.enabledScenarios.Count)];
+                Debug($"Chosen Outcome: {chosenOutcome}");
+
+                switch (chosenOutcome)
+                {
+                    case Scenarios.GetOutOfCarAndYell:
+                        Yell.YellOutcome(handle);
+                        break;
+                    case Scenarios.GetOutAndShoot:
+                        GetOutAndShoot.GOASOutcome(handle);
+                        break;
+                    case Scenarios.FleeFromTrafficStop:
+                        Flee.FleeOutcome(handle);
+                        break;
+                    case Scenarios.YellInCar:
+                        YellInCar.YICEventHandler(handle);
+                        break;
+                    case Scenarios.RevEngine:
+                        Rev.ROutcome(handle);
+                        break;
+                    case Scenarios.RamIntoPlayerVehicle:
+                        RamIntoYou.RIYOutcome(handle);
+                        break;
+                    case Scenarios.ShootAndFlee:
+                        ShootAndFlee.SAFOutcome(handle);
+                        break;
+                    default:
+                        Debug("No outcomes Enabled (or some other shit)");
+                        break;
+                }
+            }
+            catch (System.Threading.ThreadAbortException)
+            {
+
+            }
+            catch (System.Exception e)
+            {
+                Error(e, "Main.cs: ChooseEvent()");
             }
         }
     }

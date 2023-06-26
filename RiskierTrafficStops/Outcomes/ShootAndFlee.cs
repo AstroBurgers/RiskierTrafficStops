@@ -36,6 +36,10 @@ namespace RiskierTrafficStops.Outcomes
                     GameFiber.StartNew(() => DriverOnly(PedsInVehicle));
                 }
             }
+            catch (System.Threading.ThreadAbortException)
+            {
+
+            }
             catch (Exception e)
             {
                 Error(e, "ShootAndFlee.cs");

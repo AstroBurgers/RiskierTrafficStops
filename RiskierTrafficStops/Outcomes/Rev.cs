@@ -30,6 +30,10 @@ namespace RiskierTrafficStops.Outcomes
                     PursuitLHandle = SetupPursuit(true, Suspect);
                 }
             }
+            catch (System.Threading.ThreadAbortException)
+            {
+
+            }
             catch (Exception e)
             {
                 Error(e, "Rev.cs");

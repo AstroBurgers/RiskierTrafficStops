@@ -73,7 +73,6 @@ namespace RiskierTrafficStops.Outcomes
                         }
                         break;
                 }
-
             }
             catch (Exception e)
             {

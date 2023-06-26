@@ -24,6 +24,10 @@ namespace RiskierTrafficStops.Outcomes
                 Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);
                 GameFiber.WaitUntil(() => !Suspect.IsAnySpeechPlaying);
             }
+            catch (System.Threading.ThreadAbortException)
+            {
+
+            }
             catch (Exception e)
             {
                 Error(e, "YellinCar.cs");

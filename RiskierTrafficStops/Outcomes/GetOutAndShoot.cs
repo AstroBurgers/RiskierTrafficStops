@@ -71,9 +71,9 @@ namespace RiskierTrafficStops.Outcomes
                     }
                 }
             }
-            catch (System.Threading.ThreadAbortException e)
+            catch (System.Threading.ThreadAbortException)
             {
-                Error(e, "GetOutAndShoot.cs");
+                
             }
             catch (Exception e)
             {
