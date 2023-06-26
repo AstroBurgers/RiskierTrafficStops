@@ -9,16 +9,6 @@ namespace RiskierTrafficStops.Systems
     {
         internal static string defaultInfo = "[{0}] RiskierTrafficStops: {1}";
 
-        internal static void Normal(string msg)
-        {
-            Game.LogTrivial(String.Format(defaultInfo, "NORMAL", msg));
-        }
-
-        internal static void Warning(string msg)
-        {
-            Game.LogTrivial(String.Format(defaultInfo, "WARNING", msg));
-        }
-
         internal static void Error(Exception ex, string Location)
         {
             Game.LogTrivial(String.Format(defaultInfo, "ERROR", ex.ToString()));

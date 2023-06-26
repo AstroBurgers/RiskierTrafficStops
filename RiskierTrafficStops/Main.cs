@@ -2,7 +2,6 @@
 using Rage;
 using RiskierTrafficStops.Outcomes;
 using RiskierTrafficStops.Systems;
-using System;
 using static RiskierTrafficStops.Systems.Helper;
 using static RiskierTrafficStops.Systems.Logger;
 
@@ -41,7 +40,7 @@ namespace RiskierTrafficStops
                 VersionChecker.CheckForUpdates();
                 // Displaying startup Notification
                 Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Watch you back out there officer!");
-                Normal("Loaded succesfully");
+                Debug("Loaded succesfully");
                 //Displaying Autolog Notification
                 if (Settings.autoLogEnabled) { Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~Auto Logging Status", "Auto Logging is ~g~Enabled"); }
                 if (!Settings.autoLogEnabled) { Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~Auto Logging Status", "Auto Logging is ~r~Disabled"); }
@@ -69,13 +68,13 @@ namespace RiskierTrafficStops
                 switch (chosenOutcome)
                 {
                     case Scenarios.FleeFromTrafficStop:
-                        Normal($"Chosen Scenario: {chosenOutcome}");
+                        Debug($"Chosen Scenario: {chosenOutcome}");
                         GameFiber.WaitUntil(() => MainPlayer.CurrentVehicle.IsSirenOn);
                         Flee.FleeOutcome(handle);
                         HasEventHappend = true;
                         break;
                     case Scenarios.ShootAndFlee:
-                        Normal($"Chosen Scenario: {chosenOutcome}");
+                        Debug($"Chosen Scenario: {chosenOutcome}");
                         GameFiber.WaitUntil(() => MainPlayer.CurrentVehicle.IsSirenOn);
                         ShootAndFlee.SAFOutcome(handle);
                         HasEventHappend = true;
@@ -102,7 +101,7 @@ namespace RiskierTrafficStops
         public override void Finally()
         {
             Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Hope you had a good patrol!");
-            Normal("Unloaded succesfully");
+            Debug("Unloaded succesfully");
             Events.OnPulloverOfficerApproachDriver -= Events_OnPulloverOfficerApproachDriver;
             Events.OnPulloverDriverStopped -= Events_OnPulloverDriverStopped;
             Events.OnPulloverStarted -= Events_OnPulloverStarted;

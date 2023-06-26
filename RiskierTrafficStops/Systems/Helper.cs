@@ -75,6 +75,22 @@ namespace RiskierTrafficStops.Systems
             return (driver, driverVehicle);
         }
 
+
+        internal static void CleanupEvent(List<Ped> Peds, Vehicle vehicle)
+        {
+            foreach (Ped i in Peds)
+            {
+                if (i.Exists())
+                {
+                    i.IsPersistent = false;
+                }
+                else if (vehicle.Exists())
+                {
+                    vehicle.IsPersistent = false;
+                }
+            }
+        }
+
         /// <summary>
         /// Same as SetupPursuit but with a suspect list
         /// </summary>
@@ -193,7 +209,7 @@ namespace RiskierTrafficStops.Systems
         internal static void RevEngine(Ped driver, Vehicle SuspectVehicle, int[] timeBetweenRevs, int[] timeForRevsToLast, int TotalNumberOfRevs)
         {
             Random rndm = new Random();
-            Logger.Normal("Starting Rev Engine method");
+            Logger.Debug("Starting Rev Engine method");
             for (int i = 0; i < TotalNumberOfRevs; i++)
             {
                 GameFiber.Yield();

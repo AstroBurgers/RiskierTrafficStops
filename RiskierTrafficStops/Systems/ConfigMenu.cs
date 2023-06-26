@@ -4,8 +4,8 @@ using RAGENativeUI.Elements;
 using RAGENativeUI.PauseMenu;
 using System;
 using System.Drawing;
-using static RiskierTrafficStops.Systems.Logger;
 using static RiskierTrafficStops.Settings;
+using static RiskierTrafficStops.Systems.Logger;
 
 namespace RiskierTrafficStops.Systems
 {
@@ -127,7 +127,7 @@ namespace RiskierTrafficStops.Systems
                     MainMenuPool.ProcessMenus();
                 }
             }
-            catch (System.Threading.ThreadAbortException e)
+            catch (System.Threading.ThreadAbortException)
             {
 
             }

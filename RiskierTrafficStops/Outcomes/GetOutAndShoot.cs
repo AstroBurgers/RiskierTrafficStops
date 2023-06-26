@@ -101,11 +101,11 @@ namespace RiskierTrafficStops.Outcomes
         {
             if (ped.Exists())
             {
-                Normal("Setting Suspect relationship group");
+                Debug("Setting Suspect relationship group");
                 ped.RelationshipGroup = SuspectRelateGroup;
-                Normal("Making Suspect leave vehicle");
+                Debug("Making Suspect leave vehicle");
                 ped.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
-                Normal("Giving Suspect FightAgainstClosestHatedTarget Task");
+                Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
                 ped.Tasks.FightAgainstClosestHatedTarget(40f, 7000).WaitForCompletion(7000);
             }
         }
