@@ -20,7 +20,7 @@ namespace RiskierTrafficStops.Outcomes
                 suspectVehicle = GetSuspectAndVehicle(handle).Item2;
 
 
-                RevEngine(Suspect, suspectVehicle, new int[] { 2, 6 }, new int[] { 2, 6 }, 3);
+                RevEngine(Suspect, suspectVehicle, new int[] { 2, 4}, new int[] { 2, 4 }, 2);
 
                 int Chance = rndm.Next(1, 101);
 
