@@ -74,6 +74,10 @@ namespace RiskierTrafficStops.Outcomes
                         break;
                 }
             }
+            catch (System.Threading.ThreadAbortException)
+            {
+
+            }
             catch (Exception e)
             {
                 Error(e, "Yell.cs");
