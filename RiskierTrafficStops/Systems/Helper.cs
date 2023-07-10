@@ -65,6 +65,11 @@ namespace RiskierTrafficStops.Systems
                 Debug("Setting driver vehicle as Persistent");
                 driverVehicle.IsPersistent = true;
             }
+            else if (!driver.Exists() || !driverVehicle.Exists())
+            {
+                Debug($"Returning {driver} & {driverVehicle}");
+                return (driver, driverVehicle);
+            }
             Debug($"Returning {driver} & {driverVehicle}");
             return (driver, driverVehicle);
         }
