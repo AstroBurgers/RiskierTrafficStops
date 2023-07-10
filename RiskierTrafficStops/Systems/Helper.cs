@@ -47,14 +47,12 @@ namespace RiskierTrafficStops.Systems
 
         internal static (Ped, Vehicle) GetSuspectAndVehicle(LHandle handle)
         {
-            if (handle != null)
+            if ((handle != null) && Functions.IsPlayerPerformingPullover())
             {
                 Debug("Setting up Suspect");
                 driver = Functions.GetPulloverSuspect(handle);
             }
-
-
-            if (driver.IsInAnyVehicle(false) && !driver.IsInAnyPoliceVehicle && !driver.IsOnBike)
+            if (driver && driver.IsInAnyVehicle(false) && !driver.IsInAnyPoliceVehicle && !driver.IsOnBike)
             {
                 Debug("Setting up Suspect Vehicle");
                 driverVehicle = driver.CurrentVehicle;
