@@ -49,6 +49,8 @@ namespace RiskierTrafficStops
 
         private static void Events_OnPulloverStarted(LHandle handle)
         {
+            if (!IAEFunctions.IAECompatibilityCheck(handle)) { return; };
+
             chosenChance = rndm.Next(1, 101);
             chosenOutcome = Settings.enabledScenarios[rndm.Next(Settings.enabledScenarios.Count)];
             if (chosenChance < Settings.Chance)
@@ -78,12 +80,12 @@ namespace RiskierTrafficStops
 
         private static void Events_OnPulloverDriverStopped(LHandle handle)
         {
-            if (!HasEventHappend) { GameFiber.StartNew(() => ChooseEvent(handle)); }
+            if (!HasEventHappend && IAEFunctions.IAECompatibilityCheck(handle)) { GameFiber.StartNew(() => ChooseEvent(handle)); }
         }
 
         private static void Events_OnPulloverOfficerApproachDriver(LHandle handle)
         {
-            if (!HasEventHappend) { GameFiber.StartNew(() => ChooseEvent(handle)); }
+            if (!HasEventHappend && IAEFunctions.IAECompatibilityCheck(handle)) { GameFiber.StartNew(() => ChooseEvent(handle)); }
         }
 
         //For all events after the vehicle has stopped
