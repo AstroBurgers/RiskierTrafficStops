@@ -20,6 +20,8 @@ namespace RiskierTrafficStops.Outcomes
                 Suspect = GetSuspectAndVehicle(handle).Item1;
                 suspectVehicle = GetSuspectAndVehicle(handle).Item2;
 
+                if (!Suspect.Exists()) { CleanupEvent(Suspect, suspectVehicle); return; }
+
                 List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
 
                 Suspect.Tasks.DriveToPosition(MainPlayer.LastVehicle.Position, 100f, VehicleDrivingFlags.Reverse, 0.1f);

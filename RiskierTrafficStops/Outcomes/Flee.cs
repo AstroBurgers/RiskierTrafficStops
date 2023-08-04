@@ -21,6 +21,8 @@ namespace RiskierTrafficStops.Outcomes
                 Suspect = GetSuspectAndVehicle(handle).Item1;
                 suspectVehicle = GetSuspectAndVehicle(handle).Item2;
 
+                if (!Suspect.Exists()) { CleanupEvent(Suspect, suspectVehicle); return; }
+
                 Debug("Getting all vehicle occupants");
                 List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
 
@@ -36,10 +38,6 @@ namespace RiskierTrafficStops.Outcomes
                     {
                         if (!i.Exists()) { CleanupEvent(PedsInVehicle, suspectVehicle); return; }
                         i.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
-                    }
-                    if (Functions.IsPlayerPerformingPullover())
-                    {
-                        Functions.ForceEndCurrentPullover();
                     }
                     PursuitLHandle = SetupPursuitWithList(true, PedsInVehicle);
                 }

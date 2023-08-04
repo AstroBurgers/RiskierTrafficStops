@@ -10,10 +10,7 @@ namespace RiskierTrafficStops.Systems
     internal class Helper
     {
         internal static Ped MainPlayer => Game.LocalPlayer.Character;
-        internal static Random rndm = new Random(DateTime.Now.Millisecond);
-
-        internal static Ped driver;
-        internal static Vehicle driverVehicle;
+        internal static Random rndm = new(DateTime.Now.Millisecond);
 
         /// <summary>
         /// Setup a Pursuit with an Array of suspects
@@ -47,28 +44,22 @@ namespace RiskierTrafficStops.Systems
 
         internal static (Ped, Vehicle) GetSuspectAndVehicle(LHandle handle)
         {
+            Ped driver = null;
+            Vehicle driverVehicle = null;
             if ((handle != null) && Functions.IsPlayerPerformingPullover())
             {
                 Debug("Setting up Suspect");
                 driver = Functions.GetPulloverSuspect(handle);
+                Debug("Setting driver as persistent and Blocking permanent events");
+                driver.IsPersistent = true;
+                driver.BlockPermanentEvents = true;
             }
             if (driver && driver.IsInAnyVehicle(false) && !driver.IsInAnyPoliceVehicle && !driver.IsOnBike)
             {
                 Debug("Setting up Suspect Vehicle");
-                driverVehicle = driver.CurrentVehicle;
-            }
-            if (driver.Exists() && driverVehicle.Exists())
-            {
-                Debug("Setting driver as persistent and Blocking permanent events");
-                driver.IsPersistent = true;
-                driver.BlockPermanentEvents = true;
+                driverVehicle = driver.LastVehicle;
                 Debug("Setting driver vehicle as Persistent");
                 driverVehicle.IsPersistent = true;
-            }
-            else if (!driver.Exists() || !driverVehicle.Exists())
-            {
-                Debug($"Returning {driver} & {driverVehicle}");
-                return (driver, driverVehicle);
             }
             Debug($"Returning {driver} & {driverVehicle}");
             return (driver, driverVehicle);
@@ -219,7 +210,6 @@ namespace RiskierTrafficStops.Systems
         /// </summary>
         internal static void RevEngine(Ped driver, Vehicle SuspectVehicle, int[] timeBetweenRevs, int[] timeForRevsToLast, int TotalNumberOfRevs)
         {
-            Random rndm = new Random();
             Logger.Debug("Starting Rev Engine method");
             for (int i = 0; i < TotalNumberOfRevs; i++)
             {
@@ -234,9 +224,10 @@ namespace RiskierTrafficStops.Systems
 
         internal static List<Ped> GetAllVehicleOccupants(Vehicle vehicle)
         {
-            int seatCount = NativeFunction.Natives.GET_VEHICLE_NUMBER_OF_PASSENGERS<int>(vehicle, true, false);
-            List<Ped> occupantList = new List<Ped>();
-            for (int i = -1; i < seatCount; i++)
+            int seatCount = vehicle.PassengerCount; //Testing rph method instead of NativeFunction.Natives.GET_VEHICLE_NUMBER_OF_PASSENGERS<int>(vehicle, true, false);
+            List<Ped> occupantList = new();
+            occupantList.Add(vehicle.GetPedOnSeat(-1)); //vehicle.PassengerCount does not include the driver, so driver is being added here
+            for (int i = 0; i < seatCount; i++)
             {
                 if (!vehicle.IsSeatFree(i))
                 {

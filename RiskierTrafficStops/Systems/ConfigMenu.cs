@@ -23,9 +23,9 @@ namespace RiskierTrafficStops.Systems
         internal static readonly UIMenuListScrollerItem<bool> AutoLoggingEnabled = new("Auto Logging", "Enable or Disable Auto Logging", new[] { true, false });
         internal static readonly UIMenuItem SaveToINI = new("Save To INI", "Saves the current values to the INI File and Reloads the INI");
 
-        internal static UIMenu MainMenu = new UIMenu("RTS Config", "Configure Riskier Traffic Stops");
+        internal static UIMenu MainMenu = new("RTS Config", "Configure Riskier Traffic Stops");
 
-        internal static MenuPool MainMenuPool = new MenuPool();
+        internal static MenuPool MainMenuPool = new();
 
         internal static void CreateMenu()
         {
