@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Rage;
+using LSPD_First_Response.Mod.API;
 
 namespace RiskierTrafficStops.Systems
 {
@@ -18,7 +19,7 @@ namespace RiskierTrafficStops.Systems
             {
                 if (IncludeAllEvents)
                 {
-                    return ImmersiveAmbientEvents.API.BoloEventAPI.IsEntityUsedByAnyBOLOEvent(ped) && ImmersiveAmbientEvents.API.BoloEventAPI.IsEntityUsedByAnyBOLOEvent(ped);
+                    return ImmersiveAmbientEvents.API.EventAPI.IsEntityUsedByAnyEvent(ped) && ImmersiveAmbientEvents.API.BoloEventAPI.IsEntityUsedByAnyBOLOEvent(ped);
                 }
                 return ImmersiveAmbientEvents.API.BoloEventAPI.IsEntityUsedByAnyBOLOEvent(ped);
             }
@@ -31,6 +32,35 @@ namespace RiskierTrafficStops.Systems
             {
                 Logger.Error(ex, "IAEFunctions.cs, IsPedUsedByAmbientEvent()");
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks if a pullover is a part of an IAE event, returns false if so
+        /// </summary>
+        /// <param name="handle"></param>
+        /// <returns></returns>
+        internal static bool IAECompatibilityCheck(LHandle handle)
+        {
+            try
+            {
+                Ped ped = Functions.GetPulloverSuspect(handle);
+                if (IsPedUsedByAmbientEvent(ped, true))
+                {
+                    Logger.Debug("Pullover is a part of an IAE event, aborting RTS events...");
+                    return false;
+                }
+                return true;
+            }
+            catch (FileNotFoundException)
+            {
+                Logger.Debug("Immersive Ambient Events cannot be found, user might not have it installed");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "IAEFunctions.cs, IAECompatibilityCheck()");
+                return true;
             }
         }
     }
