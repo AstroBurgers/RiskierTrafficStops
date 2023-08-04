@@ -12,16 +12,16 @@ namespace RiskierTrafficStops.Systems
     internal class ConfigMenu
     {
 
-        internal static readonly UIMenuNumericScrollerItem<int> SetChance = new("Chance", "Chance that a Outcome happens", 0, 100, 1);
-        internal static readonly UIMenuListScrollerItem<bool> GOASOutcomeEnabled = new("Get Out And Shoot", "Enable or Disable this outcome", new[] { true, false });
-        internal static readonly UIMenuListScrollerItem<bool> YICOutcomeEnabled = new("Yell In Car", "Enable or Disable this outcome", new[] { true, false });
-        internal static readonly UIMenuListScrollerItem<bool> YellOutcomeEnabled = new("Yell", "Enable or Disable this outcome", new[] { true, false });
-        internal static readonly UIMenuListScrollerItem<bool> RIYOutcomeEnabled = new("Ram Into You", "Enable or Disable this outcome", new[] { true, false });
-        internal static readonly UIMenuListScrollerItem<bool> FleeOutcomeEnabled = new("Flee", "Enable or Disable this outcome", new[] { true, false });
-        internal static readonly UIMenuListScrollerItem<bool> RevOutcomeEnabled = new("Rev Engine", "Enable or Disable this outcome", new[] { true, false });
-        internal static readonly UIMenuListScrollerItem<bool> SAFOutcomeEnabled = new("Shoot And Flee", "Enable Or Disable this outcome", new[] { true, false });
-        internal static readonly UIMenuListScrollerItem<bool> AutoLoggingEnabled = new("Auto Logging", "Enable or Disable Auto Logging", new[] { true, false });
-        internal static readonly UIMenuItem SaveToINI = new("Save To INI", "Saves the current values to the INI File and Reloads the INI");
+        internal static readonly UIMenuNumericScrollerItem<int> SetChance = new("Chance", "Chance that an event happens", 0, 100, 1);
+        internal static readonly UIMenuListScrollerItem<bool> GOASOutcomeEnabled = new("Get Out And Shoot", "Enable or disable this outcome", new[] { true, false });
+        internal static readonly UIMenuListScrollerItem<bool> YICOutcomeEnabled = new("Yell In Car", "Enable or disable this outcome", new[] { true, false });
+        internal static readonly UIMenuListScrollerItem<bool> YellOutcomeEnabled = new("Yell", "Enable or disable this outcome", new[] { true, false });
+        internal static readonly UIMenuListScrollerItem<bool> RIYOutcomeEnabled = new("Ram Into You", "Enable or disable this outcome", new[] { true, false });
+        internal static readonly UIMenuListScrollerItem<bool> FleeOutcomeEnabled = new("Flee", "Enable or disable this outcome", new[] { true, false });
+        internal static readonly UIMenuListScrollerItem<bool> RevOutcomeEnabled = new("Rev Engine", "Enable or disable this outcome", new[] { true, false });
+        internal static readonly UIMenuListScrollerItem<bool> SAFOutcomeEnabled = new("Shoot And Flee", "Enable Or disable this outcome", new[] { true, false });
+        internal static readonly UIMenuListScrollerItem<bool> AutoLoggingEnabled = new("Auto Logging", "Enable or disable auto logging", new[] { true, false });
+        internal static readonly UIMenuItem SaveToINI = new("Save To INI", "Saves the current values to the INI file and reloads the INI");
 
         internal static UIMenu MainMenu = new("RTS Config", "Configure Riskier Traffic Stops");
 
@@ -33,7 +33,7 @@ namespace RiskierTrafficStops.Systems
             MainMenuPool.Add(MainMenu);
             MainMenu.MouseControlsEnabled = false;
             MainMenu.AllowCameraMovement = true;
-            TextStyle style = new TextStyle(TextFont.ChaletComprimeCologne, TextStyle.Current.Color, 1f, TextJustification.Center);
+            TextStyle style = new(TextFont.ChaletComprimeCologne, TextStyle.Current.Color, 1f, TextJustification.Center);
             MainMenu.TitleStyle = style;
 
             Debug("Adding Items to Menu");
@@ -41,18 +41,16 @@ namespace RiskierTrafficStops.Systems
             MainMenu.AddItems(SetChance, AutoLoggingEnabled, SAFOutcomeEnabled, GOASOutcomeEnabled, YICOutcomeEnabled, RIYOutcomeEnabled, FleeOutcomeEnabled, RevOutcomeEnabled, SaveToINI);
             SaveToINI.BackColor = Color.Green;
 
-            MainMenu.OnItemSelect += MainMenu_OnItemSelect;
+            MainMenu.OnItemSelect += (_, selectedItem, _) => //Easier way to do simple things in RNUI that dont require a lot of code
+            {
+                if (selectedItem.Equals(SaveToINI))
+                {
+                    AppendToINI();
+                }
+            };
 
             GameFiber.StartNew(MenuPoolProcess);
             SetupMenu();
-        }
-
-        private static void MainMenu_OnItemSelect(UIMenu sender, UIMenuItem selectedItem, int index)
-        {
-            if (selectedItem.Equals(SaveToINI))
-            {
-                AppendToINI();
-            }
         }
 
         internal static void SetupMenu()
@@ -73,40 +71,38 @@ namespace RiskierTrafficStops.Systems
         {
             Debug("Appending to INI...");
             Settings.inifile.Write("Settings", "Chance", SetChance.Value);
-            Settings.inifile.Write("Settings", "Get Out And Shoot Outcome enabled", GOASOutcomeEnabled.SelectedItem);
-            Settings.inifile.Write("Settings", "Ramming Oucome enabled", RIYOutcomeEnabled.SelectedItem);
-            Settings.inifile.Write("Settings", "Flee Outcome enabled", FleeOutcomeEnabled.SelectedItem);
-            Settings.inifile.Write("Settings", "Revving Outcome enabled", RevOutcomeEnabled.SelectedItem);
-            Settings.inifile.Write("Settings", "Yelling Outcome enabled", YellOutcomeEnabled.SelectedItem);
-            Settings.inifile.Write("Settings", "Yelling in Car Outcome enabled", YICOutcomeEnabled.SelectedItem);
-            Settings.inifile.Write("Settings", "Shoot And Flee Outcome enabled", SAFOutcomeEnabled.SelectedItem);
-            Settings.inifile.Write("Settings", "Automatic Error Reporting enabled", AutoLoggingEnabled.SelectedItem);
+            Settings.inifile.Write("Settings", "Get Out And Shoot Outcome Enabled", GOASOutcomeEnabled.SelectedItem);
+            Settings.inifile.Write("Settings", "Ramming Outcome Enabled", RIYOutcomeEnabled.SelectedItem);
+            Settings.inifile.Write("Settings", "Flee Outcome Enabled", FleeOutcomeEnabled.SelectedItem);
+            Settings.inifile.Write("Settings", "Revving Outcome Enabled", RevOutcomeEnabled.SelectedItem);
+            Settings.inifile.Write("Settings", "Yelling Outcome Enabled", YellOutcomeEnabled.SelectedItem);
+            Settings.inifile.Write("Settings", "Yelling In Car Outcome Enabled", YICOutcomeEnabled.SelectedItem);
+            Settings.inifile.Write("Settings", "Shoot And Flee Outcome Enabled", SAFOutcomeEnabled.SelectedItem);
+            Settings.inifile.Write("Settings", "Automatic Error Reporting Enabled", AutoLoggingEnabled.SelectedItem);
             Debug("Finished Appending to INI");
 
             Debug("Reading new Values...");
             Chance = inifile.ReadInt32("Settings", "Chance", 15);
-            getOutAndShootEnabled = inifile.ReadBoolean("Settings", "Get Out And Shoot Outcome enabled", getOutAndShootEnabled);
-            ramEnabled = inifile.ReadBoolean("Settings", "Ramming Oucome enabled", ramEnabled);
-            fleeEnabled = inifile.ReadBoolean("Settings", "Flee Outcome enabled", fleeEnabled);
-            revEnabled = inifile.ReadBoolean("Settings", "Revving Outcome enabled", revEnabled);
-            yellEnabled = inifile.ReadBoolean("Settings", "Yelling Outcome enabled", yellEnabled);
-            yellInCarEnabled = inifile.ReadBoolean("Settings", "Yelling Car in Outcome enabled", yellInCarEnabled);
-            shootAndFleeEnabled = inifile.ReadBoolean("Settings", "Shoot And Flee Outcome enabled", yellInCarEnabled);
-            autoLogEnabled = inifile.ReadBoolean("Settings", "Automatic Error Reporting enabled", autoLogEnabled);
+            getOutAndShootEnabled = inifile.ReadBoolean("Settings", "Get Out And Shoot Outcome Enabled", getOutAndShootEnabled);
+            ramEnabled = inifile.ReadBoolean("Settings", "Ramming Outcome Enabled", ramEnabled);
+            fleeEnabled = inifile.ReadBoolean("Settings", "Flee Outcome Enabled", fleeEnabled);
+            revEnabled = inifile.ReadBoolean("Settings", "Revving Outcome Enabled", revEnabled);
+            yellEnabled = inifile.ReadBoolean("Settings", "Yelling Outcome Enabled", yellEnabled);
+            yellInCarEnabled = inifile.ReadBoolean("Settings", "Yelling In Car Outcome Enabled", yellInCarEnabled);
+            shootAndFleeEnabled = inifile.ReadBoolean("Settings", "Shoot And Flee Outcome Enabled", shootAndFleeEnabled);
+            autoLogEnabled = inifile.ReadBoolean("Settings", "Automatic Error Reporting Enabled", autoLogEnabled);
             Debug("Finished reading new vaules");
 
             Debug("----INI Values---");
-            Debug("");
             Debug($"Chance: {Settings.Chance}");
-            Debug($"Get Out And Shoot Outcome enabled: {Settings.getOutAndShootEnabled}");
-            Debug($"Ramming Outcome enabled: {Settings.ramEnabled}");
-            Debug($"Flee Outcome enabled: {Settings.fleeEnabled}");
-            Debug($"Revving Outcome enabled: {Settings.revEnabled}");
-            Debug($"Yelling Outcome enabled: {Settings.yellEnabled}");
-            Debug($"Yelling in Car Outcome enabled: {Settings.yellInCarEnabled}");
-            Debug($"Shoot And Flee Outcome enabled: {Settings.shootAndFleeEnabled}");
-            Debug($"Automatic Error Reporting enabled: {Settings.autoLogEnabled}");
-            Debug($"");
+            Debug($"Get Out And Shoot Outcome Enabled: {Settings.getOutAndShootEnabled}");
+            Debug($"Ramming Outcome Enabled: {Settings.ramEnabled}");
+            Debug($"Flee Outcome Enabled: {Settings.fleeEnabled}");
+            Debug($"Revving Outcome Enabled: {Settings.revEnabled}");
+            Debug($"Yelling Outcome Enabled: {Settings.yellEnabled}");
+            Debug($"Yelling in Car Outcome Enabled: {Settings.yellInCarEnabled}");
+            Debug($"Shoot And Flee Outcome Enabled: {Settings.shootAndFleeEnabled}");
+            Debug($"Automatic Error Reporting Enabled: {Settings.autoLogEnabled}");
             Debug("----INI Values---");
 
             Debug("Reloading Enabled events...");

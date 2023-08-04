@@ -40,7 +40,7 @@ namespace RiskierTrafficStops
 
         internal static void UnsubscribeToEvents()
         {
-            Debug("Unsubscribing to events...");
+            Debug("Unsubscribing from events...");
             Events.OnPulloverOfficerApproachDriver -= Events_OnPulloverOfficerApproachDriver;
             Events.OnPulloverDriverStopped -= Events_OnPulloverDriverStopped;
             Events.OnPulloverStarted -= Events_OnPulloverStarted;

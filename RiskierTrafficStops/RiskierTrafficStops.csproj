@@ -35,6 +35,9 @@
     <LangVersion>10.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ImmersiveAmbientEvents">
+      <HintPath>..\..\Immersive Ambient Events\ImmersiveAmbientEvents\bin\Debug\ImmersiveAmbientEvents.dll</HintPath>
+    </Reference>
     <Reference Include="LSPD First Response">
       <HintPath>..\..\Immersive Ambient Events\ImmersiveAmbientEvents\bin\Debug\LSPD First Response.dll</HintPath>
     </Reference>
