@@ -30,43 +30,41 @@ namespace RiskierTrafficStops
             inifile = new InitializationFile(@"Plugins/Lspdfr/RiskierTrafficStops.ini");
             inifile.Create();
 
-            Chance = inifile.ReadInt32("Settings", "Chance", 15);
+            Chance = inifile.ReadInt32("Settings", "Chance", Chance);
             GetBackIn = inifile.ReadEnum("Settings", "Keybind", GetBackIn);
 
             // Reading event Booleans
-            getOutAndShootEnabled = inifile.ReadBoolean("Settings", "Get Out And Shoot Outcome enabled", getOutAndShootEnabled);
-            ramEnabled = inifile.ReadBoolean("Settings", "Ramming Oucome enabled", ramEnabled);
-            fleeEnabled = inifile.ReadBoolean("Settings", "Flee Outcome enabled", fleeEnabled);
-            revEnabled = inifile.ReadBoolean("Settings", "Revving Outcome enabled", revEnabled);
-            yellEnabled = inifile.ReadBoolean("Settings", "Yelling Outcome enabled", yellEnabled);
-            yellInCarEnabled = inifile.ReadBoolean("Settings", "Yelling Car in Outcome enabled", yellInCarEnabled);
-            shootAndFleeEnabled = inifile.ReadBoolean("Settings", "Shoot And Flee Outcome enabled", yellInCarEnabled);
+            getOutAndShootEnabled = inifile.ReadBoolean("Settings", "Get Out And Shoot Outcome Enabled", getOutAndShootEnabled);
+            ramEnabled = inifile.ReadBoolean("Settings", "Ramming Outcome Enabled", ramEnabled);
+            fleeEnabled = inifile.ReadBoolean("Settings", "Flee Outcome Enabled", fleeEnabled);
+            revEnabled = inifile.ReadBoolean("Settings", "Revving Outcome Enabled", revEnabled);
+            yellEnabled = inifile.ReadBoolean("Settings", "Yelling Outcome Enabled", yellEnabled);
+            yellInCarEnabled = inifile.ReadBoolean("Settings", "Yelling In Car Outcome Enabled", yellInCarEnabled);
+            shootAndFleeEnabled = inifile.ReadBoolean("Settings", "Shoot And Flee Outcome Enabled", shootAndFleeEnabled);
 
             // Reading Auto Log Boolean
-            autoLogEnabled = inifile.ReadBoolean("Settings", "Automatic Error Reporting enabled", autoLogEnabled);
+            autoLogEnabled = inifile.ReadBoolean("Settings", "Automatic Error Reporting Enabled", autoLogEnabled);
 
             FilterOutcomes();
         }
 
         internal static void FilterOutcomes()
         {
-            Logger.Debug("Adding enabled Scenarios to enabledScenarios");
+            Logger.Debug("Adding enabled scenarios to enabledScenarios");
             enabledScenarios.Clear();
-            if (getOutAndShootEnabled) { enabledScenarios.Add(Main.Scenarios.GetOutAndShoot); }
-            if (ramEnabled) { enabledScenarios.Add(Main.Scenarios.RamIntoPlayerVehicle); }
-            if (fleeEnabled) { enabledScenarios.Add(Main.Scenarios.FleeFromTrafficStop); }
-            if (revEnabled) { enabledScenarios.Add(Main.Scenarios.RevEngine); }
-            if (yellEnabled) { enabledScenarios.Add(Main.Scenarios.GetOutOfCarAndYell); }
-            if (yellInCarEnabled) { enabledScenarios.Add(Main.Scenarios.YellInCar); }
-            if (shootAndFleeEnabled) { enabledScenarios.Add(Main.Scenarios.ShootAndFlee); }
+            if (getOutAndShootEnabled) { enabledScenarios.Add(Scenarios.GetOutAndShoot); }
+            if (ramEnabled) { enabledScenarios.Add(Scenarios.RamIntoPlayerVehicle); }
+            if (fleeEnabled) { enabledScenarios.Add(Scenarios.FleeFromTrafficStop); }
+            if (revEnabled) { enabledScenarios.Add(Scenarios.RevEngine); }
+            if (yellEnabled) { enabledScenarios.Add(Scenarios.GetOutOfCarAndYell); }
+            if (yellInCarEnabled) { enabledScenarios.Add(Scenarios.YellInCar); }
+            if (shootAndFleeEnabled) { enabledScenarios.Add(Scenarios.ShootAndFlee); }
 
             Logger.Debug("----Enabled Scenarios----");
-            Logger.Debug("");
-            foreach (Main.Scenarios i in enabledScenarios)
+            foreach (Scenarios i in enabledScenarios)
             {
                 Logger.Debug(i.ToString());
             }
-            Logger.Debug("");
             Logger.Debug("----Enabled Scenarios----");
         }
     }

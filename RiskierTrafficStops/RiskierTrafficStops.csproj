@@ -35,14 +35,17 @@
     <LangVersion>10.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ImmersiveAmbientEvents">
+      <HintPath>..\..\Immersive Ambient Events\ImmersiveAmbientEvents\bin\Debug\ImmersiveAmbientEvents.dll</HintPath>
+    </Reference>
     <Reference Include="LSPD First Response">
-      <HintPath>..\..\Projects\Refrences\LSPD First Response.dll</HintPath>
+      <HintPath>..\..\Immersive Ambient Events\ImmersiveAmbientEvents\bin\Debug\LSPD First Response.dll</HintPath>
     </Reference>
     <Reference Include="RAGENativeUI">
-      <HintPath>..\..\..\..\Refrences\RAGENativeUI.dll</HintPath>
+      <HintPath>..\..\References\RAGENativeUI.dll</HintPath>
     </Reference>
     <Reference Include="RagePluginHook">
-      <HintPath>..\..\Projects\Refrences\RagePluginHook.dll</HintPath>
+      <HintPath>..\..\References\RagePluginHook.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -58,6 +61,8 @@
   <ItemGroup>
     <Compile Include="ConsoleCommands.cs" />
     <Compile Include="Outcomes\ShootAndFlee.cs" />
+    <Compile Include="PulloverEvents.cs" />
+    <Compile Include="Systems\IAEFunctions.cs" />
     <Compile Include="Systems\Logger.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Systems\Helper.cs" />

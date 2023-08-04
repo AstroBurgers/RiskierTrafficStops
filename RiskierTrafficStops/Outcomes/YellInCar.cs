@@ -21,9 +21,11 @@ namespace RiskierTrafficStops.Outcomes
 
                 if(!Suspect.Exists()) { CleanupEvent(Suspect, suspectVehicle); return; }
                 Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);
-                GameFiber.WaitUntil(() => !Suspect.IsAnySpeechPlaying);
-                Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);
-                GameFiber.WaitUntil(() => !Suspect.IsAnySpeechPlaying);
+                GameFiber.WaitWhile(() => Suspect.Exists() && Suspect.IsAnySpeechPlaying);
+                if (Suspect.Exists())
+                {
+                    Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);
+                }
             }
             catch (System.Threading.ThreadAbortException)
             {

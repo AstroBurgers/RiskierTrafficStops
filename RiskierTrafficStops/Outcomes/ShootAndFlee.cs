@@ -12,7 +12,7 @@ namespace RiskierTrafficStops.Outcomes
     {
         internal static Ped Suspect;
         internal static Vehicle suspectVehicle;
-        internal static RelationshipGroup SuspectRelateGroup = new RelationshipGroup("Suspect");
+        internal static RelationshipGroup SuspectRelateGroup = new("Suspect");
         internal static LHandle PursuitLHandle;
         internal static void SAFOutcome(LHandle handle)
         {
@@ -20,6 +20,8 @@ namespace RiskierTrafficStops.Outcomes
             {
                 Suspect = GetSuspectAndVehicle(handle).Item1;
                 suspectVehicle = GetSuspectAndVehicle(handle).Item2;
+
+                if (!Suspect.Exists()) { CleanupEvent(Suspect, suspectVehicle); return; }
 
                 Debug("Adding all suspect in the vehicle to a list");
                 List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
@@ -51,6 +53,9 @@ namespace RiskierTrafficStops.Outcomes
             SuspectRelateGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
             SuspectRelateGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
 
+            MainPlayer.RelationshipGroup.SetRelationshipWith(SuspectRelateGroup, Relationship.Hate); //Relationship groups go both ways
+            RelationshipGroup.Cop.SetRelationshipWith(SuspectRelateGroup, Relationship.Hate);
+
             string Weapon = pistolList[rndm.Next(pistolList.Length)];
             foreach (Ped i in Peds)
             {
@@ -75,14 +80,20 @@ namespace RiskierTrafficStops.Outcomes
         internal static void DriverOnly(List<Ped> Peds)
         {
             if (!Suspect.Exists()) { CleanupEvent(Suspect, suspectVehicle); return; }
+
             Debug("Setting up SuspectRelateGroup");
+
             SuspectRelateGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
             SuspectRelateGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
+            MainPlayer.RelationshipGroup.SetRelationshipWith(SuspectRelateGroup, Relationship.Hate); //Relationship groups go both ways
+            RelationshipGroup.Cop.SetRelationshipWith(SuspectRelateGroup, Relationship.Hate);
+
             Debug("Adding Suspect to SuspectRelateGroup");
             Suspect.RelationshipGroup = SuspectRelateGroup;
+            
             string Weapon = pistolList[rndm.Next(pistolList.Length)];
             Debug("Setting up Suspect weapon/tasks");
-            if (!Suspect.Inventory.HasLoadedWeapon) { Debug("Giving Suspect Weapon"); Suspect.Inventory.Weapons.Add(Weapon); }
+            if (!Suspect.Inventory.HasLoadedWeapon) { Debug("Giving Suspect Weapon"); Suspect.Inventory.GiveNewWeapon(Weapon, 100, true); }
             Debug("Giving suspect tasks");
             NativeFunction.Natives.TASK_VEHICLE_SHOOT_AT_PED(Suspect, MainPlayer, 20.0f);
             GameFiber.Wait(3750);

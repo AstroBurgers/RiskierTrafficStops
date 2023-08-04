@@ -29,6 +29,8 @@ namespace RiskierTrafficStops.Outcomes
                 Suspect = GetSuspectAndVehicle(handle).Item1;
                 suspectVehicle = GetSuspectAndVehicle(handle).Item2;
 
+                if (!Suspect.Exists()) { CleanupEvent(Suspect, suspectVehicle); return; }
+
                 Debug("Adding all suspect in the vehicle to a list");
 
                 List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
@@ -38,6 +40,9 @@ namespace RiskierTrafficStops.Outcomes
 
                 SuspectRelateGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
                 SuspectRelateGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
+
+                MainPlayer.RelationshipGroup.SetRelationshipWith(SuspectRelateGroup, Relationship.Hate); //Relationship groups go both ways
+                RelationshipGroup.Cop.SetRelationshipWith(SuspectRelateGroup, Relationship.Hate);
 
                 foreach (Ped i in PedsInVehicle)
                 {
@@ -104,7 +109,7 @@ namespace RiskierTrafficStops.Outcomes
                 Debug("Setting Suspect relationship group");
                 ped.RelationshipGroup = SuspectRelateGroup;
                 Debug("Making Suspect leave vehicle");
-                ped.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
+                ped.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen).WaitForCompletion();
                 Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
                 ped.Tasks.FightAgainstClosestHatedTarget(40f, 7000).WaitForCompletion(7000);
             }

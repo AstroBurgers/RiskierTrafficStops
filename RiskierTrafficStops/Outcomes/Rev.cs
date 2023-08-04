@@ -19,6 +19,7 @@ namespace RiskierTrafficStops.Outcomes
                 Suspect = GetSuspectAndVehicle(handle).Item1;
                 suspectVehicle = GetSuspectAndVehicle(handle).Item2;
 
+                if (!Suspect.Exists()) { CleanupEvent(Suspect, suspectVehicle); return; }
 
                 RevEngine(Suspect, suspectVehicle, new int[] { 2, 4}, new int[] { 2, 4 }, 2);
 
@@ -26,7 +27,6 @@ namespace RiskierTrafficStops.Outcomes
 
                 if (Chance >= 25)
                 {
-                    Functions.ForceEndCurrentPullover();
                     PursuitLHandle = SetupPursuit(true, Suspect);
                 }
             }
