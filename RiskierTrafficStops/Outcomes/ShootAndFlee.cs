@@ -73,8 +73,10 @@ namespace RiskierTrafficStops.Outcomes
             Debug("Wating 3750ms");
 
             GameFiber.Wait(3750);
-
-            PursuitLHandle = SetupPursuitWithList(true, Peds);
+            if (MainPlayer.Exists() && MainPlayer.IsAlive)
+            {
+                PursuitLHandle = SetupPursuitWithList(true, Peds);
+            }
         }
 
         internal static void DriverOnly(List<Ped> Peds)
@@ -97,7 +99,10 @@ namespace RiskierTrafficStops.Outcomes
             Debug("Giving suspect tasks");
             NativeFunction.Natives.TASK_VEHICLE_SHOOT_AT_PED(Suspect, MainPlayer, 20.0f);
             GameFiber.Wait(3750);
-            PursuitLHandle = SetupPursuitWithList(true, Peds);
+            if (MainPlayer.Exists() && MainPlayer.IsAlive)
+            {
+                PursuitLHandle = SetupPursuitWithList(true, Peds);
+            }
         }
     }
 }

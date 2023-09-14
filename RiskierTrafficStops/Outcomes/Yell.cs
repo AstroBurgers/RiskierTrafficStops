@@ -67,7 +67,7 @@ namespace RiskierTrafficStops.Outcomes
                         break;
                     case YellScenarioOutcomes.ContinueYelling:
                         GameFiber.StartNew(KeyPressed);
-                        while (!hasPedGottenBackIntoVehicle && Suspect.Exists())
+                        while (!hasPedGottenBackIntoVehicle && Suspect.Exists() && !Functions.IsPedArrested(Suspect))
                         {
                             GameFiber.Yield();
                             Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);
