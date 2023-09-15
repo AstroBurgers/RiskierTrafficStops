@@ -42,7 +42,7 @@ namespace RiskierTrafficStops.Systems
         /// </summary>
         /// <returns>Ped, Vehicle</returns>
 
-        internal static (Ped, Vehicle) GetSuspectAndVehicle(LHandle handle)
+        internal static (Ped Suspect, Vehicle suspectVehicle) GetSuspectAndVehicle(LHandle handle)
         {
             Ped driver = null;
             Vehicle driverVehicle = null;

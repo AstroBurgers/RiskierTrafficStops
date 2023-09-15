@@ -28,8 +28,9 @@ namespace RiskierTrafficStops.Outcomes
         {
             try
             {
-                Suspect = GetSuspectAndVehicle(handle).Item1;
-                suspectVehicle = GetSuspectAndVehicle(handle).Item2;
+                var e = GetSuspectAndVehicle(handle);
+                Suspect = e.Suspect;
+                suspectVehicle = e.suspectVehicle;
 
                 if (!Suspect.Exists()) { CleanupEvent(Suspect, suspectVehicle); return; }
 
@@ -102,7 +103,7 @@ namespace RiskierTrafficStops.Outcomes
 
         internal static void OutcomePullKnife()
         {
-            if (Suspect.Exists())
+            if (Suspect.Exists() && !Functions.IsPedArrested(Suspect) && !Functions.IsPedGettingArrested(Suspect))
             {
                 Suspect.Inventory.GiveNewWeapon(meleeWeapons[rndm.Next(meleeWeapons.Length)], -1, true);
 

@@ -16,8 +16,9 @@ namespace RiskierTrafficStops.Outcomes
         {
             try
             {
-                Suspect = GetSuspectAndVehicle(handle).Item1;
-                suspectVehicle = GetSuspectAndVehicle(handle).Item2;
+                var e = GetSuspectAndVehicle(handle);
+                Suspect = e.Suspect;
+                suspectVehicle = e.suspectVehicle;
 
                 if(!Suspect.Exists()) { CleanupEvent(Suspect, suspectVehicle); return; }
                 Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);
