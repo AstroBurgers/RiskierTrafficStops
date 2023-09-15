@@ -54,7 +54,7 @@ namespace RiskierTrafficStops.Systems
                 driver.IsPersistent = true;
                 driver.BlockPermanentEvents = true;
             }
-            if (driver && driver.IsInAnyVehicle(false) && !driver.IsInAnyPoliceVehicle && !driver.IsOnBike)
+            if (driver && driver.IsInAnyVehicle(false) && !driver.IsInAnyPoliceVehicle)
             {
                 Debug("Setting up Suspect Vehicle");
                 driverVehicle = driver.LastVehicle;
@@ -91,6 +91,8 @@ namespace RiskierTrafficStops.Systems
             {
                 vehicle.IsPersistent = false;
             }
+
+            PulloverEvents.HasEventHappend = false;
         }
 
         /// <summary>

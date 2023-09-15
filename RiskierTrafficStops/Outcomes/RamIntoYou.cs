@@ -21,7 +21,7 @@ namespace RiskierTrafficStops.Outcomes
                 Suspect = e.Suspect;
                 suspectVehicle = e.suspectVehicle;
 
-                if (!Suspect.Exists()) { CleanupEvent(Suspect, suspectVehicle); return; }
+                if (!Suspect.Exists() || !suspectVehicle.Exists() || !suspectVehicle.IsCar) {PulloverEvents.HasEventHappend = false; return; }
 
                 List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
 

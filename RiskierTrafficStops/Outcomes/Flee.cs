@@ -1,5 +1,6 @@
 ﻿using LSPD_First_Response.Mod.API;
 using Rage;
+using Rage.Native;
 using RiskierTrafficStops.Systems;
 using System;
 using System.Collections.Generic;
@@ -30,11 +31,11 @@ namespace RiskierTrafficStops.Outcomes
                 int Chance = rndm.Next(1, 101);
                 if (Chance < 50)
                 {
-                    Suspect.Tasks.PerformDrivingManeuver(VehicleManeuver.BurnOut);
-                    GameFiber.Wait(2750);
-                    Suspect.Tasks.PerformDrivingManeuver(VehicleManeuver.GoForwardStraight);
-                    GameFiber.Wait(350);
-                    Suspect.Tasks.Clear();
+                    Debug("Making suspect do burnout");
+                    Suspect.Tasks.PerformDrivingManeuver(suspectVehicle, VehicleManeuver.BurnOut, 2000).WaitForCompletion(2000);
+                    Debug("Clearing suspect tasks");
+                    Suspect.Tasks.PerformDrivingManeuver(suspectVehicle, VehicleManeuver.GoForwardStraight, 750).WaitForCompletion(750);
+                    Debug("Starting pursuit");
                     PursuitLHandle = SetupPursuitWithList(true, PedsInVehicle);
                 }
 
