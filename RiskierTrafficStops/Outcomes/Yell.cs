@@ -40,7 +40,7 @@ namespace RiskierTrafficStops.Outcomes
 
                 Debug("Making suspect Yell at Player");
                 int timesSpoken = 0;
-                while (Suspect.Exists() && timesSpoken < 3)
+                while (Suspect.Exists() && !Functions.IsPedArrested(Suspect) && timesSpoken < 3)
                 {
                     GameFiber.Yield();
                     timesSpoken += 1;
@@ -57,7 +57,7 @@ namespace RiskierTrafficStops.Outcomes
                 switch (chosenOutcome)
                 {
                     case YellScenarioOutcomes.GetBackInVehicle:
-                        if (Suspect.Exists()) //Double checking if suspect exists
+                        if (Suspect.Exists() && !Functions.IsPedArrested(Suspect)) //Double checking if suspect exists
                         {
                             Suspect.Tasks.EnterVehicle(suspectVehicle, -1);
                         }
@@ -115,6 +115,7 @@ namespace RiskierTrafficStops.Outcomes
                 RelationshipGroup.Cop.SetRelationshipWith(suspectRelationshipGroup, Relationship.Hate); //Relationship groups work both ways
 
                 Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
+                Suspect.BlockPermanentEvents = true;
                 Suspect.Tasks.FightAgainstClosestHatedTarget(40f, -1);
             }
         }

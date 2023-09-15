@@ -29,6 +29,11 @@ namespace RiskierTrafficStops.Outcomes
                 int Chance = rndm.Next(1, 101);
                 if (Chance < 50)
                 {
+                    Suspect.Tasks.PerformDrivingManeuver(VehicleManeuver.BurnOut);
+                    GameFiber.Wait(2750);
+                    Suspect.Tasks.PerformDrivingManeuver(VehicleManeuver.GoForwardStraight);
+                    GameFiber.Wait(350);
+                    Suspect.Tasks.Clear();
                     PursuitLHandle = SetupPursuitWithList(true, PedsInVehicle);
                 }
 

@@ -38,7 +38,7 @@ namespace RiskierTrafficStops.Systems
 
             Debug("Adding Items to Menu");
 
-            MainMenu.AddItems(SetChance, AutoLoggingEnabled, SAFOutcomeEnabled, GOASOutcomeEnabled, YICOutcomeEnabled, RIYOutcomeEnabled, FleeOutcomeEnabled, RevOutcomeEnabled, SaveToINI);
+            MainMenu.AddItems(SetChance, AutoLoggingEnabled, SAFOutcomeEnabled, GOASOutcomeEnabled, YICOutcomeEnabled, RIYOutcomeEnabled, FleeOutcomeEnabled, RevOutcomeEnabled, YellOutcomeEnabled, SaveToINI);
             SaveToINI.BackColor = Color.Green;
 
             MainMenu.OnItemSelect += (_, selectedItem, _) => //Easier way to do simple things in RNUI that dont require a lot of code
@@ -57,6 +57,7 @@ namespace RiskierTrafficStops.Systems
         {
             Debug("Assinging Menu values to their respective INI Values...");
             SetChance.Value = Settings.Chance;
+            YellOutcomeEnabled.SelectedItem = Settings.yellEnabled;
             GOASOutcomeEnabled.SelectedItem = Settings.getOutAndShootEnabled;
             YICOutcomeEnabled.SelectedItem = Settings.yellInCarEnabled;
             RIYOutcomeEnabled.SelectedItem = Settings.ramEnabled;
