@@ -31,8 +31,11 @@ namespace RiskierTrafficStops.Systems
 
             foreach (Ped Suspect in Suspects)
             {
-                GameFiber.Yield();
-                Functions.AddPedToPursuit(PursuitLHandle, Suspect);
+                if (Suspect.Exists())
+                {
+                    GameFiber.Yield();
+                    Functions.AddPedToPursuit(PursuitLHandle, Suspect);
+                }
             }
             return PursuitLHandle;
         }
