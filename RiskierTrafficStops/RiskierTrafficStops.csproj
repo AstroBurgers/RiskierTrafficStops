@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleCommands.cs" />
+    <Compile Include="Outcomes\DrunkDriverRam.cs" />
     <Compile Include="Outcomes\ShootAndFlee.cs" />
     <Compile Include="PulloverEvents.cs" />
     <Compile Include="Systems\IAEFunctions.cs" />

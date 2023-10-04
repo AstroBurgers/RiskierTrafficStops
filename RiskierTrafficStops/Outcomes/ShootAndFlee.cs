@@ -28,6 +28,8 @@ namespace RiskierTrafficStops.Outcomes
                 List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
                 Debug($"Peds In Vehicle: {PedsInVehicle.Count}");
 
+                GameFiber.Wait(4500);
+
                 int outcome = rndm.Next(1, 101);
                 if (outcome >= 50)
                 {

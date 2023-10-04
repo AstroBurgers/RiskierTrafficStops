@@ -3,6 +3,7 @@ using Rage;
 using Rage.Native;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using static RiskierTrafficStops.Systems.Logger;
 
 namespace RiskierTrafficStops.Systems
@@ -38,6 +39,34 @@ namespace RiskierTrafficStops.Systems
                 }
             }
             return PursuitLHandle;
+        }
+
+        internal static Vehicle GetVehicleBehindPlayerVehicle()
+        {
+            var i = World.GetAllVehicles().Where(i => (i.DistanceTo2D(MainPlayer.Position) < 35f) && i.HasDriver && !i.IsPersistent && !i.IsBicycle && (i.Class != VehicleClass.Motorcycle) && !i.IsBoat && !i.IsPlane && !i.Model.IsEmergencyVehicle && (i.GetPositionOffset(MainPlayer.LastVehicle.Position).Y <= 3f) && CheckIfHeadingIsWithinRange(MainPlayer.LastVehicle.Heading, i.Heading,  20f) && CheckZDistance(MainPlayer.LastVehicle.Position.Z, i.Position.Z, 5f)).ToArray();
+
+            return i[rndm.Next(i.Length)];
+        }
+
+        /// <summary>
+        /// Checks if the given heading is within a range of headingToCheckAgainst, the range is in both directions, for example 10f as a range would translate to if its within a range of 10f to the left or 10f to the right
+        /// </summary>
+        /// <param name="heading"></param>
+        /// <param name="headingToCheckAgainst"></param>
+        /// <param name="range"></param>
+        /// <returns></returns>
+
+        internal static bool CheckIfHeadingIsWithinRange(float referenceHeading, float headingToCheck, float range)
+        {
+            float absoluteDifference = Math.Abs(referenceHeading - headingToCheck);
+
+
+            if (absoluteDifference > 180f)
+            {
+                absoluteDifference = 360f - absoluteDifference;
+            }
+
+            return absoluteDifference <= range;
         }
 
         /// <summary>
@@ -245,6 +274,12 @@ namespace RiskierTrafficStops.Systems
             }
             Logger.Debug($"Peds In Vehicle: {occupantList.Count}");
             return occupantList;
+        }
+
+        internal static bool CheckZDistance(float z1, float z2, float range)
+        {
+            float difference = Math.Abs(z1 - z2);
+            return difference <= range;
         }
 
         /// <summary>
