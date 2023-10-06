@@ -95,7 +95,7 @@ namespace RiskierTrafficStops.Outcomes
 
             Debug("Adding Suspect to SuspectRelateGroup");
             Suspect.RelationshipGroup = SuspectRelateGroup;
-            
+
             string Weapon = pistolList[rndm.Next(pistolList.Length)];
             Debug("Setting up Suspect weapon/tasks");
             if (!Suspect.Inventory.HasLoadedWeapon) { Debug("Giving Suspect Weapon"); Suspect.Inventory.GiveNewWeapon(Weapon, 100, true); }

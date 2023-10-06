@@ -1,7 +1,6 @@
 ﻿using LSPD_First_Response.Mod.API;
 using Rage;
 using Rage.Native;
-using RiskierTrafficStops.Systems;
 using System;
 using static RiskierTrafficStops.Systems.Helper;
 using static RiskierTrafficStops.Systems.Logger;

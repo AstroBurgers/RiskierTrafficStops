@@ -2,7 +2,6 @@
 using RiskierTrafficStops.Systems;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using static RiskierTrafficStops.Main;
 
 namespace RiskierTrafficStops
 {

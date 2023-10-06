@@ -3,7 +3,6 @@ using Rage;
 using RiskierTrafficStops.Systems;
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using static RiskierTrafficStops.Systems.Helper;
 using static RiskierTrafficStops.Systems.Logger;
 

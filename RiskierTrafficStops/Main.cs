@@ -1,8 +1,6 @@
 ﻿using LSPD_First_Response.Mod.API;
 using Rage;
-using RiskierTrafficStops.Outcomes;
 using RiskierTrafficStops.Systems;
-using static RiskierTrafficStops.Systems.Helper;
 using static RiskierTrafficStops.Systems.Logger;
 
 namespace RiskierTrafficStops
@@ -41,7 +39,5 @@ namespace RiskierTrafficStops
             PulloverEventHandler.UnsubscribeToEvents();
             Debug("Unloaded succesfully");
         }
-
-        
     }
 }

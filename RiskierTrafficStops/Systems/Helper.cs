@@ -1,6 +1,5 @@
 ﻿using LSPD_First_Response.Mod.API;
 using Rage;
-using Rage.Native;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,7 +42,7 @@ namespace RiskierTrafficStops.Systems
 
         internal static Vehicle GetVehicleBehindPlayerVehicle()
         {
-            var i = World.GetAllVehicles().Where(i => (i.DistanceTo2D(MainPlayer.Position) < 35f) && i.HasDriver && !i.IsPersistent && !i.IsBicycle && (i.Class != VehicleClass.Motorcycle) && !i.IsBoat && !i.IsPlane && !i.Model.IsEmergencyVehicle && (i.GetPositionOffset(MainPlayer.LastVehicle.Position).Y <= 3f) && CheckIfHeadingIsWithinRange(MainPlayer.LastVehicle.Heading, i.Heading,  20f) && CheckZDistance(MainPlayer.LastVehicle.Position.Z, i.Position.Z, 5f)).ToArray();
+            Vehicle[] i = World.GetAllVehicles().Where(i => (i.DistanceTo2D(MainPlayer.Position) < 35f) && i.HasDriver && !i.IsPersistent && !i.IsBicycle && (i.Class != VehicleClass.Motorcycle) && !i.IsBoat && !i.IsPlane && !i.Model.IsEmergencyVehicle && (i.GetPositionOffset(MainPlayer.LastVehicle.Position).Y <= 3f) && CheckIfHeadingIsWithinRange(MainPlayer.LastVehicle.Heading, i.Heading, 20f) && CheckZDistance(MainPlayer.LastVehicle.Position.Z, i.Position.Z, 5f)).ToArray();
 
             return i[rndm.Next(i.Length)];
         }

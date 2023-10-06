@@ -1,7 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using LSPD_First_Response.Mod.API;
 using Rage;
-using LSPD_First_Response.Mod.API;
+using System;
+using System.IO;
 
 namespace RiskierTrafficStops.Systems
 {
