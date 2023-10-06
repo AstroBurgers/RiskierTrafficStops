@@ -10,7 +10,7 @@ namespace RiskierTrafficStops.Outcomes
 {
     internal class Yelling
     {
-        internal enum YellScenarioOutcomes
+        internal enum YellingScenarioOutcomes
         {
             GetBackInVehicle,
             ContinueYelling,
@@ -20,8 +20,8 @@ namespace RiskierTrafficStops.Outcomes
         internal static Ped Suspect;
         internal static Vehicle suspectVehicle;
         internal static RelationshipGroup suspectRelationshipGroup = new("Suspect");
-        internal static YellScenarioOutcomes chosenOutcome;
-        internal static bool hasPedGottenBackIntoVehicle = false;
+        internal static YellingScenarioOutcomes chosenOutcome;
+        internal static bool isSuspectInVehicle = false;
 
 
         internal static void YellingOutcome(LHandle handle)
@@ -41,7 +41,7 @@ namespace RiskierTrafficStops.Outcomes
 
                 Debug("Making suspect Yell at Player");
                 int timesSpoken = 0;
-                while (Suspect.Exists() && !Functions.IsPedArrested(Suspect) && timesSpoken < 3)
+                while (timesSpoken < 3 && Suspect.Exists() && !Functions.IsPedArrested(Suspect))
                 {
                     GameFiber.Yield();
                     timesSpoken += 1;
@@ -50,25 +50,25 @@ namespace RiskierTrafficStops.Outcomes
                     GameFiber.WaitWhile(() => Suspect.Exists() && Suspect.IsAnySpeechPlaying);
                 }
 
-                Debug("Choosing outome from YellScenarioOutcomes");
-                YellScenarioOutcomes[] ScenarioList = (YellScenarioOutcomes[])Enum.GetValues(typeof(YellScenarioOutcomes));
+                Debug("Choosing outome from YellingScenarioOutcomes");
+                YellingScenarioOutcomes[] ScenarioList = (YellingScenarioOutcomes[])Enum.GetValues(typeof(YellingScenarioOutcomes));
                 chosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
                 Debug($"Chosen Outcome: {chosenOutcome}");
 
                 switch (chosenOutcome)
                 {
-                    case YellScenarioOutcomes.GetBackInVehicle:
+                    case YellingScenarioOutcomes.GetBackInVehicle:
                         if (Suspect.Exists() && !Functions.IsPedArrested(Suspect)) //Double checking if suspect exists
                         {
                             Suspect.Tasks.EnterVehicle(suspectVehicle, -1);
                         }
                         break;
-                    case YellScenarioOutcomes.PullOutKnife:
+                    case YellingScenarioOutcomes.PullOutKnife:
                         OutcomePullKnife();
                         break;
-                    case YellScenarioOutcomes.ContinueYelling:
+                    case YellingScenarioOutcomes.ContinueYelling:
                         GameFiber.StartNew(KeyPressed);
-                        while (!hasPedGottenBackIntoVehicle && Suspect.Exists() && !Functions.IsPedArrested(Suspect))
+                        while (!isSuspectInVehicle && Suspect.Exists() && !Functions.IsPedArrested(Suspect))
                         {
                             GameFiber.Yield();
                             Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);
@@ -89,12 +89,12 @@ namespace RiskierTrafficStops.Outcomes
         internal static void KeyPressed()
         {
             Game.DisplayHelp($"~BLIP_INFO_ICON~ Press {Settings.GetBackIn} To to have the suspect get back in their vehicle");
-            while (Suspect.Exists() && !hasPedGottenBackIntoVehicle)
+            while (Suspect.Exists() && !isSuspectInVehicle)
             {
                 GameFiber.Yield();
                 if (Game.IsKeyDown(Settings.GetBackIn))
                 {
-                    hasPedGottenBackIntoVehicle = true;
+                    isSuspectInVehicle = true;
                     Suspect.Tasks.EnterVehicle(suspectVehicle, -1);
                     break;
                 }
