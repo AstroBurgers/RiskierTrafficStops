@@ -74,7 +74,7 @@ namespace RiskierTrafficStops.Systems
         /// </summary>
         /// <returns>Ped, Vehicle</returns>
 
-        internal static (Ped Suspect, Vehicle suspectVehicle) GetSuspectAndVehicle(LHandle handle)
+        internal static bool GetSuspectAndVehicle(LHandle handle, out Ped Suspect, out Vehicle suspectVehicle)
         {
             Ped driver = null;
             Vehicle driverVehicle = null;
@@ -94,7 +94,9 @@ namespace RiskierTrafficStops.Systems
                 driverVehicle.IsPersistent = true;
             }
             Debug($"Returning {driver} & {driverVehicle}");
-            return (driver, driverVehicle);
+            Suspect = driver;
+            suspectVehicle = driverVehicle;
+            return Suspect.Exists() && suspectVehicle.Exists();
         }
 
 
@@ -217,7 +219,6 @@ namespace RiskierTrafficStops.Systems
             "weapon_snspistol",
             "weapon_snspistol_mk2",
             "weapon_heavypistol",
-            "weapon_vintagepistol",
             "weapon_microsmg",
         };
 

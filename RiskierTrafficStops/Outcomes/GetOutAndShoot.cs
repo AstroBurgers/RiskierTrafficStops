@@ -3,6 +3,7 @@ using Rage;
 using RiskierTrafficStops.Systems;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using static RiskierTrafficStops.Systems.Helper;
 using static RiskierTrafficStops.Systems.Logger;
 
@@ -26,11 +27,11 @@ namespace RiskierTrafficStops.Outcomes
         {
             try
             {
-                var e = GetSuspectAndVehicle(handle);
-                Suspect = e.Suspect;
-                suspectVehicle = e.suspectVehicle;
-
-                if (!Suspect.Exists()) { CleanupEvent(Suspect, suspectVehicle); return; }
+                if (!GetSuspectAndVehicle(handle, out Suspect, out suspectVehicle))
+                {
+                    CleanupEvent(Suspect, suspectVehicle);
+                    return;
+                }
 
                 Debug("Adding all suspect in the vehicle to a list");
 
