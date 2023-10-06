@@ -17,7 +17,7 @@ namespace RiskierTrafficStops
         RamIntoPlayerVehicle,
         ShootAndFlee,
     }
-    internal class PulloverEvents
+    internal class PulloverEventHandler
     {
         internal static int chosenChance;
         internal static Scenarios chosenOutcome;
@@ -109,7 +109,7 @@ namespace RiskierTrafficStops
                 switch (chosenOutcome)
                 {
                     case Scenarios.GetOutOfCarAndYell:
-                        Yell.YellOutcome(handle);
+                        Yelling.YellingOutcome(handle);
                         break;
                     case Scenarios.GetOutAndShoot:
                         GetOutAndShoot.GOASOutcome(handle);
@@ -121,10 +121,10 @@ namespace RiskierTrafficStops
                         YellInCar.YICEventHandler(handle);
                         break;
                     case Scenarios.RevEngine:
-                        Rev.ROutcome(handle);
+                        Revving.RevvingOutcome(handle);
                         break;
                     case Scenarios.RamIntoPlayerVehicle:
-                        RamIntoYou.RIYOutcome(handle);
+                        Ramming.RammingOutcome(handle);
                         break;
                     case Scenarios.ShootAndFlee:
                         ShootAndFlee.SAFOutcome(handle);

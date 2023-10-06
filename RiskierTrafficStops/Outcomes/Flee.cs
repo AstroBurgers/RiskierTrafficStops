@@ -25,8 +25,6 @@ namespace RiskierTrafficStops.Outcomes
                     return;
                 }
 
-                if (!Suspect.Exists()) { CleanupEvent(Suspect, suspectVehicle); return; }
-
                 Debug("Getting all vehicle occupants");
                 List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
 

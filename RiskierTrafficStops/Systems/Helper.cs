@@ -114,7 +114,7 @@ namespace RiskierTrafficStops.Systems
                 }
             }
 
-            PulloverEvents.HasEventHappend = false;
+            PulloverEventHandler.HasEventHappend = false;
         }
 
         internal static void CleanupEvent(Ped Suspect, Vehicle vehicle)
@@ -128,7 +128,7 @@ namespace RiskierTrafficStops.Systems
                 vehicle.IsPersistent = false;
             }
 
-            PulloverEvents.HasEventHappend = false;
+            PulloverEventHandler.HasEventHappend = false;
         }
 
         /// <summary>

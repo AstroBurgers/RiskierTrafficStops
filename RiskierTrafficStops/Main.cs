@@ -31,14 +31,14 @@ namespace RiskierTrafficStops
                 if (Settings.autoLogEnabled) { Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~Auto Logging Status", "Auto Logging is ~g~Enabled"); }
                 if (!Settings.autoLogEnabled) { Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~Auto Logging Status", "Auto Logging is ~r~Disabled"); }
                 //Subscribes to events
-                PulloverEvents.SubscribeToEvents();
+                PulloverEventHandler.SubscribeToEvents();
             }
         }
         public override void Finally()
         {
             Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Hope you had a good patrol!");
             //Unsubscribes from events
-            PulloverEvents.UnsubscribeToEvents();
+            PulloverEventHandler.UnsubscribeToEvents();
             Debug("Unloaded succesfully");
         }
 

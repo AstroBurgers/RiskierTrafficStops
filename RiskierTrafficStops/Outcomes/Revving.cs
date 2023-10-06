@@ -1,19 +1,18 @@
 ﻿using LSPD_First_Response.Mod.API;
 using Rage;
 using System;
-using System.Collections.Generic;
 using static RiskierTrafficStops.Systems.Helper;
 using static RiskierTrafficStops.Systems.Logger;
 
 namespace RiskierTrafficStops.Outcomes
 {
-    internal class RamIntoYou
+    internal class Revving
     {
         internal static Ped Suspect;
         internal static Vehicle suspectVehicle;
         internal static LHandle PursuitLHandle;
 
-        internal static void RIYOutcome(LHandle handle)
+        internal static void RevvingOutcome(LHandle handle)
         {
             try
             {
@@ -23,12 +22,14 @@ namespace RiskierTrafficStops.Outcomes
                     return;
                 }
 
-                List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
+                RevEngine(Suspect, suspectVehicle, new int[] { 2, 4}, new int[] { 2, 4 }, 2);
 
-                Suspect.Tasks.DriveToPosition(MainPlayer.LastVehicle.Position, 100f, VehicleDrivingFlags.Reverse, 0.1f);
-                GameFiber.Wait(6500);
-                Suspect.Tasks.Clear();
-                PursuitLHandle = SetupPursuitWithList(true, PedsInVehicle);
+                int Chance = rndm.Next(1, 101);
+
+                if (Chance >= 25)
+                {
+                    PursuitLHandle = SetupPursuit(true, Suspect);
+                }
             }
             catch (System.Threading.ThreadAbortException)
             {
@@ -36,7 +37,7 @@ namespace RiskierTrafficStops.Outcomes
             }
             catch (Exception e)
             {
-                Error(e, "RamIntoYou.cs");
+                Error(e, "Rev.cs");
             }
         }
     }

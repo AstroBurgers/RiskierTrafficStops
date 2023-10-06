@@ -8,7 +8,7 @@ using static RiskierTrafficStops.Systems.Logger;
 
 namespace RiskierTrafficStops.Outcomes
 {
-    internal class Yell
+    internal class Yelling
     {
         internal enum YellScenarioOutcomes
         {
@@ -24,7 +24,7 @@ namespace RiskierTrafficStops.Outcomes
         internal static bool hasPedGottenBackIntoVehicle = false;
 
 
-        internal static void YellOutcome(LHandle handle)
+        internal static void YellingOutcome(LHandle handle)
         {
             try
             {
