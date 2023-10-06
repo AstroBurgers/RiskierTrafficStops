@@ -17,11 +17,11 @@ namespace RiskierTrafficStops.Outcomes
         {
             try
             {
-                var e = GetSuspectAndVehicle(handle);
-                Suspect = e.Suspect;
-                suspectVehicle = e.suspectVehicle;
-
-                if (!Suspect.Exists() || !suspectVehicle.Exists() || !suspectVehicle.IsCar) {PulloverEvents.HasEventHappend = false; return; }
+                if (!GetSuspectAndVehicle(handle, out Suspect, out suspectVehicle))
+                {
+                    CleanupEvent(Suspect, suspectVehicle);
+                    return;
+                }
 
                 List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
 

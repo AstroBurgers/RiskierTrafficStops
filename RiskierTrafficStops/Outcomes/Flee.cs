@@ -19,9 +19,11 @@ namespace RiskierTrafficStops.Outcomes
         {
             try
             {
-                var e = GetSuspectAndVehicle(handle);
-                Suspect = e.Suspect;
-                suspectVehicle = e.suspectVehicle;
+                if (!GetSuspectAndVehicle(handle, out Suspect, out suspectVehicle))
+                {
+                    CleanupEvent(Suspect, suspectVehicle);
+                    return;
+                }
 
                 if (!Suspect.Exists()) { CleanupEvent(Suspect, suspectVehicle); return; }
 

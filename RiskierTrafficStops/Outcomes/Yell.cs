@@ -28,11 +28,11 @@ namespace RiskierTrafficStops.Outcomes
         {
             try
             {
-                var e = GetSuspectAndVehicle(handle);
-                Suspect = e.Suspect;
-                suspectVehicle = e.suspectVehicle;
-
-                if (!Suspect.Exists()) { CleanupEvent(Suspect, suspectVehicle); return; }
+                if (!GetSuspectAndVehicle(handle, out Suspect, out suspectVehicle))
+                {
+                    CleanupEvent(Suspect, suspectVehicle);
+                    return;
+                }
 
                 Debug("Making Suspect Leave Vehicle");
                 Suspect.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen).WaitForCompletion();
