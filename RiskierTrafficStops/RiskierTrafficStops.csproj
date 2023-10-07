@@ -62,6 +62,7 @@
     <Compile Include="ConsoleCommands.cs" />
     <Compile Include="Outcomes\DrunkDriverRam.cs" />
     <Compile Include="Outcomes\ShootAndFlee.cs" />
+    <Compile Include="Outcomes\Spitting.cs" />
     <Compile Include="PulloverEventHandler.cs" />
     <Compile Include="Systems\IAEFunctions.cs" />
     <Compile Include="Systems\Logger.cs" />

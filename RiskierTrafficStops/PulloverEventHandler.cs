@@ -53,7 +53,7 @@ namespace RiskierTrafficStops
 
             chosenChance = rndm.Next(1, 101);
             chosenOutcome = Settings.enabledScenarios[rndm.Next(Settings.enabledScenarios.Count)];
-            if (chosenChance < Settings.Chance)
+            if (chosenChance <= Settings.Chance)
             {
                 switch (chosenOutcome)
                 {

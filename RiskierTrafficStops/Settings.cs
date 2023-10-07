@@ -47,6 +47,16 @@ namespace RiskierTrafficStops
             FilterOutcomes();
         }
 
+        internal static void ValidateINIFValues()
+        {
+            if (Chance > 100)
+            {
+                Logger.Debug("Chance value was greater than 100, setting value to 100...");
+                Chance = 100;
+                Logger.Debug("Chance value set to 100");
+            }
+        }
+
         internal static void FilterOutcomes()
         {
             Logger.Debug("Adding enabled scenarios to enabledScenarios");
