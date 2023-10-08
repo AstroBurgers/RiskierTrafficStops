@@ -16,6 +16,7 @@ namespace RiskierTrafficStops
         RevEngine,
         RamIntoPlayerVehicle,
         ShootAndFlee,
+        Spit,
     }
     internal class PulloverEventHandler
     {
@@ -128,6 +129,9 @@ namespace RiskierTrafficStops
                         break;
                     case Scenarios.ShootAndFlee:
                         ShootAndFlee.SAFOutcome(handle);
+                        break;
+                    case Scenarios.Spit:
+                        Spitting.SpittingOutcome(handle);
                         break;
                     default:
                         Debug("No outcomes Enabled (or some other shit)");

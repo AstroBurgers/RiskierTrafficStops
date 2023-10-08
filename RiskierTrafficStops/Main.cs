@@ -34,7 +34,7 @@ namespace RiskierTrafficStops
         }
         public override void Finally()
         {
-            Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Hope you had a good patrol!");
+            Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Did you crash or are you a dev?");
             //Unsubscribes from events
             PulloverEventHandler.UnsubscribeToEvents();
             Debug("Unloaded succesfully");

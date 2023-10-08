@@ -49,8 +49,8 @@ namespace RiskierTrafficStops.Outcomes
                     return;
                 }
 
-                GameFiber.WaitUntil(() => Suspect.GetPositionOffset(MainPlayer.Position).Y <= 2f);
-                Game.DisplaySubtitle(spittingText[rndm.Next(spittingText.Length)]);
+                GameFiber.WaitUntil(() => Suspect.GetPositionOffset(MainPlayer.Position).Y <= 2f, 300000);
+                Game.DisplaySubtitle(spittingText[rndm.Next(spittingText.Length)], 6000);
                 Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);
                 PulloverEventHandler.HasEventHappend = false;
             }

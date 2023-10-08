@@ -45,6 +45,7 @@ namespace RiskierTrafficStops.Systems
             try
             {
                 Ped ped = Functions.GetPulloverSuspect(handle);
+                Logger.Debug($"Does ped exsist: {ped.Exists()}");
                 if (IsPedUsedByAmbientEvent(ped, true))
                 {
                     Logger.Debug("Pullover is a part of an IAE event, aborting RTS events...");

@@ -21,6 +21,7 @@ namespace RiskierTrafficStops.Systems
         internal static readonly UIMenuListScrollerItem<bool> RevOutcomeEnabled = new("Rev Engine", "Enable or disable this outcome", new[] { true, false });
         internal static readonly UIMenuListScrollerItem<bool> SAFOutcomeEnabled = new("Shoot And Flee", "Enable Or disable this outcome", new[] { true, false });
         internal static readonly UIMenuListScrollerItem<bool> AutoLoggingEnabled = new("Auto Logging", "Enable or disable auto logging", new[] { true, false });
+        internal static readonly UIMenuListScrollerItem<bool> SpitEnabled = new("Spitting", "Enable or disable this outcome", new[] { true, false });
         internal static readonly UIMenuItem SaveToINI = new("Save To INI", "Saves the current values to the INI file and reloads the INI");
 
         internal static UIMenu MainMenu = new("RTS Config", "Configure Riskier Traffic Stops");
@@ -38,7 +39,7 @@ namespace RiskierTrafficStops.Systems
 
             Debug("Adding Items to Menu");
 
-            MainMenu.AddItems(SetChance, AutoLoggingEnabled, SAFOutcomeEnabled, GOASOutcomeEnabled, YICOutcomeEnabled, RIYOutcomeEnabled, FleeOutcomeEnabled, RevOutcomeEnabled, YellOutcomeEnabled, SaveToINI);
+            MainMenu.AddItems(SetChance, AutoLoggingEnabled, SAFOutcomeEnabled, GOASOutcomeEnabled, YICOutcomeEnabled, RIYOutcomeEnabled, FleeOutcomeEnabled, RevOutcomeEnabled, YellOutcomeEnabled, SpitEnabled, SaveToINI);
             SaveToINI.BackColor = Color.Green;
 
             MainMenu.OnItemSelect += (_, selectedItem, _) => //Easier way to do simple things in RNUI that dont require a lot of code
@@ -65,33 +66,36 @@ namespace RiskierTrafficStops.Systems
             RevOutcomeEnabled.SelectedItem = Settings.revEnabled;
             AutoLoggingEnabled.SelectedItem = Settings.autoLogEnabled;
             SAFOutcomeEnabled.SelectedItem = Settings.shootAndFleeEnabled;
+            SpitEnabled.SelectedItem = Settings.spittingEnabled;
             Debug("Assigned Values");
         }
 
         internal static void AppendToINI()
         {
             Debug("Appending to INI...");
-            Settings.inifile.Write("Settings", "Chance", SetChance.Value);
-            Settings.inifile.Write("Settings", "Get Out And Shoot Outcome Enabled", GOASOutcomeEnabled.SelectedItem);
-            Settings.inifile.Write("Settings", "Ramming Outcome Enabled", RIYOutcomeEnabled.SelectedItem);
-            Settings.inifile.Write("Settings", "Flee Outcome Enabled", FleeOutcomeEnabled.SelectedItem);
-            Settings.inifile.Write("Settings", "Revving Outcome Enabled", RevOutcomeEnabled.SelectedItem);
-            Settings.inifile.Write("Settings", "Yelling Outcome Enabled", YellOutcomeEnabled.SelectedItem);
-            Settings.inifile.Write("Settings", "Yelling In Car Outcome Enabled", YICOutcomeEnabled.SelectedItem);
-            Settings.inifile.Write("Settings", "Shoot And Flee Outcome Enabled", SAFOutcomeEnabled.SelectedItem);
-            Settings.inifile.Write("Settings", "Automatic Error Reporting Enabled", AutoLoggingEnabled.SelectedItem);
+            Settings.inifile.Write("General_Settings", "Chance", SetChance.Value);
+            Settings.inifile.Write("Outcome_Configuration", "Get Out And Shoot Outcome Enabled", GOASOutcomeEnabled.SelectedItem);
+            Settings.inifile.Write("Outcome_Configuration", "Ramming Outcome Enabled", RIYOutcomeEnabled.SelectedItem);
+            Settings.inifile.Write("Outcome_Configuration", "Flee Outcome Enabled", FleeOutcomeEnabled.SelectedItem);
+            Settings.inifile.Write("Outcome_Configuration", "Revving Outcome Enabled", RevOutcomeEnabled.SelectedItem);
+            Settings.inifile.Write("Outcome_Configuration", "Yelling Outcome Enabled", YellOutcomeEnabled.SelectedItem);
+            Settings.inifile.Write("Outcome_Configuration", "Yelling In Car Outcome Enabled", YICOutcomeEnabled.SelectedItem);
+            Settings.inifile.Write("Outcome_Configuration", "Shoot And Flee Outcome Enabled", SAFOutcomeEnabled.SelectedItem);
+            Settings.inifile.Write("Outcome_Configuration", "Spitting Outcome Enabled", SpitEnabled.SelectedItem);
+            Settings.inifile.Write("Auto_Logging", "Automatic Error Reporting Enabled", AutoLoggingEnabled.SelectedItem);
             Debug("Finished Appending to INI");
 
             Debug("Reading new Values...");
-            Chance = inifile.ReadInt32("Settings", "Chance", 15);
-            getOutAndShootEnabled = inifile.ReadBoolean("Settings", "Get Out And Shoot Outcome Enabled", getOutAndShootEnabled);
-            ramEnabled = inifile.ReadBoolean("Settings", "Ramming Outcome Enabled", ramEnabled);
-            fleeEnabled = inifile.ReadBoolean("Settings", "Flee Outcome Enabled", fleeEnabled);
-            revEnabled = inifile.ReadBoolean("Settings", "Revving Outcome Enabled", revEnabled);
-            yellEnabled = inifile.ReadBoolean("Settings", "Yelling Outcome Enabled", yellEnabled);
-            yellInCarEnabled = inifile.ReadBoolean("Settings", "Yelling In Car Outcome Enabled", yellInCarEnabled);
-            shootAndFleeEnabled = inifile.ReadBoolean("Settings", "Shoot And Flee Outcome Enabled", shootAndFleeEnabled);
-            autoLogEnabled = inifile.ReadBoolean("Settings", "Automatic Error Reporting Enabled", autoLogEnabled);
+            Chance = inifile.ReadInt32("General_Settings", "Chance", 15);
+            getOutAndShootEnabled = inifile.ReadBoolean("Outcome_Configuration", "Get Out And Shoot Outcome Enabled", getOutAndShootEnabled);
+            ramEnabled = inifile.ReadBoolean("Outcome_Configuration", "Ramming Outcome Enabled", ramEnabled);
+            fleeEnabled = inifile.ReadBoolean("Outcome_Configuration", "Flee Outcome Enabled", fleeEnabled);
+            revEnabled = inifile.ReadBoolean("Outcome_Configuration", "Revving Outcome Enabled", revEnabled);
+            yellEnabled = inifile.ReadBoolean("Outcome_Configuration", "Yelling Outcome Enabled", yellEnabled);
+            yellInCarEnabled = inifile.ReadBoolean("Outcome_Configuration", "Yelling In Car Outcome Enabled", yellInCarEnabled);
+            shootAndFleeEnabled = inifile.ReadBoolean("Outcome_Configuration", "Shoot And Flee Outcome Enabled", shootAndFleeEnabled);
+            spittingEnabled = inifile.ReadBoolean("Outcome_Configuration", "Spitting Outcome Enabled", spittingEnabled);
+            autoLogEnabled = inifile.ReadBoolean("Auto_Logging", "Automatic Error Reporting Enabled", autoLogEnabled);
             Debug("Finished reading new vaules");
 
             Debug("----INI Values---");
@@ -103,6 +107,7 @@ namespace RiskierTrafficStops.Systems
             Debug($"Yelling Outcome Enabled: {Settings.yellEnabled}");
             Debug($"Yelling in Car Outcome Enabled: {Settings.yellInCarEnabled}");
             Debug($"Shoot And Flee Outcome Enabled: {Settings.shootAndFleeEnabled}");
+            Debug($"Spitting Outcome Enabled: {Settings.spittingEnabled}");
             Debug($"Automatic Error Reporting Enabled: {Settings.autoLogEnabled}");
             Debug("----INI Values---");
 
