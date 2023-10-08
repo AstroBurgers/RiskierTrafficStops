@@ -8,20 +8,15 @@ namespace RiskierTrafficStops.Systems
     internal class IAEFunctions
     {
         /// <summary>
-        /// Checks if a ped is being used by IAE, if IncludeAllEvents is false, it will only check BOLO events
+        /// Checks if an entity is being used by IAE
         /// </summary>
-        /// <param name="ped"></param>
-        /// <param name="IncludeAllEvents"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        internal static bool IsPedUsedByAmbientEvent(Ped ped, bool IncludeAllEvents)
+        internal static bool IsPedUsedByAnyAmbientEvent(Entity entity)
         {
             try
             {
-                if (IncludeAllEvents)
-                {
-                    return ImmersiveAmbientEvents.API.EventAPI.IsEntityUsedByAnyEvent(ped) && ImmersiveAmbientEvents.API.BoloEventAPI.IsEntityUsedByAnyBOLOEvent(ped);
-                }
-                return ImmersiveAmbientEvents.API.BoloEventAPI.IsEntityUsedByAnyBOLOEvent(ped);
+                return ImmersiveAmbientEvents.API.EventAPI.IsEntityUsedByAnyEvent(entity) || ImmersiveAmbientEvents.API.BoloEventAPI.IsEntityUsedByAnyBOLOEvent(entity);
             }
             catch (FileNotFoundException)
             {
@@ -45,8 +40,7 @@ namespace RiskierTrafficStops.Systems
             try
             {
                 Ped ped = Functions.GetPulloverSuspect(handle);
-                Logger.Debug($"Does ped exsist: {ped.Exists()}");
-                if (IsPedUsedByAmbientEvent(ped, true))
+                if (IsPedUsedByAnyAmbientEvent(ped))
                 {
                     Logger.Debug("Pullover is a part of an IAE event, aborting RTS events...");
                     return false;
