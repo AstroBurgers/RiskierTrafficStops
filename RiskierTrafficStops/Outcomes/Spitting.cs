@@ -1,6 +1,5 @@
 ﻿using LSPD_First_Response.Mod.API;
 using Rage;
-using RiskierTrafficStops.Systems;
 using System;
 using System.Collections.Generic;
 using static RiskierTrafficStops.Systems.Helper;
@@ -49,7 +48,7 @@ namespace RiskierTrafficStops.Outcomes
                     return;
                 }
 
-                GameFiber.WaitUntil(() => Suspect.GetPositionOffset(MainPlayer.Position).Y <= 2f, 300000);
+                GameFiber.WaitUntil(() => Suspect.GetPositionOffset(MainPlayer.Position).X <= 1f, 120000);
                 Game.DisplaySubtitle(spittingText[rndm.Next(spittingText.Length)], 6000);
                 Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);
                 PulloverEventHandler.HasEventHappend = false;
