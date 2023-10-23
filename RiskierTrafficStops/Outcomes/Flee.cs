@@ -27,7 +27,7 @@ namespace RiskierTrafficStops.Outcomes
                 List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
 
                 int Chance = rndm.Next(1, 101);
-                if (Chance < 50)
+                if (Chance <= 50)
                 {
                     Debug("Making suspect do burnout");
                     Suspect.Tasks.PerformDrivingManeuver(suspectVehicle, VehicleManeuver.BurnOut, 2000).WaitForCompletion(2000);
@@ -37,12 +37,12 @@ namespace RiskierTrafficStops.Outcomes
                     PursuitLHandle = SetupPursuitWithList(true, PedsInVehicle);
                 }
 
-                else if (Chance > 50)
+                else if (Chance >= 50)
                 {
-                    foreach (Ped i in PedsInVehicle)
+                    for (int i = 0; i < PedsInVehicle.Count; i++)
                     {
-                        if (!i.Exists()) { CleanupEvent(PedsInVehicle, suspectVehicle); return; }
-                        i.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
+                        if (!PedsInVehicle[i].Exists()) { CleanupEvent(PedsInVehicle[i]); continue; }
+                        PedsInVehicle[i].Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
                     }
                     PursuitLHandle = SetupPursuitWithList(true, PedsInVehicle);
                 }

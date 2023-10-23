@@ -37,21 +37,21 @@ namespace RiskierTrafficStops.Outcomes
                 List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
                 Debug($"Peds In Vehicle: {PedsInVehicle.Count}");
 
-                Debug("Setting up SuspectRelateGroup");
-
+                Debug("Setting up Suspect Relationship Group");
                 SuspectRelateGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
                 SuspectRelateGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
 
                 MainPlayer.RelationshipGroup.SetRelationshipWith(SuspectRelateGroup, Relationship.Hate); //Relationship groups go both ways
                 RelationshipGroup.Cop.SetRelationshipWith(SuspectRelateGroup, Relationship.Hate);
 
-                foreach (Ped i in PedsInVehicle)
+                for (int i = 0; i < PedsInVehicle.Count; i++)
                 {
+                    // PedsInVehicle[i]
                     string Weapon = WeaponList[rndm.Next(WeaponList.Length)];
-                    if (!i.Exists()) { Helper.CleanupEvent(PedsInVehicle, suspectVehicle); return; }
-                    if (!i.Inventory.HasLoadedWeapon) { i.Inventory.GiveNewWeapon(Weapon, 100, true); Debug($"Giving Suspect weapon: {Weapon}"); }
+                    if (!PedsInVehicle[i].Exists()) { CleanupEvent(PedsInVehicle[i]); continue; }
+                    if (!PedsInVehicle[i].Inventory.HasLoadedWeapon) { PedsInVehicle[i].Inventory.GiveNewWeapon(Weapon, 100, true); Debug($"Giving Suspect weapon: {Weapon}"); }
 
-                    GameFiber.StartNew(() => GetPedOutOfVehicle(i));
+                    GameFiber.StartNew(() => GetPedOutOfVehicle(PedsInVehicle[i]));
                 }
 
                 GameFiber.Wait(7010);
@@ -68,11 +68,12 @@ namespace RiskierTrafficStops.Outcomes
                         break;
                     case shootOutcomes.KeepShooting:
                         if (Functions.IsPlayerPerformingPullover()) { Functions.ForceEndCurrentPullover(); }
-                        foreach (Ped i in PedsInVehicle)
+                        for (int i = 0; i < PedsInVehicle.Count; i++)
                         {
-                            if (!i.Exists()) { Helper.CleanupEvent(PedsInVehicle, suspectVehicle); return; }
+                            if (!PedsInVehicle[i].Exists()) { CleanupEvent(PedsInVehicle[i]); continue; }
+                            PedsInVehicle[i].Tasks.Clear();
                             Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
-                            i.Tasks.FightAgainstClosestHatedTarget(40f, -1);
+                            PedsInVehicle[i].Tasks.FightAgainstClosestHatedTarget(40f, -1);
                         }
                         break;
                 }
@@ -91,13 +92,13 @@ namespace RiskierTrafficStops.Outcomes
         internal static void PursuitOutcome(List<Ped> PedList)
         {
             int Seat = -2;
-            foreach (Ped i in PedList)
+            for (int i = 0; i < PedList.Count; i++)
             {
-                if (!i.Exists()) { Helper.CleanupEvent(PedList, suspectVehicle); return; }
+                if (PedList[i].Exists()) { CleanupEvent(PedList[i]); continue; }
+                Debug($"Giving Ped task to enter vehicle: {i}");
+                PedList[i].Tasks.Clear();
 
-                Debug("Giving Ped task to enter vehicle");
-                i.Tasks.EnterVehicle(suspectVehicle, (Seat + 1), 2f);
-                Debug($"{PedList.IndexOf(i)}");
+                PedList[i].Tasks.EnterVehicle(suspectVehicle, (Seat + 1), 2f);
             }
 
             PursuitLHandle = SetupPursuitWithList(true, PedList);
@@ -112,7 +113,7 @@ namespace RiskierTrafficStops.Outcomes
                 Debug("Making Suspect leave vehicle");
                 ped.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen).WaitForCompletion();
                 Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
-                ped.Tasks.FightAgainstClosestHatedTarget(40f, 7000).WaitForCompletion(7000);
+                ped.Tasks.FightAgainstClosestHatedTarget(40f, 7000).WaitForCompletion(7001);
             }
         }
     }

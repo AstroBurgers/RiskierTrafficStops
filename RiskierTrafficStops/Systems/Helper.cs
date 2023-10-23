@@ -29,14 +29,13 @@ namespace RiskierTrafficStops.Systems
 
             Functions.SetPursuitIsActiveForPlayer(PursuitLHandle, true);
 
-            foreach (Ped Suspect in Suspects)
+            for (int i = 0; i < Suspects.Length; i++)
             {
-                if (Suspect.Exists())
-                {
-                    GameFiber.Yield();
-                    Functions.AddPedToPursuit(PursuitLHandle, Suspect);
-                }
+                if (!Suspects[i].Exists()) { continue; }
+                Functions.AddPedToPursuit(PursuitLHandle, Suspects[i]);
+
             }
+
             return PursuitLHandle;
         }
 
@@ -85,14 +84,14 @@ namespace RiskierTrafficStops.Systems
                 driver.IsPersistent = true;
                 driver.BlockPermanentEvents = true;
             }
-            if (driver && driver.IsInAnyVehicle(false) && !driver.IsInAnyPoliceVehicle)
+            if (driver.Exists() && driver.IsInAnyVehicle(false) && !driver.IsInAnyPoliceVehicle)
             {
                 Debug("Setting up Suspect Vehicle");
                 driverVehicle = driver.LastVehicle;
                 Debug("Setting driver vehicle as Persistent");
                 driverVehicle.IsPersistent = true;
             }
-            Debug($"Returning {driver} & {driverVehicle}");
+            Debug($"Returning Driver: {driver} & Driver Vehicle: {driverVehicle}");
             Suspect = driver;
             suspectVehicle = driverVehicle;
             return Suspect.Exists() && suspectVehicle.Exists();
@@ -101,17 +100,18 @@ namespace RiskierTrafficStops.Systems
 
         internal static void CleanupEvent(List<Ped> Peds, Vehicle vehicle)
         {
-            foreach (Ped i in Peds)
+            for (int i = 0; i < Peds.Count; i++)
             {
-                if (i.Exists())
+                if (Peds[i].Exists())
                 {
-                    i.IsPersistent = false;
-                }
-                else if (vehicle.Exists())
-                {
-                    vehicle.IsPersistent = false;
+                    Peds[i].IsPersistent = false;
                 }
             }
+            if (vehicle.Exists())
+            {
+                vehicle.IsPersistent = false;
+            }
+
 
             PulloverEventHandler.HasEventHappend = false;
         }
@@ -128,6 +128,14 @@ namespace RiskierTrafficStops.Systems
             }
 
             PulloverEventHandler.HasEventHappend = false;
+        }
+
+        internal static void CleanupEvent(Ped Suspect)
+        {
+            if (Suspect.Exists())
+            {
+                Suspect.IsPersistent = false;
+            }
         }
 
         /// <summary>
@@ -265,13 +273,11 @@ namespace RiskierTrafficStops.Systems
             occupantList.Add(vehicle.GetPedOnSeat(-1)); //vehicle.PassengerCount does not include the driver, so driver is being added here
             for (int i = 0; i < seatCount; i++)
             {
-                if (!vehicle.IsSeatFree(i))
+                if (vehicle.IsSeatFree(i)) { continue; }
+                Ped ped = vehicle.GetPedOnSeat(i);
+                if (ped.Exists())
                 {
-                    Ped ped = vehicle.GetPedOnSeat(i);
-                    if (ped.Exists())
-                    {
-                        occupantList.Add(ped);
-                    }
+                    occupantList.Add(ped);
                 }
             }
             Logger.Debug($"Peds In Vehicle: {occupantList.Count}");

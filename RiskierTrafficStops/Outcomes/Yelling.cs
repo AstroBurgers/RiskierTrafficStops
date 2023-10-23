@@ -4,6 +4,7 @@ using Rage.Native;
 using System;
 using static RiskierTrafficStops.Systems.Helper;
 using static RiskierTrafficStops.Systems.Logger;
+using RAGENativeUI;
 
 namespace RiskierTrafficStops.Outcomes
 {
@@ -39,17 +40,16 @@ namespace RiskierTrafficStops.Outcomes
                 NativeFunction.Natives.x5AD23D40115353AC(Suspect, MainPlayer, -1);
 
                 Debug("Making suspect Yell at Player");
-                int timesSpoken = 0;
-                while (timesSpoken < 3 && Suspect.Exists() && !Functions.IsPedArrested(Suspect))
+                int timesToSpeak = 0;
+
+                for (int i = 0; i < timesToSpeak; i++)
                 {
-                    GameFiber.Yield();
-                    timesSpoken += 1;
-                    Debug("Suspect Is Yelling");
+                    Debug($"Making Suspect Yell, time: {i}");
                     Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);
                     GameFiber.WaitWhile(() => Suspect.Exists() && Suspect.IsAnySpeechPlaying);
                 }
 
-                Debug("Choosing outome from YellingScenarioOutcomes");
+                Debug("Choosing outome from possible Yelling outcomes");
                 YellingScenarioOutcomes[] ScenarioList = (YellingScenarioOutcomes[])Enum.GetValues(typeof(YellingScenarioOutcomes));
                 chosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
                 Debug($"Chosen Outcome: {chosenOutcome}");
@@ -87,7 +87,7 @@ namespace RiskierTrafficStops.Outcomes
         }
         internal static void KeyPressed()
         {
-            Game.DisplayHelp($"~BLIP_INFO_ICON~ Press {Settings.GetBackInKey} To to have the suspect get back in their vehicle");
+            Game.DisplayHelp($"~BLIP_INFO_ICON~ Press {Settings.GetBackInKey.GetInstructionalId()} to have the suspect get back in their vehicle", 10000);
             while (Suspect.Exists() && !isSuspectInVehicle)
             {
                 GameFiber.Yield();
