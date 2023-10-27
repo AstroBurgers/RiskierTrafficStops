@@ -48,9 +48,12 @@ namespace RiskierTrafficStops.Outcomes
                     return;
                 }
 
-                GameFiber.WaitUntil(() => Suspect.GetPositionOffset(MainPlayer.Position).X <= 1f, 120000);
-                Game.DisplaySubtitle(spittingText[rndm.Next(spittingText.Length)], 6000);
-                Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);
+                GameFiber.WaitUntil(() => Suspect.Exists() && MainPlayer.DistanceTo(Suspect) <= 2f && Suspect.IsInAnyVehicle(true), 120000);
+                if (MainPlayer.DistanceTo(Suspect) <= 2f && Suspect.IsInAnyVehicle(true))
+                {
+                    Game.DisplaySubtitle(spittingText[rndm.Next(spittingText.Length)], 6000);
+                    Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);
+                }
                 PulloverEventHandler.HasEventHappend = false;
             }
             catch (System.Threading.ThreadAbortException)
