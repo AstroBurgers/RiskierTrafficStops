@@ -37,7 +37,7 @@
   <ItemGroup>
     <Reference Include="ImmersiveAmbientEvents, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\References\ImmersiveAmbientEvents.dll</HintPath>
+      <HintPath>..\..\..\..\..\Refrences\ImmersiveAmbientEvents.dll</HintPath>
     </Reference>
     <Reference Include="LSPD First Response">
       <HintPath>..\..\Immersive Ambient Events\ImmersiveAmbientEvents\bin\Debug\LSPD First Response.dll</HintPath>
