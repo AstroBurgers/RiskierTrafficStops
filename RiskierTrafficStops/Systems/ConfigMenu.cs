@@ -11,7 +11,6 @@ namespace RiskierTrafficStops.Systems
 {
     internal class ConfigMenu
     {
-
         internal static readonly UIMenuNumericScrollerItem<int> SetChance = new("Chance", "Chance that an event happens", 0, 100, 1);
         internal static readonly UIMenuListScrollerItem<bool> GOASOutcomeEnabled = new("Get Out And Shoot", "Enable or disable this outcome", new[] { true, false });
         internal static readonly UIMenuListScrollerItem<bool> YICOutcomeEnabled = new("Yell In Car", "Enable or disable this outcome", new[] { true, false });
@@ -131,14 +130,12 @@ namespace RiskierTrafficStops.Systems
             }
             catch (System.Threading.ThreadAbortException)
             {
-
             }
             catch (Exception e)
             {
                 Logger.Error(e, "Menu.cs: MenuPoolProcess");
             }
         }
-
 
         internal static bool MenuRequirements() // The afformentioned menu requirements
         {

@@ -36,7 +36,6 @@ namespace RiskierTrafficStops.Outcomes
                     Debug("Starting pursuit");
                     PursuitLHandle = SetupPursuitWithList(true, PedsInVehicle);
                 }
-
                 else if (Chance >= 50)
                 {
                     for (int i = 0; i < PedsInVehicle.Count; i++)
@@ -49,7 +48,6 @@ namespace RiskierTrafficStops.Outcomes
             }
             catch (System.Threading.ThreadAbortException)
             {
-
             }
             catch (Exception e)
             {

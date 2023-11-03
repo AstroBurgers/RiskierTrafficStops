@@ -8,10 +8,12 @@ namespace RiskierTrafficStops
     public class Main : Plugin
     {
         internal static bool _onDuty;
+
         public override void Initialize()
         {
             Functions.OnOnDutyStateChanged += Functions_OnOnDutyStateChanged;
         }
+
         private static void Functions_OnOnDutyStateChanged(bool onDuty)
         {
             _onDuty = onDuty;
@@ -32,6 +34,7 @@ namespace RiskierTrafficStops
                 PulloverEventHandler.SubscribeToEvents();
             }
         }
+
         public override void Finally()
         {
             Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Did you crash or are you a dev?");

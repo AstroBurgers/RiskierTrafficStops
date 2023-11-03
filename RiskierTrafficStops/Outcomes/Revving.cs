@@ -33,7 +33,6 @@ namespace RiskierTrafficStops.Outcomes
             }
             catch (System.Threading.ThreadAbortException)
             {
-
             }
             catch (Exception e)
             {

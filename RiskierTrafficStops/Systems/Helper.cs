@@ -33,7 +33,6 @@ namespace RiskierTrafficStops.Systems
             {
                 if (!Suspects[i].Exists()) { continue; }
                 Functions.AddPedToPursuit(PursuitLHandle, Suspects[i]);
-
             }
 
             return PursuitLHandle;
@@ -47,6 +46,22 @@ namespace RiskierTrafficStops.Systems
         }
 
         /// <summary>
+        /// Returns the nearest vehicle to a position
+        /// </summary>
+
+        internal static Vehicle GetNearestVehicle(Vector3 position, float maxDistance = 40f)
+        {
+            List<Vehicle> vehicles = MainPlayer.GetNearbyVehicles(16).ToList();
+            if (vehicles.Count < 1)
+                throw new ArgumentOutOfRangeException();
+
+            var nearestVehicles = vehicles.OrderBy(vehicles => vehicles.DistanceTo(position)).ToList();
+            var vehicle = nearestVehicles[0];
+
+            return vehicle;
+        }
+
+        /// <summary>
         /// Checks if the given heading is within a range of headingToCheckAgainst, the range is in both directions, for example 10f as a range would translate to if its within a range of 10f to the left or 10f to the right
         /// </summary>
         /// <param name="heading"></param>
@@ -57,7 +72,6 @@ namespace RiskierTrafficStops.Systems
         internal static bool CheckIfHeadingIsWithinRange(float referenceHeading, float headingToCheck, float range)
         {
             float absoluteDifference = Math.Abs(referenceHeading - headingToCheck);
-
 
             if (absoluteDifference > 180f)
             {
@@ -97,7 +111,6 @@ namespace RiskierTrafficStops.Systems
             return Suspect.Exists() && suspectVehicle.Exists();
         }
 
-
         internal static void CleanupEvent(List<Ped> Peds, Vehicle vehicle)
         {
             for (int i = 0; i < Peds.Count; i++)
@@ -111,7 +124,6 @@ namespace RiskierTrafficStops.Systems
             {
                 vehicle.IsPersistent = false;
             }
-
 
             PulloverEventHandler.HasEventHappend = false;
         }

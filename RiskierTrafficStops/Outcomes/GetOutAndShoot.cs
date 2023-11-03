@@ -1,6 +1,5 @@
 ﻿using LSPD_First_Response.Mod.API;
 using Rage;
-using RiskierTrafficStops.Systems;
 using System;
 using System.Collections.Generic;
 using static RiskierTrafficStops.Systems.Helper;
@@ -66,6 +65,7 @@ namespace RiskierTrafficStops.Outcomes
                     case shootOutcomes.Flee:
                         PursuitOutcome(PedsInVehicle);
                         break;
+
                     case shootOutcomes.KeepShooting:
                         if (Functions.IsPlayerPerformingPullover()) { Functions.ForceEndCurrentPullover(); }
                         for (int i = 0; i < PedsInVehicle.Count; i++)
@@ -80,13 +80,11 @@ namespace RiskierTrafficStops.Outcomes
             }
             catch (System.Threading.ThreadAbortException)
             {
-
             }
             catch (Exception e)
             {
                 Error(e, "GetOutAndShoot.cs");
             }
-
         }
 
         internal static void PursuitOutcome(List<Ped> PedList)

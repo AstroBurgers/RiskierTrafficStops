@@ -8,7 +8,6 @@ namespace RiskierTrafficStops.Outcomes
 {
     internal class YellInCar
     {
-
         internal static Ped Suspect;
         internal static Vehicle suspectVehicle;
 
@@ -31,7 +30,6 @@ namespace RiskierTrafficStops.Outcomes
             }
             catch (System.Threading.ThreadAbortException)
             {
-
             }
             catch (Exception e)
             {

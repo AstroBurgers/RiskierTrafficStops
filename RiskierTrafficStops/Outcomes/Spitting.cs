@@ -1,7 +1,6 @@
 ﻿using LSPD_First_Response.Mod.API;
 using Rage;
 using System;
-using System.Collections.Generic;
 using static RiskierTrafficStops.Systems.Helper;
 using static RiskierTrafficStops.Systems.Logger;
 
@@ -58,7 +57,6 @@ namespace RiskierTrafficStops.Outcomes
             }
             catch (System.Threading.ThreadAbortException)
             {
-
             }
             catch (Exception e)
             {

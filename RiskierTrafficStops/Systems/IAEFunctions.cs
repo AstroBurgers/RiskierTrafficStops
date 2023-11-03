@@ -30,7 +30,6 @@ namespace RiskierTrafficStops.Systems
             }
         }
 
-
         /// <summary>
         /// Checks if an entity is being used by an IAE BOLO event
         /// </summary>

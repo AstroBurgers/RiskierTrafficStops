@@ -9,6 +9,7 @@ namespace RiskierTrafficStops.Systems
     {
         // Send message
         private static readonly List<string> blacklist = new List<string>();
+
         internal static void LogToDiscord(Exception ex, string location)
         {
             try

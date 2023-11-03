@@ -14,6 +14,7 @@ namespace RiskierTrafficStops.Outcomes
         internal static Vehicle suspectVehicle;
         internal static RelationshipGroup SuspectRelateGroup = new("Suspect");
         internal static LHandle PursuitLHandle;
+
         internal static void SAFOutcome(LHandle handle)
         {
             try
@@ -42,14 +43,12 @@ namespace RiskierTrafficStops.Outcomes
             }
             catch (System.Threading.ThreadAbortException)
             {
-
             }
             catch (Exception e)
             {
                 Error(e, "ShootAndFlee.cs");
             }
         }
-
 
         internal static void AllSuspects(List<Ped> Peds)
         {

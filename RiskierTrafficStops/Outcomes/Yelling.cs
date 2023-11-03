@@ -1,10 +1,10 @@
 ﻿using LSPD_First_Response.Mod.API;
 using Rage;
 using Rage.Native;
+using RAGENativeUI;
 using System;
 using static RiskierTrafficStops.Systems.Helper;
 using static RiskierTrafficStops.Systems.Logger;
-using RAGENativeUI;
 
 namespace RiskierTrafficStops.Outcomes
 {
@@ -22,7 +22,6 @@ namespace RiskierTrafficStops.Outcomes
         internal static RelationshipGroup suspectRelationshipGroup = new("Suspect");
         internal static YellingScenarioOutcomes chosenOutcome;
         internal static bool isSuspectInVehicle = false;
-
 
         internal static void YellingOutcome(LHandle handle)
         {
@@ -62,9 +61,11 @@ namespace RiskierTrafficStops.Outcomes
                             Suspect.Tasks.EnterVehicle(suspectVehicle, -1);
                         }
                         break;
+
                     case YellingScenarioOutcomes.PullOutKnife:
                         OutcomePullKnife();
                         break;
+
                     case YellingScenarioOutcomes.ContinueYelling:
                         GameFiber.StartNew(KeyPressed);
                         while (!isSuspectInVehicle && Suspect.Exists() && !Functions.IsPedArrested(Suspect))
@@ -78,13 +79,13 @@ namespace RiskierTrafficStops.Outcomes
             }
             catch (System.Threading.ThreadAbortException)
             {
-
             }
             catch (Exception e)
             {
                 Error(e, "Yell.cs");
             }
         }
+
         internal static void KeyPressed()
         {
             Game.DisplayHelp($"~BLIP_INFO_ICON~ Press {Settings.GetBackInKey.GetInstructionalId()} to have the suspect get back in their vehicle", 10000);

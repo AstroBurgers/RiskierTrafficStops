@@ -9,6 +9,7 @@ namespace RiskierTrafficStops.Systems
     {
         internal static string CurrentVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
         internal static string onlineVersion;
+
         internal static void CheckForUpdates()
         {
             WebClient webClient = new WebClient();
@@ -30,7 +31,6 @@ namespace RiskierTrafficStops.Systems
             }
             finally
             {
-
                 if (!pluginUpToDate)
                 {
                     Logger.Debug("Plugin is outdated, please up date to the latest version as soon as possible");
@@ -40,7 +40,6 @@ namespace RiskierTrafficStops.Systems
                 {
                     Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Plugin is ~g~up to date!");
                 }
-
             }
         }
     }

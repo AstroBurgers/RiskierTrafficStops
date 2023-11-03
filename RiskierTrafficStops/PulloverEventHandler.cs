@@ -18,11 +18,13 @@ namespace RiskierTrafficStops
         ShootAndFlee,
         Spit,
     }
+
     internal class PulloverEventHandler
     {
         internal static int chosenChance;
         internal static Scenarios chosenOutcome;
         internal static bool HasEventHappend;
+
         internal static void SubscribeToEvents()
         {
             //Subscribing to events
@@ -64,6 +66,7 @@ namespace RiskierTrafficStops
                         Flee.FleeOutcome(handle);
                         HasEventHappend = true;
                         break;
+
                     case Scenarios.ShootAndFlee:
                         Debug($"Chosen Scenario: {chosenOutcome}");
                         GameFiber.WaitUntil(() => MainPlayer.CurrentVehicle.IsSirenOn);
@@ -112,27 +115,35 @@ namespace RiskierTrafficStops
                     case Scenarios.GetOutOfCarAndYell:
                         Yelling.YellingOutcome(handle);
                         break;
+
                     case Scenarios.GetOutAndShoot:
                         GetOutAndShoot.GOASOutcome(handle);
                         break;
+
                     case Scenarios.FleeFromTrafficStop:
                         Flee.FleeOutcome(handle);
                         break;
+
                     case Scenarios.YellInCar:
                         YellInCar.YICEventHandler(handle);
                         break;
+
                     case Scenarios.RevEngine:
                         Revving.RevvingOutcome(handle);
                         break;
+
                     case Scenarios.RamIntoPlayerVehicle:
                         Ramming.RammingOutcome(handle);
                         break;
+
                     case Scenarios.ShootAndFlee:
                         ShootAndFlee.SAFOutcome(handle);
                         break;
+
                     case Scenarios.Spit:
                         Spitting.SpittingOutcome(handle);
                         break;
+
                     default:
                         Debug("No outcomes Enabled (or some other shit)");
                         break;
@@ -140,7 +151,6 @@ namespace RiskierTrafficStops
             }
             catch (System.Threading.ThreadAbortException)
             {
-
             }
             catch (System.Exception e)
             {
