@@ -34,7 +34,7 @@ namespace RiskierTrafficStops.Outcomes
             }
             catch (Exception e)
             {
-                Error(e, "Rev.cs");
+                Error(e, nameof(RevvingOutcome));
             }
         }
     }

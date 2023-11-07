@@ -33,7 +33,7 @@ namespace RiskierTrafficStops.Outcomes
             }
             catch (Exception e)
             {
-                Error(e, "YellingCar.cs");
+                Error(e, nameof(YicEventHandler));
             }
         }
     }

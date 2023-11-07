@@ -59,7 +59,7 @@ namespace RiskierTrafficStops.Outcomes
             }
             catch (Exception e)
             {
-                Error(e, "Spitting.cs");
+                Error(e, nameof(SpittingOutcome));
             }
         }
     }

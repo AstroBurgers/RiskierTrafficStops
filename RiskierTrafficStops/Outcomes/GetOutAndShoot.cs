@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using static RiskierTrafficStops.Systems.Helper;
 using static RiskierTrafficStops.Systems.Logger;
+// ReSharper disable HeapView.BoxingAllocation
 
 namespace RiskierTrafficStops.Outcomes
 {
@@ -33,7 +34,7 @@ namespace RiskierTrafficStops.Outcomes
 
                 Debug("Adding all suspect in the vehicle to a list");
 
-                var pedsInVehicle = GetAllVehicleOccupants(_suspectVehicle);
+                var pedsInVehicle = GetAllVehicleOccupants(_suspectVehicle) ?? throw new ArgumentNullException(nameof(handle));
                 Debug($"Peds In Vehicle: {pedsInVehicle.Count}");
 
                 Debug("Setting up Suspect Relationship Group");
@@ -48,7 +49,7 @@ namespace RiskierTrafficStops.Outcomes
                     var weapon = WeaponList[Rndm.Next(WeaponList.Length)];
                     if (!pedsInVehicle[i].Exists()) { CleanupEvent(pedsInVehicle[i]); continue; }
                     if (!pedsInVehicle[i].Inventory.HasLoadedWeapon) { pedsInVehicle[i].Inventory.GiveNewWeapon(weapon, 100, true); Debug($"Giving Suspect weapon: {weapon}"); }
-
+                    
                     GameFiber.StartNew(() => GetPedOutOfVehicle(pedsInVehicle[i]));
                 }
 
@@ -84,13 +85,13 @@ namespace RiskierTrafficStops.Outcomes
             }
             catch (Exception e)
             {
-                Error(e, "GetOutAndShoot.cs");
+                Error(e, nameof(GoasOutcome));
             }
         }
 
         private static void PursuitOutcome(List<Ped> pedList)
         {
-            var seat = -2;
+            const int seat = -2;
             for (var i = 0; i < pedList.Count; i++)
             {
                 if (pedList[i].Exists()) { CleanupEvent(pedList[i]); continue; }

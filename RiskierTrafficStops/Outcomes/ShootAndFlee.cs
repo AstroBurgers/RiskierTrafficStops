@@ -47,7 +47,7 @@ namespace RiskierTrafficStops.Outcomes
             }
             catch (Exception e)
             {
-                Error(e, "ShootAndFlee.cs");
+                Error(e, nameof(SafOutcome));
             }
         }
 
@@ -75,10 +75,8 @@ namespace RiskierTrafficStops.Outcomes
 
             Debug("Waiting 4500ms");
             GameFiber.Wait(4500);
-            if (MainPlayer.Exists() && MainPlayer.IsAlive)
-            {
-                PursuitLHandle = SetupPursuitWithList(true, peds);
-            }
+            if (!MainPlayer.Exists() || !MainPlayer.IsAlive) return;
+            PursuitLHandle = SetupPursuitWithList(true, peds);
         }
 
         private static void DriverOnly(List<Ped> peds)
@@ -87,14 +85,14 @@ namespace RiskierTrafficStops.Outcomes
 
             var weapon = PistolList[Rndm.Next(PistolList.Length)];
             Debug("Setting up Suspect Weapon");
+            
             if (!_suspect.Inventory.HasLoadedWeapon) { Debug("Giving Suspect Weapon"); _suspect.Inventory.GiveNewWeapon(weapon, 100, true); }
             Debug("Giving Suspect Tasks");
             NativeFunction.Natives.TASK_VEHICLE_SHOOT_AT_PED(_suspect, MainPlayer, 20.0f);
             GameFiber.Wait(4500);
-            if (MainPlayer.Exists() && MainPlayer.IsAlive)
-            {
-                PursuitLHandle = SetupPursuitWithList(true, peds);
-            }
+            
+            if (!MainPlayer.Exists() || !MainPlayer.IsAlive) return;
+            PursuitLHandle = SetupPursuitWithList(true, peds);
         }
     }
 }

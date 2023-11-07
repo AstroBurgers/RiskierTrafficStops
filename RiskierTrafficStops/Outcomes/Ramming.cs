@@ -35,7 +35,7 @@ namespace RiskierTrafficStops.Outcomes
             }
             catch (Exception e)
             {
-                Error(e, "RamIntoYou.cs");
+                Error(e, nameof(RammingOutcome));
             }
         }
     }

@@ -53,7 +53,7 @@ namespace RiskierTrafficStops.Outcomes
             }
             catch (Exception e)
             {
-                Error(e, "Flee.cs");
+                Error(e, nameof(FleeOutcome));
             }
         }
     }

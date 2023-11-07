@@ -39,7 +39,7 @@ namespace RiskierTrafficStops.Outcomes
                 NativeFunction.Natives.x5AD23D40115353AC(_suspect, MainPlayer, -1);
 
                 Debug("Making suspect Yell at Player");
-                var timesToSpeak = 2;
+                const int timesToSpeak = 2;
 
                 for (var i = 0; i < timesToSpeak; i++)
                 {
@@ -75,6 +75,8 @@ namespace RiskierTrafficStops.Outcomes
                             GameFiber.WaitWhile(() => _suspect.Exists() && _suspect.IsAnySpeechPlaying);
                         }
                         break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
             catch (System.Threading.ThreadAbortException)
@@ -82,7 +84,7 @@ namespace RiskierTrafficStops.Outcomes
             }
             catch (Exception e)
             {
-                Error(e, "Yell.cs");
+                Error(e, nameof(YellingOutcome));
             }
         }
 
