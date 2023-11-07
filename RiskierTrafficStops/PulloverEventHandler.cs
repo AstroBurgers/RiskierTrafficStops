@@ -19,11 +19,11 @@ namespace RiskierTrafficStops
         Spit,
     }
 
-    internal class PulloverEventHandler
+    internal static class PulloverEventHandler
     {
-        internal static int chosenChance;
-        internal static Scenarios chosenOutcome;
-        internal static bool HasEventHappend;
+        private static int _chosenChance;
+        private static Scenarios _chosenOutcome;
+        internal static bool HasEventHappened;
 
         internal static void SubscribeToEvents()
         {
@@ -52,26 +52,26 @@ namespace RiskierTrafficStops
 
         private static void Events_OnPulloverStarted(LHandle handle)
         {
-            if (!IAEFunctions.IAECompatibilityCheck(handle)) { return; };
+            if (!IaeFunctions.IaeCompatibilityCheck(handle)) return;
 
-            chosenChance = rndm.Next(1, 101);
-            chosenOutcome = Settings.enabledScenarios[rndm.Next(Settings.enabledScenarios.Count)];
-            if (chosenChance <= Settings.Chance)
+            _chosenChance = Rndm.Next(1, 101);
+            _chosenOutcome = Settings.EnabledScenarios[Rndm.Next(Settings.EnabledScenarios.Count)];
+            if (_chosenChance <= Settings.Chance)
             {
-                switch (chosenOutcome)
+                switch (_chosenOutcome)
                 {
                     case Scenarios.FleeFromTrafficStop:
-                        Debug($"Chosen Scenario: {chosenOutcome}");
+                        Debug($"Chosen Scenario: {_chosenOutcome}");
                         GameFiber.WaitUntil(() => MainPlayer.CurrentVehicle.IsSirenOn);
                         Flee.FleeOutcome(handle);
-                        HasEventHappend = true;
+                        HasEventHappened = true;
                         break;
 
                     case Scenarios.ShootAndFlee:
-                        Debug($"Chosen Scenario: {chosenOutcome}");
+                        Debug($"Chosen Scenario: {_chosenOutcome}");
                         GameFiber.WaitUntil(() => MainPlayer.CurrentVehicle.IsSirenOn);
-                        ShootAndFlee.SAFOutcome(handle);
-                        HasEventHappend = true;
+                        ShootAndFlee.SafOutcome(handle);
+                        HasEventHappened = true;
                         break;
                 }
             }
@@ -79,45 +79,45 @@ namespace RiskierTrafficStops
 
         private static void Events_OnPulloverEnded(LHandle pullover, bool normalEnding)
         {
-            HasEventHappend = false;
+            HasEventHappened = false;
         }
 
         private static void Events_OnPulloverDriverStopped(LHandle handle)
         {
-            if (!HasEventHappend && IAEFunctions.IAECompatibilityCheck(handle)) { GameFiber.StartNew(() => ChooseEvent(handle)); }
+            if (!HasEventHappened && IaeFunctions.IaeCompatibilityCheck(handle)) { GameFiber.StartNew(() => ChooseEvent(handle)); }
         }
 
         private static void Events_OnPulloverOfficerApproachDriver(LHandle handle)
         {
-            if (!HasEventHappend && IAEFunctions.IAECompatibilityCheck(handle)) { GameFiber.StartNew(() => ChooseEvent(handle)); }
+            if (!HasEventHappened && IaeFunctions.IaeCompatibilityCheck(handle)) { GameFiber.StartNew(() => ChooseEvent(handle)); }
         }
 
         //For all events after the vehicle has stopped
-        internal static void ChooseEvent(LHandle handle)
+        private static void ChooseEvent(LHandle handle)
         {
             try
             {
-                chosenChance = rndm.Next(1, 101);
-                Debug($"Chance: {chosenChance}");
-                Debug($"HasEventHappend: {HasEventHappend}");
+                _chosenChance = Rndm.Next(1, 101);
+                Debug($"Chance: {_chosenChance}");
+                Debug($"HasEventHappened: {HasEventHappened}");
 
-                if (HasEventHappend) { return; }
-                if (!(chosenChance <= Settings.Chance)) { return; }
+                if (HasEventHappened) { return; }
+                if (!(_chosenChance <= Settings.Chance)) { return; }
 
-                HasEventHappend = true;
+                HasEventHappened = true;
                 Debug("Choosing Scenario");
 
-                chosenOutcome = Settings.enabledScenarios[rndm.Next(Settings.enabledScenarios.Count)];
-                Debug($"Chosen Outcome: {chosenOutcome}");
+                _chosenOutcome = Settings.EnabledScenarios[Rndm.Next(Settings.EnabledScenarios.Count)];
+                Debug($"Chosen Outcome: {_chosenOutcome}");
 
-                switch (chosenOutcome)
+                switch (_chosenOutcome)
                 {
                     case Scenarios.GetOutOfCarAndYell:
                         Yelling.YellingOutcome(handle);
                         break;
 
                     case Scenarios.GetOutAndShoot:
-                        GetOutAndShoot.GOASOutcome(handle);
+                        GetOutAndShoot.GoasOutcome(handle);
                         break;
 
                     case Scenarios.FleeFromTrafficStop:
@@ -125,7 +125,7 @@ namespace RiskierTrafficStops
                         break;
 
                     case Scenarios.YellInCar:
-                        YellInCar.YICEventHandler(handle);
+                        YellInCar.YicEventHandler(handle);
                         break;
 
                     case Scenarios.RevEngine:
@@ -137,7 +137,7 @@ namespace RiskierTrafficStops
                         break;
 
                     case Scenarios.ShootAndFlee:
-                        ShootAndFlee.SAFOutcome(handle);
+                        ShootAndFlee.SafOutcome(handle);
                         break;
 
                     case Scenarios.Spit:

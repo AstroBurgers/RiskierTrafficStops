@@ -5,7 +5,7 @@ using System.IO;
 
 namespace RiskierTrafficStops.Systems
 {
-    internal class IAEFunctions
+    internal static class IaeFunctions
     {
         /// <summary>
         /// Checks if an entity is being used by a normal IAE event
@@ -35,7 +35,7 @@ namespace RiskierTrafficStops.Systems
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        internal static bool IsPedUsedByBOLOEvent(Entity entity)
+        internal static bool IsPedUsedByBoloEvent(Entity entity)
         {
             try
             {
@@ -53,7 +53,7 @@ namespace RiskierTrafficStops.Systems
             }
         }
 
-        internal static bool IAEEventCheck()
+        internal static bool IaeEventCheck()
         {
             try
             {
@@ -81,16 +81,16 @@ namespace RiskierTrafficStops.Systems
         /// </summary>
         /// <param name="handle"></param>
         /// <returns></returns>
-        internal static bool IAECompatibilityCheck(LHandle handle)
+        internal static bool IaeCompatibilityCheck(LHandle handle)
         {
             try
             {
-                Ped ped = Functions.GetPulloverSuspect(handle);
+                var ped = Functions.GetPulloverSuspect(handle);
                 if (IsPedUsedByAmbientEvent(ped))
                 {
-                    return IAEEventCheck();
+                    return IaeEventCheck();
                 }
-                else if (IsPedUsedByBOLOEvent(ped))
+                else if (IsPedUsedByBoloEvent(ped))
                 {
                     Logger.Debug("Pullover is a part of an IAE BOLO event, aborting RTS events...");
                     return false;

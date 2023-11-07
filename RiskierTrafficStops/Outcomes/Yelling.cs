@@ -8,57 +8,57 @@ using static RiskierTrafficStops.Systems.Logger;
 
 namespace RiskierTrafficStops.Outcomes
 {
-    internal class Yelling
+    internal static class Yelling
     {
-        internal enum YellingScenarioOutcomes
+        private enum YellingScenarioOutcomes
         {
             GetBackInVehicle,
             ContinueYelling,
             PullOutKnife
         }
 
-        internal static Ped Suspect;
-        internal static Vehicle suspectVehicle;
-        internal static RelationshipGroup suspectRelationshipGroup = new("Suspect");
-        internal static YellingScenarioOutcomes chosenOutcome;
-        internal static bool isSuspectInVehicle = false;
+        private static Ped _suspect;
+        private static Vehicle _suspectVehicle;
+        private static RelationshipGroup _suspectRelationshipGroup = new("Suspect");
+        private static YellingScenarioOutcomes _chosenOutcome;
+        private static bool _isSuspectInVehicle;
 
         internal static void YellingOutcome(LHandle handle)
         {
             try
             {
-                if (!GetSuspectAndVehicle(handle, out Suspect, out suspectVehicle))
+                if (!GetSuspectAndVehicle(handle, out _suspect, out _suspectVehicle))
                 {
-                    CleanupEvent(Suspect, suspectVehicle);
+                    CleanupEvent(_suspect, _suspectVehicle);
                     return;
                 }
 
                 Debug("Making Suspect Leave Vehicle");
-                Suspect.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen).WaitForCompletion();
+                _suspect.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen).WaitForCompletion();
                 Debug("Making Suspect Face Player");
-                NativeFunction.Natives.x5AD23D40115353AC(Suspect, MainPlayer, -1);
+                NativeFunction.Natives.x5AD23D40115353AC(_suspect, MainPlayer, -1);
 
                 Debug("Making suspect Yell at Player");
-                int timesToSpeak = 0;
+                var timesToSpeak = 2;
 
-                for (int i = 0; i < timesToSpeak; i++)
+                for (var i = 0; i < timesToSpeak; i++)
                 {
                     Debug($"Making Suspect Yell, time: {i}");
-                    Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);
-                    GameFiber.WaitWhile(() => Suspect.Exists() && Suspect.IsAnySpeechPlaying);
+                    _suspect.PlayAmbientSpeech(VoiceLines[Rndm.Next(VoiceLines.Length)]);
+                    GameFiber.WaitWhile(() => _suspect.Exists() && _suspect.IsAnySpeechPlaying);
                 }
 
-                Debug("Choosing outome from possible Yelling outcomes");
-                YellingScenarioOutcomes[] ScenarioList = (YellingScenarioOutcomes[])Enum.GetValues(typeof(YellingScenarioOutcomes));
-                chosenOutcome = ScenarioList[rndm.Next(ScenarioList.Length)];
-                Debug($"Chosen Outcome: {chosenOutcome}");
+                Debug("Choosing outcome from possible Yelling outcomes");
+                var scenarioList = (YellingScenarioOutcomes[])Enum.GetValues(typeof(YellingScenarioOutcomes));
+                _chosenOutcome = scenarioList[Rndm.Next(scenarioList.Length)];
+                Debug($"Chosen Outcome: {_chosenOutcome}");
 
-                switch (chosenOutcome)
+                switch (_chosenOutcome)
                 {
                     case YellingScenarioOutcomes.GetBackInVehicle:
-                        if (Suspect.Exists() && !Functions.IsPedArrested(Suspect)) //Double checking if suspect exists
+                        if (_suspect.Exists() && !Functions.IsPedArrested(_suspect)) //Double checking if suspect exists
                         {
-                            Suspect.Tasks.EnterVehicle(suspectVehicle, -1);
+                            _suspect.Tasks.EnterVehicle(_suspectVehicle, -1);
                         }
                         break;
 
@@ -68,11 +68,11 @@ namespace RiskierTrafficStops.Outcomes
 
                     case YellingScenarioOutcomes.ContinueYelling:
                         GameFiber.StartNew(KeyPressed);
-                        while (!isSuspectInVehicle && Suspect.Exists() && !Functions.IsPedArrested(Suspect))
+                        while (!_isSuspectInVehicle && _suspect.Exists() && !Functions.IsPedArrested(_suspect))
                         {
                             GameFiber.Yield();
-                            Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);
-                            GameFiber.WaitWhile(() => Suspect.Exists() && Suspect.IsAnySpeechPlaying);
+                            _suspect.PlayAmbientSpeech(VoiceLines[Rndm.Next(VoiceLines.Length)]);
+                            GameFiber.WaitWhile(() => _suspect.Exists() && _suspect.IsAnySpeechPlaying);
                         }
                         break;
                 }
@@ -86,39 +86,39 @@ namespace RiskierTrafficStops.Outcomes
             }
         }
 
-        internal static void KeyPressed()
+        private static void KeyPressed()
         {
             Game.DisplayHelp($"~BLIP_INFO_ICON~ Press {Settings.GetBackInKey.GetInstructionalId()} to have the suspect get back in their vehicle", 10000);
-            while (Suspect.Exists() && !isSuspectInVehicle)
+            while (_suspect.Exists() && !_isSuspectInVehicle)
             {
                 GameFiber.Yield();
                 if (Game.IsKeyDown(Settings.GetBackInKey))
                 {
-                    isSuspectInVehicle = true;
-                    Suspect.Tasks.EnterVehicle(suspectVehicle, -1);
+                    _isSuspectInVehicle = true;
+                    _suspect.Tasks.EnterVehicle(_suspectVehicle, -1);
                     break;
                 }
             }
         }
 
-        internal static void OutcomePullKnife()
+        private static void OutcomePullKnife()
         {
-            if (Suspect.Exists() && !Functions.IsPedArrested(Suspect) && !Functions.IsPedGettingArrested(Suspect))
-            {
-                Suspect.Inventory.GiveNewWeapon(meleeWeapons[rndm.Next(meleeWeapons.Length)], -1, true);
+            if (!_suspect.Exists() || Functions.IsPedArrested(_suspect) ||
+                Functions.IsPedGettingArrested(_suspect)) return;
+            
+            _suspect.Inventory.GiveNewWeapon(MeleeWeapons[Rndm.Next(MeleeWeapons.Length)], -1, true);
 
-                Debug("Setting Suspect relationship group");
-                Suspect.RelationshipGroup = suspectRelationshipGroup;
-                suspectRelationshipGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
-                suspectRelationshipGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
+            Debug("Setting Suspect relationship group");
+            _suspect.RelationshipGroup = _suspectRelationshipGroup;
+            _suspectRelationshipGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
+            _suspectRelationshipGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
 
-                MainPlayer.RelationshipGroup.SetRelationshipWith(suspectRelationshipGroup, Relationship.Hate);
-                RelationshipGroup.Cop.SetRelationshipWith(suspectRelationshipGroup, Relationship.Hate); //Relationship groups work both ways
+            MainPlayer.RelationshipGroup.SetRelationshipWith(_suspectRelationshipGroup, Relationship.Hate);
+            RelationshipGroup.Cop.SetRelationshipWith(_suspectRelationshipGroup, Relationship.Hate); //Relationship groups work both ways
 
-                Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
-                Suspect.BlockPermanentEvents = true;
-                Suspect.Tasks.FightAgainstClosestHatedTarget(40f, -1);
-            }
+            Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
+            _suspect.BlockPermanentEvents = true;
+            _suspect.Tasks.FightAgainstClosestHatedTarget(40f, -1);
         }
     }
 }

@@ -7,42 +7,49 @@ using static RiskierTrafficStops.Systems.Logger;
 
 namespace RiskierTrafficStops.Systems
 {
-    internal class Helper
+    internal static class Helper
     {
         internal static Ped MainPlayer => Game.LocalPlayer.Character;
-        internal static Random rndm = new(DateTime.Now.Millisecond);
+        internal static readonly Random Rndm = new(DateTime.Now.Millisecond);
 
         /// <summary>
         /// Setup a Pursuit with an Array of suspects
         /// </summary>
-        /// <param name="IsSuspectsPulledOver"></param>
-        /// <param name="Suspects"></param>
+        /// <param name="isSuspectsPulledOver"></param>
+        /// <param name="suspects"></param>
         /// <returns>PursuitLHandle</returns>
 
-        internal static LHandle SetupPursuit(bool IsSuspectsPulledOver, params Ped[] Suspects)
+        internal static LHandle SetupPursuit(bool isSuspectsPulledOver, params Ped[] suspects)
         {
-            if (IsSuspectsPulledOver)
+            if (isSuspectsPulledOver)
             {
                 Functions.ForceEndCurrentPullover();
             }
-            LHandle PursuitLHandle = Functions.CreatePursuit();
+            var pursuitLHandle = Functions.CreatePursuit();
 
-            Functions.SetPursuitIsActiveForPlayer(PursuitLHandle, true);
+            Functions.SetPursuitIsActiveForPlayer(pursuitLHandle, true);
 
-            for (int i = 0; i < Suspects.Length; i++)
+            for (var i = suspects.Length - 1; i >= 0; i--)
             {
-                if (!Suspects[i].Exists()) { continue; }
-                Functions.AddPedToPursuit(PursuitLHandle, Suspects[i]);
+                if (!suspects[i].Exists()) { continue; }
+                Functions.AddPedToPursuit(pursuitLHandle, suspects[i]);
             }
 
-            return PursuitLHandle;
+            return pursuitLHandle;
         }
 
-        internal static Vehicle GetVehicleBehindPlayerVehicle()
+        /*internal static Vehicle GetVehicleBehindPlayerVehicle()
         {
             Vehicle[] i = World.GetAllVehicles().Where(i => (i.DistanceTo2D(MainPlayer.Position) < 35f) && i.HasDriver && !i.IsPersistent && !i.IsBicycle && (i.Class != VehicleClass.Motorcycle) && !i.IsBoat && !i.IsPlane && !i.Model.IsEmergencyVehicle && (i.GetPositionOffset(MainPlayer.LastVehicle.Position).Y <= 3f) && CheckIfHeadingIsWithinRange(MainPlayer.LastVehicle.Heading, i.Heading, 20f) && CheckZDistance(MainPlayer.LastVehicle.Position.Z, i.Position.Z, 5f)).ToArray();
 
-            return i[rndm.Next(i.Length)];
+            return i[Rndm.Next(i.Length)];
+        }*/
+
+        internal static Vector3 GetRearOffset(Vehicle vehicle, float offset)
+        {
+            var backwardDirection = vehicle.RearPosition - vehicle.FrontPosition;
+            backwardDirection.Normalize();
+            return (backwardDirection * offset) + vehicle.RearPosition;
         }
 
         /// <summary>
@@ -51,24 +58,21 @@ namespace RiskierTrafficStops.Systems
 
         internal static Vehicle GetNearestVehicle(Vector3 position, float maxDistance = 40f)
         {
-            List<Vehicle> vehicles = MainPlayer.GetNearbyVehicles(16).ToList();
+            var vehicles = MainPlayer.GetNearbyVehicles(16).ToList();
             if (vehicles.Count < 1)
                 throw new ArgumentOutOfRangeException();
 
-            var nearestVehicles = vehicles.OrderBy(vehicles => vehicles.DistanceTo(position)).ToList();
+            var nearestVehicles = vehicles.OrderBy(vehicles1 => vehicles1.DistanceTo(position)).ToList();
             var vehicle = nearestVehicles[0];
 
             return vehicle;
         }
 
-        /// <summary>
+        /*/// <summary>
         /// Checks if the given heading is within a range of headingToCheckAgainst, the range is in both directions, for example 10f as a range would translate to if its within a range of 10f to the left or 10f to the right
         /// </summary>
-        /// <param name="heading"></param>
-        /// <param name="headingToCheckAgainst"></param>
         /// <param name="range"></param>
         /// <returns></returns>
-
         internal static bool CheckIfHeadingIsWithinRange(float referenceHeading, float headingToCheck, float range)
         {
             float absoluteDifference = Math.Abs(referenceHeading - headingToCheck);
@@ -79,14 +83,14 @@ namespace RiskierTrafficStops.Systems
             }
 
             return absoluteDifference <= range;
-        }
+        }*/
 
         /// <summary>
         /// Returns the Driver and its vehicle
         /// </summary>
         /// <returns>Ped, Vehicle</returns>
 
-        internal static bool GetSuspectAndVehicle(LHandle handle, out Ped Suspect, out Vehicle suspectVehicle)
+        internal static bool GetSuspectAndVehicle(LHandle handle, out Ped suspect, out Vehicle suspectVehicle)
         {
             Ped driver = null;
             Vehicle driverVehicle = null;
@@ -98,7 +102,7 @@ namespace RiskierTrafficStops.Systems
                 driver.IsPersistent = true;
                 driver.BlockPermanentEvents = true;
             }
-            if (driver.Exists() && driver.IsInAnyVehicle(false) && !driver.IsInAnyPoliceVehicle)
+            if (driver != null && driver.Exists() && driver.IsInAnyVehicle(false) && !driver.IsInAnyPoliceVehicle)
             {
                 Debug("Setting up Suspect Vehicle");
                 driverVehicle = driver.LastVehicle;
@@ -106,18 +110,18 @@ namespace RiskierTrafficStops.Systems
                 driverVehicle.IsPersistent = true;
             }
             Debug($"Returning Driver: {driver} & Driver Vehicle: {driverVehicle}");
-            Suspect = driver;
+            suspect = driver;
             suspectVehicle = driverVehicle;
-            return Suspect.Exists() && suspectVehicle.Exists();
+            return suspect.Exists() && suspectVehicle.Exists();
         }
 
-        internal static void CleanupEvent(List<Ped> Peds, Vehicle vehicle)
+        internal static void CleanupEvent(List<Ped> peds, Vehicle vehicle)
         {
-            for (int i = 0; i < Peds.Count; i++)
+            for (var i = peds.Count - 1; i >= 0; i--)
             {
-                if (Peds[i].Exists())
+                if (peds[i].Exists())
                 {
-                    Peds[i].IsPersistent = false;
+                    peds[i].IsPersistent = false;
                 }
             }
             if (vehicle.Exists())
@@ -125,57 +129,57 @@ namespace RiskierTrafficStops.Systems
                 vehicle.IsPersistent = false;
             }
 
-            PulloverEventHandler.HasEventHappend = false;
+            PulloverEventHandler.HasEventHappened = false;
         }
 
-        internal static void CleanupEvent(Ped Suspect, Vehicle vehicle)
+        internal static void CleanupEvent(Ped suspect, Vehicle vehicle)
         {
-            if (Suspect.Exists())
+            if (suspect.Exists())
             {
-                Suspect.IsPersistent = false;
+                suspect.IsPersistent = false;
             }
             else if (vehicle.Exists())
             {
                 vehicle.IsPersistent = false;
             }
 
-            PulloverEventHandler.HasEventHappend = false;
+            PulloverEventHandler.HasEventHappened = false;
         }
 
-        internal static void CleanupEvent(Ped Suspect)
+        internal static void CleanupEvent(Ped suspect)
         {
-            if (Suspect.Exists())
+            if (suspect.Exists())
             {
-                Suspect.IsPersistent = false;
+                suspect.IsPersistent = false;
             }
         }
 
         /// <summary>
         /// Same as SetupPursuit but with a suspect list
         /// </summary>
-        /// <param name="IsSuspectsPulledOver">If the suspects are in a traffic stop</param>
-        /// <param name="SuspectList">The list of Suspects, Type=Ped</param>
+        /// <param name="isSuspectsPulledOver">If the suspects are in a traffic stop</param>
+        /// <param name="suspectList">The list of Suspects, Type=Ped</param>
         /// <returns>PursuitLHandle</returns>
 
-        internal static LHandle SetupPursuitWithList(bool IsSuspectsPulledOver, List<Ped> SuspectList)
+        internal static LHandle SetupPursuitWithList(bool isSuspectsPulledOver, List<Ped> suspectList)
         {
-            if (IsSuspectsPulledOver)
+            if (isSuspectsPulledOver)
             {
                 Functions.ForceEndCurrentPullover();
             }
-            LHandle PursuitLHandle = Functions.CreatePursuit();
+            var pursuitLHandle = Functions.CreatePursuit();
 
-            Functions.SetPursuitIsActiveForPlayer(PursuitLHandle, true);
+            Functions.SetPursuitIsActiveForPlayer(pursuitLHandle, true);
 
-            for (int i = 0; i < SuspectList.Count; i++)
+            for (var i = suspectList.Count - 1; i >= 0; i--)
             {
                 GameFiber.Yield();
-                if (SuspectList[i].Exists())
+                if (suspectList[i].Exists())
                 {
-                    Functions.AddPedToPursuit(PursuitLHandle, SuspectList[i]);
+                    Functions.AddPedToPursuit(pursuitLHandle, suspectList[i]);
                 }
             }
-            return PursuitLHandle;
+            return pursuitLHandle;
         }
 
         /// <summary>
@@ -183,7 +187,7 @@ namespace RiskierTrafficStops.Systems
         /// </summary>
         internal static float MphToMps(float speed)
         {
-            float newSpeed = MathHelper.ConvertMilesPerHourToMetersPerSecond(speed);
+            var newSpeed = MathHelper.ConvertMilesPerHourToMetersPerSecond(speed);
             return newSpeed;
         }
 
@@ -191,7 +195,7 @@ namespace RiskierTrafficStops.Systems
         /// List of (Almost) every weapon
         /// </summary>
 
-        internal static String[] WeaponList = {
+        internal static readonly string[] WeaponList = {
             "weapon_pistol",
             "weapon_pistol_mk2",
             "weapon_combatpistol",
@@ -230,7 +234,7 @@ namespace RiskierTrafficStops.Systems
         /// List of all Weapons that can be fired from inside of a vehicle
         /// </summary>
 
-        internal static String[] pistolList =
+        internal static readonly string[] PistolList =
         {
             "weapon_pistol",
             "weapon_pistol_mk2",
@@ -247,8 +251,7 @@ namespace RiskierTrafficStops.Systems
         /// List of all viable melee Weapons
         /// </summary>
 
-        internal static String[] meleeWeapons = new String[]
-{
+        internal static readonly string[] MeleeWeapons = {
             "weapon_dagger",
             "weapon_bat",
             "weapon_bottle",
@@ -264,29 +267,29 @@ namespace RiskierTrafficStops.Systems
         /// <summary>
         /// Makes a ped rev their vehicles engine, the int list parameters each need a minimum and maximum value
         /// </summary>
-        internal static void RevEngine(Ped driver, Vehicle SuspectVehicle, int[] timeBetweenRevs, int[] timeForRevsToLast, int TotalNumberOfRevs)
+        internal static void RevEngine(Ped driver, Vehicle suspectVehicle, int[] timeBetweenRevs, int[] timeForRevsToLast, int totalNumberOfRevs)
         {
             Logger.Debug("Starting Rev Engine method");
-            for (int i = 0; i < TotalNumberOfRevs; i++)
+            for (var i = 0; i < totalNumberOfRevs; i++)
             {
                 GameFiber.Yield();
-                int time = rndm.Next(timeForRevsToLast[0], timeForRevsToLast[1]) * 1000;
-                driver.Tasks.PerformDrivingManeuver(SuspectVehicle, VehicleManeuver.RevEngine, time);
+                var time = Rndm.Next(timeForRevsToLast[0], timeForRevsToLast[1]) * 1000;
+                driver.Tasks.PerformDrivingManeuver(suspectVehicle, VehicleManeuver.RevEngine, time);
                 GameFiber.Wait(time);
-                int time2 = rndm.Next(timeBetweenRevs[0], timeBetweenRevs[1]) * 1000;
+                var time2 = Rndm.Next(timeBetweenRevs[0], timeBetweenRevs[1]) * 1000;
                 GameFiber.Wait(time2);
             }
         }
 
         internal static List<Ped> GetAllVehicleOccupants(Vehicle vehicle)
         {
-            int seatCount = vehicle.PassengerCount; //Testing rph method instead of NativeFunction.Natives.GET_VEHICLE_NUMBER_OF_PASSENGERS<int>(vehicle, true, false);
-            List<Ped> occupantList = new();
-            occupantList.Add(vehicle.GetPedOnSeat(-1)); //vehicle.PassengerCount does not include the driver, so driver is being added here
-            for (int i = 0; i < seatCount; i++)
+            var seatCount = vehicle.PassengerCount; //Testing rph method instead of NativeFunction.Natives.GET_VEHICLE_NUMBER_OF_PASSENGERS<int>(vehicle, true, false);
+            List<Ped> occupantList = new() { vehicle.GetPedOnSeat(-1) //vehicle.PassengerCount does not include the driver, so driver is being added here
+            };
+            for (var i = 0; i < seatCount; i++)
             {
                 if (vehicle.IsSeatFree(i)) { continue; }
-                Ped ped = vehicle.GetPedOnSeat(i);
+                var ped = vehicle.GetPedOnSeat(i);
                 if (ped.Exists())
                 {
                     occupantList.Add(ped);
@@ -298,16 +301,15 @@ namespace RiskierTrafficStops.Systems
 
         internal static bool CheckZDistance(float z1, float z2, float range)
         {
-            float difference = Math.Abs(z1 - z2);
+            var difference = Math.Abs(z1 - z2);
             return difference <= range;
         }
 
         /// <summary>
-        /// Array of Used curse voicelines
+        /// Array of Used curse voice-lines
         /// </summary>
 
-        internal static String[] Voicelines = new String[]
-        {
+        internal static readonly string[] VoiceLines = {
             "FIGHT",
             "GENERIC_INSULT_HIGH",
             "GENERIC_CURSE_MED",

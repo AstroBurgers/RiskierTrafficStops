@@ -7,28 +7,28 @@ using static RiskierTrafficStops.Systems.Logger;
 
 namespace RiskierTrafficStops.Outcomes
 {
-    internal class Ramming
+    internal static class Ramming
     {
-        internal static Ped Suspect;
-        internal static Vehicle suspectVehicle;
+        private static Ped _suspect;
+        private static Vehicle _suspectVehicle;
         internal static LHandle PursuitLHandle;
 
         internal static void RammingOutcome(LHandle handle)
         {
             try
             {
-                if (!GetSuspectAndVehicle(handle, out Suspect, out suspectVehicle))
+                if (!GetSuspectAndVehicle(handle, out _suspect, out _suspectVehicle))
                 {
-                    CleanupEvent(Suspect, suspectVehicle);
+                    CleanupEvent(_suspect, _suspectVehicle);
                     return;
                 }
 
-                List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
+                var pedsInVehicle = GetAllVehicleOccupants(_suspectVehicle);
 
-                Suspect.Tasks.DriveToPosition(MainPlayer.LastVehicle.Position, 100f, VehicleDrivingFlags.Reverse, 0.1f);
+                _suspect.Tasks.DriveToPosition(MainPlayer.LastVehicle.Position, 100f, VehicleDrivingFlags.Reverse, 0.1f);
                 GameFiber.Wait(3500);
-                Suspect.Tasks.Clear();
-                PursuitLHandle = SetupPursuitWithList(true, PedsInVehicle);
+                _suspect.Tasks.Clear();
+                PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
             }
             catch (System.Threading.ThreadAbortException)
             {

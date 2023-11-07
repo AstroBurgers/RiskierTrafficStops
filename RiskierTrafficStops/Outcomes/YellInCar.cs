@@ -6,26 +6,26 @@ using static RiskierTrafficStops.Systems.Logger;
 
 namespace RiskierTrafficStops.Outcomes
 {
-    internal class YellInCar
+    internal static class YellInCar
     {
-        internal static Ped Suspect;
-        internal static Vehicle suspectVehicle;
+        private static Ped _suspect;
+        private static Vehicle _suspectVehicle;
 
-        internal static void YICEventHandler(LHandle handle)
+        internal static void YicEventHandler(LHandle handle)
         {
             try
             {
-                if (!GetSuspectAndVehicle(handle, out Suspect, out suspectVehicle))
+                if (!GetSuspectAndVehicle(handle, out _suspect, out _suspectVehicle))
                 {
-                    CleanupEvent(Suspect, suspectVehicle);
+                    CleanupEvent(_suspect, _suspectVehicle);
                     return;
                 }
 
-                Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);
-                GameFiber.WaitWhile(() => Suspect.Exists() && Suspect.IsAnySpeechPlaying);
-                if (Suspect.Exists())
+                _suspect.PlayAmbientSpeech(VoiceLines[Rndm.Next(VoiceLines.Length)]);
+                GameFiber.WaitWhile(() => _suspect.Exists() && _suspect.IsAnySpeechPlaying);
+                if (_suspect.Exists())
                 {
-                    Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);
+                    _suspect.PlayAmbientSpeech(VoiceLines[Rndm.Next(VoiceLines.Length)]);
                 }
             }
             catch (System.Threading.ThreadAbortException)
@@ -33,7 +33,7 @@ namespace RiskierTrafficStops.Outcomes
             }
             catch (Exception e)
             {
-                Error(e, "YellinCar.cs");
+                Error(e, "YellingCar.cs");
             }
         }
     }

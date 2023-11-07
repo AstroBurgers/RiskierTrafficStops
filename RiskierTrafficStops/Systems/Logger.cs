@@ -7,20 +7,20 @@ namespace RiskierTrafficStops.Systems
 {
     internal static class Logger
     {
-        internal static string defaultInfo = "[{0}] RiskierTrafficStops: {1}";
+        private const string DefaultInfo = "[{0}] RiskierTrafficStops: {1}";
 
-        internal static void Error(Exception ex, string Location)
+        internal static void Error(Exception ex, string location)
         {
-            Game.LogTrivial(String.Format(defaultInfo, "ERROR", ex.ToString()));
-            if (Settings.autoLogEnabled)
+            Game.LogTrivial(string.Format(DefaultInfo, "ERROR", ex.ToString()));
+            if (Settings.AutoLogEnabled)
             {
-                PostToDiscord.LogToDiscord(ex, Location);
+                PostToDiscord.LogToDiscord(ex, location);
             }
         }
 
         internal static void Debug(string msg)
         {
-            Game.LogTrivial(String.Format(defaultInfo, "DEBUG", msg));
+            Game.LogTrivial(string.Format(DefaultInfo, "DEBUG", msg));
         }
     }
 }

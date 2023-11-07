@@ -8,37 +8,38 @@ using static RiskierTrafficStops.Systems.Logger;
 
 namespace RiskierTrafficStops.Outcomes
 {
-    internal class ShootAndFlee
+    internal static class ShootAndFlee
     {
-        internal static Ped Suspect;
-        internal static Vehicle suspectVehicle;
-        internal static RelationshipGroup SuspectRelateGroup = new("Suspect");
+        private static Ped _suspect;
+        private static Vehicle _suspectVehicle;
+        private static RelationshipGroup _suspectRelateGroup = new("Suspect");
         internal static LHandle PursuitLHandle;
 
-        internal static void SAFOutcome(LHandle handle)
+        internal static void SafOutcome(LHandle handle)
         {
             try
             {
-                if (!GetSuspectAndVehicle(handle, out Suspect, out suspectVehicle))
+                if (!GetSuspectAndVehicle(handle, out _suspect, out _suspectVehicle))
                 {
-                    CleanupEvent(Suspect, suspectVehicle);
+                    CleanupEvent(_suspect, _suspectVehicle);
                     return;
                 }
 
                 Debug("Adding all suspect in the vehicle to a list");
-                List<Ped> PedsInVehicle = GetAllVehicleOccupants(suspectVehicle);
-                Debug($"Peds In Vehicle: {PedsInVehicle.Count}");
+                var pedsInVehicle = GetAllVehicleOccupants(_suspectVehicle);
+                Debug($"Peds In Vehicle: {pedsInVehicle.Count}");
 
                 GameFiber.Wait(4500);
 
-                int outcome = rndm.Next(1, 101);
-                if (outcome >= 50)
+                var outcome = Rndm.Next(1, 101);
+                switch (outcome)
                 {
-                    GameFiber.StartNew(() => AllSuspects(PedsInVehicle));
-                }
-                else if (outcome <= 50)
-                {
-                    GameFiber.StartNew(() => DriverOnly(PedsInVehicle));
+                    case >= 50:
+                        GameFiber.StartNew(() => AllSuspects(pedsInVehicle));
+                        break;
+                    case <= 50:
+                        GameFiber.StartNew(() => DriverOnly(pedsInVehicle));
+                        break;
                 }
             }
             catch (System.Threading.ThreadAbortException)
@@ -50,49 +51,49 @@ namespace RiskierTrafficStops.Outcomes
             }
         }
 
-        internal static void AllSuspects(List<Ped> Peds)
+        private static void AllSuspects(List<Ped> peds)
         {
-            SuspectRelateGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
-            SuspectRelateGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
+            _suspectRelateGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
+            _suspectRelateGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
 
-            MainPlayer.RelationshipGroup.SetRelationshipWith(SuspectRelateGroup, Relationship.Hate); //Relationship groups go both ways
-            RelationshipGroup.Cop.SetRelationshipWith(SuspectRelateGroup, Relationship.Hate);
+            MainPlayer.RelationshipGroup.SetRelationshipWith(_suspectRelateGroup, Relationship.Hate); //Relationship groups go both ways
+            RelationshipGroup.Cop.SetRelationshipWith(_suspectRelateGroup, Relationship.Hate);
 
-            string Weapon = pistolList[rndm.Next(pistolList.Length)];
-            for (int i = 0; i < Peds.Count; i++)
+            var weapon = PistolList[Rndm.Next(PistolList.Length)];
+            for (var i = 0; i < peds.Count; i++)
             {
-                if (!Peds[i].Exists()) { CleanupEvent(Peds[i]); continue; }
-                if (!Peds[i].Inventory.HasLoadedWeapon)
+                if (!peds[i].Exists()) { CleanupEvent(peds[i]); continue; }
+                if (!peds[i].Inventory.HasLoadedWeapon)
                 {
-                    Debug($"Giving Suspect #{i} weapon: {Weapon}");
-                    Peds[i].Inventory.GiveNewWeapon(Weapon, 500, true);
+                    Debug($"Giving Suspect #{i} weapon: {weapon}");
+                    peds[i].Inventory.GiveNewWeapon(weapon, 500, true);
                 }
 
                 Debug($"Making Suspect #{i} shoot at Player");
-                NativeFunction.Natives.TASK_VEHICLE_SHOOT_AT_PED(Peds[i], MainPlayer, 20.0f);
+                NativeFunction.Natives.TASK_VEHICLE_SHOOT_AT_PED(peds[i], MainPlayer, 20.0f);
             }
 
-            Debug("Wating 4500ms");
+            Debug("Waiting 4500ms");
             GameFiber.Wait(4500);
             if (MainPlayer.Exists() && MainPlayer.IsAlive)
             {
-                PursuitLHandle = SetupPursuitWithList(true, Peds);
+                PursuitLHandle = SetupPursuitWithList(true, peds);
             }
         }
 
-        internal static void DriverOnly(List<Ped> Peds)
+        private static void DriverOnly(List<Ped> peds)
         {
-            if (!Suspect.Exists()) { CleanupEvent(Suspect, suspectVehicle); return; }
+            if (!_suspect.Exists()) { CleanupEvent(_suspect, _suspectVehicle); return; }
 
-            string Weapon = pistolList[rndm.Next(pistolList.Length)];
+            var weapon = PistolList[Rndm.Next(PistolList.Length)];
             Debug("Setting up Suspect Weapon");
-            if (!Suspect.Inventory.HasLoadedWeapon) { Debug("Giving Suspect Weapon"); Suspect.Inventory.GiveNewWeapon(Weapon, 100, true); }
+            if (!_suspect.Inventory.HasLoadedWeapon) { Debug("Giving Suspect Weapon"); _suspect.Inventory.GiveNewWeapon(weapon, 100, true); }
             Debug("Giving Suspect Tasks");
-            NativeFunction.Natives.TASK_VEHICLE_SHOOT_AT_PED(Suspect, MainPlayer, 20.0f);
+            NativeFunction.Natives.TASK_VEHICLE_SHOOT_AT_PED(_suspect, MainPlayer, 20.0f);
             GameFiber.Wait(4500);
             if (MainPlayer.Exists() && MainPlayer.IsAlive)
             {
-                PursuitLHandle = SetupPursuitWithList(true, Peds);
+                PursuitLHandle = SetupPursuitWithList(true, peds);
             }
         }
     }

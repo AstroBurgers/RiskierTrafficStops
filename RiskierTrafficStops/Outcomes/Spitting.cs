@@ -6,13 +6,12 @@ using static RiskierTrafficStops.Systems.Logger;
 
 namespace RiskierTrafficStops.Outcomes
 {
-    internal class Spitting
+    internal static class Spitting
     {
-        internal static Ped Suspect;
-        internal static Vehicle suspectVehicle;
+        private static Ped _suspect;
+        private static Vehicle _suspectVehicle;
 
-        internal static string[] spittingText = new string[]
-        {
+        private static readonly string[] SpittingText = {
             "~y~Suspect: ~w~*spits at you* Fuck you pig",
             "~y~Suspect: ~w~*spits at you* Bitch",
             "~y~Suspect: ~w~*spits at you* Come on lets fight!",
@@ -41,19 +40,19 @@ namespace RiskierTrafficStops.Outcomes
         {
             try
             {
-                if (!GetSuspectAndVehicle(handle, out Suspect, out suspectVehicle))
+                if (!GetSuspectAndVehicle(handle, out _suspect, out _suspectVehicle))
                 {
-                    CleanupEvent(Suspect, suspectVehicle);
+                    CleanupEvent(_suspect, _suspectVehicle);
                     return;
                 }
 
-                GameFiber.WaitUntil(() => Suspect.Exists() && MainPlayer.DistanceTo(Suspect) <= 2f && Suspect.IsInAnyVehicle(true), 120000);
-                if (MainPlayer.DistanceTo(Suspect) <= 2f && Suspect.IsInAnyVehicle(true))
+                GameFiber.WaitUntil(() => _suspect.Exists() && MainPlayer.DistanceTo(_suspect) <= 2f && _suspect.IsInAnyVehicle(true), 120000);
+                if (MainPlayer.DistanceTo(_suspect) <= 2f && _suspect.IsInAnyVehicle(true))
                 {
-                    Game.DisplaySubtitle(spittingText[rndm.Next(spittingText.Length)], 6000);
-                    Suspect.PlayAmbientSpeech(Voicelines[rndm.Next(Voicelines.Length)]);
+                    Game.DisplaySubtitle(SpittingText[Rndm.Next(SpittingText.Length)], 6000);
+                    _suspect.PlayAmbientSpeech(VoiceLines[Rndm.Next(VoiceLines.Length)]);
                 }
-                PulloverEventHandler.HasEventHappend = false;
+                PulloverEventHandler.HasEventHappened = false;
             }
             catch (System.Threading.ThreadAbortException)
             {

@@ -6,30 +6,28 @@ using static RiskierTrafficStops.Systems.Logger;
 
 namespace RiskierTrafficStops.Outcomes
 {
-    internal class Revving
+    internal static class Revving
     {
-        internal static Ped Suspect;
-        internal static Vehicle suspectVehicle;
+        private static Ped _suspect;
+        private static Vehicle _suspectVehicle;
         internal static LHandle PursuitLHandle;
 
         internal static void RevvingOutcome(LHandle handle)
         {
             try
             {
-                if (!GetSuspectAndVehicle(handle, out Suspect, out suspectVehicle))
+                if (!GetSuspectAndVehicle(handle, out _suspect, out _suspectVehicle))
                 {
-                    CleanupEvent(Suspect, suspectVehicle);
+                    CleanupEvent(_suspect, _suspectVehicle);
                     return;
                 }
 
-                RevEngine(Suspect, suspectVehicle, new int[] { 2, 4 }, new int[] { 2, 4 }, 2);
+                RevEngine(_suspect, _suspectVehicle, new[] { 2, 4 }, new[] { 2, 4 }, 2);
 
-                int Chance = rndm.Next(1, 101);
+                var chance = Rndm.Next(1, 101);
 
-                if (Chance >= 25)
-                {
-                    PursuitLHandle = SetupPursuit(true, Suspect);
-                }
+                if (chance < 25) return;
+                if (_suspect != null) PursuitLHandle = SetupPursuit(true, _suspect);
             }
             catch (System.Threading.ThreadAbortException)
             {

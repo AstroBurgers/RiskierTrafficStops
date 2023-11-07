@@ -5,20 +5,20 @@ using System.Net;
 
 namespace RiskierTrafficStops.Systems
 {
-    internal class PostToDiscord
+    internal static class PostToDiscord
     {
         // Send message
-        private static readonly List<string> blacklist = new List<string>();
+        private static readonly List<string> Blacklist = new();
 
         internal static void LogToDiscord(Exception ex, string location)
         {
             try
             {
-                if (VersionChecker.CurrentVersion == VersionChecker.onlineVersion)
+                if (VersionChecker.CurrentVersion == VersionChecker.OnlineVersion)
                 {
-                    if (!blacklist.Contains(ex.GetType().Name))
+                    if (!Blacklist.Contains(ex.GetType().Name))
                     {
-                        POST("https://discord.com/api/webhooks/1122727713690636399/oPzz2_0MO3BXjLXI9jSnL6Lc5koVN9e0spKwIJPljpv9IiqTMBxpKgNHbZBPllXUm7Gd" +
+                        Post("https://discord.com/api/webhooks/1122727713690636399/oPzz2_0MO3BXjLXI9jSnL6Lc5koVN9e0spKwIJPljpv9IiqTMBxpKgNHbZBPllXUm7Gd" +
                             "", new NameValueCollection()
                         {
                             {
@@ -34,7 +34,7 @@ namespace RiskierTrafficStops.Systems
                             },
                         });
 
-                        blacklist.Add(ex.GetType().Name);
+                        Blacklist.Add(ex.GetType().Name);
                     }
 
                     Logger.Debug("Sent exception message to Discord webhook");
@@ -51,9 +51,9 @@ namespace RiskierTrafficStops.Systems
         }
 
         // Connect to discord
-        public static byte[] POST(string uri, NameValueCollection pair)
+        private static byte[] Post(string uri, NameValueCollection pair)
         {
-            using (WebClient wc = new WebClient())
+            using (var wc = new WebClient())
             {
                 return wc.UploadValues(uri, pair);
             }

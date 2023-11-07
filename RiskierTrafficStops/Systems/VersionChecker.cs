@@ -5,24 +5,24 @@ using static RiskierTrafficStops.Systems.Logger;
 
 namespace RiskierTrafficStops.Systems
 {
-    internal class VersionChecker
+    internal static class VersionChecker
     {
         internal static string CurrentVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
-        internal static string onlineVersion;
+        internal static string OnlineVersion;
 
         internal static void CheckForUpdates()
         {
-            WebClient webClient = new WebClient();
-            bool pluginUpToDate = false;
+            var webClient = new WebClient();
+            var pluginUpToDate = false;
 
             try
             {
-                onlineVersion = webClient
+                OnlineVersion = webClient
      .DownloadString(
          "https://www.lcpdfr.com/applications/downloadsng/interface/api.php?do=checkForUpdates&fileId=44036&textOnly=1")
      .Trim();
-                Logger.Debug($"Online Version: {onlineVersion} | Installed Version: {CurrentVersion}");
-                pluginUpToDate = onlineVersion == CurrentVersion;
+                Logger.Debug($"Online Version: {OnlineVersion} | Installed Version: {CurrentVersion}");
+                pluginUpToDate = OnlineVersion == CurrentVersion;
             }
             catch (WebException e)
             {
