@@ -162,7 +162,7 @@ namespace RiskierTrafficStops.Systems
             for (var i = suspectList.Count - 1; i >= 0; i--)
             {
                 GameFiber.Yield();
-                if (suspectList[i].Exists())
+                if (suspectList[i].IsAvailable())
                 {
                     Functions.AddPedToPursuit(pursuitLHandle, suspectList[i]);
                 }
