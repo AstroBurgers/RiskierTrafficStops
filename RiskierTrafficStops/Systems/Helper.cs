@@ -99,7 +99,6 @@ namespace RiskierTrafficStops.Systems
                 Debug("Setting up Suspect");
                 driver = Functions.GetPulloverSuspect(handle);
                 Debug("Setting driver as persistent and Blocking permanent events");
-                driver.IsPersistent = true;
                 driver.BlockPermanentEvents = true;
             }
             if (driver != null && driver.Exists() && driver.IsInAnyVehicle(false) && !driver.IsInAnyPoliceVehicle)
@@ -107,7 +106,6 @@ namespace RiskierTrafficStops.Systems
                 Debug("Setting up Suspect Vehicle");
                 driverVehicle = driver.LastVehicle;
                 Debug("Setting driver vehicle as Persistent");
-                driverVehicle.IsPersistent = true;
             }
             Debug($"Returning Driver: {driver} & Driver Vehicle: {driverVehicle}");
             suspect = driver;
@@ -115,43 +113,9 @@ namespace RiskierTrafficStops.Systems
             return suspect.Exists() && suspectVehicle.Exists();
         }
 
-        internal static void CleanupEvent(List<Ped> peds, Vehicle vehicle)
+        internal static void CleanupEvent()
         {
-            for (var i = peds.Count - 1; i >= 0; i--)
-            {
-                if (peds[i].Exists())
-                {
-                    peds[i].IsPersistent = false;
-                }
-            }
-            if (vehicle.Exists())
-            {
-                vehicle.IsPersistent = false;
-            }
-
             PulloverEventHandler.HasEventHappened = false;
-        }
-
-        internal static void CleanupEvent(Ped suspect, Vehicle vehicle)
-        {
-            if (suspect.Exists())
-            {
-                suspect.IsPersistent = false;
-            }
-            else if (vehicle.Exists())
-            {
-                vehicle.IsPersistent = false;
-            }
-
-            PulloverEventHandler.HasEventHappened = false;
-        }
-
-        internal static void CleanupEvent(Ped suspect)
-        {
-            if (suspect.Exists())
-            {
-                suspect.IsPersistent = false;
-            }
         }
 
         /// <summary>
@@ -187,8 +151,7 @@ namespace RiskierTrafficStops.Systems
         /// </summary>
         internal static float MphToMps(float speed)
         {
-            var newSpeed = MathHelper.ConvertMilesPerHourToMetersPerSecond(speed);
-            return newSpeed;
+            return MathHelper.ConvertMilesPerHourToMetersPerSecond(speed);
         }
 
         /// <summary>
