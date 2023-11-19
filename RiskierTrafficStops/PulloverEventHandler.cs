@@ -62,14 +62,16 @@ namespace RiskierTrafficStops
                 {
                     case Scenarios.FleeFromTrafficStop:
                         Debug($"Chosen Scenario: {_chosenOutcome}");
-                        GameFiber.WaitUntil(() => MainPlayer.CurrentVehicle.IsSirenOn);
+                        GameFiber.WaitWhile(() => !MainPlayer.CurrentVehicle.IsSirenOn && Functions.IsPlayerPerformingPullover());
+                        if (!Functions.IsPlayerPerformingPullover()) { Debug("Player is no longer performing pullover, ending RTS events"); break; };
                         Flee.FleeOutcome(handle);
                         HasEventHappened = true;
                         break;
 
                     case Scenarios.ShootAndFlee:
                         Debug($"Chosen Scenario: {_chosenOutcome}");
-                        GameFiber.WaitUntil(() => MainPlayer.CurrentVehicle.IsSirenOn);
+                        GameFiber.WaitWhile(() => !MainPlayer.CurrentVehicle.IsSirenOn && Functions.IsPlayerPerformingPullover());
+                        if (!Functions.IsPlayerPerformingPullover()) { Debug("Player is no longer performing pullover, ending RTS events"); break; };
                         ShootAndFlee.SafOutcome(handle);
                         HasEventHappened = true;
                         break;
