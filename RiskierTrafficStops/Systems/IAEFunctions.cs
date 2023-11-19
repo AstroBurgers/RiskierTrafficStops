@@ -25,7 +25,7 @@ namespace RiskierTrafficStops.Systems
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "IAEFunctions.cs, IsPedUsedByAmbientEvent()");
+                Logger.Debug("Immersive Ambient Events cannot be found, user might not have it installed");
                 return false;
             }
         }
@@ -48,7 +48,7 @@ namespace RiskierTrafficStops.Systems
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "IAEFunctions.cs, IsPedUsedByBOLOEvent()");
+                Logger.Debug("Immersive Ambient Events cannot be found, user might not have it installed");
                 return false;
             }
         }
@@ -71,7 +71,7 @@ namespace RiskierTrafficStops.Systems
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "IAEFunctions.cs, IAEEventCheck()");
+                Logger.Debug("Immersive Ambient Events cannot be found, user might not have it installed");
                 return false;
             }
         }
@@ -104,7 +104,7 @@ namespace RiskierTrafficStops.Systems
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "IAEFunctions.cs, IAECompatibilityCheck()");
+                Logger.Debug("Immersive Ambient Events cannot be found, user might not have it installed");
                 return true;
             }
         }
