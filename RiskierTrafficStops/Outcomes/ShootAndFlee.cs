@@ -21,23 +21,25 @@ namespace RiskierTrafficStops.Outcomes
             {
                 if (!GetSuspectAndVehicle(handle, out _suspect, out _suspectVehicle))
                 {
-                    CleanupEvent(_suspect, _suspectVehicle);
+                    Debug("Failed to get suspect and vehicle, cleaning up RTS event...");
+                    CleanupEvent();
                     return;
                 }
 
                 Debug("Adding all suspect in the vehicle to a list");
                 var pedsInVehicle = GetAllVehicleOccupants(_suspectVehicle);
-                Debug($"Peds In Vehicle: {pedsInVehicle.Count}");
 
                 GameFiber.Wait(4500);
 
                 var outcome = Rndm.Next(1, 101);
                 switch (outcome)
                 {
-                    case >= 50:
+                    case > 50:
+                        Debug("Starting all suspects outcome");
                         GameFiber.StartNew(() => AllSuspects(pedsInVehicle));
                         break;
                     case <= 50:
+                        Debug("Starting driver only outcome");
                         GameFiber.StartNew(() => DriverOnly(pedsInVehicle));
                         break;
                 }
@@ -53,35 +55,33 @@ namespace RiskierTrafficStops.Outcomes
 
         private static void AllSuspects(List<Ped> peds)
         {
-            _suspectRelateGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
-            _suspectRelateGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
-
-            MainPlayer.RelationshipGroup.SetRelationshipWith(_suspectRelateGroup, Relationship.Hate); //Relationship groups go both ways
-            RelationshipGroup.Cop.SetRelationshipWith(_suspectRelateGroup, Relationship.Hate);
-
-            var weapon = PistolList[Rndm.Next(PistolList.Length)];
+            SetRelationshipGroups(_suspectRelateGroup);
+            
             for (var i = 0; i < peds.Count; i++)
             {
-                if (!peds[i].Exists()) { CleanupEvent(peds[i]); continue; }
-                if (!peds[i].Inventory.HasLoadedWeapon)
+                if (peds[i].IsAvailable())
                 {
-                    Debug($"Giving Suspect #{i} weapon: {weapon}");
-                    peds[i].Inventory.GiveNewWeapon(weapon, 500, true);
-                }
+                    if (!peds[i].Inventory.HasLoadedWeapon)
+                    {
+                        var weapon = PistolList[Rndm.Next(PistolList.Length)];
+                        Debug($"Giving Suspect #{i} weapon: {weapon}");
+                        peds[i].Inventory.GiveNewWeapon(weapon, 500, true);
+                    }
 
-                Debug($"Making Suspect #{i} shoot at Player");
-                NativeFunction.Natives.TASK_VEHICLE_SHOOT_AT_PED(peds[i], MainPlayer, 20.0f);
+                    Debug($"Making Suspect #{i} shoot at Player");
+                    NativeFunction.Natives.TASK_VEHICLE_SHOOT_AT_PED(peds[i], MainPlayer, 20.0f);
+                }
             }
 
             Debug("Waiting 4500ms");
             GameFiber.Wait(4500);
-            if (!MainPlayer.Exists() || !MainPlayer.IsAlive) return;
+            if (!MainPlayer.IsAvailable()) return;
             PursuitLHandle = SetupPursuitWithList(true, peds);
         }
 
         private static void DriverOnly(List<Ped> peds)
         {
-            if (!_suspect.Exists()) { CleanupEvent(_suspect, _suspectVehicle); return; }
+            if (!_suspect.Exists()) { CleanupEvent(); return; }
 
             var weapon = PistolList[Rndm.Next(PistolList.Length)];
             Debug("Setting up Suspect Weapon");
@@ -91,7 +91,7 @@ namespace RiskierTrafficStops.Outcomes
             NativeFunction.Natives.TASK_VEHICLE_SHOOT_AT_PED(_suspect, MainPlayer, 20.0f);
             GameFiber.Wait(4500);
             
-            if (!MainPlayer.Exists() || !MainPlayer.IsAlive) return;
+            if (!MainPlayer.IsAvailable()) return;
             PursuitLHandle = SetupPursuitWithList(true, peds);
         }
     }
