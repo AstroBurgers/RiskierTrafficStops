@@ -10,20 +10,16 @@ namespace RiskierTrafficStops.Outcomes
     {
         private static Ped _suspect;
         private static Vehicle _suspectVehicle;
-        private static RelationshipGroup _suspectRelateGroup = new RelationshipGroup("Suspect");
+        private static RelationshipGroup _suspectRelateGroup = new("Suspect");
 
         internal static void AmbushOutcome(LHandle handle)
         {
             if (!GetSuspectAndVehicle(handle, out _suspect, out _suspectVehicle))
             {
-                CleanupEvent(_suspect, _suspectVehicle);
+                Debug("Failed to get suspect and vehicle, cleaning up RTS event...");
+                CleanupEvent();
                 return;
             }
-
-            Debug("Adding all suspect in the vehicle to a list");
-
-            var pedsInVehicle = GetAllVehicleOccupants(_suspectVehicle);
-            Debug($"Peds In Vehicle: {pedsInVehicle.Count}");
 
             Debug("Setting Suspect Relationship Group");
             _suspectRelateGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
