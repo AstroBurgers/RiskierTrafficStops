@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using static RiskierTrafficStops.Systems.Helper;
 using static RiskierTrafficStops.Systems.Logger;
+using System.Linq;
 
 namespace RiskierTrafficStops.Outcomes
 {
@@ -19,16 +20,15 @@ namespace RiskierTrafficStops.Outcomes
             {
                 if (!GetSuspectAndVehicle(handle, out _suspect, out _suspectVehicle))
                 {
-                    CleanupEvent(_suspect, _suspectVehicle);
+                    Debug("Failed to get suspect and vehicle, cleaning up RTS event...");
+                    CleanupEvent();
                     return;
                 }
-
-                var pedsInVehicle = GetAllVehicleOccupants(_suspectVehicle);
 
                 _suspect.Tasks.DriveToPosition(MainPlayer.LastVehicle.Position, 100f, VehicleDrivingFlags.Reverse, 0.1f);
                 GameFiber.Wait(3500);
                 _suspect.Tasks.Clear();
-                PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
+                PursuitLHandle = SetupPursuitWithList(true, _suspectVehicle.Occupants.ToList());
             }
             catch (System.Threading.ThreadAbortException)
             {
