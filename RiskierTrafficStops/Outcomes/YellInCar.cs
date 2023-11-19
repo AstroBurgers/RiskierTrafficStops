@@ -17,13 +17,14 @@ namespace RiskierTrafficStops.Outcomes
             {
                 if (!GetSuspectAndVehicle(handle, out _suspect, out _suspectVehicle))
                 {
-                    CleanupEvent(_suspect, _suspectVehicle);
+                    Debug("Failed to get suspect and vehicle, cleaning up RTS event...");
+                    CleanupEvent();
                     return;
                 }
 
                 _suspect.PlayAmbientSpeech(VoiceLines[Rndm.Next(VoiceLines.Length)]);
-                GameFiber.WaitWhile(() => _suspect.Exists() && _suspect.IsAnySpeechPlaying);
-                if (_suspect.Exists())
+                GameFiber.WaitWhile(() => _suspect.IsAvailable() && _suspect.IsAnySpeechPlaying);
+                if (_suspect.IsAvailable())
                 {
                     _suspect.PlayAmbientSpeech(VoiceLines[Rndm.Next(VoiceLines.Length)]);
                 }
