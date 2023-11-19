@@ -13,7 +13,7 @@ namespace RiskierTrafficStops.Outcomes
     {
         private static Ped _suspect;
         private static Vehicle _suspectVehicle;
-        private static RelationshipGroup _suspectRelateGroup = new("Suspect");
+        private static RelationshipGroup _suspectRelateGroup = new("RTSGetOutAndShootSuspects");
         private static LHandle _pursuitLHandle;
         private static ShootOutcomes _chosenOutcome;
 

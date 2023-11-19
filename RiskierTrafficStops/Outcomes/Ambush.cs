@@ -10,7 +10,7 @@ namespace RiskierTrafficStops.Outcomes
     {
         private static Ped _suspect;
         private static Vehicle _suspectVehicle;
-        private static RelationshipGroup _suspectRelateGroup = new("Suspect");
+        private static RelationshipGroup _suspectRelateGroup = new("RTSAmbushSuspects");
 
         internal static void AmbushOutcome(LHandle handle)
         {

@@ -19,7 +19,7 @@ namespace RiskierTrafficStops.Outcomes
 
         private static Ped _suspect;
         private static Vehicle _suspectVehicle;
-        private static RelationshipGroup _suspectRelationshipGroup = new("Suspect");
+        private static RelationshipGroup _suspectRelationshipGroup = new("RTSYellingSuspects");
         private static YellingScenarioOutcomes _chosenOutcome;
         private static bool _isSuspectInVehicle;
 
