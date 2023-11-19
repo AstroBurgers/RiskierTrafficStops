@@ -18,16 +18,26 @@ namespace RiskierTrafficStops.Outcomes
             {
                 if (!GetSuspectAndVehicle(handle, out _suspect, out _suspectVehicle))
                 {
-                    CleanupEvent(_suspect, _suspectVehicle);
+                    Debug("Failed to get suspect and vehicle, cleaning up RTS event...");
+                    CleanupEvent();
                     return;
                 }
 
                 RevEngine(_suspect, _suspectVehicle, new[] { 2, 4 }, new[] { 2, 4 }, 2);
 
                 var chance = Rndm.Next(1, 101);
-
-                if (chance < 25) return;
-                if (_suspect != null) PursuitLHandle = SetupPursuit(true, _suspect);
+                switch (chance)
+                {
+                    case <= 25:
+                        Debug("Suspect chose not to run after revving");
+                        break;
+                    default:
+                        if (_suspect.IsAvailable())
+                        {
+                            PursuitLHandle = SetupPursuit(true, _suspect);
+                        }
+                        break;
+                }
             }
             catch (System.Threading.ThreadAbortException)
             {
