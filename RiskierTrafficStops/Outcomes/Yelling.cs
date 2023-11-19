@@ -29,7 +29,8 @@ namespace RiskierTrafficStops.Outcomes
             {
                 if (!GetSuspectAndVehicle(handle, out _suspect, out _suspectVehicle))
                 {
-                    CleanupEvent(_suspect, _suspectVehicle);
+                    Debug("Failed to get suspect and vehicle, cleaning up RTS event...");
+                    CleanupEvent();
                     return;
                 }
 
@@ -45,7 +46,7 @@ namespace RiskierTrafficStops.Outcomes
                 {
                     Debug($"Making Suspect Yell, time: {i}");
                     _suspect.PlayAmbientSpeech(VoiceLines[Rndm.Next(VoiceLines.Length)]);
-                    GameFiber.WaitWhile(() => _suspect.Exists() && _suspect.IsAnySpeechPlaying);
+                    GameFiber.WaitWhile(() => _suspect.IsAvailable() && _suspect.IsAnySpeechPlaying);
                 }
 
                 Debug("Choosing outcome from possible Yelling outcomes");
@@ -56,23 +57,21 @@ namespace RiskierTrafficStops.Outcomes
                 switch (_chosenOutcome)
                 {
                     case YellingScenarioOutcomes.GetBackInVehicle:
-                        if (_suspect.Exists() && !Functions.IsPedArrested(_suspect)) //Double checking if suspect exists
+                        if (_suspect.IsAvailable() && !Functions.IsPedArrested(_suspect)) //Double checking if suspect exists
                         {
                             _suspect.Tasks.EnterVehicle(_suspectVehicle, -1);
                         }
                         break;
-
                     case YellingScenarioOutcomes.PullOutKnife:
                         OutcomePullKnife();
                         break;
-
                     case YellingScenarioOutcomes.ContinueYelling:
                         GameFiber.StartNew(KeyPressed);
-                        while (!_isSuspectInVehicle && _suspect.Exists() && !Functions.IsPedArrested(_suspect))
+                        while (!_isSuspectInVehicle && _suspect.IsAvailable() && (!Functions.IsPedArrested(_suspect) || Functions.IsPedGettingArrested(_suspect)))
                         {
                             GameFiber.Yield();
                             _suspect.PlayAmbientSpeech(VoiceLines[Rndm.Next(VoiceLines.Length)]);
-                            GameFiber.WaitWhile(() => _suspect.Exists() && _suspect.IsAnySpeechPlaying);
+                            GameFiber.WaitWhile(() => _suspect.IsAvailable() && _suspect.IsAnySpeechPlaying);
                         }
                         break;
                     default:
@@ -91,7 +90,7 @@ namespace RiskierTrafficStops.Outcomes
         private static void KeyPressed()
         {
             Game.DisplayHelp($"~BLIP_INFO_ICON~ Press {Settings.GetBackInKey.GetInstructionalId()} to have the suspect get back in their vehicle", 10000);
-            while (_suspect.Exists() && !_isSuspectInVehicle)
+            while (_suspect.IsAvailable() && !_isSuspectInVehicle)
             {
                 GameFiber.Yield();
                 if (Game.IsKeyDown(Settings.GetBackInKey))
@@ -105,18 +104,12 @@ namespace RiskierTrafficStops.Outcomes
 
         private static void OutcomePullKnife()
         {
-            if (!_suspect.Exists() || Functions.IsPedArrested(_suspect) ||
+            if (!_suspect.IsAvailable() || Functions.IsPedArrested(_suspect) ||
                 Functions.IsPedGettingArrested(_suspect)) return;
             
             _suspect.Inventory.GiveNewWeapon(MeleeWeapons[Rndm.Next(MeleeWeapons.Length)], -1, true);
 
-            Debug("Setting Suspect relationship group");
-            _suspect.RelationshipGroup = _suspectRelationshipGroup;
-            _suspectRelationshipGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
-            _suspectRelationshipGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
-
-            MainPlayer.RelationshipGroup.SetRelationshipWith(_suspectRelationshipGroup, Relationship.Hate);
-            RelationshipGroup.Cop.SetRelationshipWith(_suspectRelationshipGroup, Relationship.Hate); //Relationship groups work both ways
+            SetRelationshipGroups(_suspectRelationshipGroup);
 
             Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
             _suspect.BlockPermanentEvents = true;
