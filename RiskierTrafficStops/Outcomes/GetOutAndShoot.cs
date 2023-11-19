@@ -2,6 +2,7 @@
 using Rage;
 using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using static RiskierTrafficStops.Systems.Helper;
 using static RiskierTrafficStops.Systems.Logger;
 // ReSharper disable HeapView.BoxingAllocation
@@ -35,6 +36,7 @@ namespace RiskierTrafficStops.Outcomes
                 Debug("Adding all suspect in the vehicle to a list");
 
                 var pedsInVehicle = GetAllVehicleOccupants(_suspectVehicle) ?? throw new ArgumentNullException(nameof(handle));
+                if (pedsInVehicle == null) throw new ArgumentNullException(nameof(pedsInVehicle));
                 Debug($"Peds In Vehicle: {pedsInVehicle.Count}");
 
                 Debug("Setting up Suspect Relationship Group");
@@ -43,16 +45,24 @@ namespace RiskierTrafficStops.Outcomes
 
                 MainPlayer.RelationshipGroup.SetRelationshipWith(_suspectRelateGroup, Relationship.Hate); //Relationship groups go both ways
                 RelationshipGroup.Cop.SetRelationshipWith(_suspectRelateGroup, Relationship.Hate);
-
-                for (var i = pedsInVehicle.Count - 1; i >= 0; i--)
+                
+                foreach (var i in pedsInVehicle)
+                {
+                    var weapon = WeaponList[Rndm.Next(WeaponList.Length)];
+                    if (i.Exists()) { CleanupEvent(i); continue; }
+                    if (!i.Inventory.HasLoadedWeapon) { i.Inventory.GiveNewWeapon(weapon, 100, true); Debug($"Giving Suspect weapon: {weapon}"); }
+                    
+                    GameFiber.StartNew(() => GetPedOutOfVehicle(i));
+                }
+                
+                /*for (var i = pedsInVehicle.Count - 1; i >= 0; i--)
                 {
                     var weapon = WeaponList[Rndm.Next(WeaponList.Length)];
                     if (!pedsInVehicle[i].Exists()) { CleanupEvent(pedsInVehicle[i]); continue; }
                     if (!pedsInVehicle[i].Inventory.HasLoadedWeapon) { pedsInVehicle[i].Inventory.GiveNewWeapon(weapon, 100, true); Debug($"Giving Suspect weapon: {weapon}"); }
                     
                     GameFiber.StartNew(() => GetPedOutOfVehicle(pedsInVehicle[i]));
-                }
-
+                }*/
                 GameFiber.Wait(7010);
 
                 Debug("Choosing outcome from shootOutcomes");
