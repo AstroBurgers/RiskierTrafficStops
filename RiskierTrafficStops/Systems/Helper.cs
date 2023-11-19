@@ -45,6 +45,16 @@ namespace RiskierTrafficStops.Systems
             return i[Rndm.Next(i.Length)];
         }*/
 
+        /// <summary>
+        /// Checks if a ped both exists and is alive
+        /// </summary>
+        /// <param name="ped"></param>
+        /// <returns></returns>
+        internal static bool IsAvailable(this Ped ped)
+        {
+            return ped.Exists() && ped.IsAlive;
+        }
+
         internal static Vector3 GetRearOffset(Vehicle vehicle, float offset)
         {
             var backwardDirection = vehicle.RearPosition - vehicle.FrontPosition;

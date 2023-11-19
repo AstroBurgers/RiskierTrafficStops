@@ -18,7 +18,8 @@ namespace RiskierTrafficStops.Outcomes
             {
                 if (!GetSuspectAndVehicle(handle, out _suspect, out _suspectVehicle))
                 {
-                    CleanupEvent(_suspect, _suspectVehicle);
+                    Debug("Failed to get suspect and vehicle, cleaning up RTS event...");
+                    CleanupEvent();
                     return;
                 }
 
@@ -28,7 +29,11 @@ namespace RiskierTrafficStops.Outcomes
                 var chance = Rndm.Next(1, 101);
                 switch (chance)
                 {
-                    case <= 50:
+                    case <= 33:
+                        Debug("Starting pursuit");
+                        PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
+                        break;
+                    case <= 66:
                         Debug("Making suspect do burnout");
                         _suspect.Tasks.PerformDrivingManeuver(_suspectVehicle, VehicleManeuver.BurnOut, 2000).WaitForCompletion(2000);
                         Debug("Clearing suspect tasks");
@@ -36,12 +41,14 @@ namespace RiskierTrafficStops.Outcomes
                         Debug("Starting pursuit");
                         PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                         break;
-                    case >= 50:
+                    case <= 100:
                     {
                         for (var i = pedsInVehicle.Count - 1; i >= 0; i--)
                         {
-                            if (!pedsInVehicle[i].Exists()) { CleanupEvent(pedsInVehicle[i]); continue; }
-                            pedsInVehicle[i].Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
+                            if (pedsInVehicle[i].IsAvailable())
+                            {
+                                pedsInVehicle[i].Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
+                            }
                         }
                         PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                         break;
