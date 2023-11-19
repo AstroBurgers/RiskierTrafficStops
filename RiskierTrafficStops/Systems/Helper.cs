@@ -55,6 +55,20 @@ namespace RiskierTrafficStops.Systems
             return ped.Exists() && ped.IsAlive;
         }
 
+        /// <summary>
+        /// Handles all relationship group changes
+        /// </summary>
+        /// <param name="suspectRelationshipGroup"></param>
+        internal static void SetRelationshipGroups(RelationshipGroup suspectRelationshipGroup)
+        {
+            Debug("Setting up Suspect Relationship Group");
+            suspectRelationshipGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
+            suspectRelationshipGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
+
+            MainPlayer.RelationshipGroup.SetRelationshipWith(suspectRelationshipGroup, Relationship.Hate); //Relationship groups go both ways
+            RelationshipGroup.Cop.SetRelationshipWith(suspectRelationshipGroup, Relationship.Hate);
+        }
+
         internal static Vector3 GetRearOffset(Vehicle vehicle, float offset)
         {
             var backwardDirection = vehicle.RearPosition - vehicle.FrontPosition;
