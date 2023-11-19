@@ -42,17 +42,17 @@ namespace RiskierTrafficStops.Outcomes
             {
                 if (!GetSuspectAndVehicle(handle, out _suspect, out _suspectVehicle))
                 {
-                    CleanupEvent(_suspect, _suspectVehicle);
+                    Debug("Failed to get suspect and vehicle, cleaning up RTS event...");
+                    CleanupEvent();
                     return;
                 }
 
-                GameFiber.WaitUntil(() => _suspect.Exists() && MainPlayer.DistanceTo(_suspect) <= 2f && _suspect.IsInAnyVehicle(true), 120000);
-                if (MainPlayer.DistanceTo(_suspect) <= 2f && _suspect.IsInAnyVehicle(true))
+                GameFiber.WaitWhile(() => _suspect.IsAvailable() && MainPlayer.DistanceTo(_suspect) >= 2f && _suspect.IsInAnyVehicle(true), 120000);
+                if (Functions.IsPlayerPerformingPullover() && _suspect.IsAvailable() && MainPlayer.DistanceTo(_suspect) <= 2f && _suspect.IsInAnyVehicle(true))
                 {
                     Game.DisplaySubtitle(SpittingText[Rndm.Next(SpittingText.Length)], 6000);
                     _suspect.PlayAmbientSpeech(VoiceLines[Rndm.Next(VoiceLines.Length)]);
                 }
-                PulloverEventHandler.HasEventHappened = false;
             }
             catch (System.Threading.ThreadAbortException)
             {
