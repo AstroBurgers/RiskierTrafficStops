@@ -122,14 +122,12 @@ namespace RiskierTrafficStops.Systems
             {
                 Debug("Setting up Suspect");
                 driver = Functions.GetPulloverSuspect(handle);
-                Debug("Setting driver as persistent and Blocking permanent events");
                 driver.BlockPermanentEvents = true;
             }
             if (driver != null && driver.Exists() && driver.IsInAnyVehicle(false) && !driver.IsInAnyPoliceVehicle)
             {
                 Debug("Setting up Suspect Vehicle");
                 driverVehicle = driver.LastVehicle;
-                Debug("Setting driver vehicle as Persistent");
             }
             Debug($"Returning Driver: {driver} & Driver Vehicle: {driverVehicle}");
             suspect = driver;
@@ -160,6 +158,26 @@ namespace RiskierTrafficStops.Systems
             Functions.SetPursuitIsActiveForPlayer(pursuitLHandle, true);
 
             for (var i = suspectList.Count - 1; i >= 0; i--)
+            {
+                GameFiber.Yield();
+                if (suspectList[i].IsAvailable())
+                {
+                    Functions.AddPedToPursuit(pursuitLHandle, suspectList[i]);
+                }
+            }
+            return pursuitLHandle;
+        }
+        internal static LHandle SetupPursuitWithList(bool isSuspectsPulledOver, Ped[] suspectList)
+        {
+            if (isSuspectsPulledOver)
+            {
+                Functions.ForceEndCurrentPullover();
+            }
+            var pursuitLHandle = Functions.CreatePursuit();
+
+            Functions.SetPursuitIsActiveForPlayer(pursuitLHandle, true);
+
+            for (var i = suspectList.Length - 1; i >= 0; i--)
             {
                 GameFiber.Yield();
                 if (suspectList[i].IsAvailable())

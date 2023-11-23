@@ -26,9 +26,6 @@ namespace RiskierTrafficStops.Outcomes
                     return;
                 }
 
-                Debug("Adding all suspect in the vehicle to a list");
-                var pedsInVehicle = GetAllVehicleOccupants(_suspectVehicle);
-
                 GameFiber.Wait(4500);
 
                 var outcome = Rndm.Next(1, 101);
@@ -36,11 +33,11 @@ namespace RiskierTrafficStops.Outcomes
                 {
                     case > 50:
                         Debug("Starting all suspects outcome");
-                        GameFiber.StartNew(() => AllSuspects(pedsInVehicle));
+                        GameFiber.StartNew(() => AllSuspects(_suspectVehicle.Occupants));
                         break;
                     case <= 50:
                         Debug("Starting driver only outcome");
-                        GameFiber.StartNew(() => DriverOnly(pedsInVehicle));
+                        GameFiber.StartNew(() => DriverOnly());
                         break;
                 }
             }
@@ -53,11 +50,11 @@ namespace RiskierTrafficStops.Outcomes
             }
         }
 
-        private static void AllSuspects(List<Ped> peds)
+        private static void AllSuspects(Ped[] peds)
         {
             SetRelationshipGroups(_suspectRelateGroup);
             
-            for (var i = 0; i < peds.Count; i++)
+            for (var i = 0; i < peds.Length; i++)
             {
                 if (peds[i].IsAvailable())
                 {
@@ -79,7 +76,7 @@ namespace RiskierTrafficStops.Outcomes
             PursuitLHandle = SetupPursuitWithList(true, peds);
         }
 
-        private static void DriverOnly(List<Ped> peds)
+        private static void DriverOnly()
         {
             if (!_suspect.Exists()) { CleanupEvent(); return; }
 
@@ -89,10 +86,10 @@ namespace RiskierTrafficStops.Outcomes
             if (!_suspect.Inventory.HasLoadedWeapon) { Debug("Giving Suspect Weapon"); _suspect.Inventory.GiveNewWeapon(weapon, 100, true); }
             Debug("Giving Suspect Tasks");
             NativeFunction.Natives.TASK_VEHICLE_SHOOT_AT_PED(_suspect, MainPlayer, 20.0f);
-            GameFiber.Wait(4500);
+            GameFiber.Wait(6000);
             
             if (!MainPlayer.IsAvailable()) return;
-            PursuitLHandle = SetupPursuitWithList(true, peds);
+            PursuitLHandle = SetupPursuit(true, _suspect);
         }
     }
 }
