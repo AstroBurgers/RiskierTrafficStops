@@ -78,7 +78,7 @@ namespace RiskierTrafficStops.Outcomes
 
         private static void DriverOnly()
         {
-            if (!_suspect.Exists()) { CleanupEvent(); return; }
+            if (!_suspect.IsAvailable()) { CleanupEvent(); return; }
 
             var weapon = PistolList[Rndm.Next(PistolList.Length)];
             Debug("Setting up Suspect Weapon");
