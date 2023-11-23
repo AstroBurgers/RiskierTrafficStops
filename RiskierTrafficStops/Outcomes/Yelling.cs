@@ -35,7 +35,7 @@ namespace RiskierTrafficStops.Outcomes
                 }
 
                 Debug("Making Suspect Leave Vehicle");
-                _suspect.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen).WaitForCompletion();
+                _suspect.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen).WaitForCompletion(30000);
                 Debug("Making Suspect Face Player");
                 NativeFunction.Natives.x5AD23D40115353AC(_suspect, MainPlayer, -1);
 
@@ -44,9 +44,12 @@ namespace RiskierTrafficStops.Outcomes
 
                 for (var i = 0; i < timesToSpeak; i++)
                 {
-                    Debug($"Making Suspect Yell, time: {i}");
-                    _suspect.PlayAmbientSpeech(VoiceLines[Rndm.Next(VoiceLines.Length)]);
-                    GameFiber.WaitWhile(() => _suspect.IsAvailable() && _suspect.IsAnySpeechPlaying);
+                    if (_suspect.IsAvailable())
+                    {
+                        Debug($"Making Suspect Yell, time: {i}");
+                        _suspect.PlayAmbientSpeech(VoiceLines[Rndm.Next(VoiceLines.Length)]);
+                        GameFiber.WaitWhile(() => _suspect.IsAvailable() && _suspect.IsAnySpeechPlaying, 30000);
+                    }
                 }
 
                 Debug("Choosing outcome from possible Yelling outcomes");
