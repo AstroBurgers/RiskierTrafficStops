@@ -86,7 +86,7 @@ namespace RiskierTrafficStops.Outcomes
             if (!_suspect.Inventory.HasLoadedWeapon) { Debug("Giving Suspect Weapon"); _suspect.Inventory.GiveNewWeapon(weapon, 100, true); }
             Debug("Giving Suspect Tasks");
             NativeFunction.Natives.TASK_VEHICLE_SHOOT_AT_PED(_suspect, MainPlayer, 20.0f);
-            GameFiber.Wait(6000);
+            GameFiber.Wait(5000);
             
             if (!MainPlayer.IsAvailable()) return;
             PursuitLHandle = SetupPursuit(true, _suspect);
