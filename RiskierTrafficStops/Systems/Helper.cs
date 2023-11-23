@@ -286,24 +286,6 @@ namespace RiskierTrafficStops.Systems
             }
         }
 
-        internal static List<Ped> GetAllVehicleOccupants(Vehicle vehicle)
-        {
-            var seatCount = vehicle.PassengerCount; //Testing rph method instead of NativeFunction.Natives.GET_VEHICLE_NUMBER_OF_PASSENGERS<int>(vehicle, true, false);
-            List<Ped> occupantList = new() { vehicle.GetPedOnSeat(-1) //vehicle.PassengerCount does not include the driver, so driver is being added here
-            };
-            for (var i = 0; i < seatCount; i++)
-            {
-                if (vehicle.IsSeatFree(i)) { continue; }
-                var ped = vehicle.GetPedOnSeat(i);
-                if (ped.Exists())
-                {
-                    occupantList.Add(ped);
-                }
-            }
-            Logger.Debug($"Peds In Vehicle: {occupantList.Count}");
-            return occupantList;
-        }
-
         internal static bool CheckZDistance(float z1, float z2, float range)
         {
             var difference = Math.Abs(z1 - z2);
