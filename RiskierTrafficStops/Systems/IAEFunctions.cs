@@ -85,6 +85,7 @@ namespace RiskierTrafficStops.Systems
         {
             try
             {
+                Logger.Debug("Performing IAE compatibility check...");
                 var ped = Functions.GetPulloverSuspect(handle);
                 if (IsPedUsedByAmbientEvent(ped))
                 {
