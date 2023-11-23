@@ -24,7 +24,7 @@ namespace RiskierTrafficStops.Outcomes
                 }
 
                 Debug("Getting all vehicle occupants");
-                var pedsInVehicle = GetAllVehicleOccupants(_suspectVehicle);
+                var pedsInVehicle = _suspectVehicle.Occupants;
 
                 var chance = Rndm.Next(1, 101);
                 switch (chance)
@@ -43,7 +43,7 @@ namespace RiskierTrafficStops.Outcomes
                         break;
                     case <= 100:
                     {
-                        for (var i = pedsInVehicle.Count - 1; i >= 0; i--)
+                        for (var i = pedsInVehicle.Length - 1; i >= 0; i--)
                         {
                             if (pedsInVehicle[i].IsAvailable())
                             {
