@@ -38,12 +38,12 @@ namespace RiskierTrafficStops.Outcomes
             var vehicle = GetNearestVehicle(MainPlayer.Position);
             var driver = vehicle.Driver;
             var frontOffset = _suspectVehicle.GetOffsetPositionFront(5f);
-            var pedsInVehicle = GetAllVehicleOccupants(_suspectVehicle);
-            if (pedsInVehicle.Count < 1)
+            var pedsInVehicle = _suspectVehicle.Occupants;
+            if (pedsInVehicle.Length < 1)
                 throw new ArgumentOutOfRangeException();
             
             driver.Tasks.DriveToPosition(frontOffset, 40f, VehicleDrivingFlags.Emergency).WaitForCompletion();
-            for (var i = pedsInVehicle.Count - 1; i >= 0; i--)
+            for (var i = pedsInVehicle.Length - 1; i >= 0; i--)
             {
                 if (!pedsInVehicle[i].Exists()) continue;
                 Debug("Giving ped random weapon");

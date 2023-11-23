@@ -36,8 +36,8 @@ namespace RiskierTrafficStops.Outcomes
 
                 Debug("Adding all suspect in the vehicle to a list");
 
-                var pedsInVehicle = GetAllVehicleOccupants(_suspectVehicle) ?? throw new ArgumentNullException(nameof(handle));
-                if (pedsInVehicle == null) throw new ArgumentNullException(nameof(pedsInVehicle));
+                var pedsInVehicle = _suspectVehicle.Occupants;
+                if (pedsInVehicle.Length < 1) throw new ArgumentNullException(nameof(pedsInVehicle));
 
                 SetRelationshipGroups(_suspectRelateGroup);
 
@@ -64,7 +64,7 @@ namespace RiskierTrafficStops.Outcomes
                         _pursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                         break;
                     case ShootOutcomes.KeepShooting:
-                        for (var i = pedsInVehicle.Count - 1; i >= 0; i--)
+                        for (var i = pedsInVehicle.Length - 1; i >= 0; i--)
                         {
                             if (pedsInVehicle[i].IsAvailable())
                             {
