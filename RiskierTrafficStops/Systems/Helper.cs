@@ -2,6 +2,7 @@
 using Rage;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using RiskierTrafficStops.API;
 using static RiskierTrafficStops.Systems.Logger;
@@ -13,6 +14,23 @@ namespace RiskierTrafficStops.Systems
         internal static Ped MainPlayer => Game.LocalPlayer.Character;
         internal static readonly Random Rndm = new(DateTime.Now.Millisecond);
 
+        private static string missingFiles = string.Empty;
+        
+        internal static bool VerifyDependencies()
+        {
+            if (!File.Exists("RAGENativeUI.dll")) missingFiles += "~n~- RAGENativeUI.dll";
+            
+            if (missingFiles.Length > 0)
+            {
+                Debug($"Failed to load because of these required files were not found: {missingFiles.Replace("~n~", "")}"); // note to astro: replacing ~n~ is important otherwise the log will look weird
+                Game.DisplayNotification("commonmenu", "mp_alerttriangle", "RiskierTrafficStops", "~r~Missing files!", $"These files were not found: ~y~{missingFiles}");
+                //Game.UnloadActivePlugin(); // note to astro: prevents FileNotFoundException from being sent or textures not being seen.
+                return false; // note to astro: returns the IsUpdateAvailable method to false, make sure this is the first thing in the if-statement otherwise other things will return true, or add '&& missingFiles.Length < 0' to those statements, it's personal preference
+            }
+
+            return true;
+        }
+        
         /// <summary>
         /// Setup a Pursuit with an Array of suspects
         /// </summary>
@@ -38,13 +56,6 @@ namespace RiskierTrafficStops.Systems
 
             return pursuitLHandle;
         }
-
-        /*internal static Vehicle GetVehicleBehindPlayerVehicle()
-        {
-            Vehicle[] i = World.GetAllVehicles().Where(i => (i.DistanceTo2D(MainPlayer.Position) < 35f) && i.HasDriver && !i.IsPersistent && !i.IsBicycle && (i.Class != VehicleClass.Motorcycle) && !i.IsBoat && !i.IsPlane && !i.Model.IsEmergencyVehicle && (i.GetPositionOffset(MainPlayer.LastVehicle.Position).Y <= 3f) && CheckIfHeadingIsWithinRange(MainPlayer.LastVehicle.Heading, i.Heading, 20f) && CheckZDistance(MainPlayer.LastVehicle.Position.Z, i.Position.Z, 5f)).ToArray();
-
-            return i[Rndm.Next(i.Length)];
-        }*/
 
         /// <summary>
         /// Checks if a ped both exists and is alive

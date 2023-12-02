@@ -1,7 +1,9 @@
-﻿using LSPD_First_Response.Mod.API;
+﻿using System;
+using LSPD_First_Response.Mod.API;
 using Rage;
 using RiskierTrafficStops.Systems;
 using static RiskierTrafficStops.Systems.Logger;
+using System.IO;
 
 namespace RiskierTrafficStops
 {
@@ -19,6 +21,11 @@ namespace RiskierTrafficStops
             OnDuty = onDuty;
             if (onDuty)
             {
+                if (!Helper.VerifyDependencies())
+                {
+                    return;
+                }
+                
                 // Setting up INI And checking for updates
                 Settings.IniFileSetup();
                 ConfigMenu.CreateMenu();
@@ -32,25 +39,31 @@ namespace RiskierTrafficStops
                     //Displaying Auto-log Notification
                     case true:
                         Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops",
-                            "~b~Auto Logging Status", "Auto Logging is ~g~Enabled");
+                            "~b~Auto Logging Status", "Auto Logging is ~g~Enabled~s~");
                         break;
                     case false:
                         Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops",
-                            "~b~Auto Logging Status", "Auto Logging is ~r~Disabled");
+                            "~b~Auto Logging Status", "Auto Logging is ~r~Disabled~s~");
                         break;
                 }
 
                 //Subscribes to events
                 PulloverEventHandler.SubscribeToEvents();
+
+                AppDomain.CurrentDomain.DomainUnload += Cleanup;
             }
         }
 
-        public override void Finally()
+        private static void Cleanup(object sender, EventArgs e)
         {
             Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Did you crash or are you a dev?");
             //Unsubscribes from events
             PulloverEventHandler.UnsubscribeToEvents();
             Debug("Unloaded successfully");
+        }
+        
+        public override void Finally()
+        {
         }
     }
 }
