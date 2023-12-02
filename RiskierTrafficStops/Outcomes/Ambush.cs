@@ -6,6 +6,7 @@ using static RiskierTrafficStops.Systems.Logger;
 
 namespace RiskierTrafficStops.Outcomes
 {
+    // TODO
     internal class Ambush
     {
         private static Ped _suspect;

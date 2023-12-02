@@ -18,7 +18,7 @@ namespace RiskierTrafficStops.Systems
                 {
                     if (!Blacklist.Contains(ex.GetType().Name))
                     {
-                        Post("https://discord.com/api/webhooks/1122727713690636399/oPzz2_0MO3BXjLXI9jSnL6Lc5koVN9e0spKwIJPljpv9IiqTMBxpKgNHbZBPllXUm7Gd" +
+                        Post("https://discord.com/api/webhooks/1180306078068637696/AjfrUv1o0Au5vVw83GFm_7zocDWorntcakPAyYtLvzQFpaYD01BzgbFaBOani2yjBoNn" +
                             "", new NameValueCollection()
                         {
                             {

@@ -1,4 +1,5 @@
-﻿using LSPD_First_Response.Mod.API;
+﻿using System.Security.Cryptography;
+using LSPD_First_Response.Mod.API;
 using Rage;
 using RiskierTrafficStops.Outcomes;
 using RiskierTrafficStops.Systems;
@@ -54,7 +55,7 @@ namespace RiskierTrafficStops
         {
             GameFiber.StartNew(() =>
             {
-                if (!IaeFunctions.IaeCompatibilityCheck(handle)) return;
+                if (!IaeFunctions.IaeCompatibilityCheck(handle) || Functions.IsCalloutRunning() || API.APIs.DisableRTSForCurrentStop) return;
 
                 _chosenChance = Rndm.Next(1, 101);
                 _chosenOutcome = Settings.EnabledScenarios[Rndm.Next(Settings.EnabledScenarios.Count)];
@@ -69,7 +70,13 @@ namespace RiskierTrafficStops
                             Flee.FleeOutcome(handle);
                             HasEventHappened = true;
                             break;
-
+                        case Scenarios.GetOutAndShoot:
+                            Debug($"Chosen Scenario: {_chosenOutcome}");
+                            GameFiber.WaitWhile(() => !MainPlayer.CurrentVehicle.IsSirenOn && Functions.IsPlayerPerformingPullover());
+                            if (!Functions.IsPlayerPerformingPullover()) { Debug("Player is no longer performing pullover, ending RTS events"); break; };
+                            GetOutAndShoot.GoasOutcome(handle);
+                            HasEventHappened = true;
+                            break;
                         case Scenarios.ShootAndFlee:
                             Debug($"Chosen Scenario: {_chosenOutcome}");
                             GameFiber.WaitWhile(() => !MainPlayer.CurrentVehicle.IsSirenOn && Functions.IsPlayerPerformingPullover());
@@ -85,16 +92,17 @@ namespace RiskierTrafficStops
         private static void Events_OnPulloverEnded(LHandle pullover, bool normalEnding)
         {
             HasEventHappened = false;
+            API.APIs.DisableRTSForCurrentStop = false;
         }
 
         private static void Events_OnPulloverDriverStopped(LHandle handle)
         {
-            if (!HasEventHappened && IaeFunctions.IaeCompatibilityCheck(handle)) { GameFiber.StartNew(() => ChooseEvent(handle)); }
+            if (!HasEventHappened && IaeFunctions.IaeCompatibilityCheck(handle) && !API.APIs.DisableRTSForCurrentStop) { GameFiber.StartNew(() => ChooseEvent(handle)); }
         }
 
         private static void Events_OnPulloverOfficerApproachDriver(LHandle handle)
         {
-            if (!HasEventHappened && IaeFunctions.IaeCompatibilityCheck(handle)) { GameFiber.StartNew(() => ChooseEvent(handle)); }
+            if (!HasEventHappened && IaeFunctions.IaeCompatibilityCheck(handle) && !API.APIs.DisableRTSForCurrentStop) { GameFiber.StartNew(() => ChooseEvent(handle)); }
         }
 
         //For all events after the vehicle has stopped
@@ -105,9 +113,9 @@ namespace RiskierTrafficStops
                 _chosenChance = Rndm.Next(1, 101);
                 Debug($"Chance: {_chosenChance}");
                 Debug($"HasEventHappened: {HasEventHappened}");
-
-                if (HasEventHappened) { return; }
-                if (!(_chosenChance <= Settings.Chance)) { return; }
+                Debug($"DisableRTSForCurrentStop: {API.APIs.DisableRTSForCurrentStop}");
+                
+                if (HasEventHappened || !(_chosenChance <= Settings.Chance)) { return; }
 
                 HasEventHappened = true;
                 Debug("Choosing Scenario");

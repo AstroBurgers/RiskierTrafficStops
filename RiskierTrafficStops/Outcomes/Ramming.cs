@@ -24,9 +24,16 @@ namespace RiskierTrafficStops.Outcomes
                     CleanupEvent();
                     return;
                 }
-
+                
+                if (!_suspect.Exists()) { CleanupEvent();
+                    return;
+                }
                 _suspect.Tasks.DriveToPosition(MainPlayer.LastVehicle.Position, 100f, VehicleDrivingFlags.Reverse, 0.1f);
                 GameFiber.Wait(3500);
+                
+                if (!_suspect.Exists()) { CleanupEvent();
+                    return;
+                }
                 _suspect.Tasks.Clear();
                 PursuitLHandle = SetupPursuitWithList(true, _suspectVehicle.Occupants);
             }

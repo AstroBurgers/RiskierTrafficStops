@@ -3,6 +3,7 @@ using Rage;
 using Rage.Native;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using static RiskierTrafficStops.Systems.Helper;
 using static RiskierTrafficStops.Systems.Logger;
 
@@ -41,11 +42,9 @@ namespace RiskierTrafficStops.Outcomes
                         break;
                 }
             }
-            catch (System.Threading.ThreadAbortException)
-            {
-            }
             catch (Exception e)
             {
+                if (e is ThreadAbortException) return;
                 Error(e, nameof(SafOutcome));
             }
         }

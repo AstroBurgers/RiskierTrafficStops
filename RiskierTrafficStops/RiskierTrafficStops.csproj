@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\APIs.cs" />
     <Compile Include="ConsoleCommands.cs" />
     <Compile Include="Outcomes\Ambush.cs" />
     <Compile Include="Outcomes\DrunkDriverRam.cs" />

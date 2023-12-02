@@ -2,6 +2,7 @@
 using Rage;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows.Forms;
 using static RiskierTrafficStops.Systems.Helper;
 using static RiskierTrafficStops.Systems.Logger;
@@ -77,11 +78,9 @@ namespace RiskierTrafficStops.Outcomes
                         throw new ArgumentOutOfRangeException();
                 }
             }
-            catch (System.Threading.ThreadAbortException)
-            {
-            }
             catch (Exception e)
             {
+                if (e is ThreadAbortException) return;
                 Error(e, nameof(GoasOutcome));
             }
         }

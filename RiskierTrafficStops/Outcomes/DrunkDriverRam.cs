@@ -1,4 +1,5 @@
-﻿namespace RiskierTrafficStops.Outcomes
+﻿// TODO
+namespace RiskierTrafficStops.Outcomes
 {
     internal class DrunkDriverRam
     {
