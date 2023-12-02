@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using RiskierTrafficStops.Systems;
+﻿using RiskierTrafficStops.Systems;
 
 namespace RiskierTrafficStops.API;
 
