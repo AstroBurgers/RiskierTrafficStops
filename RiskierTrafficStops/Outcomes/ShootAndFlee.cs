@@ -4,6 +4,7 @@ using Rage.Native;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using RiskierTrafficStops.API;
 using static RiskierTrafficStops.Systems.Helper;
 using static RiskierTrafficStops.Systems.Logger;
 
@@ -20,6 +21,7 @@ namespace RiskierTrafficStops.Outcomes
         {
             try
             {
+                APIs.InvokeEvent(RTSEventType.Start);
                 if (!GetSuspectAndVehicle(handle, out _suspect, out _suspectVehicle))
                 {
                     Debug("Failed to get suspect and vehicle, cleaning up RTS event...");
@@ -47,6 +49,7 @@ namespace RiskierTrafficStops.Outcomes
                 if (e is ThreadAbortException) return;
                 Error(e, nameof(SafOutcome));
             }
+            APIs.InvokeEvent(RTSEventType.End);
         }
 
         private static void AllSuspects(Ped[] peds)

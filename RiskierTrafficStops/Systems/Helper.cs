@@ -3,6 +3,7 @@ using Rage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using RiskierTrafficStops.API;
 using static RiskierTrafficStops.Systems.Logger;
 
 namespace RiskierTrafficStops.Systems
@@ -138,6 +139,7 @@ namespace RiskierTrafficStops.Systems
         internal static void CleanupEvent()
         {
             PulloverEventHandler.HasEventHappened = false;
+            APIs.InvokeEvent(RTSEventType.End);
         }
 
         /// <summary>
