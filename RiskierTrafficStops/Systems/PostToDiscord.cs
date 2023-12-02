@@ -30,7 +30,8 @@ namespace RiskierTrafficStops.Systems
                                 $"**Exception Type**```fix\n{ex.GetType()}```\n" +
                                 $"**Stack Trace**```\n{ex}\n```\n" +
                                 $"**Message**```\n{ex.Message}\n```\n" +
-                                $"**Location**\n```prolog\n{location}```"
+                                $"**Location**\n```prolog\n{location}```" +
+                                $"**Beta Version**\n```Beta Version: true```"
                             },
                         });
 
