@@ -1,12 +1,12 @@
-﻿using System.Security.Cryptography;
-using LSPD_First_Response.Mod.API;
+﻿using LSPD_First_Response.Mod.API;
 using Rage;
-using RiskierTrafficStops.Outcomes;
-using RiskierTrafficStops.Systems;
-using static RiskierTrafficStops.Systems.Helper;
-using static RiskierTrafficStops.Systems.Logger;
+using RiskierTrafficStops.API.ExternalAPIs;
+using RiskierTrafficStops.Mod.Outcomes;
+using static RiskierTrafficStops.Engine.Helpers.Helper;
+using static RiskierTrafficStops.Engine.InternalSystems.Logger;
+using static RiskierTrafficStops.API.ExternalAPIs.RAFunctions;
 
-namespace RiskierTrafficStops
+namespace RiskierTrafficStops.Engine.InternalSystems
 {
     internal enum Scenarios //Enum is outside class so that it can be referenced anywhere without having to reference the class
     {
@@ -55,7 +55,7 @@ namespace RiskierTrafficStops
         {
             GameFiber.StartNew(() =>
             {
-                if (!IaeFunctions.IaeCompatibilityCheck(handle) || Functions.IsCalloutRunning() || API.APIs.DisableRTSForCurrentStop) return;
+                if (!IaeFunctions.IaeCompatibilityCheck(handle) || Functions.IsCalloutRunning() || API.APIs.DisableRTSForCurrentStop || !RaCompatibilityCheck(handle)) return;
 
                 _chosenChance = Rndm.Next(1, 101);
                 _chosenOutcome = Settings.EnabledScenarios[Rndm.Next(Settings.EnabledScenarios.Count)];
@@ -97,12 +97,12 @@ namespace RiskierTrafficStops
 
         private static void Events_OnPulloverDriverStopped(LHandle handle)
         {
-            if (!HasEventHappened && IaeFunctions.IaeCompatibilityCheck(handle) && !API.APIs.DisableRTSForCurrentStop) { GameFiber.StartNew(() => ChooseEvent(handle)); }
+            if (!HasEventHappened && IaeFunctions.IaeCompatibilityCheck(handle) && !API.APIs.DisableRTSForCurrentStop && RaCompatibilityCheck(handle)) { GameFiber.StartNew(() => ChooseEvent(handle)); }
         }
 
         private static void Events_OnPulloverOfficerApproachDriver(LHandle handle)
         {
-            if (!HasEventHappened && IaeFunctions.IaeCompatibilityCheck(handle) && !API.APIs.DisableRTSForCurrentStop) { GameFiber.StartNew(() => ChooseEvent(handle)); }
+            if (!HasEventHappened && IaeFunctions.IaeCompatibilityCheck(handle) && !API.APIs.DisableRTSForCurrentStop && RaCompatibilityCheck(handle)) { GameFiber.StartNew(() => ChooseEvent(handle)); }
         }
 
         //For all events after the vehicle has stopped

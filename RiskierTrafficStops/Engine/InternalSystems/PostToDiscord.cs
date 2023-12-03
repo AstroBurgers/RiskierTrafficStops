@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net;
 
-namespace RiskierTrafficStops.Systems
+namespace RiskierTrafficStops.Engine.InternalSystems
 {
     internal static class PostToDiscord
     {

@@ -48,6 +48,9 @@
     <Reference Include="RagePluginHook">
       <HintPath>..\..\References\RagePluginHook.dll</HintPath>
     </Reference>
+    <Reference Include="RansomAmbience">
+      <HintPath>..\..\..\..\..\RansomAmbience.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -61,28 +64,33 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\APIs.cs" />
-    <Compile Include="ConsoleCommands.cs" />
-    <Compile Include="Outcomes\ShootAndFlee.cs" />
-    <Compile Include="Outcomes\Spitting.cs" />
-    <Compile Include="PulloverEventHandler.cs" />
-    <Compile Include="Systems\IAEFunctions.cs" />
-    <Compile Include="Systems\Logger.cs" />
+    <Compile Include="API\ExternalAPIs\IAEFunctions.cs" />
+    <Compile Include="API\ExternalAPIs\RAFunctions.cs" />
+    <Compile Include="Engine\FrontendSystems\ConfigMenu.cs" />
+    <Compile Include="Engine\FrontendSystems\ConsoleCommands.cs" />
+    <Compile Include="Engine\Helpers\Helper.cs" />
+    <Compile Include="Engine\Helpers\PedExtensions.cs" />
+    <Compile Include="Engine\InternalSystems\Logger.cs" />
+    <Compile Include="Engine\InternalSystems\PostToDiscord.cs" />
+    <Compile Include="Engine\InternalSystems\PulloverEventHandler.cs" />
+    <Compile Include="Engine\InternalSystems\Settings.cs" />
+    <Compile Include="Engine\InternalSystems\VersionChecker.cs" />
+    <Compile Include="Mod\Outcomes\Flee.cs" />
+    <Compile Include="Mod\Outcomes\GetOutAndShoot.cs" />
+    <Compile Include="Mod\Outcomes\Ramming.cs" />
+    <Compile Include="Mod\Outcomes\Revving.cs" />
+    <Compile Include="Mod\Outcomes\ShootAndFlee.cs" />
+    <Compile Include="Mod\Outcomes\Spitting.cs" />
+    <Compile Include="Mod\Outcomes\YellInCar.cs" />
+    <Compile Include="Mod\Outcomes\Yelling.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="Systems\Helper.cs" />
-    <Compile Include="Outcomes\Ramming.cs" />
-    <Compile Include="Outcomes\Flee.cs" />
-    <Compile Include="Outcomes\GetOutAndShoot.cs" />
-    <Compile Include="Outcomes\Revving.cs" />
-    <Compile Include="Outcomes\Yelling.cs" />
-    <Compile Include="Outcomes\YellInCar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="Systems\ConfigMenu.cs" />
-    <Compile Include="Systems\PostToDiscord.cs" />
-    <Compile Include="Systems\VersionChecker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="RiskierTrafficStops.ini" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Mod\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

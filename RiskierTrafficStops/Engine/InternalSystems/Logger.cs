@@ -1,9 +1,9 @@
-﻿using Rage;
-using System;
+﻿using System;
+using Rage;
 
 // Rohit said he wanted credit. So credit to Rohit for the code https://github.com/Rohit685/MysteriousCallouts/blob/master/HelperSystems/Logger.cs
 
-namespace RiskierTrafficStops.Systems
+namespace RiskierTrafficStops.Engine.InternalSystems
 {
     internal static class Logger
     {

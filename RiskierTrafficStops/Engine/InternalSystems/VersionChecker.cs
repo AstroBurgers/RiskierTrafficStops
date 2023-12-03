@@ -1,9 +1,9 @@
-﻿using Rage;
-using System.Net;
+﻿using System.Net;
 using System.Reflection;
-using static RiskierTrafficStops.Systems.Logger;
+using Rage;
+using static RiskierTrafficStops.Engine.InternalSystems.Logger;
 
-namespace RiskierTrafficStops.Systems
+namespace RiskierTrafficStops.Engine.InternalSystems
 {
     internal static class VersionChecker
     {

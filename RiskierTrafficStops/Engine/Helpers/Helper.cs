@@ -1,13 +1,14 @@
-﻿using LSPD_First_Response.Mod.API;
-using Rage;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using LSPD_First_Response.Mod.API;
+using Rage;
 using RiskierTrafficStops.API;
-using static RiskierTrafficStops.Systems.Logger;
+using RiskierTrafficStops.Engine.InternalSystems;
+using static RiskierTrafficStops.Engine.InternalSystems.Logger;
 
-namespace RiskierTrafficStops.Systems
+namespace RiskierTrafficStops.Engine.Helpers
 {
     internal static class Helper
     {
@@ -58,102 +59,6 @@ namespace RiskierTrafficStops.Systems
         }
 
         /// <summary>
-        /// Checks if a ped both exists and is alive
-        /// </summary>
-        /// <param name="ped"></param>
-        /// <returns></returns>
-        internal static bool IsAvailable(this Ped ped)
-        {
-            return ped.Exists() && ped.IsAlive;
-        }
-
-        /// <summary>
-        /// Handles all relationship group changes
-        /// </summary>
-        /// <param name="suspectRelationshipGroup"></param>
-        internal static void SetRelationshipGroups(RelationshipGroup suspectRelationshipGroup)
-        {
-            Debug("Setting up Suspect Relationship Group");
-            suspectRelationshipGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
-            suspectRelationshipGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
-
-            MainPlayer.RelationshipGroup.SetRelationshipWith(suspectRelationshipGroup, Relationship.Hate); //Relationship groups go both ways
-            RelationshipGroup.Cop.SetRelationshipWith(suspectRelationshipGroup, Relationship.Hate);
-        }
-
-        internal static Vector3 GetRearOffset(Vehicle vehicle, float offset)
-        {
-            var backwardDirection = vehicle.RearPosition - vehicle.FrontPosition;
-            backwardDirection.Normalize();
-            return (backwardDirection * offset) + vehicle.RearPosition;
-        }
-
-        /// <summary>
-        /// Returns the nearest vehicle to a position
-        /// </summary>
-
-        internal static Vehicle GetNearestVehicle(Vector3 position, float maxDistance = 40f)
-        {
-            var vehicles = MainPlayer.GetNearbyVehicles(16).ToList();
-            if (vehicles.Count < 1)
-                throw new ArgumentOutOfRangeException();
-
-            var nearestVehicles = vehicles.OrderBy(vehicles1 => vehicles1.DistanceTo(position)).ToList();
-            var vehicle = nearestVehicles[0];
-
-            return vehicle;
-        }
-
-        /*/// <summary>
-        /// Checks if the given heading is within a range of headingToCheckAgainst, the range is in both directions, for example 10f as a range would translate to if its within a range of 10f to the left or 10f to the right
-        /// </summary>
-        /// <param name="range"></param>
-        /// <returns></returns>
-        internal static bool CheckIfHeadingIsWithinRange(float referenceHeading, float headingToCheck, float range)
-        {
-            float absoluteDifference = Math.Abs(referenceHeading - headingToCheck);
-
-            if (absoluteDifference > 180f)
-            {
-                absoluteDifference = 360f - absoluteDifference;
-            }
-
-            return absoluteDifference <= range;
-        }*/
-
-        /// <summary>
-        /// Returns the Driver and its vehicle
-        /// </summary>
-        /// <returns>Ped, Vehicle</returns>
-
-        internal static bool GetSuspectAndVehicle(LHandle handle, out Ped suspect, out Vehicle suspectVehicle)
-        {
-            Ped driver = null;
-            Vehicle driverVehicle = null;
-            if ((handle != null) && Functions.IsPlayerPerformingPullover())
-            {
-                Debug("Setting up Suspect");
-                driver = Functions.GetPulloverSuspect(handle);
-                driver.BlockPermanentEvents = true;
-            }
-            if (driver != null && driver.Exists() && driver.IsInAnyVehicle(false) && !driver.IsInAnyPoliceVehicle)
-            {
-                Debug("Setting up Suspect Vehicle");
-                driverVehicle = driver.LastVehicle;
-            }
-            Debug($"Returning Driver: {driver} & Driver Vehicle: {driverVehicle}");
-            suspect = driver;
-            suspectVehicle = driverVehicle;
-            return suspect.Exists() && suspectVehicle.Exists();
-        }
-
-        internal static void CleanupEvent()
-        {
-            PulloverEventHandler.HasEventHappened = false;
-            APIs.InvokeEvent(RTSEventType.End);
-        }
-
-        /// <summary>
         /// Same as SetupPursuit but with a suspect list
         /// </summary>
         /// <param name="isSuspectsPulledOver">If the suspects are in a traffic stop</param>
@@ -199,6 +104,75 @@ namespace RiskierTrafficStops.Systems
                 }
             }
             return pursuitLHandle;
+        }
+
+        /// <summary>
+        /// Handles all relationship group changes
+        /// </summary>
+        /// <param name="suspectRelationshipGroup"></param>
+        internal static void SetRelationshipGroups(RelationshipGroup suspectRelationshipGroup)
+        {
+            Debug("Setting up Suspect Relationship Group");
+            suspectRelationshipGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
+            suspectRelationshipGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
+
+            MainPlayer.RelationshipGroup.SetRelationshipWith(suspectRelationshipGroup, Relationship.Hate); //Relationship groups go both ways
+            RelationshipGroup.Cop.SetRelationshipWith(suspectRelationshipGroup, Relationship.Hate);
+        }
+
+        internal static Vector3 GetRearOffset(Vehicle vehicle, float offset)
+        {
+            var backwardDirection = vehicle.RearPosition - vehicle.FrontPosition;
+            backwardDirection.Normalize();
+            return (backwardDirection * offset) + vehicle.RearPosition;
+        }
+
+        /// <summary>
+        /// Returns the nearest vehicle to a position
+        /// </summary>
+
+        internal static Vehicle GetNearestVehicle(Vector3 position, float maxDistance = 40f)
+        {
+            var vehicles = MainPlayer.GetNearbyVehicles(16).ToList();
+            if (vehicles.Count < 1)
+                throw new ArgumentOutOfRangeException();
+
+            var nearestVehicles = vehicles.OrderBy(vehicles1 => vehicles1.DistanceTo(position)).ToList();
+            var vehicle = nearestVehicles[0];
+
+            return vehicle;
+        }
+
+        /// <summary>
+        /// Returns the Driver and its vehicle
+        /// </summary>
+        /// <returns>Ped, Vehicle</returns>
+
+        internal static bool GetSuspectAndSuspectVehicle(LHandle handle, out Ped suspect, out Vehicle suspectVehicle)
+        {
+            Ped driver = null;
+            Vehicle driverVehicle = null;
+            if ((handle != null) && Functions.IsPlayerPerformingPullover())
+            {
+                Debug("Setting up Suspect");
+                driver = Functions.GetPulloverSuspect(handle);
+                driver.BlockPermanentEvents = true;
+            }
+            if (driver != null && driver.Exists() && driver.IsInAnyVehicle(false) && !driver.IsInAnyPoliceVehicle)
+            {
+                Debug("Setting up Suspect Vehicle");
+                driverVehicle = driver.LastVehicle;
+            }
+            Debug($"Returning Driver: {driver} & Driver Vehicle: {driverVehicle}");
+            suspect = driver;
+            suspectVehicle = driverVehicle;
+            return suspect.Exists() && suspectVehicle.Exists();
+        }
+
+        internal static void CleanupEvent()
+        {
+            PulloverEventHandler.HasEventHappened = false;
+            APIs.InvokeEvent(RTSEventType.End);
         }
 
         /// <summary>

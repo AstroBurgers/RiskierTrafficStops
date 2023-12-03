@@ -1,9 +1,10 @@
 ﻿using System;
 using LSPD_First_Response.Mod.API;
 using Rage;
-using RiskierTrafficStops.Systems;
-using static RiskierTrafficStops.Systems.Logger;
-using System.IO;
+using static RiskierTrafficStops.Engine.InternalSystems.Logger;
+using RiskierTrafficStops.Engine.FrontendSystems;
+using RiskierTrafficStops.Engine.Helpers;
+using RiskierTrafficStops.Engine.InternalSystems;
 
 namespace RiskierTrafficStops
 {

@@ -1,13 +1,14 @@
-﻿using LSPD_First_Response.Mod.API;
-using Rage;
-using System;
+﻿using System;
 using System.Threading;
+using LSPD_First_Response.Mod.API;
+using Rage;
 using RiskierTrafficStops.API;
-using static RiskierTrafficStops.Systems.Helper;
-using static RiskierTrafficStops.Systems.Logger;
+using static RiskierTrafficStops.Engine.Helpers.Helper;
+using static RiskierTrafficStops.Engine.InternalSystems.Logger;
 using static RiskierTrafficStops.API.APIs;
+using static RiskierTrafficStops.Engine.Helpers.PedExtensions;
 
-namespace RiskierTrafficStops.Outcomes
+namespace RiskierTrafficStops.Mod.Outcomes
 {
     internal static class Flee
     {
@@ -20,7 +21,7 @@ namespace RiskierTrafficStops.Outcomes
             try
             {
                 InvokeEvent(RTSEventType.Start);
-                if (!GetSuspectAndVehicle(handle, out _suspect, out _suspectVehicle))
+                if (!GetSuspectAndSuspectVehicle(handle, out _suspect, out _suspectVehicle))
                 {
                     Debug("Failed to get suspect and vehicle, cleaning up RTS event...");
                     CleanupEvent();

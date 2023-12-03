@@ -1,9 +1,8 @@
-﻿using Rage;
-using RiskierTrafficStops.Systems;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows.Forms;
+using Rage;
 
-namespace RiskierTrafficStops
+namespace RiskierTrafficStops.Engine.InternalSystems
 {
     internal static class Settings
     {

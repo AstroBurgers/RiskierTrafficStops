@@ -1,13 +1,14 @@
-﻿using Rage;
+﻿using System;
+using System.Drawing;
+using Rage;
 using RAGENativeUI;
 using RAGENativeUI.Elements;
 using RAGENativeUI.PauseMenu;
-using System;
-using System.Drawing;
-using static RiskierTrafficStops.Settings;
-using static RiskierTrafficStops.Systems.Logger;
+using RiskierTrafficStops.Engine.InternalSystems;
+using static RiskierTrafficStops.Engine.InternalSystems.Settings;
+using static RiskierTrafficStops.Engine.InternalSystems.Logger;
 
-namespace RiskierTrafficStops.Systems
+namespace RiskierTrafficStops.Engine.FrontendSystems
 {
     internal static class ConfigMenu
     {

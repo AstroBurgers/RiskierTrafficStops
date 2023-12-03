@@ -1,7 +1,6 @@
 ﻿using Rage.Attributes;
-using RiskierTrafficStops.Systems;
 
-namespace RiskierTrafficStops
+namespace RiskierTrafficStops.Engine.FrontendSystems
 {
     internal static class ConsoleCommands
     {
