@@ -21,10 +21,7 @@ namespace RiskierTrafficStops
             OnDuty = onDuty;
             if (onDuty)
             {
-                if (!Helper.VerifyDependencies())
-                {
-                    return;
-                }
+                if (!Helper.VerifyDependencies()) return;
                 
                 // Setting up INI And checking for updates
                 Settings.IniFileSetup();
