@@ -4,6 +4,7 @@ using LSPD_First_Response.Mod.API;
 using Rage;
 using Rage.Native;
 using RiskierTrafficStops.API;
+using RiskierTrafficStops.Engine.InternalSystems;
 using static RiskierTrafficStops.Engine.Helpers.Helper;
 using static RiskierTrafficStops.Engine.InternalSystems.Logger;
 using static RiskierTrafficStops.Engine.Helpers.PedExtensions;
@@ -14,7 +15,6 @@ namespace RiskierTrafficStops.Mod.Outcomes
     {
         private static Ped _suspect;
         private static Vehicle _suspectVehicle;
-        private static RelationshipGroup _suspectRelateGroup = new("RTSShootAndFleeSuspects");
         internal static LHandle PursuitLHandle;
 
         internal static void SafOutcome(LHandle handle)
@@ -36,11 +36,11 @@ namespace RiskierTrafficStops.Mod.Outcomes
                 {
                     case > 50:
                         Debug("Starting all suspects outcome");
-                        GameFiber.StartNew(() => AllSuspects(_suspectVehicle.Occupants));
+                        GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => AllSuspects(_suspectVehicle.Occupants)));
                         break;
                     case <= 50:
                         Debug("Starting driver only outcome");
-                        GameFiber.StartNew(() => DriverOnly());
+                        GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => DriverOnly()));
                         break;
                 }
             }
@@ -48,14 +48,13 @@ namespace RiskierTrafficStops.Mod.Outcomes
             {
                 if (e is ThreadAbortException) return;
                 Error(e, nameof(SafOutcome));
+                GameFiberHandling.CleanupFibers();
             }
             APIs.InvokeEvent(RTSEventType.End);
         }
 
         private static void AllSuspects(Ped[] peds)
         {
-            SetRelationshipGroups(_suspectRelateGroup);
-            
             for (var i = 0; i < peds.Length; i++)
             {
                 if (peds[i].IsAvailable())

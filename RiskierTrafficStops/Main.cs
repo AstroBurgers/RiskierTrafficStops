@@ -25,13 +25,17 @@ namespace RiskierTrafficStops
                 if (!Helper.VerifyDependencies()) return;
                 
                 // Setting up INI And checking for updates
+                Debug("Setting up INIFile...");
                 Settings.IniFileSetup();
+                Debug("Creating menu...");
                 ConfigMenu.CreateMenu();
+                Debug("Adding console commands...");
                 Game.AddConsoleCommands();
+                Debug("Checking for updates...");
                 VersionChecker.CheckForUpdates();
                 // Displaying startup Notification
                 Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Watch you back out there officer!");
-                Debug("Loaded successfully");
+                Debug("Checking Auto Log status...");
                 switch (Settings.AutoLogEnabled)
                 {
                     //Displaying Auto-log Notification
@@ -44,11 +48,13 @@ namespace RiskierTrafficStops
                             "~b~Auto Logging Status", "Auto Logging is ~r~Disabled~s~");
                         break;
                 }
-
+                
+                Debug("Auto log status: " + Settings.AutoLogEnabled);
                 //Subscribes to events
                 PulloverEventHandler.SubscribeToEvents();
 
                 AppDomain.CurrentDomain.DomainUnload += Cleanup;
+                Debug("Loaded successfully");
             }
         }
 

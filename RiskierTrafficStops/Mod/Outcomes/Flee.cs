@@ -3,6 +3,7 @@ using System.Threading;
 using LSPD_First_Response.Mod.API;
 using Rage;
 using RiskierTrafficStops.API;
+using RiskierTrafficStops.Engine.InternalSystems;
 using static RiskierTrafficStops.Engine.Helpers.Helper;
 using static RiskierTrafficStops.Engine.InternalSystems.Logger;
 using static RiskierTrafficStops.API.APIs;
@@ -64,6 +65,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
             {
                 if (e is ThreadAbortException) return;
                 Error(e, nameof(FleeOutcome));
+                GameFiberHandling.CleanupFibers();
             }
             
             InvokeEvent(RTSEventType.End);

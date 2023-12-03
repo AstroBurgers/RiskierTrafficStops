@@ -3,6 +3,7 @@ using System.Threading;
 using LSPD_First_Response.Mod.API;
 using Rage;
 using RiskierTrafficStops.API;
+using RiskierTrafficStops.Engine.InternalSystems;
 using static RiskierTrafficStops.Engine.Helpers.Helper;
 using static RiskierTrafficStops.Engine.InternalSystems.Logger;
 using static RiskierTrafficStops.Engine.Helpers.PedExtensions;
@@ -51,7 +52,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
                         if (!ped.Inventory.HasLoadedWeapon) { ped.Inventory.GiveNewWeapon(weapon, 100, true); Debug($"Giving Suspect weapon: {weapon}"); }
                     }
                     
-                    GameFiber.StartNew(() => GetPedOutOfVehicle(ped));
+                    GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => GetPedOutOfVehicle(ped)));
                 }
                 GameFiber.Wait(7010);
 
@@ -83,11 +84,13 @@ namespace RiskierTrafficStops.Mod.Outcomes
             {
                 if (e is ThreadAbortException) return;
                 Error(e, nameof(GoasOutcome));
+                GameFiberHandling.CleanupFibers();
             }
             APIs.InvokeEvent(RTSEventType.End);
         }
         private static void GetPedOutOfVehicle(Ped ped)
         {
+            ped.RelationshipGroup = _suspectRelateGroup;
             Debug("Making Suspect leave vehicle");
             ped.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen).WaitForCompletion();
             Debug("Giving Suspect FightAgainstClosestHatedTarget Task");

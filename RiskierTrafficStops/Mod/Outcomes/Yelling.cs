@@ -74,7 +74,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
                         OutcomePullKnife();
                         break;
                     case YellingScenarioOutcomes.ContinueYelling:
-                        GameFiber.StartNew(KeyPressed);
+                        GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(KeyPressed));
                         while (!_isSuspectInVehicle && _suspect.IsAvailable() && (!Functions.IsPedArrested(_suspect) || Functions.IsPedGettingArrested(_suspect)))
                         {
                             GameFiber.Yield();
@@ -90,6 +90,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
             {
                 if (e is ThreadAbortException) return;
                 Error(e, nameof(YellingOutcome));
+                GameFiberHandling.CleanupFibers();
             }
             
             APIs.InvokeEvent(RTSEventType.End);
@@ -118,7 +119,8 @@ namespace RiskierTrafficStops.Mod.Outcomes
             _suspect.Inventory.GiveNewWeapon(MeleeWeapons[Rndm.Next(MeleeWeapons.Length)], -1, true);
 
             SetRelationshipGroups(_suspectRelationshipGroup);
-
+            _suspect.RelationshipGroup = _suspectRelationshipGroup;
+            
             Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
             _suspect.BlockPermanentEvents = true;
             _suspect.Tasks.FightAgainstClosestHatedTarget(40f, -1);
