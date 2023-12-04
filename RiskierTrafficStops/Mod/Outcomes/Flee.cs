@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using LSPD_First_Response.Mod.API;
 using Rage;
@@ -17,6 +18,13 @@ namespace RiskierTrafficStops.Mod.Outcomes
         private static Vehicle _suspectVehicle;
         internal static LHandle PursuitLHandle;
 
+        private enum FleeOutcomes
+        {
+            Flee,
+            BurnOut,
+            LeaveVehicle,
+        }
+        
         internal static void FleeOutcome(LHandle handle)
         {
             try
@@ -32,14 +40,18 @@ namespace RiskierTrafficStops.Mod.Outcomes
                 Debug("Getting all vehicle occupants");
                 var pedsInVehicle = _suspectVehicle.Occupants;
 
-                var chance = Rndm.Next(1, 101);
-                switch (chance)
+                List<FleeOutcomes> allOutcomes = new()
+                    { FleeOutcomes.Flee, FleeOutcomes.BurnOut, FleeOutcomes.LeaveVehicle };
+        
+                FleeOutcomes chosenFleeOutcome = allOutcomes[Rndm.Next(allOutcomes.Count)];
+                
+                switch (chosenFleeOutcome)
                 {
-                    case <= 33:
+                    case FleeOutcomes.Flee:
                         Debug("Starting pursuit");
                         PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                         break;
-                    case <= 66:
+                    case FleeOutcomes.BurnOut:
                         Debug("Making suspect do burnout");
                         _suspect.Tasks.PerformDrivingManeuver(_suspectVehicle, VehicleManeuver.BurnOut, 2000).WaitForCompletion(2000);
                         Debug("Clearing suspect tasks");
@@ -47,18 +59,16 @@ namespace RiskierTrafficStops.Mod.Outcomes
                         Debug("Starting pursuit");
                         PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                         break;
-                    case <= 100:
-                    {
-                        for (var i = pedsInVehicle.Length - 1; i >= 0; i--)
+                    case FleeOutcomes.LeaveVehicle:
+                        foreach (var i in pedsInVehicle)
                         {
-                            if (pedsInVehicle[i].IsAvailable())
+                            if (i.IsAvailable())
                             {
-                                pedsInVehicle[i].Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
+                                i.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
                             }
                         }
                         PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                         break;
-                    }
                 }
             }
             catch (Exception e)

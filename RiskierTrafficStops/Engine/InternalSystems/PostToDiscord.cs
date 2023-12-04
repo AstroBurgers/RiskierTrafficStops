@@ -31,7 +31,7 @@ namespace RiskierTrafficStops.Engine.InternalSystems
                                 $"**Stack Trace**```\n{ex}\n```\n" +
                                 $"**Message**```\n{ex.Message}\n```\n" +
                                 $"**Location**\n```prolog\n{location}```" +
-                                $"**Beta Version**\n```Beta Version: true```"
+                                $"**Beta Version?**\n```Beta Version: false```"
                             },
                         });
 

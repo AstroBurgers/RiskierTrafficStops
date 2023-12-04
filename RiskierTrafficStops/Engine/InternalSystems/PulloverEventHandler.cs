@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using LSPD_First_Response.Mod.API;
 using Rage;
 using RiskierTrafficStops.API.ExternalAPIs;
@@ -8,7 +10,7 @@ using static RiskierTrafficStops.Engine.InternalSystems.Logger;
 
 namespace RiskierTrafficStops.Engine.InternalSystems
 {
-    internal enum Scenarios //Enum is outside class so that it can be referenced anywhere without having to reference the class
+    internal enum Scenario //Enum is outside class so that it can be referenced anywhere without having to reference the class
     {
         GetOutOfCarAndYell,
         GetOutAndShoot,
@@ -23,9 +25,11 @@ namespace RiskierTrafficStops.Engine.InternalSystems
     internal static class PulloverEventHandler
     {
         private static int _chosenChance;
-        private static Scenarios _chosenOutcome;
+        private static Scenario _chosenOutcome;
         internal static bool HasEventHappened;
-
+        private static Scenario? _lastOutcome;
+        
+        
         internal static void SubscribeToEvents()
         {
             //Subscribing to events
@@ -58,31 +62,37 @@ namespace RiskierTrafficStops.Engine.InternalSystems
                 if (!IaeFunctions.IaeCompatibilityCheck(handle) || Functions.IsCalloutRunning() || API.APIs.DisableRTSForCurrentStop) return;
 
                 _chosenChance = Rndm.Next(1, 101);
-                _chosenOutcome = Settings.EnabledScenarios[Rndm.Next(Settings.EnabledScenarios.Count)];
+                _chosenOutcome = ChooseOutcome();
                 if (_chosenChance <= Settings.Chance)
                 {
                     switch (_chosenOutcome)
                     {
-                        case Scenarios.FleeFromTrafficStop:
+                        case Scenario.FleeFromTrafficStop:
                             Debug($"Chosen Scenario: {_chosenOutcome}");
                             GameFiber.WaitWhile(() => !MainPlayer.CurrentVehicle.IsSirenOn && Functions.IsPlayerPerformingPullover());
-                            if (!Functions.IsPlayerPerformingPullover()) { Debug("Player is no longer performing pullover, ending RTS events"); break; };
+                            if (!Functions.IsPlayerPerformingPullover()) { Debug("Player is no longer performing pullover, ending RTS events"); break; }
                             GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => Flee.FleeOutcome(handle)));
                             HasEventHappened = true;
+                            
+                            _lastOutcome = Scenario.FleeFromTrafficStop;
                             break;
-                        case Scenarios.GetOutAndShoot:
+                        case Scenario.GetOutAndShoot:
                             Debug($"Chosen Scenario: {_chosenOutcome}");
                             GameFiber.WaitWhile(() => !MainPlayer.CurrentVehicle.IsSirenOn && Functions.IsPlayerPerformingPullover());
-                            if (!Functions.IsPlayerPerformingPullover()) { Debug("Player is no longer performing pullover, ending RTS events"); break; };
+                            if (!Functions.IsPlayerPerformingPullover()) { Debug("Player is no longer performing pullover, ending RTS events"); break; }
                             GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => GetOutAndShoot.GoasOutcome(handle)));
                             HasEventHappened = true;
+                            
+                            _lastOutcome = Scenario.GetOutAndShoot;
                             break;
-                        case Scenarios.ShootAndFlee:
+                        case Scenario.ShootAndFlee:
                             Debug($"Chosen Scenario: {_chosenOutcome}");
                             GameFiber.WaitWhile(() => !MainPlayer.CurrentVehicle.IsSirenOn && Functions.IsPlayerPerformingPullover());
-                            if (!Functions.IsPlayerPerformingPullover()) { Debug("Player is no longer performing pullover, ending RTS events"); break; };
+                            if (!Functions.IsPlayerPerformingPullover()) { Debug("Player is no longer performing pullover, ending RTS events"); break; }
                             GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => ShootAndFlee.SafOutcome(handle)));
                             HasEventHappened = true;
+                            
+                            _lastOutcome = Scenario.ShootAndFlee;
                             break;
                     }
                 }
@@ -126,36 +136,44 @@ namespace RiskierTrafficStops.Engine.InternalSystems
 
                 switch (_chosenOutcome)
                 {
-                    case Scenarios.GetOutOfCarAndYell:
+                    case Scenario.GetOutOfCarAndYell:
                         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => Yelling.YellingOutcome(handle)));
+                        _lastOutcome = Scenario.GetOutOfCarAndYell;
                         break;
 
-                    case Scenarios.GetOutAndShoot:
+                    case Scenario.GetOutAndShoot:
                         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => GetOutAndShoot.GoasOutcome(handle)));
+                        _lastOutcome = Scenario.GetOutAndShoot;
                         break;
 
-                    case Scenarios.FleeFromTrafficStop:
+                    case Scenario.FleeFromTrafficStop:
                         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => Flee.FleeOutcome(handle)));
+                        _lastOutcome = Scenario.FleeFromTrafficStop;
                         break;
 
-                    case Scenarios.YellInCar:
+                    case Scenario.YellInCar:
                         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => YellInCar.YicEventHandler(handle)));
+                        _lastOutcome = Scenario.YellInCar;
                         break;
 
-                    case Scenarios.RevEngine:
+                    case Scenario.RevEngine:
                         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => Revving.RevvingOutcome(handle)));
+                        _lastOutcome = Scenario.RevEngine;
                         break;
 
-                    case Scenarios.RamIntoPlayerVehicle:
+                    case Scenario.RamIntoPlayerVehicle:
                         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => Ramming.RammingOutcome(handle)));
+                        _lastOutcome = Scenario.RamIntoPlayerVehicle;
                         break;
 
-                    case Scenarios.ShootAndFlee:
+                    case Scenario.ShootAndFlee:
                         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => ShootAndFlee.SafOutcome(handle)));
+                        _lastOutcome = Scenario.ShootAndFlee;
                         break;
 
-                    case Scenarios.Spit:
+                    case Scenario.Spit:
                         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => Spitting.SpittingOutcome(handle)));
+                        _lastOutcome = Scenario.Spit;
                         break;
 
                     default:
@@ -168,6 +186,19 @@ namespace RiskierTrafficStops.Engine.InternalSystems
                 if (e is ThreadAbortException) return;
                 Error(e, "PulloverEvents.cs: ChooseEvent()");
                 GameFiberHandling.CleanupFibers();
+            }
+        }
+
+        private static Scenario ChooseOutcome()
+        {
+            if (_lastOutcome != null)
+            {
+                List<Scenario> possibleOutcome = Settings.EnabledScenarios.Where(i => i != _lastOutcome).ToList();
+                return possibleOutcome[Rndm.Next(possibleOutcome.Count)];
+            }
+            else
+            {
+                return Settings.EnabledScenarios[Rndm.Next(Settings.EnabledScenarios.Count)];
             }
         }
     }

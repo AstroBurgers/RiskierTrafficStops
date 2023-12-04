@@ -34,7 +34,7 @@ namespace RiskierTrafficStops
                 Debug("Checking for updates...");
                 VersionChecker.CheckForUpdates();
                 // Displaying startup Notification
-                Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Watch you back out there officer!");
+                Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Watch your back out there officer!");
                 Debug("Checking Auto Log status...");
                 switch (Settings.AutoLogEnabled)
                 {

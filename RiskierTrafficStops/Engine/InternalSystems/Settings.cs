@@ -7,7 +7,7 @@ namespace RiskierTrafficStops.Engine.InternalSystems
     internal static class Settings
     {
         internal static int Chance = 15;
-        internal static readonly List<Scenarios> EnabledScenarios = new List<Scenarios>();
+        internal static readonly List<Scenario> EnabledScenarios = new();
         internal static Keys GetBackInKey = Keys.Y;
         internal static InitializationFile Inifile; // Defining a new INI File
 
@@ -61,14 +61,14 @@ namespace RiskierTrafficStops.Engine.InternalSystems
         {
             Logger.Debug("Adding enabled scenarios to enabledScenarios");
             EnabledScenarios.Clear();
-            if (GetOutAndShootEnabled) { EnabledScenarios.Add(Scenarios.GetOutAndShoot); }
-            if (RamEnabled) { EnabledScenarios.Add(Scenarios.RamIntoPlayerVehicle); }
-            if (FleeEnabled) { EnabledScenarios.Add(Scenarios.FleeFromTrafficStop); }
-            if (RevEnabled) { EnabledScenarios.Add(Scenarios.RevEngine); }
-            if (YellEnabled) { EnabledScenarios.Add(Scenarios.GetOutOfCarAndYell); }
-            if (YellInCarEnabled) { EnabledScenarios.Add(Scenarios.YellInCar); }
-            if (ShootAndFleeEnabled) { EnabledScenarios.Add(Scenarios.ShootAndFlee); }
-            if (SpittingEnabled) { EnabledScenarios.Add(Scenarios.Spit); }
+            if (GetOutAndShootEnabled) { EnabledScenarios.Add(Scenario.GetOutAndShoot); }
+            if (RamEnabled) { EnabledScenarios.Add(Scenario.RamIntoPlayerVehicle); }
+            if (FleeEnabled) { EnabledScenarios.Add(Scenario.FleeFromTrafficStop); }
+            if (RevEnabled) { EnabledScenarios.Add(Scenario.RevEngine); }
+            if (YellEnabled) { EnabledScenarios.Add(Scenario.GetOutOfCarAndYell); }
+            if (YellInCarEnabled) { EnabledScenarios.Add(Scenario.YellInCar); }
+            if (ShootAndFleeEnabled) { EnabledScenarios.Add(Scenario.ShootAndFlee); }
+            if (SpittingEnabled) { EnabledScenarios.Add(Scenario.Spit); }
 
             Logger.Debug("----Enabled Scenarios----");
             foreach (var i in EnabledScenarios)

@@ -7,7 +7,7 @@ namespace RiskierTrafficStops.Engine.InternalSystems
 {
     internal static class VersionChecker
     {
-        internal static string CurrentVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+        internal static string CurrentVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString(4);
         internal static string OnlineVersion;
 
         internal static void CheckForUpdates()
