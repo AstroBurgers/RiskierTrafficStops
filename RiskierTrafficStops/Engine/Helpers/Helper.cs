@@ -53,11 +53,80 @@ namespace RiskierTrafficStops.Engine.Helpers
             {
                 if (!suspects[i].Exists()) { continue; }
                 Functions.AddPedToPursuit(pursuitLHandle, suspects[i]);
+                RandomizePursuitAttributes(suspects[i]);
             }
 
             return pursuitLHandle;
         }
 
+        internal static float NextFloat(Random random)
+        {
+            double mantissa = (random.NextDouble() * 2.0) - 1.0;
+            // choose -149 instead of -126 to also generate subnormal floats (*)
+            double exponent = Math.Pow(2.0, random.Next(-126, 128));
+            return (float)(mantissa * exponent);
+        }
+        
+        internal static void RandomizePursuitAttributes(Ped suspect)
+        {
+            try
+            {
+                static float GenerateRandomFloat()
+                {
+                    return (float)Math.Round((float)(Rndm.NextDouble() * (2.0 - 0.1) + 0.1), 1);
+                }
+                
+                PedPursuitAttributes attributes = Functions.GetPedPursuitAttributes(suspect);
+                
+                attributes.MaxDrivingSpeed = MphToMps(Rndm.Next(60, 201));
+                attributes.MinDrivingSpeed = MphToMps(Rndm.Next(30, Convert.ToInt32(attributes.MaxDrivingSpeed - 1)));
+
+                attributes.HandlingAbility = GenerateRandomFloat();
+                attributes.HandlingAbilityTurns = GenerateRandomFloat();
+
+                attributes.BurstTireSurrenderMult = 2f;
+                attributes.SurrenderChanceTireBurst = Rndm.Next(1, 31);
+                attributes.SurrenderChanceTireBurstAndCrashed = Rndm.Next(1, 41);
+
+                attributes.SurrenderChanceCarBadlyDamaged = Rndm.Next(1, 101);
+
+                attributes.SurrenderChancePitted = Rndm.Next(1, 81);
+                attributes.SurrenderChancePittedAndCrashed = Rndm.Next(1, 51);
+                attributes.SurrenderChancePittedAndSlowedDown = Rndm.Next(1, 11);
+
+                attributes.AverageBurstTireSurrenderTime = Rndm.Next(700, 2000);
+                attributes.AverageSurrenderTime = Rndm.Next(1000, 3000);
+
+                attributes.AverageFightTime = Rndm.Next(400, 2000);
+                
+                Logger.Debug($"MaxDrivingSpeed: {attributes.MaxDrivingSpeed}");
+                Logger.Debug($"MinDrivingSpeed: {attributes.MinDrivingSpeed}");
+                
+                Logger.Debug($"HandlingAbility: {attributes.HandlingAbility}");
+                Logger.Debug($"HandlingAbilityTurns: {attributes.HandlingAbilityTurns}");
+                
+                Logger.Debug($"BurstTireSurrenderMult: {attributes.BurstTireSurrenderMult}");
+                Logger.Debug($"SurrenderChanceTireBurst: {attributes.SurrenderChanceTireBurst}");
+                Logger.Debug($"SurrenderChanceTireBurstAndCrashed: {attributes.SurrenderChanceTireBurstAndCrashed}");
+                
+                Logger.Debug($"SurrenderChanceCarBadlyDamaged: {attributes.SurrenderChanceCarBadlyDamaged}");
+                
+                Logger.Debug($"SurrenderChancePitted: {attributes.SurrenderChancePitted}");
+                Logger.Debug($"SurrenderChancePittedAndCrashed: {attributes.SurrenderChancePittedAndCrashed}");
+                Logger.Debug($"SurrenderChancePittedAndSlowedDown: {attributes.SurrenderChancePittedAndSlowedDown}");
+                
+                Logger.Debug($"AverageBurstTireSurrenderTime: {attributes.AverageBurstTireSurrenderTime}");
+                Logger.Debug($"AverageSurrenderTime: {attributes.AverageSurrenderTime}");
+                
+                Logger.Debug($"AverageFightTime: {attributes.AverageFightTime}");
+            }
+            catch (Exception e)
+            {
+                if (e is System.Threading.ThreadAbortException) return;
+                Logger.Error(e, nameof(RandomizePursuitAttributes));
+            }
+        }
+        
         /// <summary>
         /// Same as SetupPursuit but with a suspect list
         /// </summary>
@@ -81,6 +150,7 @@ namespace RiskierTrafficStops.Engine.Helpers
                 if (suspectList[i].IsAvailable())
                 {
                     Functions.AddPedToPursuit(pursuitLHandle, suspectList[i]);
+                    RandomizePursuitAttributes(suspectList[i]);
                 }
             }
             return pursuitLHandle;
@@ -101,6 +171,7 @@ namespace RiskierTrafficStops.Engine.Helpers
                 if (suspectList[i].IsAvailable())
                 {
                     Functions.AddPedToPursuit(pursuitLHandle, suspectList[i]);
+                    RandomizePursuitAttributes(suspectList[i]);
                 }
             }
             return pursuitLHandle;

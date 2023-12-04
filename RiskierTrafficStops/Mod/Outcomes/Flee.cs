@@ -49,6 +49,8 @@ namespace RiskierTrafficStops.Mod.Outcomes
                 {
                     case FleeOutcomes.Flee:
                         Debug("Starting pursuit");
+                        
+                        if (Functions.GetCurrentPullover() == null) { GameFiberHandling.CleanupFibers(); return; }
                         PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                         break;
                     case FleeOutcomes.BurnOut:
@@ -57,6 +59,8 @@ namespace RiskierTrafficStops.Mod.Outcomes
                         Debug("Clearing suspect tasks");
                         _suspect.Tasks.PerformDrivingManeuver(_suspectVehicle, VehicleManeuver.GoForwardStraight, 750).WaitForCompletion(750);
                         Debug("Starting pursuit");
+                        
+                        if (Functions.GetCurrentPullover() == null) { GameFiberHandling.CleanupFibers(); return; }
                         PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                         break;
                     case FleeOutcomes.LeaveVehicle:
@@ -67,6 +71,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
                                 i.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
                             }
                         }
+                        if (Functions.GetCurrentPullover() == null) { GameFiberHandling.CleanupFibers(); return; }
                         PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                         break;
                 }
@@ -78,6 +83,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
                 GameFiberHandling.CleanupFibers();
             }
             
+            GameFiberHandling.CleanupFibers();
             InvokeEvent(RTSEventType.End);
         }
     }

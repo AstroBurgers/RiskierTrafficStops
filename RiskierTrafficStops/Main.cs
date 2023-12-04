@@ -22,50 +22,68 @@ namespace RiskierTrafficStops
             OnDuty = onDuty;
             if (onDuty)
             {
-                if (!Helper.VerifyDependencies()) return;
-                
-                // Setting up INI And checking for updates
-                Debug("Setting up INIFile...");
-                Settings.IniFileSetup();
-                Debug("Creating menu...");
-                ConfigMenu.CreateMenu();
-                Debug("Adding console commands...");
-                Game.AddConsoleCommands();
-                Debug("Checking for updates...");
-                VersionChecker.CheckForUpdates();
-                // Displaying startup Notification
-                Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Watch your back out there officer!");
-                Debug("Checking Auto Log status...");
-                switch (Settings.AutoLogEnabled)
+                GameFiber.StartNew(() =>
                 {
-                    //Displaying Auto-log Notification
-                    case true:
-                        Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops",
-                            "~b~Auto Logging Status", "Auto Logging is ~g~Enabled~s~");
-                        break;
-                    case false:
-                        Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops",
-                            "~b~Auto Logging Status", "Auto Logging is ~r~Disabled~s~");
-                        break;
-                }
-                
-                Debug("Auto log status: " + Settings.AutoLogEnabled);
-                //Subscribes to events
-                PulloverEventHandler.SubscribeToEvents();
+                    if (!Helper.VerifyDependencies()) return;
 
-                AppDomain.CurrentDomain.DomainUnload += Cleanup;
-                Debug("Loaded successfully");
+                    // Setting up INI And checking for updates
+                    Debug("Setting up INIFile...");
+                    GameFiber.StartNew(Settings.IniFileSetup);
+                    Debug("Creating menu...");
+                    GameFiber.StartNew(ConfigMenu.CreateMenu);
+                    Debug("Adding console commands...");
+                    Game.AddConsoleCommands();
+                    Debug("Checking for updates...");
+                    GameFiber.StartNew(VersionChecker.IsUpdateAvailable);
+                    // Displaying startup Notification
+                    Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro",
+                        "Watch your back out there officer!");
+                    Debug("Checking Auto Log status...");
+                    switch (Settings.AutoLogEnabled)
+                    {
+                        //Displaying Auto-log Notification
+                        case true:
+                            Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops",
+                                "~b~Auto Logging Status", "Auto Logging is ~g~Enabled~s~");
+                            break;
+                        case false:
+                            Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops",
+                                "~b~Auto Logging Status", "Auto Logging is ~r~Disabled~s~");
+                            break;
+                    }
+
+                    Debug("Auto log status: " + Settings.AutoLogEnabled);
+                    //Subscribes to events
+                    PulloverEventHandler.SubscribeToEvents();
+
+                    AppDomain.CurrentDomain.DomainUnload += Cleanup;
+                    Debug("Loaded successfully");
+                });
             }
         }
 
-        private static void Cleanup(object sender, EventArgs e)
+    private static void Cleanup(object sender, EventArgs e)
         {
-            Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Did you crash or are you a dev?");
-            //Unsubscribes from events
-            PulloverEventHandler.UnsubscribeToEvents();
-            Debug("Unloaded successfully");
+            try
+            {
+                Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Did you crash or are you a dev?");
+                //Unsubscribes from events
+                PulloverEventHandler.UnsubscribeToEvents();
+                if (VersionChecker.UpdateThread.IsAlive)
+                {
+                    VersionChecker.UpdateThread.Abort();
+                }
+                Debug("Unloaded successfully");
+            }
+            catch (Exception ex)
+            {
+                if (e is System.Threading.ThreadAbortException) return;
+                
+                Error(ex, nameof(Cleanup));
+            }
         }
-        
+    
+            
         public override void Finally()
         {
         }

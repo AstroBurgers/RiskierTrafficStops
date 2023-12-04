@@ -36,11 +36,11 @@ namespace RiskierTrafficStops.Mod.Outcomes
                 {
                     case > 50:
                         Debug("Starting all suspects outcome");
-                        GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => AllSuspects(_suspectVehicle.Occupants)));
+                        AllSuspects(_suspectVehicle.Occupants);
                         break;
                     case <= 50:
                         Debug("Starting driver only outcome");
-                        GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(DriverOnly));
+                        DriverOnly();
                         break;
                 }
             }
@@ -50,6 +50,8 @@ namespace RiskierTrafficStops.Mod.Outcomes
                 Error(e, nameof(SafOutcome));
                 GameFiberHandling.CleanupFibers();
             }
+            
+            GameFiberHandling.CleanupFibers();
             APIs.InvokeEvent(RTSEventType.End);
         }
 
@@ -74,6 +76,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
             Debug("Waiting 4500ms");
             GameFiber.Wait(4500);
             if (!MainPlayer.IsAvailable()) return;
+            if (Functions.GetCurrentPullover() == null) { GameFiberHandling.CleanupFibers(); return; }
             PursuitLHandle = SetupPursuitWithList(true, peds);
         }
 
@@ -90,6 +93,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
             GameFiber.Wait(5000);
             
             if (!MainPlayer.IsAvailable()) return;
+            if (Functions.GetCurrentPullover() == null) { GameFiberHandling.CleanupFibers(); return; }
             PursuitLHandle = SetupPursuit(true, _suspect);
         }
     }

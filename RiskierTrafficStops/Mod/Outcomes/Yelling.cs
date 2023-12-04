@@ -93,6 +93,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
                 GameFiberHandling.CleanupFibers();
             }
             
+            GameFiberHandling.CleanupFibers();
             APIs.InvokeEvent(RTSEventType.End);
         }
 

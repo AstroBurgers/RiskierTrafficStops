@@ -103,7 +103,6 @@ namespace RiskierTrafficStops.Engine.InternalSystems
         {
             HasEventHappened = false;
             API.APIs.DisableRTSForCurrentStop = false;
-            GameFiberHandling.CleanupFibers();
         }
 
         private static void Events_OnPulloverDriverStopped(LHandle handle)
@@ -191,7 +190,7 @@ namespace RiskierTrafficStops.Engine.InternalSystems
 
         private static Scenario ChooseOutcome()
         {
-            if (_lastOutcome != null)
+            if (_lastOutcome != null && Settings.EnabledScenarios.Count > 1)
             {
                 List<Scenario> possibleOutcome = Settings.EnabledScenarios.Where(i => i != _lastOutcome).ToList();
                 return possibleOutcome[Rndm.Next(possibleOutcome.Count)];

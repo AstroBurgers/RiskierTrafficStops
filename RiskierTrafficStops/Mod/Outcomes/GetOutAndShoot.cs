@@ -64,6 +64,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
                 switch (_chosenOutcome)
                 {
                     case ShootOutcomes.Flee:
+                        if (Functions.GetCurrentPullover() == null) { GameFiberHandling.CleanupFibers(); return; }
                         _pursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                         break;
                     case ShootOutcomes.KeepShooting:
@@ -86,6 +87,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
                 Error(e, nameof(GoasOutcome));
                 GameFiberHandling.CleanupFibers();
             }
+            GameFiberHandling.CleanupFibers();
             APIs.InvokeEvent(RTSEventType.End);
         }
         private static void GetPedOutOfVehicle(Ped ped)

@@ -40,6 +40,8 @@ namespace RiskierTrafficStops.Mod.Outcomes
                 Error(e, nameof(YicEventHandler));
                 GameFiberHandling.CleanupFibers();
             }
+            
+            GameFiberHandling.CleanupFibers();
             APIs.InvokeEvent(RTSEventType.End);
         }
     }

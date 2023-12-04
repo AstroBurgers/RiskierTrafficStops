@@ -38,6 +38,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
                     return;
                 }
                 _suspect.Tasks.Clear();
+                if (Functions.GetCurrentPullover() == null) { GameFiberHandling.CleanupFibers(); return; }
                 PursuitLHandle = SetupPursuitWithList(true, _suspectVehicle.Occupants);
             }
             catch (Exception e)
@@ -47,6 +48,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
                 GameFiberHandling.CleanupFibers();
             }
             
+            GameFiberHandling.CleanupFibers();
             APIs.InvokeEvent(RTSEventType.End);
         }
     }
