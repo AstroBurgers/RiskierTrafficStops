@@ -40,7 +40,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
                         break;
                     case <= 50:
                         Debug("Starting driver only outcome");
-                        GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => DriverOnly()));
+                        GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(DriverOnly));
                         break;
                 }
             }
