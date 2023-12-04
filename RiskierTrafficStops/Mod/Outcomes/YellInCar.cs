@@ -38,7 +38,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
             {
                 if (e is ThreadAbortException) return;
                 Error(e, nameof(YicEventHandler));
-                GameFiberHandling.CleanupFibers();
+                CleanupEvent();
             }
             
             GameFiberHandling.CleanupFibers();

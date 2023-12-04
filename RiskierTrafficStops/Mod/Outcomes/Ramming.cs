@@ -38,14 +38,14 @@ namespace RiskierTrafficStops.Mod.Outcomes
                     return;
                 }
                 _suspect.Tasks.Clear();
-                if (Functions.GetCurrentPullover() == null) { GameFiberHandling.CleanupFibers(); return; }
+                if (Functions.GetCurrentPullover() == null) { CleanupEvent(); return; }
                 PursuitLHandle = SetupPursuitWithList(true, _suspectVehicle.Occupants);
             }
             catch (Exception e)
             {
                 if (e is ThreadAbortException) return;
                 Error(e, nameof(RammingOutcome));
-                GameFiberHandling.CleanupFibers();
+                CleanupEvent();
             }
             
             GameFiberHandling.CleanupFibers();

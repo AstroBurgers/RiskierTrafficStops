@@ -54,7 +54,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
                     return;
                 }
 
-                GameFiber.WaitWhile(() => _suspect.IsAvailable() && MainPlayer.DistanceTo(_suspect) >= 2.5f && _suspect.IsInAnyVehicle(true), 120000);
+                GameFiber.WaitWhile(() => _suspect.IsAvailable() && MainPlayer.DistanceTo(_suspect) >= 3f && _suspect.IsInAnyVehicle(true), 120000);
                 if (Functions.IsPlayerPerformingPullover() && _suspect.IsAvailable() && MainPlayer.DistanceTo(_suspect) <= 2.5f && _suspect.IsInAnyVehicle(true))
                 {
                     Game.DisplaySubtitle(SpittingText[Rndm.Next(SpittingText.Length)], 6000);
@@ -65,7 +65,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
             {
                 if (e is ThreadAbortException) return;
                 Error(e, nameof(SpittingOutcome));
-                GameFiberHandling.CleanupFibers();
+                CleanupEvent();
             }
             
             GameFiberHandling.CleanupFibers();

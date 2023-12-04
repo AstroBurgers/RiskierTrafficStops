@@ -64,7 +64,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
                 switch (_chosenOutcome)
                 {
                     case ShootOutcomes.Flee:
-                        if (Functions.GetCurrentPullover() == null) { GameFiberHandling.CleanupFibers(); return; }
+                        if (Functions.GetCurrentPullover() == null) { CleanupEvent(); return; }
                         _pursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                         break;
                     case ShootOutcomes.KeepShooting:
@@ -85,7 +85,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
             {
                 if (e is ThreadAbortException) return;
                 Error(e, nameof(GoasOutcome));
-                GameFiberHandling.CleanupFibers();
+                CleanupEvent();
             }
             GameFiberHandling.CleanupFibers();
             APIs.InvokeEvent(RTSEventType.End);

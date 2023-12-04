@@ -243,6 +243,7 @@ namespace RiskierTrafficStops.Engine.Helpers
         internal static void CleanupEvent()
         {
             PulloverEventHandler.HasEventHappened = false;
+            GameFiberHandling.CleanupFibers();
             APIs.InvokeEvent(RTSEventType.End);
         }
 

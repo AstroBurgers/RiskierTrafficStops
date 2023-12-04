@@ -90,7 +90,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
             {
                 if (e is ThreadAbortException) return;
                 Error(e, nameof(YellingOutcome));
-                GameFiberHandling.CleanupFibers();
+                CleanupEvent();
             }
             
             GameFiberHandling.CleanupFibers();
@@ -99,7 +99,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
 
         private static void KeyPressed()
         {
-            Game.DisplayHelp($"~BLIP_INFO_ICON~ Press {Settings.GetBackInKey.GetInstructionalId()} to have the suspect get back in their vehicle", 10000);
+            Game.DisplayHelp($"~BLIP_INFO_ICON~ Press ~{Settings.GetBackInKey.GetInstructionalId()}~ to have the suspect get back in their vehicle", 10000);
             while (_suspect.IsAvailable() && !_isSuspectInVehicle)
             {
                 GameFiber.Yield();

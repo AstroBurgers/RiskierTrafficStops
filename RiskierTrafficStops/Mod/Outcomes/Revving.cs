@@ -39,7 +39,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
                     default:
                         if (_suspect.IsAvailable())
                         {
-                            if (Functions.GetCurrentPullover() == null) { GameFiberHandling.CleanupFibers(); return; }
+                            if (Functions.GetCurrentPullover() == null) { CleanupEvent(); return; }
                             PursuitLHandle = SetupPursuit(true, _suspect);
                         }
                         break;
@@ -49,7 +49,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
             {
                 if (e is ThreadAbortException) return;
                 Error(e, nameof(RevvingOutcome));
-                GameFiberHandling.CleanupFibers();
+                CleanupEvent();
             }
             
             GameFiberHandling.CleanupFibers();

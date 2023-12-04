@@ -48,7 +48,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
             {
                 if (e is ThreadAbortException) return;
                 Error(e, nameof(SafOutcome));
-                GameFiberHandling.CleanupFibers();
+                CleanupEvent();
             }
             
             GameFiberHandling.CleanupFibers();
@@ -57,26 +57,26 @@ namespace RiskierTrafficStops.Mod.Outcomes
 
         private static void AllSuspects(Ped[] peds)
         {
-            for (var i = 0; i < peds.Length; i++)
+            foreach (var i in peds)
             {
-                if (peds[i].IsAvailable())
+                if (i.IsAvailable())
                 {
-                    if (!peds[i].Inventory.HasLoadedWeapon)
+                    if (!i.Inventory.HasLoadedWeapon)
                     {
                         var weapon = PistolList[Rndm.Next(PistolList.Length)];
                         Debug($"Giving Suspect #{i} weapon: {weapon}");
-                        peds[i].Inventory.GiveNewWeapon(weapon, 500, true);
+                        i.Inventory.GiveNewWeapon(weapon, 500, true);
                     }
 
                     Debug($"Making Suspect #{i} shoot at Player");
-                    NativeFunction.Natives.TASK_VEHICLE_SHOOT_AT_PED(peds[i], MainPlayer, 20.0f);
+                    NativeFunction.Natives.x10AB107B887214D8(i, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
                 }
             }
-
+            
             Debug("Waiting 4500ms");
-            GameFiber.Wait(4500);
+            GameFiber.Wait(5000);
             if (!MainPlayer.IsAvailable()) return;
-            if (Functions.GetCurrentPullover() == null) { GameFiberHandling.CleanupFibers(); return; }
+            if (Functions.GetCurrentPullover() == null) { CleanupEvent(); return; }
             PursuitLHandle = SetupPursuitWithList(true, peds);
         }
 
@@ -89,11 +89,11 @@ namespace RiskierTrafficStops.Mod.Outcomes
             
             if (!_suspect.Inventory.HasLoadedWeapon) { Debug("Giving Suspect Weapon"); _suspect.Inventory.GiveNewWeapon(weapon, 100, true); }
             Debug("Giving Suspect Tasks");
-            NativeFunction.Natives.TASK_VEHICLE_SHOOT_AT_PED(_suspect, MainPlayer, 20.0f);
+            NativeFunction.Natives.x10AB107B887214D8(_suspect, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
             GameFiber.Wait(5000);
             
             if (!MainPlayer.IsAvailable()) return;
-            if (Functions.GetCurrentPullover() == null) { GameFiberHandling.CleanupFibers(); return; }
+            if (Functions.GetCurrentPullover() == null) { CleanupEvent(); return; }
             PursuitLHandle = SetupPursuit(true, _suspect);
         }
     }
