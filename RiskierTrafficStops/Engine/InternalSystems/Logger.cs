@@ -22,5 +22,10 @@ namespace RiskierTrafficStops.Engine.InternalSystems
         {
             Game.LogTrivial(string.Format(DefaultInfo, "DEBUG", msg));
         }
+        
+        internal static void Normal(string msg)
+        {
+            Game.LogTrivial(string.Format(DefaultInfo, "NORMAL", msg));
+        }
     }
 }

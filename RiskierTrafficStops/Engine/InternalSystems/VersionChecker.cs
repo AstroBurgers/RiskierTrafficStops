@@ -25,7 +25,7 @@ namespace RiskierTrafficStops.Engine.InternalSystems
 
         private static State _state = State.Current;
         private static string _receivedData = string.Empty;
-        internal static Thread UpdateThread = new Thread(CheckVersion);
+        internal static Thread UpdateThread = new(CheckRTSVersion);
 
         internal static string CurrentVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString(4);
         internal static string OnlineVersion;
@@ -40,7 +40,7 @@ namespace RiskierTrafficStops.Engine.InternalSystems
             switch (_state)
             {
                 case State.Failed:
-                    Debug("Update check failed... please check your internet connection");
+                    Normal("Update check failed... please check your internet connection");
                     break;
                 case State.Update:
                     Game.DisplayNotification("3dtextures",
@@ -51,11 +51,11 @@ namespace RiskierTrafficStops.Engine.InternalSystems
                         $"Online Version: ~g~{_receivedData}~s~\n" +
                         $"Installed version: ~y~{CurrentVersion}~s~\n" +
                         $"Please update ~r~ASAP~s~!");
-                    Logger.Debug($"Online Version: {_receivedData} | Installed Version: {CurrentVersion}");
-                    Logger.Debug("Plugin is outdated, please up date to the latest version as soon as possible");
+                    Logger.Normal($"Online Version: {_receivedData} | Installed Version: {CurrentVersion}");
+                    Logger.Normal("Plugin is outdated, please up date to the latest version as soon as possible");
                     break;
                 case State.Current:
-                    Logger.Debug($"Online Version: {_receivedData} | Installed Version: {CurrentVersion}");
+                    Logger.Normal($"Online Version: {_receivedData} | Installed Version: {CurrentVersion}");
                     Game.DisplayNotification("3dtextures",
                         "mpgroundlogo_cops",
                         "Riskier Traffic Stops",
@@ -65,7 +65,7 @@ namespace RiskierTrafficStops.Engine.InternalSystems
             }
         }
 
-        private static void CheckVersion()
+        private static void CheckRTSVersion()
         {
             try
             {

@@ -32,12 +32,12 @@ namespace RiskierTrafficStops.Mod.Outcomes
                 APIs.InvokeEvent(RTSEventType.Start);
                 if (!GetSuspectAndSuspectVehicle(handle, out _suspect, out _suspectVehicle))
                 {
-                    Debug("Failed to get suspect and vehicle, cleaning up RTS event...");
+                    Normal("Failed to get suspect and vehicle, cleaning up RTS event...");
                     CleanupEvent();
                     return;
                 }
 
-                Debug("Adding all suspect in the vehicle to a list");
+                Normal("Adding all suspect in the vehicle to a list");
 
                 var pedsInVehicle = _suspectVehicle.Occupants;
                 if (pedsInVehicle.Length < 1) throw new ArgumentNullException(nameof(pedsInVehicle));
@@ -49,17 +49,17 @@ namespace RiskierTrafficStops.Mod.Outcomes
                     var weapon = WeaponList[Rndm.Next(WeaponList.Length)];
                     if (ped.IsAvailable())
                     {
-                        if (!ped.Inventory.HasLoadedWeapon) { ped.Inventory.GiveNewWeapon(weapon, 100, true); Debug($"Giving Suspect weapon: {weapon}"); }
+                        if (!ped.Inventory.HasLoadedWeapon) { ped.Inventory.GiveNewWeapon(weapon, 100, true); Normal($"Giving Suspect weapon: {weapon}"); }
                     }
                     
                     GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => GetPedOutOfVehicle(ped)));
                 }
                 GameFiber.Wait(7010);
 
-                Debug("Choosing outcome from shootOutcomes");
+                Normal("Choosing outcome from shootOutcomes");
                 var scenarioList = (ShootOutcomes[])Enum.GetValues(typeof(ShootOutcomes));
                 _chosenOutcome = scenarioList[Rndm.Next(scenarioList.Length)];
-                Debug($"Chosen Outcome: {_chosenOutcome}");
+                Normal($"Chosen Outcome: {_chosenOutcome}");
 
                 switch (_chosenOutcome)
                 {
@@ -72,7 +72,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
                         {
                             if (pedsInVehicle[i].IsAvailable())
                             {
-                                Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
+                                Normal("Giving Suspect FightAgainstClosestHatedTarget Task");
                                 pedsInVehicle[i].Tasks.FightAgainstClosestHatedTarget(40f, -1);
                             }
                         }
@@ -93,9 +93,9 @@ namespace RiskierTrafficStops.Mod.Outcomes
         private static void GetPedOutOfVehicle(Ped ped)
         {
             ped.RelationshipGroup = _suspectRelateGroup;
-            Debug("Making Suspect leave vehicle");
+            Normal("Making Suspect leave vehicle");
             ped.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen).WaitForCompletion();
-            Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
+            Normal("Giving Suspect FightAgainstClosestHatedTarget Task");
             ped.Tasks.FightAgainstClosestHatedTarget(40f, 7000).WaitForCompletion(7001);
         }
     }

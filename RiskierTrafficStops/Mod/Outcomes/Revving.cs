@@ -23,7 +23,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
                 APIs.InvokeEvent(RTSEventType.Start);
                 if (!GetSuspectAndSuspectVehicle(handle, out _suspect, out _suspectVehicle))
                 {
-                    Debug("Failed to get suspect and vehicle, cleaning up RTS event...");
+                    Normal("Failed to get suspect and vehicle, cleaning up RTS event...");
                     CleanupEvent();
                     return;
                 }
@@ -34,7 +34,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
                 switch (chance)
                 {
                     case <= 25:
-                        Debug("Suspect chose not to run after revving");
+                        Normal("Suspect chose not to run after revving");
                         break;
                     default:
                         if (_suspect.IsAvailable())

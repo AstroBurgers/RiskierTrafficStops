@@ -51,15 +51,15 @@ namespace RiskierTrafficStops.Engine.InternalSystems
         private static void ValidateIniValues()
         {
             if (Chance <= 100) return;
-            Logger.Debug("Chance value was greater than 100, setting value to 100...");
+            Logger.Normal("Chance value was greater than 100, setting value to 100...");
             Chance = 100;
             Game.DisplayNotification("commonmenu", "mp_alerttriangle", "Riskier Traffic Stops", "~b~By Astro", "Chance value is ~r~over 100~w~!!");
-            Logger.Debug("Chance value set to 100");
+            Logger.Normal("Chance value set to 100");
         }
 
         internal static void FilterOutcomes()
         {
-            Logger.Debug("Adding enabled scenarios to enabledScenarios");
+            Logger.Normal("Adding enabled scenarios to enabledScenarios");
             EnabledScenarios.Clear();
             if (GetOutAndShootEnabled) { EnabledScenarios.Add(Scenario.GetOutAndShoot); }
             if (RamEnabled) { EnabledScenarios.Add(Scenario.RamIntoPlayerVehicle); }
@@ -70,13 +70,13 @@ namespace RiskierTrafficStops.Engine.InternalSystems
             if (ShootAndFleeEnabled) { EnabledScenarios.Add(Scenario.ShootAndFlee); }
             if (SpittingEnabled) { EnabledScenarios.Add(Scenario.Spit); }
 
-            Logger.Debug("----Enabled Scenarios----");
+            Logger.Normal("----Enabled Scenarios----");
             foreach (var i in EnabledScenarios)
             {
                 // ReSharper disable once HeapView.BoxingAllocation
-                Logger.Debug(i.ToString());
+                Logger.Normal(i.ToString());
             }
-            Logger.Debug("----Enabled Scenarios----");
+            Logger.Normal("----Enabled Scenarios----");
         }
     }
 }

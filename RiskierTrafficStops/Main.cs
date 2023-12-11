@@ -14,6 +14,7 @@ namespace RiskierTrafficStops
 
         public override void Initialize()
         {
+            Normal("Plugin initialized, go on duty to fully load plugin.");
             Functions.OnOnDutyStateChanged += Functions_OnOnDutyStateChanged;
         }
 
@@ -27,18 +28,18 @@ namespace RiskierTrafficStops
                     if (!Helper.VerifyDependencies()) return;
 
                     // Setting up INI And checking for updates
-                    Debug("Setting up INIFile...");
-                    GameFiber.StartNew(Settings.IniFileSetup);
-                    Debug("Creating menu...");
-                    GameFiber.StartNew(ConfigMenu.CreateMenu);
-                    Debug("Adding console commands...");
+                    Normal("Setting up INI File...");
+                    Settings.IniFileSetup();
+                    Normal("Creating config menu menu...");
+                    ConfigMenu.CreateMenu();
+                    Normal("Adding console commands...");
                     Game.AddConsoleCommands();
-                    Debug("Checking for updates...");
-                    GameFiber.StartNew(VersionChecker.IsUpdateAvailable);
+                    Normal("Checking for updates...");
+                    VersionChecker.IsUpdateAvailable();
                     // Displaying startup Notification
                     Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro",
                         "Watch your back out there officer!");
-                    Debug("Checking Auto Log status...");
+                    Normal("Checking Auto Log status...");
                     switch (Settings.AutoLogEnabled)
                     {
                         //Displaying Auto-log Notification
@@ -52,12 +53,12 @@ namespace RiskierTrafficStops
                             break;
                     }
 
-                    Debug("Auto log status: " + Settings.AutoLogEnabled);
+                    Normal("Auto log status: " + Settings.AutoLogEnabled);
                     //Subscribes to events
                     PulloverEventHandler.SubscribeToEvents();
 
                     AppDomain.CurrentDomain.DomainUnload += Cleanup;
-                    Debug("Loaded successfully");
+                    Normal("Loaded successfully");
                 });
             }
         }
@@ -73,7 +74,7 @@ namespace RiskierTrafficStops
                 {
                     VersionChecker.UpdateThread.Abort();
                 }
-                Debug("Unloaded successfully");
+                Normal("Unloaded successfully");
             }
             catch (Exception ex)
             {

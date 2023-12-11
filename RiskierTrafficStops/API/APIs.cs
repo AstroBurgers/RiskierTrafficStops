@@ -33,11 +33,11 @@ public class APIs
         {
             case RTSEventType.Start:
                 OnRTSOutcomeStarted?.Invoke();
-                Logger.Debug("OnRTSOutcomeStarted Invoked");
+                Logger.Normal("OnRTSOutcomeStarted Invoked");
                 break;
             case RTSEventType.End:
                 OnRTSOutcomeEnded?.Invoke();
-                Logger.Debug("OnRTSOutcomeEnded Invoked");
+                Logger.Normal("OnRTSOutcomeEnded Invoked");
                 break;
         }
     }

@@ -32,12 +32,12 @@ namespace RiskierTrafficStops.Mod.Outcomes
                 InvokeEvent(RTSEventType.Start);
                 if (!GetSuspectAndSuspectVehicle(handle, out _suspect, out _suspectVehicle))
                 {
-                    Debug("Failed to get suspect and vehicle, cleaning up RTS event...");
+                    Normal("Failed to get suspect and vehicle, cleaning up RTS event...");
                     CleanupEvent();
                     return;
                 }
                 
-                Debug("Getting all vehicle occupants");
+                Normal("Getting all vehicle occupants");
                 var pedsInVehicle = _suspectVehicle.Occupants;
 
                 List<FleeOutcomes> allOutcomes = new()
@@ -48,17 +48,17 @@ namespace RiskierTrafficStops.Mod.Outcomes
                 switch (chosenFleeOutcome)
                 {
                     case FleeOutcomes.Flee:
-                        Debug("Starting pursuit");
+                        Normal("Starting pursuit");
                         
                         if (Functions.GetCurrentPullover() == null) { CleanupEvent(); return; }
                         PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                         break;
                     case FleeOutcomes.BurnOut:
-                        Debug("Making suspect do burnout");
+                        Normal("Making suspect do burnout");
                         _suspect.Tasks.PerformDrivingManeuver(_suspectVehicle, VehicleManeuver.BurnOut, 2000).WaitForCompletion(2000);
-                        Debug("Clearing suspect tasks");
+                        Normal("Clearing suspect tasks");
                         _suspect.Tasks.PerformDrivingManeuver(_suspectVehicle, VehicleManeuver.GoForwardStraight, 750).WaitForCompletion(750);
-                        Debug("Starting pursuit");
+                        Normal("Starting pursuit");
                         
                         if (Functions.GetCurrentPullover() == null) { CleanupEvent(); return; }
                         PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);

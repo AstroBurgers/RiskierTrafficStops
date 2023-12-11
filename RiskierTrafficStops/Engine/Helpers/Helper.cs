@@ -13,18 +13,18 @@ namespace RiskierTrafficStops.Engine.Helpers
     internal static class Helper
     {
         internal static Ped MainPlayer => Game.LocalPlayer.Character;
-        internal static readonly Random Rndm = new(DateTime.Now.Millisecond);
+        internal static Random Rndm = new(DateTime.Now.Millisecond);
 
-        private static string missingFiles = string.Empty;
+        private static string _missingFiles = string.Empty;
         
         internal static bool VerifyDependencies()
         {
-            if (!File.Exists("RAGENativeUI.dll")) missingFiles += "~n~- RAGENativeUI.dll";
+            if (!File.Exists("RAGENativeUI.dll")) _missingFiles += "~n~- RAGENativeUI.dll";
             
-            if (missingFiles.Length > 0)
+            if (_missingFiles.Length > 0)
             {
-                Debug($"Failed to load because of these required files were not found: {missingFiles.Replace("~n~", "")}"); // note to astro: replacing ~n~ is important otherwise the log will look weird
-                Game.DisplayNotification("commonmenu", "mp_alerttriangle", "RiskierTrafficStops", "~r~Missing files!", $"These files were not found: ~y~{missingFiles}");
+                Normal($"Failed to load because of these required files were not found: {_missingFiles.Replace("~n~", "")}"); // note to astro: replacing ~n~ is important otherwise the log will look weird
+                Game.DisplayNotification("commonmenu", "mp_alerttriangle", "RiskierTrafficStops", "~r~Missing files!", $"These files were not found: ~y~{_missingFiles}");
                 //Game.UnloadActivePlugin(); // note to astro: prevents FileNotFoundException from being sent or textures not being seen.
                 return false; // note to astro: returns the IsUpdateAvailable method to false, make sure this is the first thing in the if-statement otherwise other things will return true, or add '&& missingFiles.Length < 0' to those statements, it's personal preference
             }
@@ -99,26 +99,26 @@ namespace RiskierTrafficStops.Engine.Helpers
 
                 attributes.AverageFightTime = Rndm.Next(400, 2000);
                 
-                Logger.Debug($"MaxDrivingSpeed: {attributes.MaxDrivingSpeed}");
-                Logger.Debug($"MinDrivingSpeed: {attributes.MinDrivingSpeed}");
+                Logger.Normal($"MaxDrivingSpeed: {attributes.MaxDrivingSpeed}");
+                Logger.Normal($"MinDrivingSpeed: {attributes.MinDrivingSpeed}");
                 
-                Logger.Debug($"HandlingAbility: {attributes.HandlingAbility}");
-                Logger.Debug($"HandlingAbilityTurns: {attributes.HandlingAbilityTurns}");
+                Logger.Normal($"HandlingAbility: {attributes.HandlingAbility}");
+                Logger.Normal($"HandlingAbilityTurns: {attributes.HandlingAbilityTurns}");
                 
-                Logger.Debug($"BurstTireSurrenderMult: {attributes.BurstTireSurrenderMult}");
-                Logger.Debug($"SurrenderChanceTireBurst: {attributes.SurrenderChanceTireBurst}");
-                Logger.Debug($"SurrenderChanceTireBurstAndCrashed: {attributes.SurrenderChanceTireBurstAndCrashed}");
+                Logger.Normal($"BurstTireSurrenderMult: {attributes.BurstTireSurrenderMult}");
+                Logger.Normal($"SurrenderChanceTireBurst: {attributes.SurrenderChanceTireBurst}");
+                Logger.Normal($"SurrenderChanceTireBurstAndCrashed: {attributes.SurrenderChanceTireBurstAndCrashed}");
                 
-                Logger.Debug($"SurrenderChanceCarBadlyDamaged: {attributes.SurrenderChanceCarBadlyDamaged}");
+                Logger.Normal($"SurrenderChanceCarBadlyDamaged: {attributes.SurrenderChanceCarBadlyDamaged}");
                 
-                Logger.Debug($"SurrenderChancePitted: {attributes.SurrenderChancePitted}");
-                Logger.Debug($"SurrenderChancePittedAndCrashed: {attributes.SurrenderChancePittedAndCrashed}");
-                Logger.Debug($"SurrenderChancePittedAndSlowedDown: {attributes.SurrenderChancePittedAndSlowedDown}");
+                Logger.Normal($"SurrenderChancePitted: {attributes.SurrenderChancePitted}");
+                Logger.Normal($"SurrenderChancePittedAndCrashed: {attributes.SurrenderChancePittedAndCrashed}");
+                Logger.Normal($"SurrenderChancePittedAndSlowedDown: {attributes.SurrenderChancePittedAndSlowedDown}");
                 
-                Logger.Debug($"AverageBurstTireSurrenderTime: {attributes.AverageBurstTireSurrenderTime}");
-                Logger.Debug($"AverageSurrenderTime: {attributes.AverageSurrenderTime}");
+                Logger.Normal($"AverageBurstTireSurrenderTime: {attributes.AverageBurstTireSurrenderTime}");
+                Logger.Normal($"AverageSurrenderTime: {attributes.AverageSurrenderTime}");
                 
-                Logger.Debug($"AverageFightTime: {attributes.AverageFightTime}");
+                Logger.Normal($"AverageFightTime: {attributes.AverageFightTime}");
             }
             catch (Exception e)
             {
@@ -183,7 +183,7 @@ namespace RiskierTrafficStops.Engine.Helpers
         /// <param name="suspectRelationshipGroup"></param>
         internal static void SetRelationshipGroups(RelationshipGroup suspectRelationshipGroup)
         {
-            Debug("Setting up Suspect Relationship Group");
+            Normal("Setting up Suspect Relationship Group");
             suspectRelationshipGroup.SetRelationshipWith(MainPlayer.RelationshipGroup, Relationship.Hate);
             suspectRelationshipGroup.SetRelationshipWith(RelationshipGroup.Cop, Relationship.Hate);
 
@@ -225,16 +225,16 @@ namespace RiskierTrafficStops.Engine.Helpers
             Vehicle driverVehicle = null;
             if ((handle != null) && Functions.IsPlayerPerformingPullover())
             {
-                Debug("Setting up Suspect");
+                Normal("Setting up Suspect");
                 driver = Functions.GetPulloverSuspect(handle);
                 driver.BlockPermanentEvents = true;
             }
             if (driver != null && driver.Exists() && driver.IsInAnyVehicle(false) && !driver.IsInAnyPoliceVehicle)
             {
-                Debug("Setting up Suspect Vehicle");
+                Normal("Setting up Suspect Vehicle");
                 driverVehicle = driver.LastVehicle;
             }
-            Debug($"Returning Driver: {driver} & Driver Vehicle: {driverVehicle}");
+            Normal($"Returning Driver: {driver} & Driver Vehicle: {driverVehicle}");
             suspect = driver;
             suspectVehicle = driverVehicle;
             return suspect.Exists() && suspectVehicle.Exists();
@@ -242,6 +242,7 @@ namespace RiskierTrafficStops.Engine.Helpers
 
         internal static void CleanupEvent()
         {
+            Normal("Cleaning up RTS Outcome...");
             PulloverEventHandler.HasEventHappened = false;
             GameFiberHandling.CleanupFibers();
             APIs.InvokeEvent(RTSEventType.End);
@@ -333,7 +334,7 @@ namespace RiskierTrafficStops.Engine.Helpers
         /// </summary>
         internal static void RevEngine(Ped driver, Vehicle suspectVehicle, int[] timeBetweenRevs, int[] timeForRevsToLast, int totalNumberOfRevs)
         {
-            Logger.Debug("Starting Rev Engine method");
+            Logger.Normal("Starting Rev Engine method");
             for (var i = 0; i < totalNumberOfRevs; i++)
             {
                 GameFiber.Yield();

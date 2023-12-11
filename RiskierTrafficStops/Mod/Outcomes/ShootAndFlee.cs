@@ -24,7 +24,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
                 APIs.InvokeEvent(RTSEventType.Start);
                 if (!GetSuspectAndSuspectVehicle(handle, out _suspect, out _suspectVehicle))
                 {
-                    Debug("Failed to get suspect and vehicle, cleaning up RTS event...");
+                    Normal("Failed to get suspect and vehicle, cleaning up RTS event...");
                     CleanupEvent();
                     return;
                 }
@@ -35,11 +35,11 @@ namespace RiskierTrafficStops.Mod.Outcomes
                 switch (outcome)
                 {
                     case > 50:
-                        Debug("Starting all suspects outcome");
+                        Normal("Starting all suspects outcome");
                         AllSuspects(_suspectVehicle.Occupants);
                         break;
                     case <= 50:
-                        Debug("Starting driver only outcome");
+                        Normal("Starting driver only outcome");
                         DriverOnly();
                         break;
                 }
@@ -64,16 +64,16 @@ namespace RiskierTrafficStops.Mod.Outcomes
                     if (!i.Inventory.HasLoadedWeapon)
                     {
                         var weapon = PistolList[Rndm.Next(PistolList.Length)];
-                        Debug($"Giving Suspect #{i} weapon: {weapon}");
+                        Normal($"Giving Suspect #{i} weapon: {weapon}");
                         i.Inventory.GiveNewWeapon(weapon, 500, true);
                     }
 
-                    Debug($"Making Suspect #{i} shoot at Player");
+                    Normal($"Making Suspect #{i} shoot at Player");
                     NativeFunction.Natives.x10AB107B887214D8(i, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
                 }
             }
             
-            Debug("Waiting 4500ms");
+            Normal("Waiting 4500ms");
             GameFiber.Wait(5000);
             if (!MainPlayer.IsAvailable()) return;
             if (Functions.GetCurrentPullover() == null) { CleanupEvent(); return; }
@@ -85,10 +85,10 @@ namespace RiskierTrafficStops.Mod.Outcomes
             if (!_suspect.IsAvailable()) { CleanupEvent(); return; }
 
             var weapon = PistolList[Rndm.Next(PistolList.Length)];
-            Debug("Setting up Suspect Weapon");
+            Normal("Setting up Suspect Weapon");
             
-            if (!_suspect.Inventory.HasLoadedWeapon) { Debug("Giving Suspect Weapon"); _suspect.Inventory.GiveNewWeapon(weapon, 100, true); }
-            Debug("Giving Suspect Tasks");
+            if (!_suspect.Inventory.HasLoadedWeapon) { Normal("Giving Suspect Weapon"); _suspect.Inventory.GiveNewWeapon(weapon, 100, true); }
+            Normal("Giving Suspect Tasks");
             NativeFunction.Natives.x10AB107B887214D8(_suspect, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
             GameFiber.Wait(5000);
             

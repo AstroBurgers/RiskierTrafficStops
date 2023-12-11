@@ -30,14 +30,14 @@ namespace RiskierTrafficStops.Engine.FrontendSystems
 
         internal static void CreateMenu()
         {
-            Logger.Debug("Creating Menu...");
+            Logger.Normal("Creating Menu...");
             MainMenuPool.Add(MainMenu);
             MainMenu.MouseControlsEnabled = false;
             MainMenu.AllowCameraMovement = true;
             TextStyle style = new(TextFont.ChaletComprimeCologne, TextStyle.Current.Color, 1f, TextJustification.Center);
             MainMenu.TitleStyle = style;
 
-            Debug("Adding Items to Menu");
+            Normal("Adding Items to Menu");
 
             MainMenu.AddItems(SetChance, AutoLoggingEnabled, SafOutcomeEnabled, GoasOutcomeEnabled, YicOutcomeEnabled, RiyOutcomeEnabled, FleeOutcomeEnabled, RevOutcomeEnabled, YellOutcomeEnabled, SpitEnabled, SaveToIni);
             SaveToIni.BackColor = Color.Green;
@@ -56,7 +56,7 @@ namespace RiskierTrafficStops.Engine.FrontendSystems
 
         private static void SetupMenu()
         {
-            Debug("Assigning Menu values to their respective INI Values...");
+            Normal("Assigning Menu values to their respective INI Values...");
             SetChance.Value = Chance;
             YellOutcomeEnabled.SelectedItem = YellEnabled;
             GoasOutcomeEnabled.SelectedItem = GetOutAndShootEnabled;
@@ -67,12 +67,12 @@ namespace RiskierTrafficStops.Engine.FrontendSystems
             AutoLoggingEnabled.SelectedItem = AutoLogEnabled;
             SafOutcomeEnabled.SelectedItem = ShootAndFleeEnabled;
             SpitEnabled.SelectedItem = SpittingEnabled;
-            Debug("Assigned Values");
+            Normal("Assigned Values");
         }
 
         private static void AppendToIni()
         {
-            Debug("Appending to INI...");
+            Normal("Appending to INI...");
             Inifile.Write("General_Settings", "Chance", SetChance.Value);
             Inifile.Write("Outcome_Configuration", "Get Out And Shoot Outcome Enabled", GoasOutcomeEnabled.SelectedItem);
             Inifile.Write("Outcome_Configuration", "Ramming Outcome Enabled", RiyOutcomeEnabled.SelectedItem);
@@ -83,9 +83,9 @@ namespace RiskierTrafficStops.Engine.FrontendSystems
             Inifile.Write("Outcome_Configuration", "Shoot And Flee Outcome Enabled", SafOutcomeEnabled.SelectedItem);
             Inifile.Write("Outcome_Configuration", "Spitting Outcome Enabled", SpitEnabled.SelectedItem);
             Inifile.Write("Auto_Logging", "Automatic Error Reporting Enabled", AutoLoggingEnabled.SelectedItem);
-            Debug("Finished Appending to INI");
+            Normal("Finished Appending to INI");
 
-            Debug("Reading new Values...");
+            Normal("Reading new Values...");
             Chance = Inifile.ReadInt32("General_Settings", "Chance", 15);
             GetOutAndShootEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Get Out And Shoot Outcome Enabled", GetOutAndShootEnabled);
             RamEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Ramming Outcome Enabled", RamEnabled);
@@ -96,24 +96,24 @@ namespace RiskierTrafficStops.Engine.FrontendSystems
             ShootAndFleeEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Shoot And Flee Outcome Enabled", ShootAndFleeEnabled);
             SpittingEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Spitting Outcome Enabled", SpittingEnabled);
             AutoLogEnabled = Inifile.ReadBoolean("Auto_Logging", "Automatic Error Reporting Enabled", AutoLogEnabled);
-            Debug("Finished reading new values");
+            Normal("Finished reading new values");
 
-            Debug("----INI Values---");
-            Debug($"Chance: {Chance}");
-            Debug($"Get Out And Shoot Outcome Enabled: {GetOutAndShootEnabled}");
-            Debug($"Ramming Outcome Enabled: {RamEnabled}");
-            Debug($"Flee Outcome Enabled: {FleeEnabled}");
-            Debug($"Revving Outcome Enabled: {RevEnabled}");
-            Debug($"Yelling Outcome Enabled: {YellEnabled}");
-            Debug($"Yelling in Car Outcome Enabled: {YellInCarEnabled}");
-            Debug($"Shoot And Flee Outcome Enabled: {ShootAndFleeEnabled}");
-            Debug($"Spitting Outcome Enabled: {SpittingEnabled}");
-            Debug($"Automatic Error Reporting Enabled: {AutoLogEnabled}");
-            Debug("----INI Values---");
+            Normal("----INI Values---");
+            Normal($"Chance: {Chance}");
+            Normal($"Get Out And Shoot Outcome Enabled: {GetOutAndShootEnabled}");
+            Normal($"Ramming Outcome Enabled: {RamEnabled}");
+            Normal($"Flee Outcome Enabled: {FleeEnabled}");
+            Normal($"Revving Outcome Enabled: {RevEnabled}");
+            Normal($"Yelling Outcome Enabled: {YellEnabled}");
+            Normal($"Yelling in Car Outcome Enabled: {YellInCarEnabled}");
+            Normal($"Shoot And Flee Outcome Enabled: {ShootAndFleeEnabled}");
+            Normal($"Spitting Outcome Enabled: {SpittingEnabled}");
+            Normal($"Automatic Error Reporting Enabled: {AutoLogEnabled}");
+            Normal("----INI Values---");
 
-            Debug("Reloading Enabled events...");
+            Normal("Reloading Enabled events...");
             FilterOutcomes();
-            Debug("Finished Reloading Enabled events");
+            Normal("Finished Reloading Enabled events");
             Game.DisplayNotification("commonmenu", "shop_tick_icon", "Riskier Traffic Stops", "~b~INI Saving", "Saved to INI ~g~Successfully~w~!");
         }
 
@@ -121,7 +121,7 @@ namespace RiskierTrafficStops.Engine.FrontendSystems
         {
             try
             {
-                Debug("Initializing MenuPoolProcess");
+                Normal("Initializing MenuPoolProcess");
                 while (Main.OnDuty)
                 {
                     GameFiber.Yield();

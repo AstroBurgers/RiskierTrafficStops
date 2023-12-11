@@ -34,33 +34,33 @@ namespace RiskierTrafficStops.Mod.Outcomes
                 APIs.InvokeEvent(RTSEventType.Start);
                 if (!GetSuspectAndSuspectVehicle(handle, out _suspect, out _suspectVehicle))
                 {
-                    Debug("Failed to get suspect and vehicle, cleaning up RTS event...");
+                    Normal("Failed to get suspect and vehicle, cleaning up RTS event...");
                     CleanupEvent();
                     return;
                 }
 
-                Debug("Making Suspect Leave Vehicle");
+                Normal("Making Suspect Leave Vehicle");
                 _suspect.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen).WaitForCompletion(30000);
-                Debug("Making Suspect Face Player");
+                Normal("Making Suspect Face Player");
                 NativeFunction.Natives.x5AD23D40115353AC(_suspect, MainPlayer, -1);
 
-                Debug("Making suspect Yell at Player");
+                Normal("Making suspect Yell at Player");
                 const int timesToSpeak = 2;
 
                 for (var i = 0; i < timesToSpeak; i++)
                 {
                     if (_suspect.IsAvailable())
                     {
-                        Debug($"Making Suspect Yell, time: {i}");
+                        Normal($"Making Suspect Yell, time: {i}");
                         _suspect.PlayAmbientSpeech(VoiceLines[Rndm.Next(VoiceLines.Length)]);
                         GameFiber.WaitWhile(() => _suspect.IsAvailable() && _suspect.IsAnySpeechPlaying, 30000);
                     }
                 }
 
-                Debug("Choosing outcome from possible Yelling outcomes");
+                Normal("Choosing outcome from possible Yelling outcomes");
                 var scenarioList = (YellingScenarioOutcomes[])Enum.GetValues(typeof(YellingScenarioOutcomes));
                 _chosenOutcome = scenarioList[Rndm.Next(scenarioList.Length)];
-                Debug($"Chosen Outcome: {_chosenOutcome}");
+                Normal($"Chosen Outcome: {_chosenOutcome}");
 
                 switch (_chosenOutcome)
                 {
@@ -122,7 +122,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
             SetRelationshipGroups(_suspectRelationshipGroup);
             _suspect.RelationshipGroup = _suspectRelationshipGroup;
             
-            Debug("Giving Suspect FightAgainstClosestHatedTarget Task");
+            Normal("Giving Suspect FightAgainstClosestHatedTarget Task");
             _suspect.BlockPermanentEvents = true;
             _suspect.Tasks.FightAgainstClosestHatedTarget(40f, -1);
         }

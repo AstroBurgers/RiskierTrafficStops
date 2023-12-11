@@ -21,12 +21,12 @@ namespace RiskierTrafficStops.API.ExternalAPIs
             }
             catch (FileNotFoundException)
             {
-                Logger.Debug("Immersive Ambient Events cannot be found, user might not have it installed");
+                Logger.Normal("Immersive Ambient Events cannot be found, user might not have it installed");
                 return false;
             }
             catch (Exception ex)
             {
-                Logger.Debug("Immersive Ambient Events cannot be found, user might not have it installed");
+                Logger.Normal("Immersive Ambient Events cannot be found, user might not have it installed");
                 return false;
             }
         }
@@ -44,12 +44,12 @@ namespace RiskierTrafficStops.API.ExternalAPIs
             }
             catch (FileNotFoundException)
             {
-                Logger.Debug("Immersive Ambient Events cannot be found, user might not have it installed");
+                Logger.Normal("Immersive Ambient Events cannot be found, user might not have it installed");
                 return false;
             }
             catch (Exception ex)
             {
-                Logger.Debug("Immersive Ambient Events cannot be found, user might not have it installed");
+                Logger.Normal("Immersive Ambient Events cannot be found, user might not have it installed");
                 return false;
             }
         }
@@ -60,19 +60,19 @@ namespace RiskierTrafficStops.API.ExternalAPIs
             {
                 if (ImmersiveAmbientEvents.API.EventAPI.CheckIfEventIsRunning(ImmersiveAmbientEvents.API.EventAPI.Events.StreetRacing))
                 {
-                    Logger.Debug("Pullover is a part of an IAE street racing event, aborting RTS events...");
+                    Logger.Normal("Pullover is a part of an IAE street racing event, aborting RTS events...");
                     return false;
                 }
                 return true;
             }
             catch (FileNotFoundException)
             {
-                Logger.Debug("Immersive Ambient Events cannot be found, user might not have it installed");
+                Logger.Normal("Immersive Ambient Events cannot be found, user might not have it installed");
                 return false;
             }
             catch (Exception ex)
             {
-                Logger.Debug("Immersive Ambient Events cannot be found, user might not have it installed");
+                Logger.Normal("Immersive Ambient Events cannot be found, user might not have it installed");
                 return false;
             }
         }
@@ -86,7 +86,7 @@ namespace RiskierTrafficStops.API.ExternalAPIs
         {
             try
             {
-                Logger.Debug("Performing IAE compatibility check...");
+                Logger.Normal("Performing IAE compatibility check...");
                 var ped = Functions.GetPulloverSuspect(handle);
                 if (IsPedUsedByAmbientEvent(ped))
                 {
@@ -94,19 +94,19 @@ namespace RiskierTrafficStops.API.ExternalAPIs
                 }
                 else if (IsPedUsedByBoloEvent(ped))
                 {
-                    Logger.Debug("Pullover is a part of an IAE BOLO event, aborting RTS events...");
+                    Logger.Normal("Pullover is a part of an IAE BOLO event, aborting RTS events...");
                     return false;
                 }
                 return true;
             }
             catch (FileNotFoundException)
             {
-                Logger.Debug("Immersive Ambient Events cannot be found, user might not have it installed");
+                Logger.Normal("Immersive Ambient Events cannot be found, user might not have it installed");
                 return true;
             }
             catch (Exception ex)
             {
-                Logger.Debug("Immersive Ambient Events cannot be found, user might not have it installed");
+                Logger.Normal("Immersive Ambient Events cannot be found, user might not have it installed");
                 return true;
             }
         }
