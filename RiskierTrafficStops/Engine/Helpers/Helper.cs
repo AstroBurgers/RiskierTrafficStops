@@ -207,10 +207,8 @@ namespace RiskierTrafficStops.Engine.Helpers
             var vehicles = MainPlayer.GetNearbyVehicles(16).ToList();
             if (vehicles.Count < 1)
                 throw new ArgumentOutOfRangeException();
-
-            var nearestVehicles = vehicles.OrderBy(vehicles1 => vehicles1.DistanceTo(position)).ToList();
-            var vehicle = nearestVehicles[0];
-
+            var vehicle = vehicles.OrderBy(vehicles1 => vehicles1.DistanceTo(position)).ToList().First();
+        
             return vehicle;
         }
 

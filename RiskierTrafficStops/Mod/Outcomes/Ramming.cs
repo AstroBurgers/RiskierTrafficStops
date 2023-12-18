@@ -27,17 +27,14 @@ namespace RiskierTrafficStops.Mod.Outcomes
                     CleanupEvent();
                     return;
                 }
-                
-                if (!_suspect.IsAvailable()) { CleanupEvent();
-                    return;
+
+                if (_suspect.IsAvailable())
+                {
+                    _suspect.Tasks.DriveToPosition(MainPlayer.LastVehicle.Position, 100f, VehicleDrivingFlags.Reverse, 0.1f);
+                    GameFiber.Wait(3500);
+                    _suspect.Tasks.Clear();
                 }
-                _suspect.Tasks.DriveToPosition(MainPlayer.LastVehicle.Position, 100f, VehicleDrivingFlags.Reverse, 0.1f);
-                GameFiber.Wait(3500);
-                
-                if (!_suspect.IsAvailable()) { CleanupEvent();
-                    return;
-                }
-                _suspect.Tasks.Clear();
+
                 if (Functions.GetCurrentPullover() == null) { CleanupEvent(); return; }
                 PursuitLHandle = SetupPursuitWithList(true, _suspectVehicle.Occupants);
             }

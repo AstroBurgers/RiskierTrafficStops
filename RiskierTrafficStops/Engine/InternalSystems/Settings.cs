@@ -71,11 +71,7 @@ namespace RiskierTrafficStops.Engine.InternalSystems
             if (SpittingEnabled) { EnabledScenarios.Add(Scenario.Spit); }
 
             Logger.Normal("----Enabled Scenarios----");
-            foreach (var i in EnabledScenarios)
-            {
-                // ReSharper disable once HeapView.BoxingAllocation
-                Logger.Normal(i.ToString());
-            }
+            EnabledScenarios.ForEach(i => Logger.Normal(i.ToString()));
             Logger.Normal("----Enabled Scenarios----");
         }
     }

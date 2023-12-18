@@ -27,7 +27,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
                     CleanupEvent();
                     return;
                 }
-
+                
                 RevEngine(_suspect, _suspectVehicle, new[] { 2, 4 }, new[] { 2, 4 }, 2);
 
                 var chance = Rndm.Next(1, 101);

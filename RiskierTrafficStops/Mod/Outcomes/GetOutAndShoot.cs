@@ -51,10 +51,11 @@ namespace RiskierTrafficStops.Mod.Outcomes
                     {
                         if (!ped.Inventory.HasLoadedWeapon) { ped.Inventory.GiveNewWeapon(weapon, 100, true); Normal($"Giving Suspect weapon: {weapon}"); }
                     }
-                    
-                    GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => GetPedOutOfVehicle(ped)));
+
+                    GetPedOutOfVehicle(ped);
+                    //GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => GetPedOutOfVehicle(ped)));
                 }
-                GameFiber.Wait(7010);
+                //GameFiber.Wait(7010);
 
                 Normal("Choosing outcome from shootOutcomes");
                 var scenarioList = (ShootOutcomes[])Enum.GetValues(typeof(ShootOutcomes));
@@ -68,14 +69,14 @@ namespace RiskierTrafficStops.Mod.Outcomes
                         _pursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                         break;
                     case ShootOutcomes.KeepShooting:
-                        for (var i = pedsInVehicle.Length - 1; i >= 0; i--)
+                        /*for (var i = pedsInVehicle.Length - 1; i >= 0; i--)
                         {
                             if (pedsInVehicle[i].IsAvailable())
                             {
                                 Normal("Giving Suspect FightAgainstClosestHatedTarget Task");
                                 pedsInVehicle[i].Tasks.FightAgainstClosestHatedTarget(40f, -1);
                             }
-                        }
+                        }*/
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -96,7 +97,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
             Normal("Making Suspect leave vehicle");
             ped.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen).WaitForCompletion();
             Normal("Giving Suspect FightAgainstClosestHatedTarget Task");
-            ped.Tasks.FightAgainstClosestHatedTarget(40f, 7000).WaitForCompletion(7001);
+            ped.Tasks.FightAgainstClosestHatedTarget(40f, -1); //.WaitForCompletion(7001);
         }
     }
 }

@@ -59,22 +59,18 @@ namespace RiskierTrafficStops.Mod.Outcomes
         {
             foreach (var i in peds)
             {
-                if (i.IsAvailable())
+                if (!i.IsAvailable()) continue;
+                if (!i.Inventory.HasLoadedWeapon)
                 {
-                    if (!i.Inventory.HasLoadedWeapon)
-                    {
-                        var weapon = PistolList[Rndm.Next(PistolList.Length)];
-                        Normal($"Giving Suspect #{i} weapon: {weapon}");
-                        i.Inventory.GiveNewWeapon(weapon, 500, true);
-                    }
-
-                    Normal($"Making Suspect #{i} shoot at Player");
-                    NativeFunction.Natives.x10AB107B887214D8(i, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
+                    var weapon = PistolList[Rndm.Next(PistolList.Length)];
+                    Normal($"Giving Suspect #{i} weapon: {weapon}");
+                    i.Inventory.GiveNewWeapon(weapon, 500, true);
                 }
+
+                Normal($"Making Suspect #{i} shoot at Player");
+                NativeFunction.Natives.x10AB107B887214D8(i, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
             }
-            
-            Normal("Waiting 4500ms");
-            GameFiber.Wait(5000);
+
             if (!MainPlayer.IsAvailable()) return;
             if (Functions.GetCurrentPullover() == null) { CleanupEvent(); return; }
             PursuitLHandle = SetupPursuitWithList(true, peds);
@@ -82,15 +78,19 @@ namespace RiskierTrafficStops.Mod.Outcomes
 
         private static void DriverOnly()
         {
-            if (!_suspect.IsAvailable()) { CleanupEvent(); return; }
+            if (!_suspect.IsAvailable()) return;
 
-            var weapon = PistolList[Rndm.Next(PistolList.Length)];
+
             Normal("Setting up Suspect Weapon");
+            if (!_suspect.Inventory.HasLoadedWeapon)
+            {
+                Normal("Giving Suspect Weapon");
+                var weapon = PistolList[Rndm.Next(PistolList.Length)];
+                _suspect.Inventory.GiveNewWeapon(weapon, 100, true);
+            }
             
-            if (!_suspect.Inventory.HasLoadedWeapon) { Normal("Giving Suspect Weapon"); _suspect.Inventory.GiveNewWeapon(weapon, 100, true); }
             Normal("Giving Suspect Tasks");
             NativeFunction.Natives.x10AB107B887214D8(_suspect, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
-            GameFiber.Wait(5000);
             
             if (!MainPlayer.IsAvailable()) return;
             if (Functions.GetCurrentPullover() == null) { CleanupEvent(); return; }
