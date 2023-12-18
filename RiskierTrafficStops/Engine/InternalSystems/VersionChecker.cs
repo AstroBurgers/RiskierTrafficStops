@@ -33,7 +33,7 @@ namespace RiskierTrafficStops.Engine.InternalSystems
         internal static void IsUpdateAvailable()
         {
             UpdateThread.Start();
-            GameFiber.Sleep(20000);
+            GameFiber.Sleep(1000);
 
             while (UpdateThread.IsAlive) GameFiber.Wait(1000);
 

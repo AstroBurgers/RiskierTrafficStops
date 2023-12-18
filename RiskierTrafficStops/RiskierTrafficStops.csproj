@@ -70,6 +70,7 @@
     <Compile Include="Engine\FrontendSystems\ConsoleCommands.cs" />
     <Compile Include="Engine\Helpers\Helper.cs" />
     <Compile Include="Engine\Helpers\PedExtensions.cs" />
+    <Compile Include="Engine\InternalSystems\DecisionTree.cs" />
     <Compile Include="Engine\InternalSystems\GameFiberHandling.cs" />
     <Compile Include="Engine\InternalSystems\Logger.cs" />
     <Compile Include="Engine\InternalSystems\PostToDiscord.cs" />

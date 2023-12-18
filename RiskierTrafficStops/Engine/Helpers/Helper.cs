@@ -58,19 +58,19 @@ namespace RiskierTrafficStops.Engine.Helpers
 
             return pursuitLHandle;
         }
-
-        internal static float NextFloat(Random random)
-        {
-            double mantissa = (random.NextDouble() * 2.0) - 1.0;
-            // choose -149 instead of -126 to also generate subnormal floats (*)
-            double exponent = Math.Pow(2.0, random.Next(-126, 128));
-            return (float)(mantissa * exponent);
-        }
         
         internal static void RandomizePursuitAttributes(Ped suspect)
         {
             try
             {
+                float NextFloat(Random random)
+                {
+                    double mantissa = (random.NextDouble() * 2.0) - 1.0;
+                    // choose -149 instead of -126 to also generate subnormal floats (*)
+                    double exponent = Math.Pow(2.0, random.Next(-126, 128));
+                    return (float)(mantissa * exponent);
+                }
+                
                 static float GenerateRandomFloat()
                 {
                     return (float)Math.Round((float)(Rndm.NextDouble() * (2.0 - 0.1) + 0.1), 1);

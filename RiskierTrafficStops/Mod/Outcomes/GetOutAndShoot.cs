@@ -7,6 +7,7 @@ using RiskierTrafficStops.Engine.InternalSystems;
 using static RiskierTrafficStops.Engine.Helpers.Helper;
 using static RiskierTrafficStops.Engine.InternalSystems.Logger;
 using static RiskierTrafficStops.Engine.Helpers.PedExtensions;
+using RiskierTrafficStops.Engine.InternalSystems;
 // ReSharper disable HeapView.BoxingAllocation
 
 namespace RiskierTrafficStops.Mod.Outcomes
@@ -18,7 +19,8 @@ namespace RiskierTrafficStops.Mod.Outcomes
         private static RelationshipGroup _suspectRelateGroup = new("RTSGetOutAndShootSuspects");
         private static LHandle _pursuitLHandle;
         private static ShootOutcomes _chosenOutcome;
-
+        
+        
         private enum ShootOutcomes
         {
             Flee,
