@@ -28,7 +28,7 @@ namespace RiskierTrafficStops.Engine.InternalSystems
         private static string _receivedData = string.Empty;
         internal static Thread UpdateThread = new(CheckRTSVersion);
 
-        internal static string CurrentVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString(4);
+        internal static string CurrentVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
         internal static string OnlineVersion;
 
         internal static void IsUpdateAvailable()
