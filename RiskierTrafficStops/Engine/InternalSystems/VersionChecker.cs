@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Reflection;
 using System.Threading;
 using Rage;
@@ -32,36 +33,43 @@ namespace RiskierTrafficStops.Engine.InternalSystems
 
         internal static void IsUpdateAvailable()
         {
-            UpdateThread.Start();
-            GameFiber.Sleep(1000);
-
-            while (UpdateThread.IsAlive) GameFiber.Wait(1000);
-
-            switch (_state)
+            try
             {
-                case State.Failed:
-                    Normal("Update check failed... please check your internet connection");
-                    break;
-                case State.Update:
-                    Game.DisplayNotification("3dtextures",
-                        "mpgroundlogo_cops",
-                        "Riskier Traffic Stops",
-                        "~b~By Astro",
-                        $"Plugin is ~r~out of to date~s~!\n" +
-                        $"Online Version: ~g~{_receivedData}~s~\n" +
-                        $"Installed version: ~y~{CurrentVersion}~s~\n" +
-                        $"Please update ~r~ASAP~s~!");
-                    Logger.Normal($"Online Version: {_receivedData} | Installed Version: {CurrentVersion}");
-                    Logger.Normal("Plugin is outdated, please up date to the latest version as soon as possible");
-                    break;
-                case State.Current:
-                    Logger.Normal($"Online Version: {_receivedData} | Installed Version: {CurrentVersion}");
-                    Game.DisplayNotification("3dtextures",
-                        "mpgroundlogo_cops",
-                        "Riskier Traffic Stops",
-                        "~b~By Astro",
-                        "Plugin is ~g~up to date!");
-                    break;
+                UpdateThread.Start();
+                GameFiber.Sleep(1000);
+
+                while (UpdateThread.IsAlive) GameFiber.Wait(1000);
+
+                switch (_state)
+                {
+                    case State.Failed:
+                        Normal("Update check failed... please check your internet connection");
+                        break;
+                    case State.Update:
+                        Game.DisplayNotification("3dtextures",
+                            "mpgroundlogo_cops",
+                            "Riskier Traffic Stops",
+                            "~b~By Astro",
+                            $"Plugin is ~r~out of to date~s~!\n" +
+                            $"Online Version: ~g~{_receivedData}~s~\n" +
+                            $"Installed version: ~y~{CurrentVersion}~s~\n" +
+                            $"Please update ~r~ASAP~s~!");
+                        Logger.Normal($"Online Version: {_receivedData} | Installed Version: {CurrentVersion}");
+                        Logger.Normal("Plugin is outdated, please up date to the latest version as soon as possible");
+                        break;
+                    case State.Current:
+                        Logger.Normal($"Online Version: {_receivedData} | Installed Version: {CurrentVersion}");
+                        Game.DisplayNotification("3dtextures",
+                            "mpgroundlogo_cops",
+                            "Riskier Traffic Stops",
+                            "~b~By Astro",
+                            "Plugin is ~g~up to date!");
+                        break;
+                }
+            }
+            catch (WebException)
+            {
+                _state = State.Failed;
             }
         }
 

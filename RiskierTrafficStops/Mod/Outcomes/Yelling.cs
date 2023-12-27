@@ -106,7 +106,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
                 if (Game.IsKeyDown(Settings.GetBackInKey))
                 {
                     _isSuspectInVehicle = true;
-                    _suspect.Tasks.EnterVehicle(_suspectVehicle, -1);
+                    _suspect.Tasks.EnterVehicle(_suspectVehicle, -1).WaitForCompletion();
                     break;
                 }
             }
@@ -117,13 +117,13 @@ namespace RiskierTrafficStops.Mod.Outcomes
             if (!_suspect.IsAvailable() || Functions.IsPedArrested(_suspect) ||
                 Functions.IsPedGettingArrested(_suspect)) return;
             
+            _suspect.BlockPermanentEvents = true;
             _suspect.Inventory.GiveNewWeapon(MeleeWeapons[Rndm.Next(MeleeWeapons.Length)], -1, true);
 
             SetRelationshipGroups(_suspectRelationshipGroup);
             _suspect.RelationshipGroup = _suspectRelationshipGroup;
-            
+
             Normal("Giving Suspect FightAgainstClosestHatedTarget Task");
-            _suspect.BlockPermanentEvents = true;
             _suspect.Tasks.FightAgainstClosestHatedTarget(40f, -1);
         }
     }

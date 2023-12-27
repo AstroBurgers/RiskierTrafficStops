@@ -63,28 +63,30 @@ namespace RiskierTrafficStops
             }
         }
 
-    private static void Cleanup(object sender, EventArgs e)
+        private static void Cleanup(object sender, EventArgs e)
         {
             try
             {
-                Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", "Did you crash or are you a dev?");
+                Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro",
+                    "Did you crash or are you a dev?");
                 //Unsubscribes from events
                 PulloverEventHandler.UnsubscribeToEvents();
                 if (VersionChecker.UpdateThread.IsAlive)
                 {
                     VersionChecker.UpdateThread.Abort();
                 }
+
                 Normal("Unloaded successfully");
             }
             catch (Exception ex)
             {
                 if (e is System.Threading.ThreadAbortException) return;
-                
+
                 Error(ex, nameof(Cleanup));
             }
         }
-    
-            
+
+
         public override void Finally()
         {
         }

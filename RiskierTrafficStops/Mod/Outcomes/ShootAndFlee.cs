@@ -71,6 +71,8 @@ namespace RiskierTrafficStops.Mod.Outcomes
                 NativeFunction.Natives.x10AB107B887214D8(i, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
             }
 
+            GameFiber.Wait(5000);
+            
             if (!MainPlayer.IsAvailable()) return;
             if (Functions.GetCurrentPullover() == null) { CleanupEvent(); return; }
             PursuitLHandle = SetupPursuitWithList(true, peds);
@@ -91,6 +93,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
             
             Normal("Giving Suspect Tasks");
             NativeFunction.Natives.x10AB107B887214D8(_suspect, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
+            GameFiber.Wait(5000);
             
             if (!MainPlayer.IsAvailable()) return;
             if (Functions.GetCurrentPullover() == null) { CleanupEvent(); return; }
