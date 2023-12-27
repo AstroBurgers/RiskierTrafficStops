@@ -114,8 +114,8 @@ namespace RiskierTrafficStops.Mod.Outcomes
 
         private static void OutcomePullKnife()
         {
-            if (!_suspect.IsAvailable() || Functions.IsPedArrested(_suspect) ||
-                Functions.IsPedGettingArrested(_suspect)) return;
+            if (!_suspect.IsAvailable() || Functions.IsPedArrested(_suspect) || Functions.IsPedGettingArrested(_suspect)) 
+                return;
             
             _suspect.BlockPermanentEvents = true;
             _suspect.Inventory.GiveNewWeapon(MeleeWeapons[Rndm.Next(MeleeWeapons.Length)], -1, true);
@@ -124,7 +124,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
             _suspect.RelationshipGroup = _suspectRelationshipGroup;
 
             Normal("Giving Suspect FightAgainstClosestHatedTarget Task");
-            _suspect.Tasks.FightAgainstClosestHatedTarget(40f, -1);
+            _suspect.Tasks.FightAgainst(MainPlayer, -1);
         }
     }
 }

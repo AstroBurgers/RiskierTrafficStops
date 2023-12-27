@@ -59,9 +59,9 @@ namespace RiskierTrafficStops.Mod.Outcomes
                     }
 
                     GetPedOutOfVehicle(ped);
-                    //GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => GetPedOutOfVehicle(ped)));
+                    GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => GetPedOutOfVehicle(ped)));
                 }
-                GameFiber.Wait(7000);
+                GameFiber.Wait(7010);
 
                 Normal("Choosing outcome from shootOutcomes");
                 var scenarioList = (ShootOutcomes[])Enum.GetValues(typeof(ShootOutcomes));
@@ -80,14 +80,14 @@ namespace RiskierTrafficStops.Mod.Outcomes
                         _pursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                         break;
                     case ShootOutcomes.KeepShooting:
-                        /*foreach (var i in pedsInVehicle)
+                        foreach (var i in pedsInVehicle)
                         {
                             if (i.IsAvailable())
                             {
                                 Normal("Giving Suspect FightAgainstClosestHatedTarget Task");
                                 i.Tasks.FightAgainstClosestHatedTarget(40f, -1);
                             }
-                        }*/
+                        }
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -108,9 +108,9 @@ namespace RiskierTrafficStops.Mod.Outcomes
         {
             ped.RelationshipGroup = _suspectRelateGroup;
             Normal("Making Suspect leave vehicle");
-            ped.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen).WaitForCompletion();
+            ped.Tasks.LeaveVehicle(ped.LastVehicle, LeaveVehicleFlags.LeaveDoorOpen).WaitForCompletion();
             Normal("Giving Suspect FightAgainstClosestHatedTarget Task");
-            ped.Tasks.FightAgainstClosestHatedTarget(40f, -1); //.WaitForCompletion(7001);
+            ped.Tasks.FightAgainstClosestHatedTarget(40f, 7000).WaitForCompletion(7001);
         }
     }
 }
