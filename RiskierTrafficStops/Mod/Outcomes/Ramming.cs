@@ -6,7 +6,7 @@ using RiskierTrafficStops.API;
 using RiskierTrafficStops.Engine.InternalSystems;
 using static RiskierTrafficStops.Engine.Helpers.Helper;
 using static RiskierTrafficStops.Engine.InternalSystems.Logger;
-using static RiskierTrafficStops.Engine.Helpers.PedExtensions;
+using static RiskierTrafficStops.Engine.Helpers.Extensions;
 
 namespace RiskierTrafficStops.Mod.Outcomes
 {
@@ -20,14 +20,14 @@ namespace RiskierTrafficStops.Mod.Outcomes
         {
             try
             {
-                APIs.InvokeEvent(RTSEventType.Start);
                 if (!GetSuspectAndSuspectVehicle(handle, out _suspect, out _suspectVehicle))
                 {
                     Normal("Failed to get suspect and vehicle, cleaning up RTS event...");
                     CleanupEvent();
                     return;
                 }
-
+                APIs.InvokeEvent(RTSEventType.Start);
+                
                 if (_suspect.IsAvailable())
                 {
                     _suspect.Tasks.DriveToPosition(MainPlayer.LastVehicle.Position, 100f, VehicleDrivingFlags.Reverse, 0.1f);

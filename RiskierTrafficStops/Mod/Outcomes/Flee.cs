@@ -8,7 +8,7 @@ using RiskierTrafficStops.Engine.InternalSystems;
 using static RiskierTrafficStops.Engine.Helpers.Helper;
 using static RiskierTrafficStops.Engine.InternalSystems.Logger;
 using static RiskierTrafficStops.API.APIs;
-using static RiskierTrafficStops.Engine.Helpers.PedExtensions;
+using static RiskierTrafficStops.Engine.Helpers.Extensions;
 
 namespace RiskierTrafficStops.Mod.Outcomes
 {
@@ -29,13 +29,13 @@ namespace RiskierTrafficStops.Mod.Outcomes
         {
             try
             {
-                InvokeEvent(RTSEventType.Start);
                 if (!GetSuspectAndSuspectVehicle(handle, out _suspect, out _suspectVehicle))
                 {
                     Normal("Failed to get suspect and vehicle, cleaning up RTS event...");
                     CleanupEvent();
                     return;
                 }
+                InvokeEvent(RTSEventType.Start);
                 
                 Normal("Getting all vehicle occupants");
                 var pedsInVehicle = _suspectVehicle.Occupants;
@@ -71,7 +71,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
                                 i.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
                             }
                         }
-                        if (Functions.GetCurrentPullover() == null) { CleanupEvent(); return; }
+                        if (Functions.GetCurrentPullover() == null) { return; }
                         PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                         break;
                 }

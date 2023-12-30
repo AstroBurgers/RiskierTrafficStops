@@ -17,14 +17,14 @@ namespace RiskierTrafficStops.Engine.InternalSystems
     
     internal static class VersionChecker
     {
-        private enum State
+        internal enum State
         {
             Failed,
             Update,
             Current
         }
 
-        private static State _state = State.Current;
+        internal static State _state = State.Current;
         private static string _receivedData = string.Empty;
         internal static Thread UpdateThread = new(CheckRTSVersion);
 

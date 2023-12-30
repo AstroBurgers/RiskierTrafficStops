@@ -7,7 +7,7 @@ using RiskierTrafficStops.API;
 using RiskierTrafficStops.Engine.InternalSystems;
 using static RiskierTrafficStops.Engine.Helpers.Helper;
 using static RiskierTrafficStops.Engine.InternalSystems.Logger;
-using static RiskierTrafficStops.Engine.Helpers.PedExtensions;
+using static RiskierTrafficStops.Engine.Helpers.Extensions;
 
 namespace RiskierTrafficStops.Mod.Outcomes
 {
@@ -21,14 +21,14 @@ namespace RiskierTrafficStops.Mod.Outcomes
         {
             try
             {
-                APIs.InvokeEvent(RTSEventType.Start);
                 if (!GetSuspectAndSuspectVehicle(handle, out _suspect, out _suspectVehicle))
                 {
                     Normal("Failed to get suspect and vehicle, cleaning up RTS event...");
                     CleanupEvent();
                     return;
                 }
-
+                APIs.InvokeEvent(RTSEventType.Start);
+                
                 GameFiber.Wait(4500);
 
                 var outcome = Rndm.Next(1, 101);
@@ -60,12 +60,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
             foreach (var i in peds)
             {
                 if (!i.IsAvailable()) continue;
-                if (!i.Inventory.HasLoadedWeapon)
-                {
-                    var weapon = PistolList[Rndm.Next(PistolList.Length)];
-                    Normal($"Giving Suspect #{i} weapon: {weapon}");
-                    i.Inventory.GiveNewWeapon(weapon, 500, true);
-                }
+                i.GiveWeapon();
 
                 Normal($"Making Suspect #{i} shoot at Player");
                 NativeFunction.Natives.x10AB107B887214D8(i, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
@@ -73,8 +68,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
 
             GameFiber.Wait(5000);
             
-            if (!MainPlayer.IsAvailable()) return;
-            if (Functions.GetCurrentPullover() == null) { CleanupEvent(); return; }
+            if ((Functions.GetCurrentPullover() == null) || !MainPlayer.IsAvailable()) { CleanupEvent(); return; }
             PursuitLHandle = SetupPursuitWithList(true, peds);
         }
 
@@ -84,19 +78,13 @@ namespace RiskierTrafficStops.Mod.Outcomes
 
 
             Normal("Setting up Suspect Weapon");
-            if (!_suspect.Inventory.HasLoadedWeapon)
-            {
-                Normal("Giving Suspect Weapon");
-                var weapon = PistolList[Rndm.Next(PistolList.Length)];
-                _suspect.Inventory.GiveNewWeapon(weapon, 100, true);
-            }
+            _suspect.GiveWeapon();
             
             Normal("Giving Suspect Tasks");
             NativeFunction.Natives.x10AB107B887214D8(_suspect, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
             GameFiber.Wait(5000);
             
-            if (!MainPlayer.IsAvailable()) return;
-            if (Functions.GetCurrentPullover() == null) { CleanupEvent(); return; }
+            if (Functions.GetCurrentPullover() == null || !MainPlayer.IsAvailable()) { CleanupEvent(); return; }
             PursuitLHandle = SetupPursuit(true, _suspect);
         }
     }

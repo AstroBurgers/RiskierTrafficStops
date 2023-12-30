@@ -14,7 +14,7 @@ namespace RiskierTrafficStops.Engine.InternalSystems
         {
             try
             {
-                if (VersionChecker.CurrentVersion == VersionChecker.OnlineVersion)
+                if (VersionChecker._state == VersionChecker.State.Current)
                 {
                     if (!Blacklist.Contains(ex.GetType().Name))
                     {
@@ -34,8 +34,6 @@ namespace RiskierTrafficStops.Engine.InternalSystems
                                 $"**Beta Version?**\n```Beta Version: false```"
                             },
                         });
-
-                        Blacklist.Add(ex.GetType().Name);
                     }
 
                     Logger.Debug("Sent exception message to Discord webhook");

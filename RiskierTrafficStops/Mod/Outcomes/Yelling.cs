@@ -8,7 +8,7 @@ using RiskierTrafficStops.API;
 using RiskierTrafficStops.Engine.InternalSystems;
 using static RiskierTrafficStops.Engine.Helpers.Helper;
 using static RiskierTrafficStops.Engine.InternalSystems.Logger;
-using static RiskierTrafficStops.Engine.Helpers.PedExtensions;
+using static RiskierTrafficStops.Engine.Helpers.Extensions;
 
 namespace RiskierTrafficStops.Mod.Outcomes
 {
@@ -25,20 +25,19 @@ namespace RiskierTrafficStops.Mod.Outcomes
         private static Vehicle _suspectVehicle;
         private static RelationshipGroup _suspectRelationshipGroup = new("RTSYellingSuspects");
         private static YellingScenarioOutcomes _chosenOutcome;
-        private static bool _isSuspectInVehicle;
 
         internal static void YellingOutcome(LHandle handle)
         {
             try
             {
-                APIs.InvokeEvent(RTSEventType.Start);
                 if (!GetSuspectAndSuspectVehicle(handle, out _suspect, out _suspectVehicle))
                 {
                     Normal("Failed to get suspect and vehicle, cleaning up RTS event...");
                     CleanupEvent();
                     return;
                 }
-
+                APIs.InvokeEvent(RTSEventType.Start);
+                
                 Normal("Making Suspect Leave Vehicle");
                 _suspect.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen).WaitForCompletion(30000);
                 Normal("Making Suspect Face Player");
@@ -75,7 +74,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
                         break;
                     case YellingScenarioOutcomes.ContinueYelling:
                         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(KeyPressed));
-                        while (!_isSuspectInVehicle && _suspect.IsAvailable() && (!Functions.IsPedArrested(_suspect) || Functions.IsPedGettingArrested(_suspect)))
+                        while (!_suspect.IsInAnyVehicle(false) && _suspect.IsAvailable() && (!Functions.IsPedArrested(_suspect) || Functions.IsPedGettingArrested(_suspect)))
                         {
                             GameFiber.Yield();
                             _suspect.PlayAmbientSpeech(VoiceLines[Rndm.Next(VoiceLines.Length)]);
@@ -100,12 +99,11 @@ namespace RiskierTrafficStops.Mod.Outcomes
         private static void KeyPressed()
         {
             Game.DisplayHelp($"~BLIP_INFO_ICON~ Press ~{Settings.GetBackInKey.GetInstructionalId()}~ to have the suspect get back in their vehicle", 10000);
-            while (_suspect.IsAvailable() && !_isSuspectInVehicle)
+            while (_suspect.IsAvailable() && _suspect.IsAvailable() && !_suspect.IsInAnyVehicle(false))
             {
                 GameFiber.Yield();
                 if (Game.IsKeyDown(Settings.GetBackInKey))
                 {
-                    _isSuspectInVehicle = true;
                     _suspect.Tasks.EnterVehicle(_suspectVehicle, -1).WaitForCompletion();
                     break;
                 }
@@ -117,7 +115,6 @@ namespace RiskierTrafficStops.Mod.Outcomes
             if (!_suspect.IsAvailable() || Functions.IsPedArrested(_suspect) || Functions.IsPedGettingArrested(_suspect)) 
                 return;
             
-            _suspect.BlockPermanentEvents = true;
             _suspect.Inventory.GiveNewWeapon(MeleeWeapons[Rndm.Next(MeleeWeapons.Length)], -1, true);
 
             SetRelationshipGroups(_suspectRelationshipGroup);

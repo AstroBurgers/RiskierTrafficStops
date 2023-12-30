@@ -70,7 +70,7 @@ namespace RiskierTrafficStops
                 Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro",
                     "Did you crash or are you a dev?");
                 //Unsubscribes from events
-                PulloverEventHandler.UnsubscribeToEvents();
+                PulloverEventHandler.UnsubscribeFromEvents();
                 if (VersionChecker.UpdateThread.IsAlive)
                 {
                     VersionChecker.UpdateThread.Abort();

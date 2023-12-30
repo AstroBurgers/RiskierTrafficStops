@@ -6,7 +6,7 @@ using RiskierTrafficStops.API;
 using RiskierTrafficStops.Engine.InternalSystems;
 using static RiskierTrafficStops.Engine.Helpers.Helper;
 using static RiskierTrafficStops.Engine.InternalSystems.Logger;
-using static RiskierTrafficStops.Engine.Helpers.PedExtensions;
+using static RiskierTrafficStops.Engine.Helpers.Extensions;
 using RiskierTrafficStops.Engine.InternalSystems;
 // ReSharper disable HeapView.BoxingAllocation
 
@@ -18,10 +18,10 @@ namespace RiskierTrafficStops.Mod.Outcomes
         private static Vehicle _suspectVehicle;
         private static RelationshipGroup _suspectRelateGroup = new("RTSGetOutAndShootSuspects");
         private static LHandle _pursuitLHandle;
-        private static ShootOutcomes _chosenOutcome;
+        private static GetOutAndShootOutcomes _chosenOutcome;
 
 
-        private enum ShootOutcomes
+        private enum GetOutAndShootOutcomes
         {
             Flee,
             KeepShooting
@@ -31,16 +31,15 @@ namespace RiskierTrafficStops.Mod.Outcomes
         {
             try
             {
-                APIs.InvokeEvent(RTSEventType.Start);
                 if (!GetSuspectAndSuspectVehicle(handle, out _suspect, out _suspectVehicle))
                 {
                     Normal("Failed to get suspect and vehicle, cleaning up RTS event...");
                     CleanupEvent();
                     return;
                 }
-
+                APIs.InvokeEvent(RTSEventType.Start);
+                
                 Normal("Adding all suspect in the vehicle to a list");
-
                 var pedsInVehicle = _suspectVehicle.Occupants;
                 if (pedsInVehicle.Length < 1) throw new ArgumentNullException(nameof(pedsInVehicle));
 
@@ -48,29 +47,19 @@ namespace RiskierTrafficStops.Mod.Outcomes
 
                 foreach (Ped ped in pedsInVehicle)
                 {
-                    var weapon = WeaponList[Rndm.Next(WeaponList.Length)];
-                    if (ped.IsAvailable())
-                    {
-                        if (!ped.Inventory.HasLoadedWeapon)
-                        {
-                            ped.Inventory.GiveNewWeapon(weapon, 100, true);
-                            Normal($"Giving Suspect weapon: {weapon}");
-                        }
-                    }
-
-                    GetPedOutOfVehicle(ped);
+                    ped.GiveWeapon();
                     GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => GetPedOutOfVehicle(ped)));
                 }
                 GameFiber.Wait(7010);
 
-                Normal("Choosing outcome from shootOutcomes");
-                var scenarioList = (ShootOutcomes[])Enum.GetValues(typeof(ShootOutcomes));
+                Normal("Choosing outcome from GetOutAndShootOutcomes");
+                var scenarioList = (GetOutAndShootOutcomes[])Enum.GetValues(typeof(GetOutAndShootOutcomes));
                 _chosenOutcome = scenarioList[Rndm.Next(scenarioList.Length)];
                 Normal($"Chosen Outcome: {_chosenOutcome}");
 
                 switch (_chosenOutcome)
                 {
-                    case ShootOutcomes.Flee:
+                    case GetOutAndShootOutcomes.Flee:
                         if (Functions.GetCurrentPullover() == null)
                         {
                             CleanupEvent();
@@ -79,7 +68,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
 
                         _pursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                         break;
-                    case ShootOutcomes.KeepShooting:
+                    case GetOutAndShootOutcomes.KeepShooting:
                         foreach (var i in pedsInVehicle)
                         {
                             if (i.IsAvailable())
@@ -107,8 +96,11 @@ namespace RiskierTrafficStops.Mod.Outcomes
         private static void GetPedOutOfVehicle(Ped ped)
         {
             ped.RelationshipGroup = _suspectRelateGroup;
-            Normal("Making Suspect leave vehicle");
-            ped.Tasks.LeaveVehicle(ped.LastVehicle, LeaveVehicleFlags.LeaveDoorOpen).WaitForCompletion();
+            if (ped.IsInVehicle(ped.LastVehicle, false) && ped.LastVehicle.IsAvailable())
+            {
+                Normal("Making Suspect leave vehicle");
+                ped.Tasks.LeaveVehicle(ped.LastVehicle, LeaveVehicleFlags.LeaveDoorOpen).WaitForCompletion();
+            }
             Normal("Giving Suspect FightAgainstClosestHatedTarget Task");
             ped.Tasks.FightAgainstClosestHatedTarget(40f, 7000).WaitForCompletion(7001);
         }

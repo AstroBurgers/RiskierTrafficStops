@@ -63,14 +63,6 @@ namespace RiskierTrafficStops.Engine.Helpers
         {
             try
             {
-                float NextFloat(Random random)
-                {
-                    double mantissa = (random.NextDouble() * 2.0) - 1.0;
-                    // choose -149 instead of -126 to also generate subnormal floats (*)
-                    double exponent = Math.Pow(2.0, random.Next(-126, 128));
-                    return (float)(mantissa * exponent);
-                }
-                
                 static float GenerateRandomFloat()
                 {
                     return (float)Math.Round((float)(Rndm.NextDouble() * (2.0 - 0.1) + 0.1), 1);
@@ -133,7 +125,6 @@ namespace RiskierTrafficStops.Engine.Helpers
         /// <param name="isSuspectsPulledOver">If the suspects are in a traffic stop</param>
         /// <param name="suspectList">The list of Suspects, Type=Ped</param>
         /// <returns>PursuitLHandle</returns>
-
         internal static LHandle SetupPursuitWithList(bool isSuspectsPulledOver, List<Ped> suspectList)
         {
             if (isSuspectsPulledOver)
@@ -216,18 +207,17 @@ namespace RiskierTrafficStops.Engine.Helpers
         /// Returns the Driver and its vehicle
         /// </summary>
         /// <returns>Ped, Vehicle</returns>
-
         internal static bool GetSuspectAndSuspectVehicle(LHandle handle, out Ped suspect, out Vehicle suspectVehicle)
         {
             Ped driver = null;
             Vehicle driverVehicle = null;
-            if ((handle != null) && Functions.IsPlayerPerformingPullover())
+            if ((handle != null) && Functions.IsPlayerPerformingPullover() && Functions.GetPulloverSuspect(handle).IsAvailable())
             {
                 Normal("Setting up Suspect");
                 driver = Functions.GetPulloverSuspect(handle);
                 driver.BlockPermanentEvents = true;
             }
-            if (driver != null && driver.Exists() && driver.IsInAnyVehicle(false) && !driver.IsInAnyPoliceVehicle)
+            if (driver.IsAvailable() && driver.IsInAnyVehicle(false) && !driver.IsInAnyPoliceVehicle)
             {
                 Normal("Setting up Suspect Vehicle");
                 driverVehicle = driver.LastVehicle;
@@ -235,7 +225,7 @@ namespace RiskierTrafficStops.Engine.Helpers
             Normal($"Returning Driver: {driver} & Driver Vehicle: {driverVehicle}");
             suspect = driver;
             suspectVehicle = driverVehicle;
-            return suspect.Exists() && suspectVehicle.Exists();
+            return suspect.IsAvailable() && suspectVehicle.IsAvailable();
         }
 
         internal static void CleanupEvent()

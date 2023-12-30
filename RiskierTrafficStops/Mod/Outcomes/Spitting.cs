@@ -6,7 +6,7 @@ using RiskierTrafficStops.API;
 using RiskierTrafficStops.Engine.InternalSystems;
 using static RiskierTrafficStops.Engine.Helpers.Helper;
 using static RiskierTrafficStops.Engine.InternalSystems.Logger;
-using static RiskierTrafficStops.Engine.Helpers.PedExtensions;
+using static RiskierTrafficStops.Engine.Helpers.Extensions;
 
 namespace RiskierTrafficStops.Mod.Outcomes
 {
@@ -46,14 +46,14 @@ namespace RiskierTrafficStops.Mod.Outcomes
         {
             try
             {
-                APIs.InvokeEvent(RTSEventType.Start);
                 if (!GetSuspectAndSuspectVehicle(handle, out _suspect, out _suspectVehicle))
                 {
                     Normal("Failed to get suspect and vehicle, cleaning up RTS event...");
                     CleanupEvent();
                     return;
                 }
-
+                APIs.InvokeEvent(RTSEventType.Start);
+                
                 GameFiber.WaitWhile(() => _suspect.IsAvailable() && MainPlayer.DistanceTo(_suspect) >= 3f && _suspect.IsInAnyVehicle(true), 120000);
                 if (Functions.IsPlayerPerformingPullover() && _suspect.IsAvailable() && MainPlayer.DistanceTo(_suspect) <= 2.5f && _suspect.IsInAnyVehicle(true))
                 {

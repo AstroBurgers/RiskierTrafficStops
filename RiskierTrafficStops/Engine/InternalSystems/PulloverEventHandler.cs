@@ -47,7 +47,7 @@ namespace RiskierTrafficStops.Engine.InternalSystems
             Events.OnPulloverEnded += Events_OnPulloverEnded;
         }
 
-        internal static void UnsubscribeToEvents()
+        internal static void UnsubscribeFromEvents()
         {
             Normal("Unsubscribing from events...");
             Events.OnPulloverOfficerApproachDriver -= Events_OnPulloverOfficerApproachDriver;
