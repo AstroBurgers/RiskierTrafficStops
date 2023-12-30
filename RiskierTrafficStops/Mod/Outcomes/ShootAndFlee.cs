@@ -60,7 +60,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
             foreach (var i in peds)
             {
                 if (!i.IsAvailable()) continue;
-                i.GiveWeapon();
+                i.GivePistol();
 
                 Normal($"Making Suspect #{i} shoot at Player");
                 NativeFunction.Natives.x10AB107B887214D8(i, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
@@ -78,7 +78,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
 
 
             Normal("Setting up Suspect Weapon");
-            _suspect.GiveWeapon();
+            _suspect.GivePistol();
             
             Normal("Giving Suspect Tasks");
             NativeFunction.Natives.x10AB107B887214D8(_suspect, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED

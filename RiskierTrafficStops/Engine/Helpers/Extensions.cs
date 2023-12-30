@@ -25,6 +25,28 @@ internal static class Extensions
             ped.Inventory.GiveNewWeapon(weapon, 100, true);
             Logger.Normal($"Giving {ped.Model.Name} {weapon}");
         }
+        else if (ped.IsAvailable() && ped.Inventory.HasLoadedWeapon)
+        {
+            var pedWeapons = ped.Inventory.Weapons;
+            var weapon = pedWeapons[Rndm.Next(pedWeapons.Count)];
+            ped.Inventory.EquippedWeapon = weapon.ToString();
+        }
+    }
+
+    internal static void GivePistol(this Ped ped)
+    {
+        if (ped.IsAvailable() && !ped.Inventory.HasLoadedWeapon)
+        {
+            var weapon = PistolList[Rndm.Next(PistolList.Length)];
+            ped.Inventory.GiveNewWeapon(weapon, 100, true);
+            Logger.Normal($"Giving {ped.Model.Name} {weapon}");
+        }
+        else if (ped.IsAvailable() && ped.Inventory.HasLoadedWeapon)
+        {
+            var pedWeapons = ped.Inventory.Weapons;
+            var weapon = pedWeapons[Rndm.Next(pedWeapons.Count)];
+            ped.Inventory.EquippedWeapon = weapon.ToString();
+        }
     }
     
     /// <summary>
