@@ -12,10 +12,6 @@ namespace RiskierTrafficStops.Engine.InternalSystems
         internal static void Error(Exception ex, string location)
         {
             Game.LogTrivial(string.Format(DefaultInfo, "ERROR", ex.ToString()));
-            if (Settings.AutoLogEnabled)
-            {
-                PostToDiscord.LogToDiscord(ex, location);
-            }
         }
 
         internal static void Debug(string msg)

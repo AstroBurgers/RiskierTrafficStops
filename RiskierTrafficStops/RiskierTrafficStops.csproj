@@ -70,7 +70,6 @@
     <Compile Include="Engine\InternalSystems\DecisionTree.cs" />
     <Compile Include="Engine\InternalSystems\GameFiberHandling.cs" />
     <Compile Include="Engine\InternalSystems\Logger.cs" />
-    <Compile Include="Engine\InternalSystems\PostToDiscord.cs" />
     <Compile Include="Engine\InternalSystems\PulloverEventHandler.cs" />
     <Compile Include="Engine\InternalSystems\Settings.cs" />
     <Compile Include="Engine\InternalSystems\VersionChecker.cs" />
