@@ -70,8 +70,8 @@ namespace RiskierTrafficStops.Engine.Helpers
                 
                 PedPursuitAttributes attributes = Functions.GetPedPursuitAttributes(suspect);
                 
-                attributes.MaxDrivingSpeed = MphToMps(Rndm.Next(60, 201));
-                attributes.MinDrivingSpeed = MphToMps(Rndm.Next(30, Convert.ToInt32(attributes.MaxDrivingSpeed - 1)));
+                attributes.MinDrivingSpeed = MphToMps(Rndm.Next(35, 60));
+                attributes.MaxDrivingSpeed = MphToMps(Rndm.Next(61, 201));
 
                 attributes.HandlingAbility = GenerateRandomFloat();
                 attributes.HandlingAbilityTurns = GenerateRandomFloat();
@@ -88,7 +88,7 @@ namespace RiskierTrafficStops.Engine.Helpers
 
                 attributes.AverageBurstTireSurrenderTime = Rndm.Next(700, 2000);
                 attributes.AverageSurrenderTime = Rndm.Next(1000, 3000);
-
+                
                 attributes.AverageFightTime = Rndm.Next(400, 2000);
                 
                 Logger.Normal($"MaxDrivingSpeed: {attributes.MaxDrivingSpeed}");
