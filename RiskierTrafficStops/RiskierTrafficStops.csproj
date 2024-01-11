@@ -35,6 +35,9 @@
     <LangVersion>10.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ImmersiveAmbientEvents">
+      <HintPath>..\..\..\..\..\References\ImmersiveAmbientEvents.dll</HintPath>
+    </Reference>
     <Reference Include="ImmersiveAmbientEvents, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Refrences\ImmersiveAmbientEvents.dll</HintPath>

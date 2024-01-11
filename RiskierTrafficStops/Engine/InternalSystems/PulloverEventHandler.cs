@@ -137,48 +137,41 @@ namespace RiskierTrafficStops.Engine.InternalSystems
                 Normal("Choosing Scenario");
 
                 _chosenOutcome = Settings.EnabledScenarios[Rndm.Next(Settings.EnabledScenarios.Count)];
+                _lastOutcome = _chosenOutcome;
                 Normal($"Chosen Outcome: {_chosenOutcome}");
 
                 switch (_chosenOutcome)
                 {
                     case Scenario.GetOutOfCarAndYell:
                         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => Yelling.YellingOutcome(handle)));
-                        _lastOutcome = Scenario.GetOutOfCarAndYell;
                         break;
 
                     case Scenario.GetOutAndShoot:
                         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => GetOutAndShoot.GoasOutcome(handle)));
-                        _lastOutcome = Scenario.GetOutAndShoot;
                         break;
 
                     case Scenario.FleeFromTrafficStop:
                         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => Flee.FleeOutcome(handle)));
-                        _lastOutcome = Scenario.FleeFromTrafficStop;
                         break;
 
                     case Scenario.YellInCar:
                         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => YellInCar.YicEventHandler(handle)));
-                        _lastOutcome = Scenario.YellInCar;
                         break;
 
                     case Scenario.RevEngine:
                         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => Revving.RevvingOutcome(handle)));
-                        _lastOutcome = Scenario.RevEngine;
                         break;
 
                     case Scenario.RamIntoPlayerVehicle:
                         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => Ramming.RammingOutcome(handle)));
-                        _lastOutcome = Scenario.RamIntoPlayerVehicle;
                         break;
 
                     case Scenario.ShootAndFlee:
                         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => ShootAndFlee.SafOutcome(handle)));
-                        _lastOutcome = Scenario.ShootAndFlee;
                         break;
 
                     case Scenario.Spit:
                         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => Spitting.SpittingOutcome(handle)));
-                        _lastOutcome = Scenario.Spit;
                         break;
 
                     default:
