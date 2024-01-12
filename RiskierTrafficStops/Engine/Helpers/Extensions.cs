@@ -1,5 +1,4 @@
-﻿using LSPD_First_Response.Mod.API;
-using Rage;
+﻿using Rage;
 using RiskierTrafficStops.Engine.InternalSystems;
 using static RiskierTrafficStops.Engine.Helpers.Helper;
 
@@ -14,7 +13,7 @@ internal static class Extensions
     /// <returns></returns>
     internal static bool IsAvailable(this Ped ped)
     {
-        return ped.Exists() && ped.IsAlive && ped != null;
+        return ped.Exists() && ped.IsAlive && ped.Model.IsValid;
     }
 
     internal static void GiveWeapon(this Ped ped)
@@ -56,6 +55,6 @@ internal static class Extensions
     /// <returns></returns>
     internal static bool IsAvailable(this Vehicle veh)
     {
-        return veh.Exists() && veh.IsValid() && veh != null;
+        return veh.Exists() && veh.IsValid() && veh.Model.IsValid;
     }
 }

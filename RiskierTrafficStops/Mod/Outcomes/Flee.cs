@@ -33,6 +33,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
                 {
                     Normal("Failed to get suspect and vehicle, cleaning up RTS event...");
                     CleanupEvent();
+                    
                     return;
                 }
                 InvokeEvent(RTSEventType.Start);

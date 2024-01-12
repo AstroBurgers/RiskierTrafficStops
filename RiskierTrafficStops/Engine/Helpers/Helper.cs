@@ -19,7 +19,7 @@ namespace RiskierTrafficStops.Engine.Helpers
         
         internal static bool VerifyDependencies()
         {
-            if (!File.Exists("RAGENativeUI.dll")) _missingFiles += "~n~- RAGENativeUI.dll";
+            if (!VersionChecker.IsAssemblyAvailable("RAGENativeUI.dll", "1.9.2")) _missingFiles += "~n~- RAGENativeUI.dll";
             
             if (_missingFiles.Length > 0)
             {
@@ -222,7 +222,8 @@ namespace RiskierTrafficStops.Engine.Helpers
                 Normal("Setting up Suspect Vehicle");
                 driverVehicle = driver.LastVehicle;
             }
-            Normal($"Returning Driver: {driver} & Driver Vehicle: {driverVehicle}");
+            
+            Normal("Returning Driver & Driver Vehicle");
             suspect = driver;
             suspectVehicle = driverVehicle;
             return suspect.IsAvailable() && suspectVehicle.IsAvailable();

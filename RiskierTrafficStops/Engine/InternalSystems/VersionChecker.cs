@@ -1,20 +1,26 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Rage;
-using RiskierTrafficStops.Engine.InternalSystems;
 using static RiskierTrafficStops.Engine.InternalSystems.Logger;
+using Task = System.Threading.Tasks.Task;
 
 namespace RiskierTrafficStops.Engine.InternalSystems
 {
-    
+
     /*
      * CREDIT TO SuperPyroManiac for the orignal code
      * Modifications made by myself
      * https://github.com/SuperPyroManiac/SuperPlugins/blob/master/SuperCallouts/SimpleFunctions/VersionChecker.cs
      */
-    
+
     internal static class VersionChecker
     {
         internal enum State
@@ -72,7 +78,28 @@ namespace RiskierTrafficStops.Engine.InternalSystems
                 _state = State.Failed;
             }
         }
-
+        
+        // Credit to Opus49 for this method
+        internal static bool IsAssemblyAvailable(string assemblyName, string version)
+        {
+            try
+            {
+                AssemblyName assemblyName2 = AssemblyName.GetAssemblyName(AppDomain.CurrentDomain.BaseDirectory + "/" + assemblyName);
+                if (assemblyName2.Version >= new Version(version))
+                {
+                    Normal($"{assemblyName} is available ({assemblyName2.Version}).");
+                    return true;
+                }
+                Normal($"{assemblyName} does not meet minimum requirements ({assemblyName2.Version} < {version}).");
+                return false;
+            }
+            catch (Exception ex) when (ex is FileNotFoundException || ex is BadImageFormatException)
+            {
+                Normal(assemblyName + " is not available.");
+                return false;
+            }
+        }
+        
         private static void CheckRTSVersion()
         {
             try
