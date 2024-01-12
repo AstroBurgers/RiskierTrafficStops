@@ -105,7 +105,6 @@
   <ItemGroup>
     <Compile Include="API\APIs.cs" />
     <Compile Include="API\ExternalAPIs\IAEFunctions.cs" />
-    <Compile Include="API\ExternalAPIs\RAFunctions.cs" />
     <Compile Include="Engine\FrontendSystems\ConfigMenu.cs" />
     <Compile Include="Engine\FrontendSystems\ConsoleCommands.cs" />
     <Compile Include="Engine\Helpers\Helper.cs" />

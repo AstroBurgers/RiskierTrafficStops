@@ -10,43 +10,43 @@ using static RiskierTrafficStops.Engine.Helpers.Extensions;
 
 namespace RiskierTrafficStops.Mod.Outcomes
 {
-    internal static class Ramming
+    internal class Ramming : Outcome
     {
-        private static Ped _suspect;
-        private static Vehicle _suspectVehicle;
-        internal static LHandle PursuitLHandle;
-
-        internal static void RammingOutcome(LHandle handle)
+        internal Ramming(LHandle handle) : base(handle)
         {
             try
             {
-                if (!GetSuspectAndSuspectVehicle(handle, out _suspect, out _suspectVehicle))
+                if (MeetsRequirements(TrafficStopLHandle))
                 {
-                    Normal("Failed to get suspect and vehicle, cleaning up RTS event...");
-                    CleanupEvent();
-                    return;
+                    GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
                 }
-                APIs.InvokeEvent(RTSEventType.Start);
-                
-                if (_suspect.IsAvailable())
-                {
-                    _suspect.Tasks.DriveToPosition(MainPlayer.LastVehicle.Position, 100f, VehicleDrivingFlags.Reverse, 0.1f);
-                    GameFiber.Wait(3500);
-                    _suspect.Tasks.Clear();
-                }
-
-                if (Functions.GetCurrentPullover() == null) { CleanupEvent(); return; }
-                PursuitLHandle = SetupPursuitWithList(true, _suspectVehicle.Occupants);
             }
             catch (Exception e)
             {
                 if (e is ThreadAbortException) return;
-                Error(e, nameof(RammingOutcome));
+                Error(e, nameof(StartOutcome));
                 CleanupEvent();
             }
-            
-            GameFiberHandling.CleanupFibers();
-            APIs.InvokeEvent(RTSEventType.End);
+        }
+
+        internal override void StartOutcome()
+        {
+            APIs.InvokeEvent(RTSEventType.Start);
+
+            if (Suspect.IsAvailable())
+            {
+                Suspect.Tasks.DriveToPosition(MainPlayer.LastVehicle.Position, 100f, VehicleDrivingFlags.Reverse, 0.1f);
+                GameFiber.Wait(3500);
+                Suspect.Tasks.Clear();
+            }
+
+            if (Functions.GetCurrentPullover() == null)
+            {
+                CleanupEvent();
+                return;
+            }
+
+            PursuitLHandle = SetupPursuitWithList(true, SuspectVehicle.Occupants);
         }
     }
 }

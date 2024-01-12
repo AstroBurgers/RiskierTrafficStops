@@ -36,24 +36,11 @@ namespace RiskierTrafficStops
                     Game.AddConsoleCommands();
                     Normal("Checking for updates...");
                     VersionChecker.IsUpdateAvailable();
+                    
                     // Displaying startup Notification
                     Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro",
                         "Watch your back out there officer!");
-                    Normal("Checking Auto Log status...");
-                    switch (Settings.AutoLogEnabled)
-                    {
-                        //Displaying Auto-log Notification
-                        case true:
-                            Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops",
-                                "~b~Auto Logging Status", "Auto Logging is ~g~Enabled~s~");
-                            break;
-                        case false:
-                            Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops",
-                                "~b~Auto Logging Status", "Auto Logging is ~r~Disabled~s~");
-                            break;
-                    }
-
-                    Normal("Auto log status: " + Settings.AutoLogEnabled);
+                    
                     //Subscribes to events
                     PulloverEventHandler.SubscribeToEvents();
 

@@ -14,7 +14,6 @@ namespace RiskierTrafficStops.Mod.Outcomes
 {
     internal class GetOutAndShoot : Outcome
     {
-        
         private static GetOutAndShootOutcomes _chosenOutcome;
         private enum GetOutAndShootOutcomes
         {
@@ -36,7 +35,7 @@ namespace RiskierTrafficStops.Mod.Outcomes
             {
                 if (e is ThreadAbortException) return;
                 Error(e, nameof(StartOutcome));
-                CleanupEvent();
+                CleanupOutcome();
             }
         }
 
