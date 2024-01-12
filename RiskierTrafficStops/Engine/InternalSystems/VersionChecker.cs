@@ -9,26 +9,25 @@ using static RiskierTrafficStops.Engine.InternalSystems.Logger;
 namespace RiskierTrafficStops.Engine.InternalSystems;
 
 /*
- * CREDIT TO SuperPyroManiac for the orignal code
+ * CREDIT TO SuperPyroManiac for the original code
  * Modifications made by myself
  * https://github.com/SuperPyroManiac/SuperPlugins/blob/master/SuperCallouts/SimpleFunctions/VersionChecker.cs
  */
 
 internal static class VersionChecker
 {
-    internal enum State
+    private enum CheckedState
     {
         Failed,
         Update,
         Current
     }
 
-    internal static State _state = State.Current;
+    private static CheckedState _state = CheckedState.Current;
     private static string _receivedData = string.Empty;
-    internal static Thread UpdateThread = new(CheckRTSVersion);
+    internal static readonly Thread UpdateThread = new(CheckRtsVersion);
 
-    internal static string CurrentVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString(4);
-    internal static string OnlineVersion;
+    private static string CurrentVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString(4);
 
     internal static void IsUpdateAvailable()
     {
@@ -41,10 +40,10 @@ internal static class VersionChecker
 
             switch (_state)
             {
-                case State.Failed:
+                case CheckedState.Failed:
                     Normal("Update check failed... please check your internet connection");
                     break;
-                case State.Update:
+                case CheckedState.Update:
                     Game.DisplayNotification("3dtextures",
                         "mpgroundlogo_cops",
                         "Riskier Traffic Stops",
@@ -56,7 +55,7 @@ internal static class VersionChecker
                     Logger.Normal($"Online Version: {_receivedData} | Installed Version: {CurrentVersion}");
                     Logger.Normal("Plugin is outdated, please up date to the latest version as soon as possible");
                     break;
-                case State.Current:
+                case CheckedState.Current:
                     Logger.Normal($"Online Version: {_receivedData} | Installed Version: {CurrentVersion}");
                     Game.DisplayNotification("3dtextures",
                         "mpgroundlogo_cops",
@@ -68,7 +67,7 @@ internal static class VersionChecker
         }
         catch (WebException)
         {
-            _state = State.Failed;
+            _state = CheckedState.Failed;
         }
     }
         
@@ -93,7 +92,7 @@ internal static class VersionChecker
         }
     }
         
-    private static void CheckRTSVersion()
+    private static void CheckRtsVersion()
     {
         try
         {
@@ -104,10 +103,10 @@ internal static class VersionChecker
         }
         catch (WebException)
         {
-            _state = State.Failed;
+            _state = CheckedState.Failed;
         }
 
         if (_receivedData == CurrentVersion) return;
-        _state = State.Update;
+        _state = CheckedState.Update;
     }
 }

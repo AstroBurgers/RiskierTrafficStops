@@ -12,7 +12,7 @@ namespace RiskierTrafficStops.Engine.Helpers;
 internal static class Helper
 {
     internal static Ped MainPlayer => Game.LocalPlayer.Character;
-    internal static Random Rndm = new(DateTime.Now.Millisecond);
+    internal static readonly Random Rndm = new(DateTime.Now.Millisecond);
 
     private static string _missingFiles = string.Empty;
         
@@ -216,6 +216,7 @@ internal static class Helper
             driver = Functions.GetPulloverSuspect(handle);
             driver.BlockPermanentEvents = true;
         }
+        // ReSharper disable once PossibleNullReferenceException
         if (driver.IsAvailable() && driver.IsInAnyVehicle(false) && !driver.IsInAnyPoliceVehicle)
         {
             Normal("Setting up Suspect Vehicle");

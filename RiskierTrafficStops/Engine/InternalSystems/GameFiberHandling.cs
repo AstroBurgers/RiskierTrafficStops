@@ -4,9 +4,9 @@ using Rage;
 
 namespace RiskierTrafficStops.Engine.InternalSystems;
 
-public class GameFiberHandling
+public static class GameFiberHandling
 {
-    internal static List<GameFiber> OutcomeGameFibers = new();
+    internal static readonly List<GameFiber> OutcomeGameFibers = new();
 
     internal static void CleanupFibers()
     {
@@ -20,7 +20,7 @@ public class GameFiberHandling
                     i.Abort();
                 }
 
-                OutcomeGameFibers.Clear();
+                if (OutcomeGameFibers != null) OutcomeGameFibers.Clear();
             }
         });
     }

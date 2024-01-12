@@ -10,7 +10,7 @@ namespace RiskierTrafficStops.Engine.InternalSystems;
 internal static class Settings
 {
     internal static int Chance = 15;
-    internal static List<(bool enabled, Type outcome)> AllOutcomes = new();
+    private static readonly List<(bool enabled, Type outcome)> AllOutcomes = new();
     internal static Keys GetBackInKey = Keys.Y;
     internal static InitializationFile Inifile; // Defining a new INI File
 

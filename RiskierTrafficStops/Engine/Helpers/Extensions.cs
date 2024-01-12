@@ -51,7 +51,7 @@ internal static class Extensions
     /// <summary>
     /// Checks if a ped both exists and is alive
     /// </summary>
-    /// <param name="ped"></param>
+    /// <param name="veh"></param>
     /// <returns></returns>
     internal static bool IsAvailable(this Vehicle veh)
     {

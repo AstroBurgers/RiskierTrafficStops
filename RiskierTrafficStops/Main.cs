@@ -67,8 +67,6 @@ public class Main : Plugin
         }
         catch (Exception ex)
         {
-            if (e is System.Threading.ThreadAbortException) return;
-
             Error(ex, nameof(Cleanup));
         }
     }

@@ -24,7 +24,7 @@ internal static class IaeFunctions
             Logger.Normal("Immersive Ambient Events cannot be found, user might not have it installed");
             return false;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             Logger.Normal("Immersive Ambient Events cannot be found, user might not have it installed");
             return false;
@@ -47,7 +47,7 @@ internal static class IaeFunctions
             Logger.Normal("Immersive Ambient Events cannot be found, user might not have it installed");
             return false;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             Logger.Normal("Immersive Ambient Events cannot be found, user might not have it installed");
             return false;
@@ -70,7 +70,7 @@ internal static class IaeFunctions
             Logger.Normal("Immersive Ambient Events cannot be found, user might not have it installed");
             return false;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             Logger.Normal("Immersive Ambient Events cannot be found, user might not have it installed");
             return false;
