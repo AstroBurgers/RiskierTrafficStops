@@ -12,7 +12,7 @@ namespace RiskierTrafficStops.Mod.Outcomes;
 
 internal class Ramming : Outcome
 {
-    internal Ramming(LHandle handle) : base(handle)
+    public Ramming(LHandle handle) : base(handle)
     {
         try
         {

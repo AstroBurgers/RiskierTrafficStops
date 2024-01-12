@@ -72,7 +72,12 @@ internal static class Settings
         PulloverEventHandler.enabledOutcomes = AllOutcomes.Where(i => i.enabled).Select(i => i.outcome).ToList();
         
         Logger.Normal("----Enabled Outcomes----");
-        PulloverEventHandler.enabledOutcomes.ForEach(i => Logger.Normal(i.ToString()));
+        PulloverEventHandler.enabledOutcomes.ForEach(i => Logger.Normal(
+            i.ToString()
+                .Substring(
+                    i.ToString()
+                        .LastIndexOf('.') + 1
+                )));
         Logger.Normal("----Enabled Outcomes----");
     }
 }

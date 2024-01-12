@@ -13,7 +13,7 @@ namespace RiskierTrafficStops.Mod.Outcomes;
 
 internal class ShootAndFlee : Outcome
 {
-    internal ShootAndFlee(LHandle handle) : base(handle)
+    public ShootAndFlee(LHandle handle) : base(handle)
     {
         try
         {

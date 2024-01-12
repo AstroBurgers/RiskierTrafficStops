@@ -16,7 +16,7 @@ internal abstract class Outcome
     
     internal virtual void StartOutcome(){}
 
-    internal virtual bool MeetsRequirements(LHandle handle)
+    internal static bool MeetsRequirements(LHandle handle)
     {
         if (!Helper.GetSuspectAndSuspectVehicle(handle, out Suspect, out SuspectVehicle) || Functions.GetCurrentPullover() == null)
         {

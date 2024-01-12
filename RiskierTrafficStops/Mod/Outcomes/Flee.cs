@@ -21,7 +21,7 @@ internal class Flee : Outcome
         LeaveVehicle,
     }
 
-    internal Flee(LHandle handle) : base(handle)
+    public Flee(LHandle handle) : base(handle)
     {
         try
         {

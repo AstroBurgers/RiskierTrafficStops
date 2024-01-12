@@ -12,7 +12,7 @@ namespace RiskierTrafficStops.Mod.Outcomes;
 
 internal class Spitting : Outcome
 {
-    internal Spitting(LHandle handle) : base(handle)
+    public Spitting(LHandle handle) : base(handle)
     {
         try
         {

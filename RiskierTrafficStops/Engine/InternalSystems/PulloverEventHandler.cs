@@ -5,7 +5,6 @@ using System.Threading;
 using LSPD_First_Response.Mod.API;
 using Rage;
 using RiskierTrafficStops.API.ExternalAPIs;
-using RiskierTrafficStops.Mod.Outcomes;
 using static RiskierTrafficStops.Engine.Helpers.Helper;
 using static RiskierTrafficStops.Engine.InternalSystems.Logger;
 using System.Security.Cryptography;
@@ -52,8 +51,13 @@ internal static class PulloverEventHandler
         {
             if (!IaeFunctions.IaeCompatibilityCheck(handle) || Functions.IsCalloutRunning() || API.APIs.DisableRTSForCurrentStop) return;
 
-            HasEventHappened = true;
-            ChooseOutcome(handle);
+            GameFiber.WaitWhile(() => !MainPlayer.LastVehicle.IsSirenOn && Functions.IsPlayerPerformingPullover());
+
+            if (MainPlayer.LastVehicle.IsSirenOn && Functions.IsPlayerPerformingPullover())
+            {
+                HasEventHappened = true;
+                ChooseOutcome(handle);
+            }
         });
     }
 

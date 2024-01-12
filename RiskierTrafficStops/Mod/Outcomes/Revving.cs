@@ -12,7 +12,7 @@ namespace RiskierTrafficStops.Mod.Outcomes;
 
 internal class Revving : Outcome
 {
-    internal Revving(LHandle handle) : base(handle)
+    public Revving(LHandle handle) : base(handle)
     {
         try
         {

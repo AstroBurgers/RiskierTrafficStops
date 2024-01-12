@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using LSPD_First_Response.Mod.API;
 using Rage;
@@ -223,7 +222,7 @@ internal static class Helper
             driverVehicle = driver.LastVehicle;
         }
             
-        Normal("Returning Driver & Driver Vehicle");
+        Normal("Returning Suspect & Suspect Vehicle");
         suspect = driver;
         suspectVehicle = driverVehicle;
         return suspect.IsAvailable() && suspectVehicle.IsAvailable();

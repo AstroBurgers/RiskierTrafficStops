@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Rage;
 using static RiskierTrafficStops.Engine.InternalSystems.Logger;
-using Task = System.Threading.Tasks.Task;
 
 namespace RiskierTrafficStops.Engine.InternalSystems;
 

@@ -12,7 +12,7 @@ namespace RiskierTrafficStops.Mod.Outcomes;
 
 internal class YellInCar : Outcome
 {
-    internal YellInCar(LHandle handle) : base(handle)
+    public YellInCar(LHandle handle) : base(handle)
     {
         try
         {
