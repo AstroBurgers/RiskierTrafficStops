@@ -12,18 +12,6 @@ using System.Security.Cryptography;
 
 namespace RiskierTrafficStops.Engine.InternalSystems;
 
-internal enum Outcome //Enum is outside class so that it can be referenced anywhere without having to reference the class
-{
-    GetOutOfCarAndYell,
-    GetOutAndShoot,
-    FleeFromTrafficStop,
-    YellInCar,
-    RevEngine,
-    RamIntoPlayerVehicle,
-    ShootAndFlee,
-    Spit,
-}
-
 internal static class PulloverEventHandler
 {
     private static Type _chosenOutcome;
@@ -95,10 +83,7 @@ internal static class PulloverEventHandler
         {
             if (ShouldEventHappen())
             {
-                Normal($"HasEventHappened: {HasEventHappened}");
                 Normal($"DisableRTSForCurrentStop: {API.APIs.DisableRTSForCurrentStop}");
-
-                if (HasEventHappened) return;
                 
                 Normal("Choosing Outcome");
                 if (enabledOutcomes.Count <= 1)
