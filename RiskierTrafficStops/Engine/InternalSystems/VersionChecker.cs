@@ -27,7 +27,7 @@ internal static class VersionChecker
     private static string _receivedData = string.Empty;
     internal static readonly Thread UpdateThread = new(CheckRtsVersion);
 
-    private static string CurrentVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString(4);
+    private static string CurrentVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
 
     internal static void IsUpdateAvailable()
     {
