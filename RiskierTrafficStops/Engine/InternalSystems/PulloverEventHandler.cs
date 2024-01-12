@@ -29,7 +29,6 @@ internal static class PulloverEventHandler
     private static Type _chosenOutcome;
     internal static bool HasEventHappened;
     private static Type? _lastOutcome;
-    private static Action<LHandle> _chosenOutcomeAction;
     private static RNGCryptoServiceProvider _outcomeRng = new RNGCryptoServiceProvider();
     
     internal static List<Type> enabledOutcomes = new ();
@@ -102,9 +101,17 @@ internal static class PulloverEventHandler
                 if (HasEventHappened) return;
                 
                 Normal("Choosing Outcome");
-                _chosenOutcome = enabledOutcomes[Rndm.Next(Settings.AllOutcomes.Count)];
-                _lastOutcome = _chosenOutcome;
+                if (enabledOutcomes.Count <= 1)
+                {
+                    _chosenOutcome = enabledOutcomes[Rndm.Next(enabledOutcomes.Count)];
+                }
+                else
+                {
+                    _chosenOutcome = enabledOutcomes[Rndm.Next(enabledOutcomes.Where(i => i != _lastOutcome).ToList().Count)];
+                }
                 Normal($"Chosen Outcome: {_chosenOutcome}");
+                
+                _lastOutcome = _chosenOutcome;
 
                 Activator.CreateInstance(_chosenOutcome, args: handle);
             }
