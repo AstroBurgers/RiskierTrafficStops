@@ -22,12 +22,13 @@ internal class GetOutAndShoot : Outcome
     }
 
     // RTSGetOutAndShootSuspects
-    public GetOutAndShoot(string RelateGroup, LHandle handle) : base(RelateGroup, handle)
+    public GetOutAndShoot(LHandle handle) : base(handle)
     {
         try
         {
             if (MeetsRequirements(TrafficStopLHandle))
             {
+                SuspectRelateGroup = new RelationshipGroup("RTSGetOutAndShootSuspects");
                 GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
             }
         }

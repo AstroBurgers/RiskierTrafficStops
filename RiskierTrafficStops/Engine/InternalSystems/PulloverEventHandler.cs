@@ -12,7 +12,7 @@ using System.Security.Cryptography;
 
 namespace RiskierTrafficStops.Engine.InternalSystems;
 
-internal enum Scenario //Enum is outside class so that it can be referenced anywhere without having to reference the class
+internal enum Outcome //Enum is outside class so that it can be referenced anywhere without having to reference the class
 {
     GetOutOfCarAndYell,
     GetOutAndShoot,
@@ -26,12 +26,14 @@ internal enum Scenario //Enum is outside class so that it can be referenced anyw
 
 internal static class PulloverEventHandler
 {
-    private static Scenario _chosenOutcome;
+    private static Type _chosenOutcome;
     internal static bool HasEventHappened;
-    private static Scenario? _lastOutcome;
+    private static Type? _lastOutcome;
     private static Action<LHandle> _chosenOutcomeAction;
     private static RNGCryptoServiceProvider _outcomeRng = new RNGCryptoServiceProvider();
-        
+    
+    internal static List<Type> enabledOutcomes = new ();
+    
     internal static void SubscribeToEvents()
     {
         //Subscribing to events
@@ -63,41 +65,8 @@ internal static class PulloverEventHandler
         {
             if (!IaeFunctions.IaeCompatibilityCheck(handle) || Functions.IsCalloutRunning() || API.APIs.DisableRTSForCurrentStop) return;
 
-            //_chosenChance = Rndm.Next(1, 101);
-            _chosenOutcome = ChooseOutcome();
-            Normal($"Chosen Scenario: {_chosenOutcome}");
-                
-            _chosenOutcomeAction = null;
-                
-            if (!ShouldEventHappen()) return;
-                
-            if (HasEventHappened) return;
             HasEventHappened = true;
-            _lastOutcome = _chosenOutcome;
-            switch (_chosenOutcome)
-            {
-                case Scenario.FleeFromTrafficStop:
-                    GameFiber.WaitWhile(() => !MainPlayer.CurrentVehicle.IsSirenOn && Functions.IsPlayerPerformingPullover());
-                    Flee fleeOutcome = new Flee(handle);
-                    break;
-                    
-                case Scenario.GetOutAndShoot:
-                    GameFiber.WaitWhile(() => !MainPlayer.CurrentVehicle.IsSirenOn && Functions.IsPlayerPerformingPullover());
-                    GetOutAndShoot getOutAndShootOutcome = new GetOutAndShoot("RTSGetOutAndShootSuspects", handle);
-                    break;
-                    
-                case Scenario.ShootAndFlee:
-                    GameFiber.WaitWhile(() => !MainPlayer.CurrentVehicle.IsSirenOn && Functions.IsPlayerPerformingPullover());
-                    _chosenOutcomeAction = ShootAndFlee.SafOutcome;
-                    break;
-            }
-                
-            if (Functions.IsPlayerPerformingPullover()) {Normal("Player is no longer performing pullover, ending RTS events");
-                GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() =>
-                {
-                    if (_chosenOutcomeAction != null) _chosenOutcomeAction(handle);
-                }));
-            }
+            ChooseOutcome(handle);
         });
     }
 
@@ -109,16 +78,19 @@ internal static class PulloverEventHandler
 
     private static void Events_OnPulloverDriverStopped(LHandle handle)
     {
-        if (!HasEventHappened && IaeFunctions.IaeCompatibilityCheck(handle) && !API.APIs.DisableRTSForCurrentStop) { GameFiber.StartNew(() => ChooseEvent(handle)); }
+        if (!HasEventHappened && IaeFunctions.IaeCompatibilityCheck(handle) && !API.APIs.DisableRTSForCurrentStop) { GameFiber.StartNew(() => ChooseOutcome(handle)); }
     }
 
     private static void Events_OnPulloverOfficerApproachDriver(LHandle handle)
     {
-        if (!HasEventHappened && IaeFunctions.IaeCompatibilityCheck(handle) && !API.APIs.DisableRTSForCurrentStop) { GameFiber.StartNew(() => ChooseEvent(handle)); }
+        if (!HasEventHappened && IaeFunctions.IaeCompatibilityCheck(handle) && !API.APIs.DisableRTSForCurrentStop) { GameFiber.StartNew(() => ChooseOutcome(handle)); }
     }
 
-    //For all events after the vehicle has stopped
-    private static void ChooseEvent(LHandle handle)
+    /// <summary>
+    /// Chooses an outcome from the enabled outcomes
+    /// </summary>
+    /// <param name="handle">Handle of the current traffic stop</param>
+    private static void ChooseOutcome(LHandle handle)
     {
         try
         {
@@ -127,58 +99,14 @@ internal static class PulloverEventHandler
                 Normal($"HasEventHappened: {HasEventHappened}");
                 Normal($"DisableRTSForCurrentStop: {API.APIs.DisableRTSForCurrentStop}");
 
-                if (HasEventHappened)
-                {
-                    return;
-                }
-                    
-                Normal("Choosing Scenario");
-                _chosenOutcome = Settings.EnabledScenarios[Rndm.Next(Settings.EnabledScenarios.Count)];
+                if (HasEventHappened) return;
+                
+                Normal("Choosing Outcome");
+                _chosenOutcome = enabledOutcomes[Rndm.Next(Settings.AllOutcomes.Count)];
                 _lastOutcome = _chosenOutcome;
                 Normal($"Chosen Outcome: {_chosenOutcome}");
 
-                switch (_chosenOutcome)
-                {
-                    case Scenario.GetOutOfCarAndYell:
-                        GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() =>
-                            Yelling.YellingOutcome(handle)));
-                        break;
-
-                    case Scenario.GetOutAndShoot:
-                        GetOutAndShoot getOutAndShoot = new GetOutAndShoot("RTSGetOutAndShootSuspects", handle);
-                        break;
-
-                    case Scenario.FleeFromTrafficStop:
-                        Flee fleeOutcome = new Flee(handle);
-                        break;
-
-                    case Scenario.YellInCar:
-                        GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() =>
-                            YellInCar.YicEventHandler(handle)));
-                        break;
-
-                    case Scenario.RevEngine:
-                        Revving revEngingOutcome = new Revving(handle);
-                        break;
-
-                    case Scenario.RamIntoPlayerVehicle:
-                        Ramming rammingOutcome = new Ramming(handle);
-                        break;
-
-                    case Scenario.ShootAndFlee:
-                        GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() =>
-                            ShootAndFlee.SafOutcome(handle)));
-                        break;
-
-                    case Scenario.Spit:
-                        GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() =>
-                            Spitting.SpittingOutcome(handle)));
-                        break;
-
-                    default:
-                        Normal("No outcomes Enabled (or some other shit)");
-                        break;
-                }
+                Activator.CreateInstance(_chosenOutcome, args: handle);
             }
         }
         catch (Exception e)
@@ -186,19 +114,6 @@ internal static class PulloverEventHandler
             if (e is ThreadAbortException) return;
             Error(e, "PulloverEvents.cs: ChooseEvent()");
             GameFiberHandling.CleanupFibers();
-        }
-    }
-
-    private static Scenario ChooseOutcome()
-    {
-        if (_lastOutcome != null && Settings.EnabledScenarios.Count > 1)
-        {
-            List<Scenario> possibleOutcome = Settings.EnabledScenarios.Where(i => i != _lastOutcome).ToList();
-            return possibleOutcome[Rndm.Next(possibleOutcome.Count)];
-        }
-        else
-        {
-            return Settings.EnabledScenarios[Rndm.Next(Settings.EnabledScenarios.Count)];
         }
     }
         

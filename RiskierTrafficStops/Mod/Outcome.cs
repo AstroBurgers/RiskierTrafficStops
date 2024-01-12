@@ -40,10 +40,4 @@ internal abstract class Outcome
     {
         TrafficStopLHandle = handle;
     }
-    
-    internal Outcome(string RelationshipGroupName, LHandle handle)
-    {
-        TrafficStopLHandle = handle;
-        SuspectRelateGroup = new RelationshipGroup(RelationshipGroupName);
-    }
 }

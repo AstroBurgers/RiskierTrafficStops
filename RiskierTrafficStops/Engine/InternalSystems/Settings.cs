@@ -1,13 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using Rage;
+using RiskierTrafficStops.Mod.Outcomes;
 
 namespace RiskierTrafficStops.Engine.InternalSystems;
 
 internal static class Settings
 {
     internal static int Chance = 15;
-    internal static readonly List<Scenario> EnabledScenarios = new();
+    internal static List<(bool enabled, Type outcome)> AllOutcomes = new();
     internal static Keys GetBackInKey = Keys.Y;
     internal static InitializationFile Inifile; // Defining a new INI File
 
@@ -54,19 +57,22 @@ internal static class Settings
 
     internal static void FilterOutcomes()
     {
-        Logger.Normal("Adding enabled scenarios to enabledScenarios");
-        EnabledScenarios.Clear();
-        if (GetOutAndShootEnabled) { EnabledScenarios.Add(Scenario.GetOutAndShoot); }
-        if (RamEnabled) { EnabledScenarios.Add(Scenario.RamIntoPlayerVehicle); }
-        if (FleeEnabled) { EnabledScenarios.Add(Scenario.FleeFromTrafficStop); }
-        if (RevEnabled) { EnabledScenarios.Add(Scenario.RevEngine); }
-        if (YellEnabled) { EnabledScenarios.Add(Scenario.GetOutOfCarAndYell); }
-        if (YellInCarEnabled) { EnabledScenarios.Add(Scenario.YellInCar); }
-        if (ShootAndFleeEnabled) { EnabledScenarios.Add(Scenario.ShootAndFlee); }
-        if (SpittingEnabled) { EnabledScenarios.Add(Scenario.Spit); }
+        Logger.Normal("Adding enabled outcomes to enabledOutcomes");
+        AllOutcomes.Clear();
+        
+        AllOutcomes.Add((GetOutAndShootEnabled, typeof(GetOutAndShoot)));
+        AllOutcomes.Add((RamEnabled, typeof(Ramming)));
+        AllOutcomes.Add((FleeEnabled, typeof(Flee)));
+        AllOutcomes.Add((RevEnabled, typeof(Revving)));
+        AllOutcomes.Add((YellEnabled, typeof(Yelling)));
+        AllOutcomes.Add((YellInCarEnabled, typeof(YellInCar)));
+        AllOutcomes.Add((ShootAndFleeEnabled, typeof(ShootAndFlee)));
+        AllOutcomes.Add((SpittingEnabled, typeof(Spitting)));
 
-        Logger.Normal("----Enabled Scenarios----");
-        EnabledScenarios.ForEach(i => Logger.Normal(i.ToString()));
-        Logger.Normal("----Enabled Scenarios----");
+        PulloverEventHandler.enabledOutcomes = AllOutcomes.Where(i => i.enabled).Select(i => i.outcome).ToList();
+        
+        Logger.Normal("----Enabled Outcomes----");
+        PulloverEventHandler.enabledOutcomes.ForEach(i => Logger.Normal(i.ToString()));
+        Logger.Normal("----Enabled Outcomes----");
     }
 }
