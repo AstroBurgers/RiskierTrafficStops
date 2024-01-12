@@ -116,6 +116,7 @@
     <Compile Include="Engine\InternalSystems\PulloverEventHandler.cs" />
     <Compile Include="Engine\InternalSystems\Settings.cs" />
     <Compile Include="Engine\InternalSystems\VersionChecker.cs" />
+    <Compile Include="Mod\Outcome.cs" />
     <Compile Include="Mod\Outcomes\Flee.cs" />
     <Compile Include="Mod\Outcomes\GetOutAndShoot.cs" />
     <Compile Include="Mod\Outcomes\Ramming.cs" />
@@ -131,9 +132,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="RiskierTrafficStops.ini" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Mod\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

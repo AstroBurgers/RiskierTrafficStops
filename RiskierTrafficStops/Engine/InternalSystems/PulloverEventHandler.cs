@@ -83,7 +83,7 @@ namespace RiskierTrafficStops.Engine.InternalSystems
                     
                     case Scenario.GetOutAndShoot:
                         GameFiber.WaitWhile(() => !MainPlayer.CurrentVehicle.IsSirenOn && Functions.IsPlayerPerformingPullover());
-                        _chosenOutcomeAction = GetOutAndShoot.GoasOutcome;
+                        GetOutAndShoot getOutAndShoot = new GetOutAndShoot("RTSGetOutAndShootSuspects", handle);
                         break;
                     
                     case Scenario.ShootAndFlee:
@@ -145,8 +145,7 @@ namespace RiskierTrafficStops.Engine.InternalSystems
                             break;
 
                         case Scenario.GetOutAndShoot:
-                            GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() =>
-                                GetOutAndShoot.GoasOutcome(handle)));
+                            GetOutAndShoot getOutAndShoot = new GetOutAndShoot("RTSGetOutAndShootSuspects", handle);
                             break;
 
                         case Scenario.FleeFromTrafficStop:
