@@ -9,83 +9,88 @@ using static RiskierTrafficStops.Engine.Helpers.Helper;
 using static RiskierTrafficStops.Engine.InternalSystems.Logger;
 using static RiskierTrafficStops.Engine.Helpers.Extensions;
 
-namespace RiskierTrafficStops.Mod.Outcomes
+namespace RiskierTrafficStops.Mod.Outcomes;
+
+internal class ShootAndFlee : Outcome
 {
-    internal static class ShootAndFlee
+    internal ShootAndFlee(LHandle handle) : base(handle)
     {
-        private static Ped _suspect;
-        private static Vehicle _suspectVehicle;
-        internal static LHandle PursuitLHandle;
-
-        internal static void SafOutcome(LHandle handle)
+        try
         {
-            try
+            if (MeetsRequirements(TrafficStopLHandle))
             {
-                if (!GetSuspectAndSuspectVehicle(handle, out _suspect, out _suspectVehicle))
-                {
-                    Normal("Failed to get suspect and vehicle, cleaning up RTS event...");
-                    CleanupEvent();
-                    return;
-                }
-                APIs.InvokeEvent(RTSEventType.Start);
-                
-                GameFiber.Wait(4500);
+                GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
+            }
+        }
+        catch (Exception e)
+        {
+            if (e is ThreadAbortException) return;
+            Error(e, nameof(StartOutcome));
+            CleanupOutcome();
+        }
+    }
 
-                var outcome = Rndm.Next(1, 101);
-                switch (outcome)
-                {
-                    case > 50:
-                        Normal("Starting all suspects outcome");
-                        AllSuspects(_suspectVehicle.Occupants);
-                        break;
-                    case <= 50:
-                        Normal("Starting driver only outcome");
-                        DriverOnly();
-                        break;
-                }
-            }
-            catch (Exception e)
-            {
-                if (e is ThreadAbortException) return;
-                Error(e, nameof(SafOutcome));
-                CleanupEvent();
-            }
-            
-            GameFiberHandling.CleanupFibers();
-            APIs.InvokeEvent(RTSEventType.End);
+    internal override void StartOutcome()
+    {
+        APIs.InvokeEvent(RTSEventType.Start);
+
+        var outcome = Rndm.Next(1, 101);
+        switch (outcome)
+        {
+            case > 50:
+                Normal("Starting all suspects outcome");
+                AllSuspects(SuspectVehicle.Occupants);
+                break;
+            case <= 50:
+                Normal("Starting driver only outcome");
+                DriverOnly();
+                break;
         }
 
-        private static void AllSuspects(Ped[] peds)
+        GameFiberHandling.CleanupFibers();
+        APIs.InvokeEvent(RTSEventType.End);
+    }
+
+    private static void AllSuspects(Ped[] peds)
+    {
+        foreach (var i in peds)
         {
-            foreach (var i in peds)
-            {
-                if (!i.IsAvailable()) continue;
-                i.GivePistol();
+            if (!i.IsAvailable()) continue;
+            i.GivePistol();
 
-                Normal($"Making Suspect #{i} shoot at Player");
-                NativeFunction.Natives.x10AB107B887214D8(i, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
-            }
-
-            GameFiber.Wait(5000);
-            
-            if ((Functions.GetCurrentPullover() == null) || !MainPlayer.IsAvailable()) { CleanupEvent(); return; }
-            PursuitLHandle = SetupPursuitWithList(true, peds);
+            Normal($"Making Suspect #{i} shoot at Player");
+            NativeFunction.Natives.x10AB107B887214D8(i, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
         }
 
-        private static void DriverOnly()
+        GameFiber.Wait(5000);
+
+        if ((Functions.GetCurrentPullover() == null) || !MainPlayer.IsAvailable())
         {
-            if (!_suspect.IsAvailable()) return;
-
-
-            Normal("Setting up Suspect Weapon");
-            _suspect.GivePistol();
-            
-            Normal("Giving Suspect Tasks");
-            NativeFunction.Natives.x10AB107B887214D8(_suspect, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
-            GameFiber.Wait(5000);
-            
-            if (Functions.GetCurrentPullover() == null || !MainPlayer.IsAvailable()) { CleanupEvent(); return; }
-            PursuitLHandle = SetupPursuit(true, _suspect);
+            CleanupEvent();
+            return;
         }
+
+        PursuitLHandle = SetupPursuitWithList(true, peds);
+    }
+
+    private static void DriverOnly()
+    {
+        if (!Suspect.IsAvailable()) return;
+
+
+        Normal("Setting up Suspect Weapon");
+        Suspect.GivePistol();
+
+        Normal("Giving Suspect Tasks");
+        NativeFunction.Natives.x10AB107B887214D8(Suspect, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
+        GameFiber.Wait(5000);
+
+        if (Functions.GetCurrentPullover() == null || !MainPlayer.IsAvailable())
+        {
+            CleanupEvent();
+            return;
+        }
+
+        PursuitLHandle = SetupPursuit(true, Suspect);
     }
 }

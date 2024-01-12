@@ -13,8 +13,6 @@ internal abstract class Outcome
     internal static RelationshipGroup SuspectRelateGroup;
     internal static LHandle PursuitLHandle;
     internal static LHandle TrafficStopLHandle;
-
-    internal static bool IsOutcomeRunning = false;
     
     internal virtual void StartOutcome(){}
 

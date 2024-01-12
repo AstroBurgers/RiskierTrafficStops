@@ -8,52 +8,55 @@ using static RiskierTrafficStops.Engine.Helpers.Helper;
 using static RiskierTrafficStops.Engine.InternalSystems.Logger;
 using static RiskierTrafficStops.Engine.Helpers.Extensions;
 
-namespace RiskierTrafficStops.Mod.Outcomes
+namespace RiskierTrafficStops.Mod.Outcomes;
+
+internal class Revving : Outcome
 {
-    internal static class Revving
+    internal Revving(LHandle handle) : base(handle)
     {
-        private static Ped _suspect;
-        private static Vehicle _suspectVehicle;
-        internal static LHandle PursuitLHandle;
-
-        internal static void RevvingOutcome(LHandle handle)
+        try
         {
-            try
+            if (MeetsRequirements(TrafficStopLHandle))
             {
-                if (!GetSuspectAndSuspectVehicle(handle, out _suspect, out _suspectVehicle))
-                {
-                    Normal("Failed to get suspect and vehicle, cleaning up RTS event...");
-                    CleanupEvent();
-                    return;
-                }
-                APIs.InvokeEvent(RTSEventType.Start);
-                
-                RevEngine(_suspect, _suspectVehicle, new[] { 2, 4 }, new[] { 2, 4 }, 2);
-
-                var chance = Rndm.Next(1, 101);
-                switch (chance)
-                {
-                    case <= 25:
-                        Normal("Suspect chose not to run after revving");
-                        break;
-                    default:
-                        if (_suspect.IsAvailable())
-                        {
-                            if (Functions.GetCurrentPullover() == null) { CleanupEvent(); return; }
-                            PursuitLHandle = SetupPursuit(true, _suspect);
-                        }
-                        break;
-                }
+                GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
             }
-            catch (Exception e)
-            {
-                if (e is ThreadAbortException) return;
-                Error(e, nameof(RevvingOutcome));
-                CleanupEvent();
-            }
-            
-            GameFiberHandling.CleanupFibers();
-            APIs.InvokeEvent(RTSEventType.End);
         }
+        catch (Exception e)
+        {
+            if (e is ThreadAbortException) return;
+            Error(e, nameof(StartOutcome));
+            CleanupOutcome();
+        }
+    }
+
+    internal override void StartOutcome()
+    {
+        APIs.InvokeEvent(RTSEventType.Start);
+
+        RevEngine(Suspect, SuspectVehicle, new[] { 2, 4 }, new[] { 2, 4 }, 2);
+
+        var chance = Rndm.Next(1, 101);
+        switch (chance)
+        {
+            case <= 25:
+                Normal("Suspect chose not to run after revving");
+                break;
+            default:
+                if (Suspect.IsAvailable())
+                {
+                    if (Functions.GetCurrentPullover() == null)
+                    {
+                        CleanupEvent();
+                        return;
+                    }
+
+                    PursuitLHandle = SetupPursuit(true, Suspect);
+                }
+
+                break;
+        }
+
+        GameFiberHandling.CleanupFibers();
+        APIs.InvokeEvent(RTSEventType.End);
     }
 }
