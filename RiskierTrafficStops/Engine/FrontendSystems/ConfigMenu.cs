@@ -20,7 +20,6 @@ namespace RiskierTrafficStops.Engine.FrontendSystems
         private static readonly UIMenuListScrollerItem<bool> FleeOutcomeEnabled = new("Flee", "Enable or disable this outcome", new[] { true, false });
         private static readonly UIMenuListScrollerItem<bool> RevOutcomeEnabled = new("Rev Engine", "Enable or disable this outcome", new[] { true, false });
         private static readonly UIMenuListScrollerItem<bool> SafOutcomeEnabled = new("Shoot And Flee", "Enable Or disable this outcome", new[] { true, false });
-        private static readonly UIMenuListScrollerItem<bool> AutoLoggingEnabled = new("Auto Logging", "Enable or disable auto logging", new[] { true, false });
         private static readonly UIMenuListScrollerItem<bool> SpitEnabled = new("Spitting", "Enable or disable this outcome", new[] { true, false });
         private static readonly UIMenuItem SaveToIni = new("Save To INI", "Saves the current values to the INI file and reloads the INI");
 
@@ -39,7 +38,7 @@ namespace RiskierTrafficStops.Engine.FrontendSystems
 
             Normal("Adding Items to Menu");
 
-            MainMenu.AddItems(SetChance, AutoLoggingEnabled, SafOutcomeEnabled, GoasOutcomeEnabled, YicOutcomeEnabled, RiyOutcomeEnabled, FleeOutcomeEnabled, RevOutcomeEnabled, YellOutcomeEnabled, SpitEnabled, SaveToIni);
+            MainMenu.AddItems(SetChance, SafOutcomeEnabled, GoasOutcomeEnabled, YicOutcomeEnabled, RiyOutcomeEnabled, FleeOutcomeEnabled, RevOutcomeEnabled, YellOutcomeEnabled, SpitEnabled, SaveToIni);
             SaveToIni.BackColor = Color.Green;
 
             MainMenu.OnItemSelect += (_, selectedItem, _) => //Easier way to do simple things in RNUI that dont require a lot of code
@@ -64,7 +63,6 @@ namespace RiskierTrafficStops.Engine.FrontendSystems
             RiyOutcomeEnabled.SelectedItem = RamEnabled;
             FleeOutcomeEnabled.SelectedItem = FleeEnabled;
             RevOutcomeEnabled.SelectedItem = RevEnabled;
-            AutoLoggingEnabled.SelectedItem = AutoLogEnabled;
             SafOutcomeEnabled.SelectedItem = ShootAndFleeEnabled;
             SpitEnabled.SelectedItem = SpittingEnabled;
             Normal("Assigned Values");
@@ -82,7 +80,6 @@ namespace RiskierTrafficStops.Engine.FrontendSystems
             Inifile.Write("Outcome_Configuration", "Yelling In Car Outcome Enabled", YicOutcomeEnabled.SelectedItem);
             Inifile.Write("Outcome_Configuration", "Shoot And Flee Outcome Enabled", SafOutcomeEnabled.SelectedItem);
             Inifile.Write("Outcome_Configuration", "Spitting Outcome Enabled", SpitEnabled.SelectedItem);
-            Inifile.Write("Auto_Logging", "Automatic Error Reporting Enabled", AutoLoggingEnabled.SelectedItem);
             Normal("Finished Appending to INI");
 
             Normal("Reading new Values...");
@@ -95,7 +92,6 @@ namespace RiskierTrafficStops.Engine.FrontendSystems
             YellInCarEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Yelling In Car Outcome Enabled", YellInCarEnabled);
             ShootAndFleeEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Shoot And Flee Outcome Enabled", ShootAndFleeEnabled);
             SpittingEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Spitting Outcome Enabled", SpittingEnabled);
-            AutoLogEnabled = Inifile.ReadBoolean("Auto_Logging", "Automatic Error Reporting Enabled", AutoLogEnabled);
             Normal("Finished reading new values");
 
             Normal("----INI Values---");
@@ -108,7 +104,6 @@ namespace RiskierTrafficStops.Engine.FrontendSystems
             Normal($"Yelling in Car Outcome Enabled: {YellInCarEnabled}");
             Normal($"Shoot And Flee Outcome Enabled: {ShootAndFleeEnabled}");
             Normal($"Spitting Outcome Enabled: {SpittingEnabled}");
-            Normal($"Automatic Error Reporting Enabled: {AutoLogEnabled}");
             Normal("----INI Values---");
 
             Normal("Reloading Enabled events...");

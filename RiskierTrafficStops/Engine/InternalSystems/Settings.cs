@@ -21,9 +21,6 @@ namespace RiskierTrafficStops.Engine.InternalSystems
         internal static bool ShootAndFleeEnabled = true;
         internal static bool SpittingEnabled = true;
 
-        // Webhook boolean
-        internal static bool AutoLogEnabled = true;
-
         internal static void IniFileSetup()
         {
             Inifile = new InitializationFile(@"Plugins/Lspdfr/RiskierTrafficStops.ini");
@@ -41,9 +38,7 @@ namespace RiskierTrafficStops.Engine.InternalSystems
             YellInCarEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Yelling In Car Outcome Enabled", YellInCarEnabled);
             ShootAndFleeEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Shoot And Flee Outcome Enabled", ShootAndFleeEnabled);
             SpittingEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Spitting Outcome Enabled", SpittingEnabled);
-
-            // Reading Auto Log Boolean
-            AutoLogEnabled = Inifile.ReadBoolean("Auto_Logging", "Automatic Error Reporting Enabled", AutoLogEnabled);
+            
             ValidateIniValues();
             FilterOutcomes();
         }
