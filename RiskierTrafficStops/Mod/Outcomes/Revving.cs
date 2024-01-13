@@ -1,12 +1,4 @@
-﻿using System;
-using System.Threading;
-using LSPD_First_Response.Mod.API;
-using Rage;
-using RiskierTrafficStops.API;
-using RiskierTrafficStops.Engine.InternalSystems;
-using static RiskierTrafficStops.Engine.Helpers.Helper;
-using static RiskierTrafficStops.Engine.InternalSystems.Logger;
-using static RiskierTrafficStops.Engine.Helpers.Extensions;
+﻿using static RiskierTrafficStops.Engine.Helpers.Extensions;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 
@@ -31,16 +23,17 @@ internal class Revving : Outcome
 
     internal override void StartOutcome()
     {
-        APIs.InvokeEvent(RTSEventType.Start);
+        InvokeEvent(RTSEventType.Start);
 
         RevEngine(Suspect, SuspectVehicle, new[] { 2, 4 }, new[] { 2, 4 }, 2);
 
-        var chance = Rndm.Next(1, 101);
+        long chance = GenerateChance();
         switch (chance)
         {
             case <= 25:
                 Normal("Suspect chose not to run after revving");
                 break;
+            
             default:
                 if (Suspect.IsAvailable())
                 {
@@ -52,11 +45,10 @@ internal class Revving : Outcome
 
                     PursuitLHandle = SetupPursuit(true, Suspect);
                 }
-
                 break;
         }
 
         GameFiberHandling.CleanupFibers();
-        APIs.InvokeEvent(RTSEventType.End);
+        InvokeEvent(RTSEventType.End);
     }
 }

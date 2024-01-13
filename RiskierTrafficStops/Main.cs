@@ -1,10 +1,4 @@
-﻿using System;
-using LSPD_First_Response.Mod.API;
-using Rage;
-using static RiskierTrafficStops.Engine.InternalSystems.Logger;
-using RiskierTrafficStops.Engine.FrontendSystems;
-using RiskierTrafficStops.Engine.Helpers;
-using RiskierTrafficStops.Engine.InternalSystems;
+﻿using RiskierTrafficStops.Engine.FrontendSystems;
 
 namespace RiskierTrafficStops;
 
@@ -25,11 +19,11 @@ public class Main : Plugin
         {
             GameFiber.StartNew(() =>
             {
-                if (!Helper.VerifyDependencies()) return;
+                if (!VerifyDependencies()) return;
 
                 // Setting up INI And checking for updates
                 Normal("Setting up INI File...");
-                Settings.IniFileSetup();
+                IniFileSetup();
                 Normal("Creating config menu menu...");
                 ConfigMenu.CreateMenu();
                 Normal("Adding console commands...");

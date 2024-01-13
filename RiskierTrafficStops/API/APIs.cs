@@ -1,6 +1,4 @@
-﻿using RiskierTrafficStops.Engine.InternalSystems;
-
-namespace RiskierTrafficStops.API;
+﻿namespace RiskierTrafficStops.API;
 
 internal enum RTSEventType
 {
@@ -33,11 +31,11 @@ public class APIs
         {
             case RTSEventType.Start:
                 OnRTSOutcomeStarted?.Invoke();
-                Logger.Normal("OnRTSOutcomeStarted Invoked");
+                Normal("OnRTSOutcomeStarted Invoked");
                 break;
             case RTSEventType.End:
                 OnRTSOutcomeEnded?.Invoke();
-                Logger.Normal("OnRTSOutcomeEnded Invoked");
+                Normal("OnRTSOutcomeEnded Invoked");
                 break;
         }
     }

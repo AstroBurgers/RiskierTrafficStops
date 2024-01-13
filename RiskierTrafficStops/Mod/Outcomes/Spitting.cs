@@ -1,12 +1,4 @@
-﻿using System;
-using System.Threading;
-using LSPD_First_Response.Mod.API;
-using Rage;
-using RiskierTrafficStops.API;
-using RiskierTrafficStops.Engine.InternalSystems;
-using static RiskierTrafficStops.Engine.Helpers.Helper;
-using static RiskierTrafficStops.Engine.InternalSystems.Logger;
-using static RiskierTrafficStops.Engine.Helpers.Extensions;
+﻿using static RiskierTrafficStops.Engine.Helpers.Extensions;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 
@@ -59,7 +51,7 @@ internal class Spitting : Outcome
 
     internal override void StartOutcome()
     {
-        APIs.InvokeEvent(RTSEventType.Start);
+        InvokeEvent(RTSEventType.Start);
 
         GameFiber.WaitWhile(
             () => Suspect.IsAvailable() && MainPlayer.DistanceTo(Suspect) >= 3f && Suspect.IsInAnyVehicle(true),
@@ -72,6 +64,6 @@ internal class Spitting : Outcome
         }
 
         GameFiberHandling.CleanupFibers();
-        APIs.InvokeEvent(RTSEventType.End);
+        InvokeEvent(RTSEventType.End);
     }
 }

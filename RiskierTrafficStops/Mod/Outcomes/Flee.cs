@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using LSPD_First_Response.Mod.API;
-using Rage;
-using RiskierTrafficStops.API;
-using RiskierTrafficStops.Engine.InternalSystems;
-using static RiskierTrafficStops.Engine.Helpers.Helper;
-using static RiskierTrafficStops.Engine.InternalSystems.Logger;
-using static RiskierTrafficStops.API.APIs;
-using static RiskierTrafficStops.Engine.Helpers.Extensions;
+﻿using static RiskierTrafficStops.Engine.Helpers.Extensions;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 
@@ -21,6 +11,8 @@ internal class Flee : Outcome
         LeaveVehicle,
     }
 
+    private static FleeOutcomes[] _allFleeOutcomes = (FleeOutcomes[])Enum.GetValues(typeof(FleeOutcomes));
+    
     public Flee(LHandle handle) : base(handle)
     {
         try
@@ -45,10 +37,7 @@ internal class Flee : Outcome
         Normal("Getting all vehicle occupants");
         var pedsInVehicle = SuspectVehicle.Occupants;
 
-        List<FleeOutcomes> allOutcomes = new()
-            { FleeOutcomes.Flee, FleeOutcomes.BurnOut, FleeOutcomes.LeaveVehicle };
-
-        FleeOutcomes chosenFleeOutcome = allOutcomes[Rndm.Next(allOutcomes.Count)];
+        FleeOutcomes chosenFleeOutcome = _allFleeOutcomes.PickRandom();
 
         switch (chosenFleeOutcome)
         {
@@ -89,10 +78,7 @@ internal class Flee : Outcome
                     }
                 }
 
-                if (Functions.GetCurrentPullover() == null)
-                {
-                    return;
-                }
+                if (Functions.GetCurrentPullover() == null) return;
 
                 PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                 break;

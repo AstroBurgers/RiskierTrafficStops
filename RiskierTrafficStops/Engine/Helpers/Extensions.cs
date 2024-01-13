@@ -1,8 +1,4 @@
-﻿using Rage;
-using RiskierTrafficStops.Engine.InternalSystems;
-using static RiskierTrafficStops.Engine.Helpers.Helper;
-
-namespace RiskierTrafficStops.Engine.Helpers;
+﻿namespace RiskierTrafficStops.Engine.Helpers;
 
 internal static class Extensions
 {
@@ -11,10 +7,7 @@ internal static class Extensions
     /// </summary>
     /// <param name="ped"></param>
     /// <returns></returns>
-    internal static bool IsAvailable(this Ped ped)
-    {
-        return ped.Exists() && ped.IsAlive && ped.Model.IsValid;
-    }
+    internal static bool IsAvailable(this Ped ped) => ped.Exists() && ped.IsAlive && ped.Model.IsValid;
 
     internal static void GiveWeapon(this Ped ped)
     {
@@ -22,7 +15,7 @@ internal static class Extensions
         {
             var weapon = WeaponList[Rndm.Next(WeaponList.Length)];
             ped.Inventory.GiveNewWeapon(weapon, 100, true);
-            Logger.Normal($"Giving {ped.Model.Name} {weapon}");
+            Normal($"Giving {ped.Model.Name} {weapon}");
         }
         else if (ped.IsAvailable() && ped.Inventory.HasLoadedWeapon)
         {
@@ -38,7 +31,7 @@ internal static class Extensions
         {
             var weapon = PistolList[Rndm.Next(PistolList.Length)];
             ped.Inventory.GiveNewWeapon(weapon, 100, true);
-            Logger.Normal($"Giving {ped.Model.Name} {weapon}");
+            Normal($"Giving {ped.Model.Name} {weapon}");
         }
         else if (ped.IsAvailable() && ped.Inventory.HasLoadedWeapon)
         {
@@ -47,14 +40,18 @@ internal static class Extensions
             ped.Inventory.EquippedWeapon = weapon.ToString();
         }
     }
-    
+
     /// <summary>
     /// Checks if a ped both exists and is alive
     /// </summary>
     /// <param name="veh"></param>
     /// <returns></returns>
-    internal static bool IsAvailable(this Vehicle veh)
-    {
-        return veh.Exists() && veh.IsValid() && veh.Model.IsValid;
-    }
+    internal static bool IsAvailable(this Vehicle veh) => veh.Exists() && veh.IsValid() && veh.Model.IsValid;
+    
+    // Thanks again, Khori
+    public static T PickRandom<T>(this IEnumerable<T> source) => source.Any() ? source.PickRandom(1).Single() : default;
+
+    public static IEnumerable<T> PickRandom<T>(this IEnumerable<T> source, int count) => source.Shuffle().Take(count);
+
+    public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source) => source.OrderBy(_ => Guid.NewGuid());
 }

@@ -1,12 +1,4 @@
-﻿using System;
-using System.Threading;
-using LSPD_First_Response.Mod.API;
-using Rage;
-using RiskierTrafficStops.API;
-using RiskierTrafficStops.Engine.InternalSystems;
-using static RiskierTrafficStops.Engine.Helpers.Helper;
-using static RiskierTrafficStops.Engine.InternalSystems.Logger;
-using static RiskierTrafficStops.Engine.Helpers.Extensions;
+﻿using static RiskierTrafficStops.Engine.Helpers.Extensions;
 
 // ReSharper disable HeapView.BoxingAllocation
 
@@ -15,6 +7,12 @@ namespace RiskierTrafficStops.Mod.Outcomes;
 internal class GetOutAndShoot : Outcome
 {
     private static GetOutAndShootOutcomes _chosenOutcome;
+
+    private static GetOutAndShootOutcomes[] _allGoasOutcomes =
+        (GetOutAndShootOutcomes[])Enum.GetValues(typeof(GetOutAndShootOutcomes));
+    
+    private static Ped[] PedsInVehicle => SuspectVehicle.Occupants;
+    
     private enum GetOutAndShootOutcomes
     {
         Flee,
@@ -42,15 +40,15 @@ internal class GetOutAndShoot : Outcome
 
     internal override void StartOutcome()
     {
-        APIs.InvokeEvent(RTSEventType.Start);
+        InvokeEvent(RTSEventType.Start);
 
         Normal("Adding all suspect in the vehicle to a list");
-        var pedsInVehicle = SuspectVehicle.Occupants;
-        if (pedsInVehicle.Length < 1) throw new ArgumentNullException(nameof(pedsInVehicle));
+        
+        if (PedsInVehicle.Length < 1) throw new ArgumentNullException(nameof(PedsInVehicle));
 
         SetRelationshipGroups(SuspectRelateGroup);
 
-        foreach (Ped ped in pedsInVehicle)
+        foreach (Ped ped in PedsInVehicle)
         {
             ped.GiveWeapon();
             GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => GetPedOutOfVehicle(ped)));
@@ -59,8 +57,7 @@ internal class GetOutAndShoot : Outcome
         GameFiber.Wait(7010);
 
         Normal("Choosing outcome from GetOutAndShootOutcomes");
-        var scenarioList = (GetOutAndShootOutcomes[])Enum.GetValues(typeof(GetOutAndShootOutcomes));
-        _chosenOutcome = scenarioList[Rndm.Next(scenarioList.Length)];
+        _chosenOutcome = _allGoasOutcomes.PickRandom();
         Normal($"Chosen Outcome: {_chosenOutcome}");
 
         switch (_chosenOutcome)
@@ -72,10 +69,10 @@ internal class GetOutAndShoot : Outcome
                     return;
                 }
 
-                PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
+                PursuitLHandle = SetupPursuitWithList(true, PedsInVehicle);
                 break;
             case GetOutAndShootOutcomes.KeepShooting:
-                foreach (var i in pedsInVehicle)
+                foreach (var i in PedsInVehicle)
                 {
                     if (i.IsAvailable())
                     {
@@ -89,7 +86,7 @@ internal class GetOutAndShoot : Outcome
                 throw new ArgumentOutOfRangeException();
         }
 
-        APIs.InvokeEvent(RTSEventType.End);
+        InvokeEvent(RTSEventType.End);
     }
 
     private static void GetPedOutOfVehicle(Ped ped)

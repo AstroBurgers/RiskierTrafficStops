@@ -1,10 +1,4 @@
-﻿using LSPD_First_Response.Mod.API;
-using Rage;
-using RiskierTrafficStops.API;
-using RiskierTrafficStops.Engine.Helpers;
-using RiskierTrafficStops.Engine.InternalSystems;
-
-namespace RiskierTrafficStops.Mod;
+﻿namespace RiskierTrafficStops.Mod;
 
 internal abstract class Outcome
 {
@@ -18,22 +12,22 @@ internal abstract class Outcome
 
     internal static bool MeetsRequirements(LHandle handle)
     {
-        if (!Helper.GetSuspectAndSuspectVehicle(handle, out Suspect, out SuspectVehicle) || Functions.GetCurrentPullover() == null)
+        if (!GetSuspectAndSuspectVehicle(handle, out Suspect, out SuspectVehicle) || Functions.GetCurrentPullover() == null)
         {
-            Logger.Normal("Failed to get suspect and vehicle, cleaning up RTS event...");
-            Helper.CleanupEvent();
+            Normal("Failed to get suspect and vehicle, cleaning up RTS event...");
+            CleanupEvent();
             return false;
         }
 
         return true;
     }
     
-    internal virtual void CleanupOutcome()
+    internal static void CleanupOutcome()
     {
-        Logger.Normal("Cleaning up RTS Outcome...");
+        Normal("Cleaning up RTS Outcome...");
         PulloverEventHandler.HasEventHappened = false;
         GameFiberHandling.CleanupFibers();
-        APIs.InvokeEvent(RTSEventType.End);
+        InvokeEvent(RTSEventType.End);
     }
     
     internal Outcome(LHandle handle)

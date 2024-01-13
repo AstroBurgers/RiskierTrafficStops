@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using LSPD_First_Response.Mod.API;
-using Rage;
-using RiskierTrafficStops.API;
-using RiskierTrafficStops.Engine.InternalSystems;
-using static RiskierTrafficStops.Engine.InternalSystems.Logger;
+﻿using System.Security.Cryptography;
 
 namespace RiskierTrafficStops.Engine.Helpers;
 
@@ -13,7 +6,8 @@ internal static class Helper
 {
     internal static Ped MainPlayer => Game.LocalPlayer.Character;
     internal static readonly Random Rndm = new(DateTime.Now.Millisecond);
-
+    internal static RNGCryptoServiceProvider ImprovedRandom = new();
+    
     private static string _missingFiles = string.Empty;
         
     internal static bool VerifyDependencies()
@@ -62,10 +56,7 @@ internal static class Helper
     {
         try
         {
-            static float GenerateRandomFloat()
-            {
-                return (float)Math.Round((float)(Rndm.NextDouble() * (2.0 - 0.1) + 0.1), 1);
-            }
+            static float GenerateRandomFloat() => (float)Math.Round((float)(Rndm.NextDouble() * (2.0 - 0.1) + 0.1), 1);
                 
             PedPursuitAttributes attributes = Functions.GetPedPursuitAttributes(suspect);
                 
@@ -90,31 +81,31 @@ internal static class Helper
                 
             attributes.AverageFightTime = Rndm.Next(400, 2000);
                 
-            Logger.Normal($"MaxDrivingSpeed: {attributes.MaxDrivingSpeed}");
-            Logger.Normal($"MinDrivingSpeed: {attributes.MinDrivingSpeed}");
+            Normal($"MaxDrivingSpeed: {attributes.MaxDrivingSpeed}");
+            Normal($"MinDrivingSpeed: {attributes.MinDrivingSpeed}");
                 
-            Logger.Normal($"HandlingAbility: {attributes.HandlingAbility}");
-            Logger.Normal($"HandlingAbilityTurns: {attributes.HandlingAbilityTurns}");
+            Normal($"HandlingAbility: {attributes.HandlingAbility}");
+            Normal($"HandlingAbilityTurns: {attributes.HandlingAbilityTurns}");
                 
-            Logger.Normal($"BurstTireSurrenderMult: {attributes.BurstTireSurrenderMult}");
-            Logger.Normal($"SurrenderChanceTireBurst: {attributes.SurrenderChanceTireBurst}");
-            Logger.Normal($"SurrenderChanceTireBurstAndCrashed: {attributes.SurrenderChanceTireBurstAndCrashed}");
+            Normal($"BurstTireSurrenderMult: {attributes.BurstTireSurrenderMult}");
+            Normal($"SurrenderChanceTireBurst: {attributes.SurrenderChanceTireBurst}");
+            Normal($"SurrenderChanceTireBurstAndCrashed: {attributes.SurrenderChanceTireBurstAndCrashed}");
                 
-            Logger.Normal($"SurrenderChanceCarBadlyDamaged: {attributes.SurrenderChanceCarBadlyDamaged}");
+            Normal($"SurrenderChanceCarBadlyDamaged: {attributes.SurrenderChanceCarBadlyDamaged}");
                 
-            Logger.Normal($"SurrenderChancePitted: {attributes.SurrenderChancePitted}");
-            Logger.Normal($"SurrenderChancePittedAndCrashed: {attributes.SurrenderChancePittedAndCrashed}");
-            Logger.Normal($"SurrenderChancePittedAndSlowedDown: {attributes.SurrenderChancePittedAndSlowedDown}");
+            Normal($"SurrenderChancePitted: {attributes.SurrenderChancePitted}");
+            Normal($"SurrenderChancePittedAndCrashed: {attributes.SurrenderChancePittedAndCrashed}");
+            Normal($"SurrenderChancePittedAndSlowedDown: {attributes.SurrenderChancePittedAndSlowedDown}");
                 
-            Logger.Normal($"AverageBurstTireSurrenderTime: {attributes.AverageBurstTireSurrenderTime}");
-            Logger.Normal($"AverageSurrenderTime: {attributes.AverageSurrenderTime}");
+            Normal($"AverageBurstTireSurrenderTime: {attributes.AverageBurstTireSurrenderTime}");
+            Normal($"AverageSurrenderTime: {attributes.AverageSurrenderTime}");
                 
-            Logger.Normal($"AverageFightTime: {attributes.AverageFightTime}");
+            Normal($"AverageFightTime: {attributes.AverageFightTime}");
         }
         catch (Exception e)
         {
-            if (e is System.Threading.ThreadAbortException) return;
-            Logger.Error(e, nameof(RandomizePursuitAttributes));
+            if (e is ThreadAbortException) return;
+            Error(e, nameof(RandomizePursuitAttributes));
         }
     }
         
@@ -234,21 +225,29 @@ internal static class Helper
         Normal("Cleaning up RTS Outcome...");
         PulloverEventHandler.HasEventHappened = false;
         GameFiberHandling.CleanupFibers();
-        APIs.InvokeEvent(RTSEventType.End);
+        InvokeEvent(RTSEventType.End);
     }
 
     /// <summary>
     /// Converts MPH to meters per second which is what all tasks use, returns meters per second
     /// </summary>
-    internal static float MphToMps(float speed)
-    {
-        return MathHelper.ConvertMilesPerHourToMetersPerSecond(speed);
-    }
+    internal static float MphToMps(float speed) => MathHelper.ConvertMilesPerHourToMetersPerSecond(speed);
 
+    internal static long GenerateChance()
+    {
+        byte[] randomBytes = new byte[8]; // Using 8 bytes for more randomization ig
+        ImprovedRandom.GetBytes(randomBytes);
+ 
+        long randomNumber = BitConverter.ToInt64(randomBytes, 0) & 0x7FFFFFFFFFFFFFFF; // Convert to positive integer
+
+        var convertedChance = randomNumber % 100;
+        
+        return convertedChance;
+    }
+    
     /// <summary>
     /// List of (Almost) every weapon
     /// </summary>
-
     internal static readonly string[] WeaponList = {
         "weapon_pistol",
         "weapon_pistol_mk2",
@@ -323,7 +322,7 @@ internal static class Helper
     /// </summary>
     internal static void RevEngine(Ped driver, Vehicle suspectVehicle, int[] timeBetweenRevs, int[] timeForRevsToLast, int totalNumberOfRevs)
     {
-        Logger.Normal("Starting Rev Engine method");
+        Normal("Starting Rev Engine method");
         for (var i = 0; i < totalNumberOfRevs; i++)
         {
             GameFiber.Yield();
@@ -344,7 +343,6 @@ internal static class Helper
     /// <summary>
     /// Array of Used curse voice-lines
     /// </summary>
-
     internal static readonly string[] VoiceLines = {
         "FIGHT",
         "GENERIC_INSULT_HIGH",

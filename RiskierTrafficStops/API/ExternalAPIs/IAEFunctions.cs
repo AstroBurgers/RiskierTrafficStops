@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using LSPD_First_Response.Mod.API;
-using Rage;
-using RiskierTrafficStops.Engine.InternalSystems;
+﻿using System.IO;
 
 namespace RiskierTrafficStops.API.ExternalAPIs;
 
@@ -21,12 +17,12 @@ internal static class IaeFunctions
         }
         catch (FileNotFoundException)
         {
-            Logger.Normal("Immersive Ambient Events cannot be found, user might not have it installed");
+            Normal("Immersive Ambient Events cannot be found, user might not have it installed");
             return false;
         }
         catch (Exception)
         {
-            Logger.Normal("Immersive Ambient Events cannot be found, user might not have it installed");
+            Normal("Immersive Ambient Events cannot be found, user might not have it installed");
             return false;
         }
     }
@@ -44,12 +40,12 @@ internal static class IaeFunctions
         }
         catch (FileNotFoundException)
         {
-            Logger.Normal("Immersive Ambient Events cannot be found, user might not have it installed");
+            Normal("Immersive Ambient Events cannot be found, user might not have it installed");
             return false;
         }
         catch (Exception)
         {
-            Logger.Normal("Immersive Ambient Events cannot be found, user might not have it installed");
+            Normal("Immersive Ambient Events cannot be found, user might not have it installed");
             return false;
         }
     }
@@ -60,19 +56,19 @@ internal static class IaeFunctions
         {
             if (ImmersiveAmbientEvents.API.EventAPI.CheckIfEventIsRunning(ImmersiveAmbientEvents.API.EventAPI.Events.StreetRacing))
             {
-                Logger.Normal("Pullover is a part of an IAE street racing event, aborting RTS events...");
+                Normal("Pullover is a part of an IAE street racing event, aborting RTS events...");
                 return false;
             }
             return true;
         }
         catch (FileNotFoundException)
         {
-            Logger.Normal("Immersive Ambient Events cannot be found, user might not have it installed");
+            Normal("Immersive Ambient Events cannot be found, user might not have it installed");
             return false;
         }
         catch (Exception)
         {
-            Logger.Normal("Immersive Ambient Events cannot be found, user might not have it installed");
+            Normal("Immersive Ambient Events cannot be found, user might not have it installed");
             return false;
         }
     }
@@ -86,7 +82,7 @@ internal static class IaeFunctions
     {
         try
         {
-            Logger.Normal("Performing IAE compatibility check...");
+            Normal("Performing IAE compatibility check...");
             var ped = Functions.GetPulloverSuspect(handle);
             if (IsPedUsedByAmbientEvent(ped))
             {
@@ -94,19 +90,19 @@ internal static class IaeFunctions
             }
             else if (IsPedUsedByBoloEvent(ped))
             {
-                Logger.Normal("Pullover is a part of an IAE BOLO event, aborting RTS events...");
+                Normal("Pullover is a part of an IAE BOLO event, aborting RTS events...");
                 return false;
             }
             return true;
         }
         catch (FileNotFoundException)
         {
-            Logger.Normal("Immersive Ambient Events cannot be found, user might not have it installed");
+            Normal("Immersive Ambient Events cannot be found, user might not have it installed");
             return true;
         }
         catch (Exception ex)
         {
-            Logger.Normal("Immersive Ambient Events cannot be found, user might not have it installed");
+            Normal("Immersive Ambient Events cannot be found, user might not have it installed");
             return true;
         }
     }

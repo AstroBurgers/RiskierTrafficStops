@@ -1,13 +1,4 @@
-﻿using System;
-using System.Threading;
-using LSPD_First_Response.Mod.API;
-using Rage;
-using Rage.Native;
-using RiskierTrafficStops.API;
-using RiskierTrafficStops.Engine.InternalSystems;
-using static RiskierTrafficStops.Engine.Helpers.Helper;
-using static RiskierTrafficStops.Engine.InternalSystems.Logger;
-using static RiskierTrafficStops.Engine.Helpers.Extensions;
+﻿using static RiskierTrafficStops.Engine.Helpers.Extensions;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 
@@ -32,23 +23,23 @@ internal class ShootAndFlee : Outcome
 
     internal override void StartOutcome()
     {
-        APIs.InvokeEvent(RTSEventType.Start);
+        InvokeEvent(RTSEventType.Start);
 
-        var outcome = Rndm.Next(1, 101);
-        switch (outcome)
+        long chance = GenerateChance();
+        switch (chance)
         {
-            case > 50:
+            case <= 60:
                 Normal("Starting all suspects outcome");
                 AllSuspects(SuspectVehicle.Occupants);
                 break;
-            case <= 50:
+            default:
                 Normal("Starting driver only outcome");
                 DriverOnly();
                 break;
         }
 
         GameFiberHandling.CleanupFibers();
-        APIs.InvokeEvent(RTSEventType.End);
+        InvokeEvent(RTSEventType.End);
     }
 
     private static void AllSuspects(Ped[] peds)

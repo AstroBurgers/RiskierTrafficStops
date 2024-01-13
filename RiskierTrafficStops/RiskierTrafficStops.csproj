@@ -115,6 +115,7 @@
     <Compile Include="Engine\InternalSystems\PulloverEventHandler.cs" />
     <Compile Include="Engine\InternalSystems\Settings.cs" />
     <Compile Include="Engine\InternalSystems\VersionChecker.cs" />
+    <Compile Include="GlobalUsings.cs" />
     <Compile Include="Mod\Outcome.cs" />
     <Compile Include="Mod\Outcomes\Flee.cs" />
     <Compile Include="Mod\Outcomes\GetOutAndShoot.cs" />
