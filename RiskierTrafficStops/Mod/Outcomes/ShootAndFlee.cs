@@ -1,4 +1,6 @@
-﻿using static RiskierTrafficStops.Engine.Helpers.Extensions;
+﻿using RiskierTrafficStops.Engine.Helpers.Extensions;
+using static RiskierTrafficStops.Engine.Helpers.MathHelper;
+using static RiskierTrafficStops.Engine.Helpers.PursuitHelper;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 
@@ -17,7 +19,7 @@ internal class ShootAndFlee : Outcome
         {
             if (e is ThreadAbortException) return;
             Error(e, nameof(StartOutcome));
-            CleanupOutcome();
+            CleanupOutcome(true);
         }
     }
 
@@ -57,7 +59,7 @@ internal class ShootAndFlee : Outcome
 
         if ((Functions.GetCurrentPullover() == null) || !MainPlayer.IsAvailable())
         {
-            CleanupEvent();
+            CleanupOutcome(false);
             return;
         }
 
@@ -78,7 +80,7 @@ internal class ShootAndFlee : Outcome
 
         if (Functions.GetCurrentPullover() == null || !MainPlayer.IsAvailable())
         {
-            CleanupEvent();
+            CleanupOutcome(false);
             return;
         }
 

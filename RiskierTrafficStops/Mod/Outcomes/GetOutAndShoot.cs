@@ -1,4 +1,6 @@
-﻿using static RiskierTrafficStops.Engine.Helpers.Extensions;
+﻿using RiskierTrafficStops.Engine.Helpers.Extensions;
+using static RiskierTrafficStops.Engine.Helpers.PursuitHelper;
+using static RiskierTrafficStops.Engine.Helpers.Extensions.PedExtensions;
 
 // ReSharper disable HeapView.BoxingAllocation
 
@@ -34,7 +36,7 @@ internal class GetOutAndShoot : Outcome
         {
             if (e is ThreadAbortException) return;
             Error(e, nameof(StartOutcome));
-            CleanupOutcome();
+            CleanupOutcome(true);
         }
     }
 
@@ -65,7 +67,7 @@ internal class GetOutAndShoot : Outcome
             case GetOutAndShootOutcomes.Flee:
                 if (Functions.GetCurrentPullover() == null)
                 {
-                    CleanupEvent();
+                    CleanupOutcome(false);
                     return;
                 }
 

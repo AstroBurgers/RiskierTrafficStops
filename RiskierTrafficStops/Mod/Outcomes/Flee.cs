@@ -1,4 +1,5 @@
-﻿using static RiskierTrafficStops.Engine.Helpers.Extensions;
+﻿using RiskierTrafficStops.Engine.Helpers.Extensions;
+using static RiskierTrafficStops.Engine.Helpers.PursuitHelper;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 
@@ -26,7 +27,7 @@ internal class Flee : Outcome
         {
             if (e is ThreadAbortException) return;
             Error(e, nameof(StartOutcome));
-            CleanupOutcome();
+            CleanupOutcome(true);
         }
     }
 
@@ -46,7 +47,7 @@ internal class Flee : Outcome
 
                 if (Functions.GetCurrentPullover() == null)
                 {
-                    CleanupEvent();
+                    CleanupOutcome(false);
                     return;
                 }
 
@@ -63,7 +64,7 @@ internal class Flee : Outcome
 
                 if (Functions.GetCurrentPullover() == null)
                 {
-                    CleanupEvent();
+                    CleanupOutcome(false);
                     return;
                 }
 

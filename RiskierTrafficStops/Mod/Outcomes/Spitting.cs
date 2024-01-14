@@ -1,4 +1,6 @@
-﻿using static RiskierTrafficStops.Engine.Helpers.Extensions;
+﻿using RiskierTrafficStops.Engine.Helpers.Extensions;
+using static RiskierTrafficStops.Engine.Data.Arrays;
+using static RiskierTrafficStops.Engine.Helpers.MathHelper;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 
@@ -17,7 +19,7 @@ internal class Spitting : Outcome
         {
             if (e is ThreadAbortException) return;
             Error(e, nameof(StartOutcome));
-            CleanupOutcome();
+            CleanupOutcome(true);
         }
     }
 
@@ -59,8 +61,8 @@ internal class Spitting : Outcome
         if (Functions.IsPlayerPerformingPullover() && Suspect.IsAvailable() &&
             MainPlayer.DistanceTo(Suspect) <= 2.5f && Suspect.IsInAnyVehicle(true))
         {
-            Game.DisplaySubtitle(SpittingText[Rndm.Next(SpittingText.Length)], 6000);
-            Suspect.PlayAmbientSpeech(VoiceLines[Rndm.Next(VoiceLines.Length)]);
+            Game.DisplaySubtitle(SpittingText[Rndm.Next(SpittingText.Length+1)], 6000);
+            Suspect.PlayAmbientSpeech(VoiceLines[Rndm.Next(VoiceLines.Length+1)]);
         }
 
         GameFiberHandling.CleanupFibers();

@@ -1,4 +1,5 @@
-﻿using static RiskierTrafficStops.Engine.Helpers.Extensions;
+﻿using RiskierTrafficStops.Engine.Helpers.Extensions;
+using static RiskierTrafficStops.Engine.Helpers.PursuitHelper;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 
@@ -17,7 +18,7 @@ internal class Ramming : Outcome
         {
             if (e is ThreadAbortException) return;
             Error(e, nameof(StartOutcome));
-            CleanupEvent();
+            CleanupOutcome(true);
         }
     }
 
@@ -34,7 +35,7 @@ internal class Ramming : Outcome
 
         if (Functions.GetCurrentPullover() == null)
         {
-            CleanupEvent();
+            CleanupOutcome(false);
             return;
         }
 

@@ -1,4 +1,6 @@
-﻿using static RiskierTrafficStops.Engine.Helpers.Extensions;
+﻿using RiskierTrafficStops.Engine.Helpers.Extensions;
+using static RiskierTrafficStops.Engine.Data.Arrays;
+using static RiskierTrafficStops.Engine.Helpers.MathHelper;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 
@@ -17,7 +19,7 @@ internal class YellInCar : Outcome
         {
             if (e is ThreadAbortException) return;
             Error(e, nameof(StartOutcome));
-            CleanupOutcome();
+            CleanupOutcome(true);
         }
     }
 

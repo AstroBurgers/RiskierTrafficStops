@@ -100,7 +100,7 @@ internal static class IaeFunctions
             Normal("Immersive Ambient Events cannot be found, user might not have it installed");
             return true;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             Normal("Immersive Ambient Events cannot be found, user might not have it installed");
             return true;

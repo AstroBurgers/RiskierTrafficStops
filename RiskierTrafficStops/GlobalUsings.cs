@@ -12,6 +12,6 @@ global using RiskierTrafficStops.API;
 global using RiskierTrafficStops.Engine.Helpers;
 global using RiskierTrafficStops.Engine.InternalSystems;
 global using static RiskierTrafficStops.API.APIs;
-global using static RiskierTrafficStops.Engine.Helpers.Helper;
+global using static RiskierTrafficStops.Engine.Helper;
 global using static RiskierTrafficStops.Engine.InternalSystems.Logger;
 global using static RiskierTrafficStops.Engine.InternalSystems.Settings;

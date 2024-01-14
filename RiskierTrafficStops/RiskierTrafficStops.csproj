@@ -105,10 +105,17 @@
   <ItemGroup>
     <Compile Include="API\APIs.cs" />
     <Compile Include="API\ExternalAPIs\IAEFunctions.cs" />
+    <Compile Include="Engine\Data\Arrays.cs" />
     <Compile Include="Engine\FrontendSystems\ConfigMenu.cs" />
     <Compile Include="Engine\FrontendSystems\ConsoleCommands.cs" />
-    <Compile Include="Engine\Helpers\Helper.cs" />
-    <Compile Include="Engine\Helpers\Extensions.cs" />
+    <Compile Include="Engine\Helper.cs" />
+    <Compile Include="Engine\Helpers\DependencyHelper.cs" />
+    <Compile Include="Engine\Helpers\Extensions\EnumExtensions.cs" />
+    <Compile Include="Engine\Helpers\Extensions\PedExtensions.cs" />
+    <Compile Include="Engine\Helpers\Extensions\VehicleExtensions.cs" />
+    <Compile Include="Engine\Helpers\NativeFunctions.cs" />
+    <Compile Include="Engine\Helpers\MathHelper.cs" />
+    <Compile Include="Engine\Helpers\PursuitHelper.cs" />
     <Compile Include="Engine\InternalSystems\DecisionTree.cs" />
     <Compile Include="Engine\InternalSystems\GameFiberHandling.cs" />
     <Compile Include="Engine\InternalSystems\Logger.cs" />

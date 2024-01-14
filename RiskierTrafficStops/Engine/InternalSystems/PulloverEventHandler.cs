@@ -1,5 +1,5 @@
 ﻿using RiskierTrafficStops.API.ExternalAPIs;
-using System.Security.Cryptography;
+using static RiskierTrafficStops.Engine.Helpers.MathHelper;
 
 namespace RiskierTrafficStops.Engine.InternalSystems;
 
@@ -7,9 +7,12 @@ internal static class PulloverEventHandler
 {
     private static Type _chosenOutcome;
     internal static bool HasEventHappened;
-    private static Type? _lastOutcome;
     
-    internal static List<Type> enabledOutcomes = new ();
+    #nullable enable
+    private static Type? _lastOutcome;
+    #nullable disable
+    
+    internal static List<Type> EnabledOutcomes = new ();
     
     internal static void SubscribeToEvents()
     {
@@ -81,7 +84,7 @@ internal static class PulloverEventHandler
                 Normal($"DisableRTSForCurrentStop: {DisableRTSForCurrentStop}");
                 
                 Normal("Choosing Outcome");
-                _chosenOutcome = enabledOutcomes.Count <= 1 ? enabledOutcomes[Rndm.Next(enabledOutcomes.Count)] : enabledOutcomes[Rndm.Next(enabledOutcomes.Where(i => i != _lastOutcome).ToList().Count)];
+                _chosenOutcome = EnabledOutcomes.Count <= 1 ? EnabledOutcomes[Rndm.Next(EnabledOutcomes.Count)] : EnabledOutcomes[Rndm.Next(EnabledOutcomes.Where(i => i != _lastOutcome).ToList().Count)];
                 Normal($"Chosen Outcome: {_chosenOutcome}");
                 
                 _lastOutcome = _chosenOutcome;

@@ -1,4 +1,5 @@
 ﻿using RiskierTrafficStops.Engine.FrontendSystems;
+using static RiskierTrafficStops.Engine.Helpers.DependencyHelper;
 
 namespace RiskierTrafficStops;
 

@@ -65,10 +65,10 @@ internal static class Settings
         AllOutcomes.Add((ShootAndFleeEnabled, typeof(ShootAndFlee)));
         AllOutcomes.Add((SpittingEnabled, typeof(Spitting)));
 
-        PulloverEventHandler.enabledOutcomes = AllOutcomes.Where(i => i.enabled).Select(i => i.outcome).ToList();
+        PulloverEventHandler.EnabledOutcomes = AllOutcomes.Where(i => i.enabled).Select(i => i.outcome).ToList();
         
         Normal("----Enabled Outcomes----");
-        PulloverEventHandler.enabledOutcomes.ForEach(i => Normal(
+        PulloverEventHandler.EnabledOutcomes.ForEach(i => Normal(
             i.ToString()
                 .Substring(
                     i.ToString()
