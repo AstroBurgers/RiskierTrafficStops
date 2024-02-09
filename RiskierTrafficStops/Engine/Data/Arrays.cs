@@ -27,7 +27,7 @@ internal static class Arrays
         "~y~Suspect: ~s~*spits at you and hits shoe* Your a bitch you know that?",
         "~y~Suspect: ~s~*spits at you and hits shoe* Screw you pig",
         "~y~Suspect: ~s~*spits at you and hits shoe* What are you gonna do now, huh?",
-        "~y~Suspect: ~s~*spits at you and hits shoe* Whatcha gonna do you little bitch?",
+        "~y~Suspect: ~s~*spits at you and hits shoe* Watcha gonna do you little bitch?",
         "~y~Suspect: ~s~*spits at you and hits shoe* Where's your little squad of bitches?",
         "~y~Suspect: ~s~*spits at you and hits gun* Oh look the bitch patrol!",
         "~y~Suspect: ~s~*spits at you and hits taser* Oh look the bitch patrol!",

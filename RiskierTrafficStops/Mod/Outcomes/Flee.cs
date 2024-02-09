@@ -12,7 +12,7 @@ internal class Flee : Outcome
         LeaveVehicle,
     }
 
-    private static FleeOutcomes[] _allFleeOutcomes = (FleeOutcomes[])Enum.GetValues(typeof(FleeOutcomes));
+    private static readonly FleeOutcomes[] AllFleeOutcomes = (FleeOutcomes[])Enum.GetValues(typeof(FleeOutcomes));
     
     public Flee(LHandle handle) : base(handle)
     {
@@ -46,7 +46,7 @@ internal class Flee : Outcome
             }
         }
         
-        FleeOutcomes chosenFleeOutcome = _allFleeOutcomes.PickRandom();
+        FleeOutcomes chosenFleeOutcome = AllFleeOutcomes.PickRandom();
 
         switch (chosenFleeOutcome)
         {

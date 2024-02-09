@@ -7,7 +7,7 @@ namespace RiskierTrafficStops.Mod.Outcomes;
 
 internal class Yelling : Outcome
 {
-    private static YellingScenarioOutcomes[] _allYellingOutcomes =
+    private static readonly YellingScenarioOutcomes[] AllYellingOutcomes =
         (YellingScenarioOutcomes[])Enum.GetValues(typeof(YellingScenarioOutcomes));
     
     public Yelling(LHandle handle) : base(handle)
@@ -60,7 +60,7 @@ internal class Yelling : Outcome
         }
 
         Normal("Choosing outcome from possible Yelling outcomes");
-        _chosenOutcome = _allYellingOutcomes[Rndm.Next(_allYellingOutcomes.Length)];
+        _chosenOutcome = AllYellingOutcomes[Rndm.Next(AllYellingOutcomes.Length)];
         Normal($"Chosen Outcome: {_chosenOutcome}");
 
         switch (_chosenOutcome)
