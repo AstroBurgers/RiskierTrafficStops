@@ -61,6 +61,11 @@ public class Main : Plugin
             if (VersionChecker.UpdateThread.IsAlive)
             {
                 Normal("Update thread was still running, shutting down...");
+                Game.DisplayNotification("new_editor",
+                    "warningtriangle",
+                    "Riskier Traffic Stops",
+                    "Version Checker",
+                    $"Update thread was still running!\nPlease wait 10s before going back on duty!\nIf you do not wait 10s you are risking a crash, you have been warned!");
                 VersionChecker.UpdateThread.Abort();
             }
 
