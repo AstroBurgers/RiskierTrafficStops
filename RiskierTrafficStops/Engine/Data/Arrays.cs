@@ -2,6 +2,28 @@
 
 internal static class Arrays
 {
+    internal static readonly string[] PluginLoadText =
+    {
+        "Watch your back out there, Officer!",
+        "Time for chicago simulator...",
+        "IS THAT A GUN!?",
+        "Make sure your ready to draw at all times, Officer.",
+        "Hope you don't get shot.",
+        "POCKET FENTANYL!",
+        "Thanks for installing!",
+        "RiskierTrafficStops cause your risking a crash."
+    };
+
+    internal static readonly string[] PluginUnloadText =
+    {
+        "Let me guess, you crashed",
+        "Is that you Echooo?",
+        "Is that you Marcel?",
+        "Hope you had a good patrol!",
+        "Looks like you weren't shot at.",
+        "Good policing, Officer!"
+    };
+    
     /// <summary>
     /// Text used in the spitting outcome
     /// </summary>

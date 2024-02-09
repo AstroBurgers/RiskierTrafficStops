@@ -1,4 +1,6 @@
-﻿using RiskierTrafficStops.Engine.FrontendSystems;
+﻿using RiskierTrafficStops.Engine.Data;
+using RiskierTrafficStops.Engine.FrontendSystems;
+using RiskierTrafficStops.Engine.Helpers.Extensions;
 using static RiskierTrafficStops.Engine.Helpers.DependencyHelper;
 
 namespace RiskierTrafficStops;
@@ -21,7 +23,6 @@ public class Main : Plugin
             GameFiber.StartNew(() =>
             {
                 if (!VerifyDependencies()) return;
-
                 // Setting up INI And checking for updates
                 Normal("Setting up INI File...");
                 IniFileSetup();
@@ -33,8 +34,11 @@ public class Main : Plugin
                 VersionChecker.IsUpdateAvailable();
                     
                 // Displaying startup Notification
-                Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro",
-                    "Watch your back out there officer!");
+                Game.DisplayNotification("3dtextures",
+                    "mpgroundlogo_cops",
+                    "Riskier Traffic Stops",
+                    "~b~By Astro",
+                    $"{Arrays.PluginLoadText.PickRandom()}");
                     
                 //Subscribes to events
                 PulloverEventHandler.SubscribeToEvents();
@@ -49,8 +53,11 @@ public class Main : Plugin
     {
         try
         {
-            Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro",
-                "Did you crash or are you a dev?");
+            Game.DisplayNotification("3dtextures",
+                "mpgroundlogo_cops",
+                "Riskier Traffic Stops",
+                "~b~By Astro",
+                $"{Arrays.PluginUnloadText.PickRandom()}");
             //Unsubscribes from events
             PulloverEventHandler.UnsubscribeFromEvents();
             if (VersionChecker.UpdateThread.IsAlive)
