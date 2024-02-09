@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using LSPD_First_Response.Mod.API;
-using Rage;
-using RiskierTrafficStops.API.ExternalAPIs;
-using static RiskierTrafficStops.Engine.Helpers.Helper;
-using static RiskierTrafficStops.Engine.InternalSystems.Logger;
-using System.Security.Cryptography;
+﻿using RiskierTrafficStops.API.ExternalAPIs;
 
 namespace RiskierTrafficStops.Engine.InternalSystems;
 
@@ -15,10 +6,12 @@ internal static class PulloverEventHandler
 {
     private static Type _chosenOutcome;
     internal static bool HasEventHappened;
-    private static Type? _lastOutcome;
-    private static RNGCryptoServiceProvider _outcomeRng = new RNGCryptoServiceProvider();
     
-    internal static List<Type> enabledOutcomes = new ();
+    #nullable enable
+    private static Type? _lastOutcome;
+    #nullable disable
+    
+    internal static List<Type> EnabledOutcomes = new ();
     
     internal static void SubscribeToEvents()
     {
@@ -49,7 +42,7 @@ internal static class PulloverEventHandler
     {
         GameFiber.StartNew(() =>
         {
-            if (!IaeFunctions.IaeCompatibilityCheck(handle) || Functions.IsCalloutRunning() || API.APIs.DisableRTSForCurrentStop) return;
+            if (!IaeFunctions.IaeCompatibilityCheck(handle) || Functions.IsCalloutRunning() || DisableRTSForCurrentStop) return;
 
             GameFiber.WaitWhile(() => !MainPlayer.LastVehicle.IsSirenOn && Functions.IsPlayerPerformingPullover());
 
@@ -64,17 +57,17 @@ internal static class PulloverEventHandler
     private static void Events_OnPulloverEnded(LHandle pullover, bool normalEnding)
     {
         HasEventHappened = false;
-        API.APIs.DisableRTSForCurrentStop = false;
+        DisableRTSForCurrentStop = false;
     }
 
     private static void Events_OnPulloverDriverStopped(LHandle handle)
     {
-        if (!HasEventHappened && IaeFunctions.IaeCompatibilityCheck(handle) && !API.APIs.DisableRTSForCurrentStop) { GameFiber.StartNew(() => ChooseOutcome(handle)); }
+        if (!HasEventHappened && IaeFunctions.IaeCompatibilityCheck(handle) && !DisableRTSForCurrentStop) { GameFiber.StartNew(() => ChooseOutcome(handle)); }
     }
 
     private static void Events_OnPulloverOfficerApproachDriver(LHandle handle)
     {
-        if (!HasEventHappened && IaeFunctions.IaeCompatibilityCheck(handle) && !API.APIs.DisableRTSForCurrentStop) { GameFiber.StartNew(() => ChooseOutcome(handle)); }
+        if (!HasEventHappened && IaeFunctions.IaeCompatibilityCheck(handle) && !DisableRTSForCurrentStop) { GameFiber.StartNew(() => ChooseOutcome(handle)); }
     }
 
     /// <summary>
@@ -87,17 +80,10 @@ internal static class PulloverEventHandler
         {
             if (ShouldEventHappen())
             {
-                Normal($"DisableRTSForCurrentStop: {API.APIs.DisableRTSForCurrentStop}");
+                Normal($"DisableRTSForCurrentStop: {DisableRTSForCurrentStop}");
                 
                 Normal("Choosing Outcome");
-                if (enabledOutcomes.Count <= 1)
-                {
-                    _chosenOutcome = enabledOutcomes[Rndm.Next(enabledOutcomes.Count)];
-                }
-                else
-                {
-                    _chosenOutcome = enabledOutcomes[Rndm.Next(enabledOutcomes.Where(i => i != _lastOutcome).ToList().Count)];
-                }
+                _chosenOutcome = EnabledOutcomes.Count <= 1 ? EnabledOutcomes[Rndm.Next(EnabledOutcomes.Count)] : EnabledOutcomes[Rndm.Next(EnabledOutcomes.Where(i => i != _lastOutcome).ToList().Count)];
                 Normal($"Chosen Outcome: {_chosenOutcome}");
                 
                 _lastOutcome = _chosenOutcome;
@@ -115,14 +101,9 @@ internal static class PulloverEventHandler
         
     private static bool ShouldEventHappen()
     {
-        byte[] randomBytes = new byte[8]; // Using 8 bytes for more randomization ig
-        _outcomeRng.GetBytes(randomBytes);
- 
-        long randomNumber = BitConverter.ToInt64(randomBytes, 0) & 0x7FFFFFFF; // Convert to positive integer
-
-        var convertedChance = randomNumber % 100;
+        long convertedChance = GenerateChance();
         Normal("Chance: " + convertedChance);
-            
-        return convertedChance < Settings.Chance;
+        
+        return convertedChance < Chance;
     }
 }

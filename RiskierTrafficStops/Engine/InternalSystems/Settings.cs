@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
-using Rage;
+﻿using System.Windows.Forms;
 using RiskierTrafficStops.Mod.Outcomes;
 
 namespace RiskierTrafficStops.Engine.InternalSystems;
@@ -49,15 +45,15 @@ internal static class Settings
     private static void ValidateIniValues()
     {
         if (Chance <= 100) return;
-        Logger.Normal("Chance value was greater than 100, setting value to 100...");
+        Normal("Chance value was greater than 100, setting value to 100...");
         Chance = 100;
         Game.DisplayNotification("commonmenu", "mp_alerttriangle", "Riskier Traffic Stops", "~b~By Astro", "Chance value is ~r~over 100~w~!!");
-        Logger.Normal("Chance value set to 100");
+        Normal("Chance value set to 100");
     }
 
     internal static void FilterOutcomes()
     {
-        Logger.Normal("Adding enabled outcomes to enabledOutcomes");
+        Normal("Adding enabled outcomes to enabledOutcomes");
         AllOutcomes.Clear();
         
         AllOutcomes.Add((GetOutAndShootEnabled, typeof(GetOutAndShoot)));
@@ -69,15 +65,15 @@ internal static class Settings
         AllOutcomes.Add((ShootAndFleeEnabled, typeof(ShootAndFlee)));
         AllOutcomes.Add((SpittingEnabled, typeof(Spitting)));
 
-        PulloverEventHandler.enabledOutcomes = AllOutcomes.Where(i => i.enabled).Select(i => i.outcome).ToList();
+        PulloverEventHandler.EnabledOutcomes = AllOutcomes.Where(i => i.enabled).Select(i => i.outcome).ToList();
         
-        Logger.Normal("----Enabled Outcomes----");
-        PulloverEventHandler.enabledOutcomes.ForEach(i => Logger.Normal(
+        Normal("----Enabled Outcomes----");
+        PulloverEventHandler.EnabledOutcomes.ForEach(i => Normal(
             i.ToString()
                 .Substring(
                     i.ToString()
                         .LastIndexOf('.') + 1
                 )));
-        Logger.Normal("----Enabled Outcomes----");
+        Normal("----Enabled Outcomes----");
     }
 }

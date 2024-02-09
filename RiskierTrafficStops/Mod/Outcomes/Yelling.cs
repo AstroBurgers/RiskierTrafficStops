@@ -1,19 +1,12 @@
-﻿using System;
-using System.Threading;
-using LSPD_First_Response.Mod.API;
-using Rage;
-using Rage.Native;
-using RAGENativeUI;
-using RiskierTrafficStops.API;
-using RiskierTrafficStops.Engine.InternalSystems;
-using static RiskierTrafficStops.Engine.Helpers.Helper;
-using static RiskierTrafficStops.Engine.InternalSystems.Logger;
-using static RiskierTrafficStops.Engine.Helpers.Extensions;
+﻿using static RiskierTrafficStops.Engine.Helpers.Extensions.PedExtensions;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 
 internal class Yelling : Outcome
 {
+    private static readonly YellingScenarioOutcomes[] AllYellingOutcomes =
+        (YellingScenarioOutcomes[])Enum.GetValues(typeof(YellingScenarioOutcomes));
+    
     public Yelling(LHandle handle) : base(handle)
     {
         try
@@ -28,7 +21,7 @@ internal class Yelling : Outcome
         {
             if (e is ThreadAbortException) return;
             Error(e, nameof(StartOutcome));
-            CleanupOutcome();
+            CleanupOutcome(true);
         }
     }
 
@@ -43,7 +36,7 @@ internal class Yelling : Outcome
 
     internal override void StartOutcome()
     {
-        APIs.InvokeEvent(RTSEventType.Start);
+        InvokeEvent(RTSEventType.Start);
 
         Normal("Making Suspect Leave Vehicle");
         Suspect.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen).WaitForCompletion(30000);
@@ -64,8 +57,7 @@ internal class Yelling : Outcome
         }
 
         Normal("Choosing outcome from possible Yelling outcomes");
-        var scenarioList = (YellingScenarioOutcomes[])Enum.GetValues(typeof(YellingScenarioOutcomes));
-        _chosenOutcome = scenarioList[Rndm.Next(scenarioList.Length)];
+        _chosenOutcome = AllYellingOutcomes[Rndm.Next(AllYellingOutcomes.Length)];
         Normal($"Chosen Outcome: {_chosenOutcome}");
 
         switch (_chosenOutcome)
@@ -96,18 +88,18 @@ internal class Yelling : Outcome
         }
 
         GameFiberHandling.CleanupFibers();
-        APIs.InvokeEvent(RTSEventType.End);
+        InvokeEvent(RTSEventType.End);
     }
 
     private static void KeyPressed()
     {
         Game.DisplayHelp(
-            $"~BLIP_INFO_ICON~ Press ~{Settings.GetBackInKey.GetInstructionalId()}~ to have the suspect get back in their vehicle",
+            $"~BLIP_INFO_ICON~ Press ~{GetBackInKey.GetInstructionalId()}~ to have the suspect get back in their vehicle",
             10000);
         while (Suspect.IsAvailable() && SuspectVehicle.IsAvailable() && !Suspect.IsInAnyVehicle(false))
         {
             GameFiber.Yield();
-            if (Game.IsKeyDown(Settings.GetBackInKey))
+            if (Game.IsKeyDown(GetBackInKey))
             {
                 Suspect.Tasks.EnterVehicle(SuspectVehicle, -1).WaitForCompletion();
                 break;

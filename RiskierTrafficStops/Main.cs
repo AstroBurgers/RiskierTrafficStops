@@ -1,10 +1,5 @@
-﻿using System;
-using LSPD_First_Response.Mod.API;
-using Rage;
-using static RiskierTrafficStops.Engine.InternalSystems.Logger;
-using RiskierTrafficStops.Engine.FrontendSystems;
-using RiskierTrafficStops.Engine.Helpers;
-using RiskierTrafficStops.Engine.InternalSystems;
+﻿using RiskierTrafficStops.Engine.FrontendSystems;
+using static RiskierTrafficStops.Engine.Helpers.DependencyHelper;
 
 namespace RiskierTrafficStops;
 
@@ -25,11 +20,10 @@ public class Main : Plugin
         {
             GameFiber.StartNew(() =>
             {
-                if (!Helper.VerifyDependencies()) return;
-
+                if (!VerifyDependencies()) return;
                 // Setting up INI And checking for updates
                 Normal("Setting up INI File...");
-                Settings.IniFileSetup();
+                IniFileSetup();
                 Normal("Creating config menu menu...");
                 ConfigMenu.CreateMenu();
                 Normal("Adding console commands...");
@@ -38,8 +32,11 @@ public class Main : Plugin
                 VersionChecker.IsUpdateAvailable();
                     
                 // Displaying startup Notification
-                Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro",
-                    "Watch your back out there officer!");
+                Game.DisplayNotification("3dtextures",
+                    "mpgroundlogo_cops",
+                    "Riskier Traffic Stops",
+                    "~b~By Astro",
+                    $"{PluginLoadText.PickRandom()}");
                     
                 //Subscribes to events
                 PulloverEventHandler.SubscribeToEvents();
@@ -54,12 +51,21 @@ public class Main : Plugin
     {
         try
         {
-            Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro",
-                "Did you crash or are you a dev?");
+            Game.DisplayNotification("3dtextures",
+                "mpgroundlogo_cops",
+                "Riskier Traffic Stops",
+                "~b~By Astro",
+                $"{PluginUnloadText.PickRandom()}");
             //Unsubscribes from events
             PulloverEventHandler.UnsubscribeFromEvents();
             if (VersionChecker.UpdateThread.IsAlive)
             {
+                Normal("Update thread was still running, shutting down...");
+                Game.DisplayNotification("new_editor",
+                    "warningtriangle",
+                    "Riskier Traffic Stops",
+                    "Version Checker",
+                    $"Update thread was still running!\nPlease wait 10s before going back on duty!\nIf you do not wait 10s you are risking a crash, you have been warned!");
                 VersionChecker.UpdateThread.Abort();
             }
 

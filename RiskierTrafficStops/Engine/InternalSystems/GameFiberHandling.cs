@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Rage;
+﻿namespace RiskierTrafficStops.Engine.InternalSystems;
 
-namespace RiskierTrafficStops.Engine.InternalSystems;
-
-public static class GameFiberHandling
+// Thanks for the help making this better Khori
+internal static class GameFiberHandling
 {
     internal static readonly List<GameFiber> OutcomeGameFibers = new();
 
@@ -12,16 +9,16 @@ public static class GameFiberHandling
     {
         GameFiber.StartNew(() =>
         {
-            Logger.Debug("Cleaning up running GameFibers...");
-            foreach (var i in OutcomeGameFibers.ToList())
+            Debug("Cleaning up running GameFibers...");
+            OutcomeGameFibers.RemoveAll(fiber =>
             {
-                if (i.IsAlive)
+                if (fiber.IsAlive)
                 {
-                    i.Abort();
+                    fiber.Abort();
+                    return true;
                 }
-
-                if (OutcomeGameFibers != null) OutcomeGameFibers.Clear();
-            }
+                return false;
+            });
         });
     }
 }

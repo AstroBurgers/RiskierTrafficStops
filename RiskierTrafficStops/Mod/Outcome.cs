@@ -1,10 +1,4 @@
-﻿using LSPD_First_Response.Mod.API;
-using Rage;
-using RiskierTrafficStops.API;
-using RiskierTrafficStops.Engine.Helpers;
-using RiskierTrafficStops.Engine.InternalSystems;
-
-namespace RiskierTrafficStops.Mod;
+﻿namespace RiskierTrafficStops.Mod;
 
 internal abstract class Outcome
 {
@@ -13,27 +7,57 @@ internal abstract class Outcome
     internal static RelationshipGroup SuspectRelateGroup;
     internal static LHandle PursuitLHandle;
     internal static LHandle TrafficStopLHandle;
+
+    internal static List<Ped> PedsToIgnore = new();
     
     internal virtual void StartOutcome(){}
 
     internal static bool MeetsRequirements(LHandle handle)
     {
-        if (!Helper.GetSuspectAndSuspectVehicle(handle, out Suspect, out SuspectVehicle) || Functions.GetCurrentPullover() == null)
+        if (!GetSuspectAndSuspectVehicle(handle, out Suspect, out SuspectVehicle) || Functions.GetCurrentPullover() == null)
         {
-            Logger.Normal("Failed to get suspect and vehicle, cleaning up RTS event...");
-            Helper.CleanupEvent();
+            Normal("Failed to get suspect and vehicle, cleaning up RTS event...");
+            CleanupOutcome(false);
             return false;
         }
 
         return true;
     }
     
-    internal virtual void CleanupOutcome()
+    
+    /// <summary>
+    /// Returns the Driver and its vehicle
+    /// </summary>
+    /// <returns>Ped, Vehicle</returns>
+    internal static bool GetSuspectAndSuspectVehicle(LHandle handle, out Ped suspect, out Vehicle suspectVehicle)
     {
-        Logger.Normal("Cleaning up RTS Outcome...");
+        Ped driver = null;
+        Vehicle driverVehicle = null;
+        if ((handle != null) && Functions.IsPlayerPerformingPullover() && Functions.GetPulloverSuspect(handle).IsAvailable())
+        {
+            Normal("Setting up Suspect");
+            driver = Functions.GetPulloverSuspect(handle);
+            driver.BlockPermanentEvents = true;
+        }
+        // ReSharper disable once PossibleNullReferenceException
+        if (driver.IsAvailable() && driver.IsInAnyVehicle(false) && !driver.IsInAnyPoliceVehicle)
+        {
+            Normal("Setting up Suspect Vehicle");
+            driverVehicle = driver.LastVehicle;
+        }
+            
+        Normal("Returning Suspect & Suspect Vehicle");
+        suspect = driver;
+        suspectVehicle = driverVehicle;
+        return suspect.IsAvailable() && suspectVehicle.IsAvailable();
+    }
+    
+    internal static void CleanupOutcome(bool throwEvent)
+    {
+        Normal("Cleaning up RTS Outcome...");
         PulloverEventHandler.HasEventHappened = false;
         GameFiberHandling.CleanupFibers();
-        APIs.InvokeEvent(RTSEventType.End);
+        if (throwEvent) InvokeEvent(RTSEventType.End);
     }
     
     internal Outcome(LHandle handle)

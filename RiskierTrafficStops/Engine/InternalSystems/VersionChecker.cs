@@ -1,10 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Net;
 using System.Reflection;
-using System.Threading;
-using Rage;
-using static RiskierTrafficStops.Engine.InternalSystems.Logger;
 
 namespace RiskierTrafficStops.Engine.InternalSystems;
 
@@ -52,11 +48,11 @@ internal static class VersionChecker
                         $"Online Version: ~g~{_receivedData}~s~\n" +
                         $"Installed version: ~y~{CurrentVersion}~s~\n" +
                         $"Please update ~r~ASAP~s~!");
-                    Logger.Normal($"Online Version: {_receivedData} | Installed Version: {CurrentVersion}");
-                    Logger.Normal("Plugin is outdated, please up date to the latest version as soon as possible");
+                    Normal($"Online Version: {_receivedData} | Installed Version: {CurrentVersion}");
+                    Normal("Plugin is outdated, please up date to the latest version as soon as possible");
                     break;
                 case CheckedState.Current:
-                    Logger.Normal($"Online Version: {_receivedData} | Installed Version: {CurrentVersion}");
+                    Normal($"Online Version: {_receivedData} | Installed Version: {CurrentVersion}");
                     Game.DisplayNotification("3dtextures",
                         "mpgroundlogo_cops",
                         "Riskier Traffic Stops",

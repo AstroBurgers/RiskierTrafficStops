@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using LSPD_First_Response.Mod.API;
-using Rage;
-using RiskierTrafficStops.API;
-using RiskierTrafficStops.Engine.InternalSystems;
-using static RiskierTrafficStops.Engine.Helpers.Helper;
-using static RiskierTrafficStops.Engine.InternalSystems.Logger;
-using static RiskierTrafficStops.API.APIs;
-using static RiskierTrafficStops.Engine.Helpers.Extensions;
-
-namespace RiskierTrafficStops.Mod.Outcomes;
+﻿namespace RiskierTrafficStops.Mod.Outcomes;
 
 internal class Flee : Outcome
 {
@@ -21,6 +9,8 @@ internal class Flee : Outcome
         LeaveVehicle,
     }
 
+    private static readonly FleeOutcomes[] AllFleeOutcomes = (FleeOutcomes[])Enum.GetValues(typeof(FleeOutcomes));
+    
     public Flee(LHandle handle) : base(handle)
     {
         try
@@ -34,7 +24,7 @@ internal class Flee : Outcome
         {
             if (e is ThreadAbortException) return;
             Error(e, nameof(StartOutcome));
-            CleanupOutcome();
+            CleanupOutcome(true);
         }
     }
 
@@ -43,12 +33,17 @@ internal class Flee : Outcome
         InvokeEvent(RTSEventType.Start);
             
         Normal("Getting all vehicle occupants");
-        var pedsInVehicle = SuspectVehicle.Occupants;
+        var pedsInVehicle = SuspectVehicle.Occupants.ToList();
 
-        List<FleeOutcomes> allOutcomes = new()
-            { FleeOutcomes.Flee, FleeOutcomes.BurnOut, FleeOutcomes.LeaveVehicle };
-
-        FleeOutcomes chosenFleeOutcome = allOutcomes[Rndm.Next(allOutcomes.Count)];
+        foreach (var ped in pedsInVehicle)
+        {
+            if (ped.IsAvailable() && PedsToIgnore.Contains(ped))
+            {
+                pedsInVehicle.Remove(ped);
+            }
+        }
+        
+        FleeOutcomes chosenFleeOutcome = AllFleeOutcomes.PickRandom();
 
         switch (chosenFleeOutcome)
         {
@@ -57,7 +52,7 @@ internal class Flee : Outcome
 
                 if (Functions.GetCurrentPullover() == null)
                 {
-                    CleanupEvent();
+                    CleanupOutcome(false);
                     return;
                 }
 
@@ -74,7 +69,7 @@ internal class Flee : Outcome
 
                 if (Functions.GetCurrentPullover() == null)
                 {
-                    CleanupEvent();
+                    CleanupOutcome(false);
                     return;
                 }
 
@@ -89,10 +84,7 @@ internal class Flee : Outcome
                     }
                 }
 
-                if (Functions.GetCurrentPullover() == null)
-                {
-                    return;
-                }
+                if (Functions.GetCurrentPullover() == null) return;
 
                 PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                 break;

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Drawing;
-using Rage;
-using RAGENativeUI;
+﻿using System.Drawing;
 using RAGENativeUI.Elements;
 using RAGENativeUI.PauseMenu;
-using RiskierTrafficStops.Engine.InternalSystems;
-using static RiskierTrafficStops.Engine.InternalSystems.Settings;
-using static RiskierTrafficStops.Engine.InternalSystems.Logger;
 
 namespace RiskierTrafficStops.Engine.FrontendSystems;
 
@@ -29,7 +23,7 @@ internal static class ConfigMenu
 
     internal static void CreateMenu()
     {
-        Logger.Normal("Creating Menu...");
+        Normal("Creating Menu...");
         MainMenuPool.Add(MainMenu);
         MainMenu.MouseControlsEnabled = false;
         MainMenu.AllowCameraMovement = true;
@@ -124,12 +118,12 @@ internal static class ConfigMenu
                 MainMenuPool.ProcessMenus();
             }
         }
-        catch (System.Threading.ThreadAbortException)
+        catch (ThreadAbortException)
         {
         }
         catch (Exception e)
         {
-            Logger.Error(e, "Menu.cs: MenuPoolProcess");
+            Error(e, "Menu.cs: MenuPoolProcess");
         }
     }
 
