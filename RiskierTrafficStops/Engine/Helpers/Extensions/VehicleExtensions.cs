@@ -1,6 +1,6 @@
 ﻿namespace RiskierTrafficStops.Engine.Helpers.Extensions;
 
-public static class VehicleExtensions
+internal static class VehicleExtensions
 {
     /// <summary>
     /// Checks if a ped both exists and is alive

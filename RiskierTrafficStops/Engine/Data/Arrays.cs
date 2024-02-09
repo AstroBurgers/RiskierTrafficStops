@@ -1,6 +1,6 @@
 ﻿namespace RiskierTrafficStops.Engine.Data;
 
-public class Arrays
+internal static class Arrays
 {
     /// <summary>
     /// Text used in the spitting outcome

@@ -1,7 +1,7 @@
 ﻿namespace RiskierTrafficStops.Engine.InternalSystems;
 
-// Thanks Khori
-public static class GameFiberHandling
+// Thanks for the help making this better Khori
+internal static class GameFiberHandling
 {
     internal static readonly List<GameFiber> OutcomeGameFibers = new();
 

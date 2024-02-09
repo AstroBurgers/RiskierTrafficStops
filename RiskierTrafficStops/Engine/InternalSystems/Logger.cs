@@ -1,6 +1,4 @@
-﻿
-
-// Rohit said he wanted credit. So credit to Rohit for the code https://github.com/Rohit685/MysteriousCallouts/blob/master/HelperSystems/Logger.cs
+﻿// Rohit said he wanted credit. So credit to Rohit for the original code https://github.com/Rohit685/MysteriousCallouts/blob/master/HelperSystems/Logger.cs
 
 namespace RiskierTrafficStops.Engine.InternalSystems;
 

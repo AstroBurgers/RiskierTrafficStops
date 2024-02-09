@@ -1,6 +1,6 @@
 ﻿namespace RiskierTrafficStops.Engine.Helpers;
 
-public class DependencyHelper
+internal static class DependencyHelper
 {
     private static string _missingFiles = string.Empty;
         

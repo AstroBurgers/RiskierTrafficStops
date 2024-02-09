@@ -3,7 +3,7 @@ using static RiskierTrafficStops.Engine.Data.Arrays;
 
 namespace RiskierTrafficStops.Engine.Helpers.Extensions;
 
-public static class PedExtensions
+internal static class PedExtensions
 {
     internal static void GivePistol(this Ped ped)
     {

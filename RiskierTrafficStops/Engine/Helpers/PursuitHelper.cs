@@ -3,7 +3,7 @@ using static RiskierTrafficStops.Engine.Helpers.MathHelper;
 
 namespace RiskierTrafficStops.Engine.Helpers;
 
-public class PursuitHelper
+internal static class PursuitHelper
 {
     /// <summary>
     /// Setup a Pursuit with an Array of suspects

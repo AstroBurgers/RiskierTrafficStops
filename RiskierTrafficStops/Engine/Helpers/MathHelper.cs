@@ -2,7 +2,7 @@
 
 namespace RiskierTrafficStops.Engine.Helpers;
 
-public class MathHelper
+internal static class MathHelper
 {
     internal static readonly Random Rndm = new(DateTime.Now.Millisecond);
     internal static readonly RNGCryptoServiceProvider ImprovedRandom = new();
