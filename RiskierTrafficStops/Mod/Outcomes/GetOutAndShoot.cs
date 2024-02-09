@@ -13,7 +13,7 @@ internal class GetOutAndShoot : Outcome
     private static GetOutAndShootOutcomes[] _allGoasOutcomes =
         (GetOutAndShootOutcomes[])Enum.GetValues(typeof(GetOutAndShootOutcomes));
     
-    private static Ped[] PedsInVehicle => SuspectVehicle.Occupants;
+    private static List<Ped> _pedsInVehicle = SuspectVehicle.Occupants.ToList();
     
     private enum GetOutAndShootOutcomes
     {
@@ -46,11 +46,19 @@ internal class GetOutAndShoot : Outcome
 
         Normal("Adding all suspect in the vehicle to a list");
         
-        if (PedsInVehicle.Length < 1) throw new ArgumentNullException(nameof(PedsInVehicle));
+        if (_pedsInVehicle.Count < 1) throw new ArgumentNullException(nameof(_pedsInVehicle));
 
+        foreach (var ped in _pedsInVehicle)
+        {
+            if (ped.IsAvailable() && PedsToIgnore.Contains(ped))
+            {
+                _pedsInVehicle.Remove(ped);
+            }
+        }
+        
         SetRelationshipGroups(SuspectRelateGroup);
 
-        foreach (Ped ped in PedsInVehicle)
+        foreach (Ped ped in _pedsInVehicle)
         {
             ped.GiveWeapon();
             GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => GetPedOutOfVehicle(ped)));
@@ -71,10 +79,10 @@ internal class GetOutAndShoot : Outcome
                     return;
                 }
 
-                PursuitLHandle = SetupPursuitWithList(true, PedsInVehicle);
+                PursuitLHandle = SetupPursuitWithList(true, _pedsInVehicle);
                 break;
             case GetOutAndShootOutcomes.KeepShooting:
-                foreach (var i in PedsInVehicle)
+                foreach (var i in _pedsInVehicle)
                 {
                     if (i.IsAvailable())
                     {

@@ -27,12 +27,21 @@ internal class ShootAndFlee : Outcome
     {
         InvokeEvent(RTSEventType.Start);
 
+        var pedsInVehicle = SuspectVehicle.Occupants.ToList();
+        foreach (var ped in pedsInVehicle)
+        {
+            if (ped.IsAvailable() && PedsToIgnore.Contains(ped))
+            {
+                pedsInVehicle.Remove(ped);
+            }
+        }
+        
         long chance = GenerateChance();
         switch (chance)
         {
             case <= 60:
                 Normal("Starting all suspects outcome");
-                AllSuspects(SuspectVehicle.Occupants);
+                AllSuspects(pedsInVehicle);
                 break;
             default:
                 Normal("Starting driver only outcome");
@@ -44,7 +53,7 @@ internal class ShootAndFlee : Outcome
         InvokeEvent(RTSEventType.End);
     }
 
-    private static void AllSuspects(Ped[] peds)
+    private static void AllSuspects(List<Ped> peds)
     {
         foreach (var i in peds)
         {

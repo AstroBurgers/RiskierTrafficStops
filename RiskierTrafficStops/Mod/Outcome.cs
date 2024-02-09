@@ -9,6 +9,8 @@ internal abstract class Outcome
     internal static RelationshipGroup SuspectRelateGroup;
     internal static LHandle PursuitLHandle;
     internal static LHandle TrafficStopLHandle;
+
+    internal static List<Ped> PedsToIgnore = new();
     
     internal virtual void StartOutcome(){}
 

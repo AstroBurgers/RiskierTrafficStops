@@ -36,8 +36,16 @@ internal class Flee : Outcome
         InvokeEvent(RTSEventType.Start);
             
         Normal("Getting all vehicle occupants");
-        var pedsInVehicle = SuspectVehicle.Occupants;
+        var pedsInVehicle = SuspectVehicle.Occupants.ToList();
 
+        foreach (var ped in pedsInVehicle)
+        {
+            if (ped.IsAvailable() && PedsToIgnore.Contains(ped))
+            {
+                pedsInVehicle.Remove(ped);
+            }
+        }
+        
         FleeOutcomes chosenFleeOutcome = _allFleeOutcomes.PickRandom();
 
         switch (chosenFleeOutcome)

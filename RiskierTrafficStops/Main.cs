@@ -55,6 +55,7 @@ public class Main : Plugin
             PulloverEventHandler.UnsubscribeFromEvents();
             if (VersionChecker.UpdateThread.IsAlive)
             {
+                Normal("Update thread was still running, shutting down...");
                 VersionChecker.UpdateThread.Abort();
             }
 
