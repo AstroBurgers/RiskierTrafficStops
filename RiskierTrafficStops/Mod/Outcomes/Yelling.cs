@@ -1,7 +1,4 @@
-﻿using RiskierTrafficStops.Engine.Helpers.Extensions;
-using static RiskierTrafficStops.Engine.Data.Arrays;
-using static RiskierTrafficStops.Engine.Helpers.Extensions.PedExtensions;
-using static RiskierTrafficStops.Engine.Helpers.MathHelper;
+﻿using static RiskierTrafficStops.Engine.Helpers.Extensions.PedExtensions;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 

@@ -1,6 +1,4 @@
-﻿using RiskierTrafficStops.Engine.Data;
-using RiskierTrafficStops.Engine.FrontendSystems;
-using RiskierTrafficStops.Engine.Helpers.Extensions;
+﻿using RiskierTrafficStops.Engine.FrontendSystems;
 using static RiskierTrafficStops.Engine.Helpers.DependencyHelper;
 
 namespace RiskierTrafficStops;
@@ -38,7 +36,7 @@ public class Main : Plugin
                     "mpgroundlogo_cops",
                     "Riskier Traffic Stops",
                     "~b~By Astro",
-                    $"{Arrays.PluginLoadText.PickRandom()}");
+                    $"{PluginLoadText.PickRandom()}");
                     
                 //Subscribes to events
                 PulloverEventHandler.SubscribeToEvents();
@@ -57,7 +55,7 @@ public class Main : Plugin
                 "mpgroundlogo_cops",
                 "Riskier Traffic Stops",
                 "~b~By Astro",
-                $"{Arrays.PluginUnloadText.PickRandom()}");
+                $"{PluginUnloadText.PickRandom()}");
             //Unsubscribes from events
             PulloverEventHandler.UnsubscribeFromEvents();
             if (VersionChecker.UpdateThread.IsAlive)

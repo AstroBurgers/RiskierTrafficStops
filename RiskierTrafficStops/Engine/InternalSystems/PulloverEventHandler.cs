@@ -1,5 +1,4 @@
 ﻿using RiskierTrafficStops.API.ExternalAPIs;
-using static RiskierTrafficStops.Engine.Helpers.MathHelper;
 
 namespace RiskierTrafficStops.Engine.InternalSystems;
 

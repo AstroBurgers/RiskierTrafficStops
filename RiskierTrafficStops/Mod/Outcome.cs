@@ -1,6 +1,4 @@
-﻿using RiskierTrafficStops.Engine.Helpers.Extensions;
-
-namespace RiskierTrafficStops.Mod;
+﻿namespace RiskierTrafficStops.Mod;
 
 internal abstract class Outcome
 {

@@ -1,7 +1,4 @@
-﻿using static RiskierTrafficStops.Engine.Helpers.MathHelper;
-using static RiskierTrafficStops.Engine.Data.Arrays;
-
-namespace RiskierTrafficStops.Engine.Helpers.Extensions;
+﻿namespace RiskierTrafficStops.Engine.Helpers.Extensions;
 
 internal static class PedExtensions
 {

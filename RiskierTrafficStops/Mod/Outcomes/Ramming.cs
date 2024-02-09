@@ -1,7 +1,4 @@
-﻿using RiskierTrafficStops.Engine.Helpers.Extensions;
-using static RiskierTrafficStops.Engine.Helpers.PursuitHelper;
-
-namespace RiskierTrafficStops.Mod.Outcomes;
+﻿namespace RiskierTrafficStops.Mod.Outcomes;
 
 internal class Ramming : Outcome
 {

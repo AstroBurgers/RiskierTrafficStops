@@ -1,7 +1,4 @@
-﻿using RiskierTrafficStops.Engine.Helpers.Extensions;
-using static RiskierTrafficStops.Engine.Helpers.MathHelper;
-
-namespace RiskierTrafficStops.Engine.Helpers;
+﻿namespace RiskierTrafficStops.Engine.Helpers;
 
 internal static class PursuitHelper
 {

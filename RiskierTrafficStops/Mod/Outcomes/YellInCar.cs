@@ -1,8 +1,4 @@
-﻿using RiskierTrafficStops.Engine.Helpers.Extensions;
-using static RiskierTrafficStops.Engine.Data.Arrays;
-using static RiskierTrafficStops.Engine.Helpers.MathHelper;
-
-namespace RiskierTrafficStops.Mod.Outcomes;
+﻿namespace RiskierTrafficStops.Mod.Outcomes;
 
 internal class YellInCar : Outcome
 {
