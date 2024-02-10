@@ -54,6 +54,9 @@ internal class ShootAndFlee : Outcome
         foreach (var i in peds)
         {
             if (!i.IsAvailable()) continue;
+            i.Tasks.PlayAnimation(new AnimationDictionary("anim@gangops@facility@servers@bodysearch@"), "player_search",
+                8f, AnimationFlags.SecondaryTask | AnimationFlags.UpperBodyOnly);
+            GameFiber.Wait(Rndm.Next(1, 4) * 750);
             i.GivePistol();
 
             Normal($"Making Suspect #{i} shoot at Player");
@@ -74,8 +77,9 @@ internal class ShootAndFlee : Outcome
     private static void DriverOnly()
     {
         if (!Suspect.IsAvailable()) return;
-
-
+        Suspect.Tasks.PlayAnimation(new AnimationDictionary("anim@gangops@facility@servers@bodysearch@"), "player_search",
+            8f, AnimationFlags.SecondaryTask | AnimationFlags.UpperBodyOnly);
+        GameFiber.Wait(Rndm.Next(1, 4) * 750);
         Normal("Setting up Suspect Weapon");
         Suspect.GivePistol();
 
