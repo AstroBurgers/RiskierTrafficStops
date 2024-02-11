@@ -5,6 +5,9 @@ namespace RiskierTrafficStops.Mod.Outcomes;
 
 internal class HostageTaking : Outcome
 {
+    internal static Vector3 PlayerLastPos = Vector3.Zero;
+    internal static List<Ped> pedsInVehicle = new();
+    
     public HostageTaking(LHandle handle) : base(handle)
     {
         try
@@ -27,7 +30,7 @@ internal class HostageTaking : Outcome
         InvokeEvent(RTSEventType.Start);
 
         Normal("Getting all vehicle occupants");
-        var pedsInVehicle = SuspectVehicle.Occupants.ToList();
+        pedsInVehicle = SuspectVehicle.Occupants.ToList();
 
         foreach (var ped in pedsInVehicle)
         {
@@ -35,6 +38,7 @@ internal class HostageTaking : Outcome
             {
                 pedsInVehicle.Remove(ped);
             }
+            ped.BlockPermanentEvents = true;
         }
 
         if (pedsInVehicle.Count <= 1)
@@ -42,20 +46,44 @@ internal class HostageTaking : Outcome
             CleanupOutcome(true);
             return;
         }
-
+        
         Suspect suspect = new Suspect(Suspect);
 
-        Suspect hostage = new Suspect(pedsInVehicle[0]);
+        Suspect hostage = new Suspect(pedsInVehicle[1]);
         
         // Hostage stuff
+        GetOutAndSurrender(hostage.suspect);
         
-        hostage.Tasks.LeaveVehicle(LeaveVehicleFlags.None).WaitForCompletion();
-        Vector3 pos = SuspectVehicle.GetOffsetPosition(new Vector3(1.5f, 1.5f,
-            // ReSharper disable once PossibleInvalidOperationException
-            World.GetGroundZ(SuspectVehicle.Position, false, true).Value));
-        hostage.Tasks.GoStraightToPosition(pos, 2f, GetOppositeHeading(SuspectVehicle.Heading), 0.1f, 5000).WaitForCompletion();
-        hostage.Tasks.PlayAnimation(new AnimationDictionary("random@getawaydriver"), "idle_2_hands_up", 1f, AnimationFlags.StayInEndFrame).WaitForCompletion(2500);
-        hostage.Tasks.PlayAnimation(new AnimationDictionary("random@arrests@busted"), "idle_c", 1f, AnimationFlags.Loop);
+        if (pedsInVehicle.Count > 2)
+        {
+            foreach (var ped in pedsInVehicle.Where(i => i != hostage && i.IsAvailable() && i != Suspect))
+            {
+                if (!ped.IsAvailable())
+                {
+                    pedsInVehicle.Remove(ped);
+                }
+
+                ped.Tasks.LeaveVehicle(ped.LastVehicle, LeaveVehicleFlags.None).WaitForCompletion();
+                ped.GiveWeapon();
+                ped.Tasks.AimWeaponAt(MainPlayer, -1);
+            }
+
+            Suspect.Tasks.LeaveVehicle(Suspect.LastVehicle, LeaveVehicleFlags.None).WaitForCompletion();
+            Vector3 suspectPos = hostage.suspect.GetOffsetPosition(new Vector3(0f, 1f, 0f));
+            Suspect.Tasks.FollowNavigationMeshToPosition(suspectPos, Suspect.Heading - 180, 2f).WaitForCompletion();
+            Suspect.GiveWeapon();
+            Suspect.Tasks.AimWeaponAt(hostage, -1);
+        }
+        else if (pedsInVehicle.Count == 2)
+        {
+            Vector3 suspectPos = hostage.suspect.GetOffsetPosition(new Vector3(-1.5f, -1f, 0f));
+            Suspect.Tasks.FollowNavigationMeshToPosition(suspectPos, Suspect.Heading - 180, 2f).WaitForCompletion();
+            Suspect.GiveWeapon();
+            Suspect.Tasks.AimWeaponAt(hostage, -1);
+        }
+        
+        Game.DisplaySubtitle(hostageSituationText.PickRandom());
+        PlayerLastPos = MainPlayer.Position;
         
         Debug($"IsSuicidal: {suspect.IsSuicidal}");
         Debug($"HatesHostage: {suspect.HatesHostage}");
@@ -92,6 +120,15 @@ internal class HostageTaking : Outcome
         bdt.FollowTruePath();
     }
 
+    private static void GetOutAndSurrender(Ped ped)
+    {
+        ped.Tasks.LeaveVehicle(ped.LastVehicle, LeaveVehicleFlags.None).WaitForCompletion();
+        Vector3 pos = SuspectVehicle.GetOffsetPosition(new Vector3(-1.5f, -1.5f, 0f));
+        ped.Tasks.FollowNavigationMeshToPosition(pos, SuspectVehicle.Heading - 180, 2f).WaitForCompletion();
+        ped.Tasks.PlayAnimation(new AnimationDictionary("random@getawaydriver"), "idle_2_hands_up", 1f, AnimationFlags.StayInEndFrame).WaitForCompletion(2500);
+        ped.Tasks.PlayAnimation(new AnimationDictionary("random@arrests@busted"), "idle_c", 1f, AnimationFlags.Loop);
+    }
+    
     private static void DetonateBomb()
     {
         Debug("DetonateBomb");
@@ -107,6 +144,7 @@ internal class HostageTaking : Outcome
     private static void ShootAtEachOther()
     {
         Debug("ShootAtEachOther");
+        HandlePlayerMovement();
     }
 
     private static void AllSuspectsSurrender()
@@ -122,16 +160,30 @@ internal class HostageTaking : Outcome
     private static void CommitSuicide()
     {
         Debug("CommitSuicide");
+        HandlePlayerMovement();
     }
 
     private static void ShootOutAllSuspects()
     {
         Debug("ShootOutAllSuspects");
+        HandlePlayerMovement();
     }
 
     private static void ShootOut()
     {
         Debug("ShootOut");
+        HandlePlayerMovement();
+    }
+
+    private static void HandlePlayerMovement()
+    {
+        if ((PlayerLastPos.X += 2f) < MainPlayer.Position.X || (PlayerLastPos.Y += 2f) < MainPlayer.Position.Y)
+        {
+            foreach (var ped in pedsInVehicle.Where(i => i.IsAvailable() && i != pedsInVehicle[0]))
+            {
+                ped.Tasks.FireWeaponAt(pedsInVehicle[0], 2500, FiringPattern.FullAutomatic);
+            }
+        }
     }
 }
 
@@ -144,7 +196,7 @@ internal class Suspect : Ped
     internal bool HatesHostage { get; private set; }
     internal bool WantsToDieByCop { get; private set; }
     internal bool IsTerrorist { get; private set; }
-
+    
     internal Suspect(Ped ped)
     {
         suspect = ped;
