@@ -1,4 +1,6 @@
-﻿namespace RiskierTrafficStops.Mod.Outcomes;
+﻿using RiskierTrafficStops.Engine.InternalSystems;
+
+namespace RiskierTrafficStops.Mod.Outcomes;
 
 internal class HostageTaking : Outcome
 {
@@ -33,5 +35,25 @@ internal class HostageTaking : Outcome
                 pedsInVehicle.Remove(ped);
             }
         }
+        
+        if (pedsInVehicle.Count <= 1) CleanupOutcome(true);
+    }
+}
+
+internal class Suspect : Ped
+{
+    internal Ped suspect;
+    
+    internal bool IsSuicidal = false;
+    internal bool WantToSurvive = false;
+    internal bool HatesHostage = false;
+    internal bool HasAutomaticWeapon = false;
+    
+    internal Suspect(Ped ped)
+    {
+        suspect = ped;
+        IsSuicidal = GenerateChance() < 40;
+        WantToSurvive = GenerateChance() < 30;
+        HatesHostage = GenerateChance() < 20;
     }
 }
