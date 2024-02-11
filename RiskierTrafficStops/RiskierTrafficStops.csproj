@@ -70,6 +70,7 @@
     <Compile Include="Engine\Helper.cs" />
     <Compile Include="Engine\Helpers\BinaryDecisionTree.cs" />
     <Compile Include="Engine\Helpers\DependencyHelper.cs" />
+    <Compile Include="Engine\Helpers\EncodingHelper.cs" />
     <Compile Include="Engine\Helpers\Extensions\EnumExtensions.cs" />
     <Compile Include="Engine\Helpers\Extensions\PedExtensions.cs" />
     <Compile Include="Engine\Helpers\Extensions\VehicleExtensions.cs" />

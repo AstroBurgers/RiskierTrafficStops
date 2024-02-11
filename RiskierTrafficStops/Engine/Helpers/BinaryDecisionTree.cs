@@ -55,7 +55,14 @@ public class BDT {
         }
         else
         {
-            FollowTruePath(subroot.left);
+            if (subroot.left == null && subroot.outcomeAssociated != null)
+            {
+                subroot.outcomeAssociated();
+            }
+            else
+            {
+                FollowTruePath(subroot.left);
+            }
         }
     }
 

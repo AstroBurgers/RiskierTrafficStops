@@ -39,44 +39,51 @@ internal class HostageTaking : Outcome
             }
         }
 
-        if (pedsInVehicle.Count <= 1) CleanupOutcome(true);
+        if (pedsInVehicle.Count <= 1)
+        {
+            CleanupOutcome(true);
+            return;
+        }
 
         Suspect suspect = new Suspect(Suspect);
 
-        Debug($"{suspect.IsSuicidal}");
-        Debug($"{suspect.HatesHostage}");
-        Debug($"{suspect.WantToSurvive}");
+        Debug($"IsSuicidal: {suspect.IsSuicidal}");
+        Debug($"HatesHostage: {suspect.HatesHostage}");
+        Debug($"WantToSurvive: {suspect.WantToSurvive}");
+        Debug($"WantsToDieByCop: {suspect.WantsToDieByCop}");
         
         // Less than 2 suspects
-        Node CommitSuicide = new Node(true, null, null, HostageTaking.CommitSuicide);
-        Node ShootOut = new Node(false, null, null, HostageTaking.ShootOut);
-        Node Surrender = new Node(true, null, null, HostageTaking.Surrender);
+        Node commitSuicide = new Node(true, null, null, HostageTaking.CommitSuicide);
+        Node shootOut = new Node(false, null, null, HostageTaking.ShootOut);
+        Node surrender = new Node(true, null, null, HostageTaking.Surrender);
 
-        Node WantsToSurvive = new Node(suspect.WantToSurvive, ShootOut, Surrender);
-        Node ShouldCommit = new Node(true, ShootOut, CommitSuicide);
-        Node IsSuicidal = new Node(suspect.IsSuicidal, WantsToSurvive, ShouldCommit);
+        Node wantsToSurvive = new Node(suspect.WantToSurvive, shootOut, surrender);
+        Node wantsToDieByCop = new Node(suspect.WantsToDieByCop, commitSuicide, shootOut);
+        Node isSuicidal = new Node(suspect.IsSuicidal, wantsToSurvive, wantsToDieByCop);
 
         // More than 2 suspects
-        Node ShootItOut = new Node(false, null, null, ShootOutAllSuspects);
-        Node AllSurrender = new Node(true, null, null, AllSuspectsSurrender);
-        Node ShootAtEachother = new Node(true, null, null, HostageTaking.ShootAtEachOther);
-        Node KillHostageThenShootOut = new Node(true, null, null, HostageTaking.KillHostageThenShootOut);
+        Node shootItOut = new Node(false, null, null, ShootOutAllSuspects);
+        Node allSurrender = new Node(true, null, null, AllSuspectsSurrender);
+        Node shootAtEachother = new Node(true, null, null, HostageTaking.ShootAtEachOther);
+        Node killHostageThenShootOut = new Node(true, null, null, HostageTaking.KillHostageThenShootOut);
 
-        Node AllWantToSurvive = new Node(suspect.WantToSurvive, ShootItOut, AllSurrender);
-        Node AreAnySuicidal = new Node(suspect.IsSuicidal, AllWantToSurvive, ShootAtEachother);
-        Node HateHostage = new Node(suspect.HatesHostage, AreAnySuicidal, KillHostageThenShootOut);
+        Node allWantToSurvive = new Node(suspect.WantToSurvive, shootItOut, allSurrender);
+        Node areAnySuicidal = new Node(suspect.IsSuicidal, allWantToSurvive, shootAtEachother);
+        Node hateHostage = new Node(suspect.HatesHostage, areAnySuicidal, killHostageThenShootOut);
 
         // Root Node
-        Node MoreThan2Suspects = new Node(pedsInVehicle.Count > 2, IsSuicidal, HateHostage);
+        Node moreThan2Suspects = new Node(pedsInVehicle.Count > 2, isSuicidal, hateHostage);
 
         // Tree
-        BDT bdt = new BDT(MoreThan2Suspects);
+        BDT bdt = new BDT(moreThan2Suspects);
         
         bdt.FollowTruePath();
     }
 
     private static void KillHostageThenShootOut()
     {
+        // byte[] textBytes = System.Text.Encoding.UTF8.GetBytes(text);
+        // Convert.ToBase64String(textBytes);
         Debug("KillHostageThenShootOut");
     }
 
@@ -118,13 +125,15 @@ internal class Suspect : Ped
     internal bool IsSuicidal = false;
     internal bool WantToSurvive = false;
     internal bool HatesHostage = false;
-
+    internal bool WantsToDieByCop = false;
+    
 
     internal Suspect(Ped ped)
     {
         suspect = ped;
         IsSuicidal = GenerateChance() < 40;
         WantToSurvive = GenerateChance() < 30;
+        WantsToDieByCop = GenerateChance() < 25;
         HatesHostage = GenerateChance() < 20;
     }
 }
