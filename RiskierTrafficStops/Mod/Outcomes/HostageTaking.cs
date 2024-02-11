@@ -46,11 +46,6 @@ internal class HostageTaking : Outcome
         }
 
         Suspect suspect = new Suspect(Suspect);
-        List<Suspect> suspectsInVehicle = new();
-        foreach (var ped in pedsInVehicle.Where(i => i != Suspect))
-        {
-            
-        }
         
         
         Debug($"IsSuicidal: {suspect.IsSuicidal}");
@@ -59,9 +54,9 @@ internal class HostageTaking : Outcome
         Debug($"WantsToDieByCop: {suspect.WantsToDieByCop}");
         
         // Less than 2 suspects
-        Node commitSuicide = new Node(true, null, null, HostageTaking.CommitSuicide);
-        Node shootOut = new Node(false, null, null, HostageTaking.ShootOut);
-        Node surrender = new Node(true, null, null, HostageTaking.Surrender);
+        Node commitSuicide = new Node(true, null, null, CommitSuicide);
+        Node shootOut = new Node(false, null, null, ShootOut);
+        Node surrender = new Node(true, null, null, Surrender);
 
         Node wantsToSurvive = new Node(suspect.WantToSurvive, shootOut, surrender);
         Node wantsToDieByCop = new Node(suspect.WantsToDieByCop, commitSuicide, shootOut);
@@ -70,12 +65,14 @@ internal class HostageTaking : Outcome
         // More than 2 suspects
         Node shootItOut = new Node(false, null, null, ShootOutAllSuspects);
         Node allSurrender = new Node(true, null, null, AllSuspectsSurrender);
-        Node shootAtEachother = new Node(true, null, null, HostageTaking.ShootAtEachOther);
-        Node killHostageThenShootOut = new Node(true, null, null, HostageTaking.KillHostageThenShootOut);
-
+        Node shootAtEachother = new Node(true, null, null, ShootAtEachOther);
+        Node killHostageThenShootOut = new Node(true, null, null, KillHostageThenShootOut);
+        Node detonateBomb = new Node(true, null, null, DetonateBomb);
+        
         Node allWantToSurvive = new Node(suspect.WantToSurvive, shootItOut, allSurrender);
         Node areAnySuicidal = new Node(suspect.IsSuicidal, allWantToSurvive, shootAtEachother);
-        Node hateHostage = new Node(suspect.HatesHostage, areAnySuicidal, killHostageThenShootOut);
+        Node areTerrorists = new Node(suspect.IsTerrorist, killHostageThenShootOut, detonateBomb);
+        Node hateHostage = new Node(suspect.HatesHostage, areAnySuicidal, areTerrorists);
 
         // Root Node
         Node moreThan2Suspects = new Node(pedsInVehicle.Count > 2, isSuicidal, hateHostage);
@@ -86,6 +83,11 @@ internal class HostageTaking : Outcome
         bdt.FollowTruePath();
     }
 
+    private static void DetonateBomb()
+    {
+        Debug("DetonateBomb");
+    }
+    
     private static void KillHostageThenShootOut()
     {
         // byte[] textBytes = System.Text.Encoding.UTF8.GetBytes(text);
