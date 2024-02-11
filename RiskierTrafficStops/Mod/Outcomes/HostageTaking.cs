@@ -1,7 +1,5 @@
 ﻿using RiskierTrafficStops.Engine.Helpers;
-using RiskierTrafficStops.Engine.InternalSystems;
 using static RiskierTrafficStops.Engine.Helpers.BDT;
-using static RiskierTrafficStops.Mod.Outcomes.HostageTaking;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 
@@ -46,7 +44,18 @@ internal class HostageTaking : Outcome
         }
 
         Suspect suspect = new Suspect(Suspect);
+
+        Suspect hostage = new Suspect(pedsInVehicle[0]);
         
+        // Hostage stuff
+        
+        hostage.Tasks.LeaveVehicle(LeaveVehicleFlags.None).WaitForCompletion();
+        Vector3 pos = SuspectVehicle.GetOffsetPosition(new Vector3(1.5f, 1.5f,
+            // ReSharper disable once PossibleInvalidOperationException
+            World.GetGroundZ(SuspectVehicle.Position, false, true).Value));
+        hostage.Tasks.GoStraightToPosition(pos, 2f, GetOppositeHeading(SuspectVehicle.Heading), 0.1f, 5000).WaitForCompletion();
+        hostage.Tasks.PlayAnimation(new AnimationDictionary("random@getawaydriver"), "idle_2_hands_up", 1f, AnimationFlags.StayInEndFrame).WaitForCompletion(2500);
+        hostage.Tasks.PlayAnimation(new AnimationDictionary("random@arrests@busted"), "idle_c", 1f, AnimationFlags.Loop);
         
         Debug($"IsSuicidal: {suspect.IsSuicidal}");
         Debug($"HatesHostage: {suspect.HatesHostage}");
