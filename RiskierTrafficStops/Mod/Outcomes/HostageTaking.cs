@@ -46,7 +46,13 @@ internal class HostageTaking : Outcome
         }
 
         Suspect suspect = new Suspect(Suspect);
-
+        List<Suspect> suspectsInVehicle = new();
+        foreach (var ped in pedsInVehicle.Where(i => i != Suspect))
+        {
+            
+        }
+        
+        
         Debug($"IsSuicidal: {suspect.IsSuicidal}");
         Debug($"HatesHostage: {suspect.HatesHostage}");
         Debug($"WantToSurvive: {suspect.WantToSurvive}");
@@ -122,18 +128,19 @@ internal class Suspect : Ped
 {
     internal Ped suspect;
 
-    internal bool IsSuicidal = false;
-    internal bool WantToSurvive = false;
-    internal bool HatesHostage = false;
-    internal bool WantsToDieByCop = false;
-    
+    internal bool IsSuicidal { get; private set; }
+    internal bool WantToSurvive { get; private set; }
+    internal bool HatesHostage { get; private set; }
+    internal bool WantsToDieByCop { get; private set; }
+    internal bool IsTerrorist { get; private set; }
 
     internal Suspect(Ped ped)
     {
         suspect = ped;
-        IsSuicidal = GenerateChance() < 40;
-        WantToSurvive = GenerateChance() < 30;
-        WantsToDieByCop = GenerateChance() < 25;
-        HatesHostage = GenerateChance() < 20;
+        IsSuicidal = GenerateChance() < IsSuicidalChance;
+        WantToSurvive = GenerateChance() < WantsToSurviveChance;
+        WantsToDieByCop = GenerateChance() < WantsToDieBieCopChance;
+        HatesHostage = GenerateChance() < HatesHostageChance;
+        IsTerrorist = GenerateChance() < IsTerroristChance;
     }
 }
