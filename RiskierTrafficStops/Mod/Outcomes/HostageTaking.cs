@@ -43,6 +43,10 @@ internal class HostageTaking : Outcome
 
         Suspect suspect = new Suspect(Suspect);
 
+        Debug($"{suspect.IsSuicidal}");
+        Debug($"{suspect.HatesHostage}");
+        Debug($"{suspect.WantToSurvive}");
+        
         // Less than 2 suspects
         Node CommitSuicide = new Node(true, null, null, HostageTaking.CommitSuicide);
         Node ShootOut = new Node(false, null, null, HostageTaking.ShootOut);
@@ -73,30 +77,37 @@ internal class HostageTaking : Outcome
 
     private static void KillHostageThenShootOut()
     {
+        Debug("KillHostageThenShootOut");
     }
 
     private static void ShootAtEachOther()
     {
+        Debug("ShootAtEachOther");
     }
 
     private static void AllSuspectsSurrender()
     {
+        Debug("AllSuspectsSurrender");
     }
 
     private static void Surrender()
     {
+        Debug("Surrender");
     }
 
     private static void CommitSuicide()
     {
+        Debug("CommitSuicide");
     }
 
     private static void ShootOutAllSuspects()
     {
+        Debug("ShootOutAllSuspects");
     }
 
     private static void ShootOut()
     {
+        Debug("ShootOut");
     }
 }
 
