@@ -1,4 +1,5 @@
-﻿using RiskierTrafficStops.Engine.FrontendSystems;
+﻿using System.Reflection;
+using RiskierTrafficStops.Engine.FrontendSystems;
 using static RiskierTrafficStops.Engine.Helpers.DependencyHelper;
 
 namespace RiskierTrafficStops;
@@ -6,7 +7,7 @@ namespace RiskierTrafficStops;
 public class Main : Plugin
 {
     internal static bool OnDuty;
-
+    
     public override void Initialize()
     {
         Normal("Plugin initialized, go on duty to fully load plugin.");
@@ -29,15 +30,42 @@ public class Main : Plugin
                 Normal("Adding console commands...");
                 Game.AddConsoleCommands();
                 Normal("Checking for updates...");
-                VersionChecker.IsUpdateAvailable();
-                    
+                new UpdateChecker(44036, Assembly.GetExecutingAssembly()).OnCompleted += (s, e) =>
+                {
+                    bool UpdateAvailable = e.UpdateAvailable;
+                    var UpdateVersion = e.LatestVersion;
+
+                    if (UpdateAvailable)
+                    {
+                        Game.DisplayNotification("3dtextures",
+                            "mpgroundlogo_cops",
+                            "Riskier Traffic Stops",
+                            "~b~By Astro",
+                            $"Plugin is ~r~out of to date~s~!\n" +
+                            $"Online Version: ~g~{UpdateVersion}~s~\n" +
+                            $"Installed version: ~y~{Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}~s~\n" +
+                            $"Please update ~r~ASAP~s~!");
+                        Normal($"Online Version: {UpdateVersion} | Installed Version: {Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}");
+                        Normal("Plugin is outdated, please up date to the latest version as soon as possible");
+                    }
+                    else if (!e.Failed)
+                    {
+                        Normal($"Online Version: {UpdateVersion} | Installed Version: {Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}");
+                        Game.DisplayNotification("3dtextures",
+                            "mpgroundlogo_cops",
+                            "Riskier Traffic Stops",
+                            "~b~By Astro",
+                            "Plugin is ~g~up to date!");
+                    }
+                };
+
                 // Displaying startup Notification
                 Game.DisplayNotification("3dtextures",
                     "mpgroundlogo_cops",
                     "Riskier Traffic Stops",
                     "~b~By Astro",
                     $"{PluginLoadText.PickRandom()}");
-                    
+
                 //Subscribes to events
                 PulloverEventHandler.SubscribeToEvents();
 
@@ -58,16 +86,6 @@ public class Main : Plugin
                 $"{PluginUnloadText.PickRandom()}");
             //Unsubscribes from events
             PulloverEventHandler.UnsubscribeFromEvents();
-            if (VersionChecker.UpdateThread.IsAlive)
-            {
-                Normal("Update thread was still running, shutting down...");
-                Game.DisplayNotification("new_editor",
-                    "warningtriangle",
-                    "Riskier Traffic Stops",
-                    "Version Checker",
-                    $"Update thread was still running!\nPlease wait 10s before going back on duty!\nIf you do not wait 10s you are risking a crash, you have been warned!");
-                VersionChecker.UpdateThread.Abort();
-            }
 
             Normal("Unloaded successfully");
         }
