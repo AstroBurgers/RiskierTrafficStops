@@ -176,40 +176,97 @@ internal class HostageTaking : Outcome
 
         var tempGroup = new RelationshipGroup("RTSShootingAtEachOtherSuspects");
         Game.SetRelationshipBetweenRelationshipGroups(SuspectRelateGroup, tempGroup, Relationship.Hate);
-        
-        foreach (var ped in pedsInVehicle.Where(i => i.IsAvailable() && i != pedsInVehicle[1] && i != Suspect))
+
+        if (Suspect.Exists()) Suspect.RelationshipGroup = tempGroup;
+
+        for (int i = 0; i < pedsInVehicle.Where(i => i.IsAvailable() && i != pedsInVehicle[1]).Count(); i++)
         {
-            ped.RelationshipGroup = SuspectRelateGroup;
+            if (i % 2 == 0)
+            {
+                pedsInVehicle[i].RelationshipGroup = SuspectRelateGroup;
+            }
+            else
+            {
+                pedsInVehicle[i].RelationshipGroup = tempGroup;
+            }
         }
         
+        foreach (var ped in pedsInVehicle.Where(i => i.IsAvailable() && i != pedsInVehicle[1]))
+        {
+            ped.Tasks.FightAgainstClosestHatedTarget(50f, -1);
+        }
+        
+        GameFiber.Wait(7500);
+        Game.SetRelationshipBetweenRelationshipGroups(SuspectRelateGroup, RelationshipGroup.Cop, Relationship.Hate);
+        Game.SetRelationshipBetweenRelationshipGroups(SuspectRelateGroup, MainPlayer.RelationshipGroup, Relationship.Hate);
+        Game.SetRelationshipBetweenRelationshipGroups(tempGroup, RelationshipGroup.Cop, Relationship.Hate);
+        Game.SetRelationshipBetweenRelationshipGroups(tempGroup, MainPlayer.RelationshipGroup, Relationship.Hate);
+        foreach (var ped in pedsInVehicle.Where(i => i.IsAvailable() && i != pedsInVehicle[1]))
+        {
+            ped.Tasks.FightAgainstClosestHatedTarget(50f, -1);
+        }
     }
 
     private static void AllSuspectsSurrender()
     {
         Debug("AllSuspectsSurrender");
+        foreach (var ped in pedsInVehicle.Where(i => i.IsAvailable() && i != pedsInVehicle[1]))
+        {
+            Game.LogTrivial("Making ped drop weapon...");
+            NativeFunction.Natives.x6B7513D9966FBEC0(ped); // SET_PED_DROPS_WEAPON
+            ped.Tasks.PutHandsUp(-1, MainPlayer);
+        }
     }
 
     private static void Surrender()
     {
         Debug("Surrender");
+        if (Suspect.IsAvailable())
+        {
+            Game.LogTrivial("Making ped drop weapon...");
+            NativeFunction.Natives.x6B7513D9966FBEC0(Suspect); // SET_PED_DROPS_WEAPON
+            Suspect.Tasks.PutHandsUp(-1, MainPlayer);
+        }
     }
 
     private static void CommitSuicide()
     {
         Debug("CommitSuicide");
         HandlePlayerMovement();
+        if (Suspect.IsAvailable())
+        {
+            Suspect.Inventory.GiveNewWeapon("WEAPON_UNARMED", -1, true);
+            Suspect.Tasks.PlayAnimation(new AnimationDictionary("mp_suicide"), "pill", 5f, AnimationFlags.None);
+            GameFiber.Wait(2500);
+            Suspect.Kill();
+        }
     }
 
     private static void ShootOutAllSuspects()
     {
         Debug("ShootOutAllSuspects");
         HandlePlayerMovement();
+        Game.SetRelationshipBetweenRelationshipGroups(SuspectRelateGroup, RelationshipGroup.Cop, Relationship.Hate);
+        Game.SetRelationshipBetweenRelationshipGroups(SuspectRelateGroup, MainPlayer.RelationshipGroup, Relationship.Hate);
+        foreach (var ped in pedsInVehicle.Where(i => i.IsAvailable() && i != pedsInVehicle[1]))
+        {
+            ped.RelationshipGroup = SuspectRelateGroup;
+            ped.Tasks.FightAgainstClosestHatedTarget(50f, -1);
+        }
     }
 
     private static void ShootOut()
     {
         Debug("ShootOut");
         HandlePlayerMovement();
+        Game.SetRelationshipBetweenRelationshipGroups(SuspectRelateGroup, RelationshipGroup.Cop, Relationship.Hate);
+        Game.SetRelationshipBetweenRelationshipGroups(SuspectRelateGroup, MainPlayer.RelationshipGroup, Relationship.Hate);
+
+        if (Suspect.IsAvailable())
+        {
+            Suspect.RelationshipGroup = SuspectRelateGroup;
+            Suspect.Tasks.FightAgainstClosestHatedTarget(50f, -1);
+        }
     }
 
     private static void HandlePlayerMovement()
