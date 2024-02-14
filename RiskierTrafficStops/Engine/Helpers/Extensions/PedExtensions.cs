@@ -39,6 +39,22 @@ internal static class PedExtensions
     /// <returns></returns>
     internal static bool IsAvailable(this Ped ped) => ped.Exists() && ped.IsAlive && ped.Model.IsValid;
 
+    /// <summary>
+    /// Makes ped drop their equipped weapon and put their hands up
+    /// </summary>
+    /// <param name="ped"></param>
+    internal static void Surrender(this Ped ped)
+    {
+        if (!ped.IsAvailable())
+            return;
+
+        if (ped.Inventory.EquippedWeapon is not null && ped.Inventory.EquippedWeapon != "WEAPON_UNARMED")
+        {
+            NativeFunction.Natives.x6B7513D9966FBEC0(ped); // SET_PED_DROPS_WEAPON
+        }
+        ped.Tasks.PutHandsUp(-1, MainPlayer);
+    }
+    
     internal static void GiveWeapon(this Ped ped)
     {
         if (ped.IsAvailable() && !ped.Inventory.HasLoadedWeapon)
