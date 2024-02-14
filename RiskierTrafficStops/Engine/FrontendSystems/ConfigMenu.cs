@@ -15,6 +15,7 @@ internal static class ConfigMenu
     private static readonly UIMenuListScrollerItem<bool> RevOutcomeEnabled = new("Rev Engine", "Enable or disable this outcome", new[] { true, false });
     private static readonly UIMenuListScrollerItem<bool> SafOutcomeEnabled = new("Shoot And Flee", "Enable Or disable this outcome", new[] { true, false });
     private static readonly UIMenuListScrollerItem<bool> SpitEnabled = new("Spitting", "Enable or disable this outcome", new[] { true, false });
+    private static readonly UIMenuListScrollerItem<bool> HostageTakingEnabled = new("Hostage Taking", "Enable or disable this outcome", new[] { true, false });
     private static readonly UIMenuItem SaveToIni = new("Save To INI", "Saves the current values to the INI file and reloads the INI");
 
     internal static readonly UIMenu MainMenu = new("RTS Config", "Configure Riskier Traffic Stops");
@@ -32,7 +33,7 @@ internal static class ConfigMenu
 
         Normal("Adding Items to Menu");
 
-        MainMenu.AddItems(SetChance, SafOutcomeEnabled, GoasOutcomeEnabled, YicOutcomeEnabled, RiyOutcomeEnabled, FleeOutcomeEnabled, RevOutcomeEnabled, YellOutcomeEnabled, SpitEnabled, SaveToIni);
+        MainMenu.AddItems(SetChance, SafOutcomeEnabled, GoasOutcomeEnabled, YicOutcomeEnabled, RiyOutcomeEnabled, FleeOutcomeEnabled, RevOutcomeEnabled, YellOutcomeEnabled, SpitEnabled, HostageTakingEnabled, SaveToIni);
         SaveToIni.BackColor = Color.Green;
 
         MainMenu.OnItemSelect += (_, selectedItem, _) => //Easier way to do simple things in RNUI that dont require a lot of code
@@ -59,6 +60,7 @@ internal static class ConfigMenu
         RevOutcomeEnabled.SelectedItem = RevEnabled;
         SafOutcomeEnabled.SelectedItem = ShootAndFleeEnabled;
         SpitEnabled.SelectedItem = SpittingEnabled;
+        HostageTakingEnabled.SelectedItem = Settings.HostageTakingEnabled;
         Normal("Assigned Values");
     }
 
@@ -74,6 +76,7 @@ internal static class ConfigMenu
         Inifile.Write("Outcome_Configuration", "Yelling In Car Outcome Enabled", YicOutcomeEnabled.SelectedItem);
         Inifile.Write("Outcome_Configuration", "Shoot And Flee Outcome Enabled", SafOutcomeEnabled.SelectedItem);
         Inifile.Write("Outcome_Configuration", "Spitting Outcome Enabled", SpitEnabled.SelectedItem);
+        Inifile.Write("Outcome_Configuration", "Hostage Taking Outcome Enabled", HostageTakingEnabled.SelectedItem);  
         Normal("Finished Appending to INI");
 
         Normal("Reading new Values...");
@@ -86,6 +89,7 @@ internal static class ConfigMenu
         YellInCarEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Yelling In Car Outcome Enabled", YellInCarEnabled);
         ShootAndFleeEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Shoot And Flee Outcome Enabled", ShootAndFleeEnabled);
         SpittingEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Spitting Outcome Enabled", SpittingEnabled);
+        Settings.HostageTakingEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Hostage Taking Outcome Enabled", Settings.HostageTakingEnabled);  
         Normal("Finished reading new values");
 
         Normal("----INI Values---");
@@ -98,6 +102,7 @@ internal static class ConfigMenu
         Normal($"Yelling in Car Outcome Enabled: {YellInCarEnabled}");
         Normal($"Shoot And Flee Outcome Enabled: {ShootAndFleeEnabled}");
         Normal($"Spitting Outcome Enabled: {SpittingEnabled}");
+        Normal($"Hostage Taking Enabled: {Settings.HostageTakingEnabled}");
         Normal("----INI Values---");
 
         Normal("Reloading Enabled events...");
