@@ -21,9 +21,8 @@ internal class HostageTaking : Outcome
                 GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
             }
         }
-        catch (Exception e)
+        catch (Exception e) when (e is not ThreadAbortException)
         {
-            if (e is ThreadAbortException) return;
             Error(e, nameof(StartOutcome));
             CleanupOutcome(true);
         }
@@ -56,16 +55,7 @@ internal class HostageTaking : Outcome
 
         // Hostage stuff
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => GetOutAndSurrender(_hostage.Ped)));
-
-        GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() =>
-        {
-            Vector3 suspectPos = SuspectVehicle.GetOffsetPosition(new Vector3(-1.5f, -0.5f, 0f));
-            Suspect.Tasks
-                .FollowNavigationMeshToPosition(suspectPos, MathHelper.RotateHeading(SuspectVehicle.Heading, 180), 2f)
-                .WaitForCompletion();
-            Suspect.GiveWeapon();
-            NativeFunction.Natives.x9B53BB6E8943AF53(Suspect, _hostage.Ped, -1, false); // TASK_AIM_GUN_AT_ENTITY
-        }));
+        GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(HandleSuspect));
 
         if (_pedsInVehicle.Count > 2)
         {
@@ -87,7 +77,7 @@ internal class HostageTaking : Outcome
 
         Game.DisplaySubtitle(HostageSituationText.PickRandom());
         _playerLastPos = MainPlayer.Position;
-
+        
         Debug($"IsSuicidal: {_suspect.IsSuicidal}");
         Debug($"HatesHostage: {_suspect.HatesHostage}");
         Debug($"WantToSurvive: {_suspect.WantToSurvive}");
@@ -109,12 +99,12 @@ internal class HostageTaking : Outcome
             // More than 2 suspects
             Node shootItOut = new Node(false, null, null, ShootOutAllSuspects);
             Node allSurrender = new Node(true, null, null, AllSuspectsSurrender);
-            Node shootAtEachother = new Node(true, null, null, ShootAtEachOther);
+            Node shootAtEachOther = new Node(true, null, null, ShootAtEachOther);
             Node killHostageThenShootOut = new Node(true, null, null, KillHostageThenShootOut);
             Node detonateBomb = new Node(true, null, null, DetonateBomb);
 
             Node allWantToSurvive = new Node(_suspect.WantToSurvive, shootItOut, allSurrender);
-            Node areAnySuicidal = new Node(_suspect.IsSuicidal, allWantToSurvive, shootAtEachother);
+            Node areAnySuicidal = new Node(_suspect.IsSuicidal, allWantToSurvive, shootAtEachOther);
             Node areTerrorists = new Node(_suspect.IsTerrorist, killHostageThenShootOut, detonateBomb);
             Node hateHostage = new Node(_suspect.HatesHostage, areAnySuicidal, areTerrorists);
 
@@ -125,9 +115,23 @@ internal class HostageTaking : Outcome
             Bdt bdt = new Bdt(moreThan2Suspects);
 
             bdt.FollowTruePath();
+            InvokeEvent(RTSEventType.End);
         }, "Riskier Traffic Stops BDT Fiber"));
     }
 
+    private static void HandleSuspect()
+    {
+        if (_suspect.IsAvailable())
+        {
+            Vector3 suspectPos = SuspectVehicle.GetOffsetPosition(new Vector3(-1.5f, -0.5f, 0f));
+            Suspect.Tasks
+                .FollowNavigationMeshToPosition(suspectPos, MathHelper.RotateHeading(SuspectVehicle.Heading, 180), 2f)
+                .WaitForCompletion();
+            Suspect.GiveWeapon();
+            NativeFunction.Natives.x9B53BB6E8943AF53(Suspect, _hostage.Ped, -1, false); // TASK_AIM_GUN_AT_ENTITY
+        }
+    }
+    
     private static void GetOutAndSurrender(Ped ped)
     {
         if (ped.IsAvailable())
@@ -185,16 +189,9 @@ internal class HostageTaking : Outcome
 
         if (Suspect.Exists()) Suspect.RelationshipGroup = tempGroup;
 
-        for (int i = 0; i < _pedsInVehicle.Where(i => i.IsAvailable() && i != _hostage.Ped).Count(); i++)
+        for (int i = 0; i < _pedsInVehicle.Count(ped => ped.IsAvailable() && ped != _hostage.Ped); i++)
         {
-            if (i % 2 == 0)
-            {
-                _pedsInVehicle[i].RelationshipGroup = SuspectRelateGroup;
-            }
-            else
-            {
-                _pedsInVehicle[i].RelationshipGroup = tempGroup;
-            }
+            _pedsInVehicle[i].RelationshipGroup = i % 2 == 0 ? SuspectRelateGroup : tempGroup;
         }
 
         foreach (var ped in _pedsInVehicle.Where(i => i.IsAvailable() && i != _hostage.Ped))
