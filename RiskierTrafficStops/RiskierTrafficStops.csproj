@@ -97,6 +97,7 @@
     <Compile Include="Mod\Outcomes\YellInCar.cs" />
     <Compile Include="Mod\Outcomes\Yelling.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Mod\Suspect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
