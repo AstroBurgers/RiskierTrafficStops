@@ -1,40 +1,40 @@
 namespace RiskierTrafficStops.Engine.Helpers;
 
-public class Bdt {
+internal class Bdt {
     
-    public class Node {
-        public Node Left;
-        public Node Right;
-        public bool Value;
-        public Action OutcomeAssociated;
+    internal class Node {
+        internal Node Left;
+        internal Node Right;
+        internal bool Value;
+        internal Action OutcomeAssociated;
 
-        public Node(bool value, Node left, Node right, Action outcomeAssociated) {
-            this.Value = value;
-            this.Left = left;
-            this.Right = right;
-            this.OutcomeAssociated = outcomeAssociated;
+        internal Node(bool value, Node left, Node right, Action outcomeAssociated) {
+            Value = value;
+            Left = left;
+            Right = right;
+            OutcomeAssociated = outcomeAssociated;
         }
 
-        public Node(bool value, Node left, Node right)
+        internal Node(bool value, Node left, Node right)
         {
-            this.Value = value;
-            this.Left = left;
-            this.Right = right;
+            Value = value;
+            Left = left;
+            Right = right;
             OutcomeAssociated = null;
         }
     }
 
     private Node _root;
 
-    public Bdt() {
+    internal Bdt() {
         _root = null;
     }
-    public Bdt(Node root) {
-        this._root = root;
+    internal Bdt(Node root) {
+        _root = root;
     }
     
     
-    public void FollowTruePath()
+    internal void FollowTruePath()
     {
         FollowTruePath(_root);
     }
@@ -66,11 +66,11 @@ public class Bdt {
         }
     }
 
-    public bool IsEmpty() {
+    internal bool IsEmpty() {
         return _root == null;
     }
 
-    public void Add(Node node, bool insertToLeft)
+    internal void Add(Node node, bool insertToLeft)
     {
         if (IsEmpty())
         {

@@ -5,14 +5,9 @@ namespace RiskierTrafficStops.Engine.InternalSystems;
 
 internal static class PulloverEventHandler
 {
-    private static Type _chosenOutcome;
     internal static bool HasEventHappened;
     
-    #nullable enable
-    private static Type? _lastOutcome;
-    #nullable disable
-    
-    internal static List<Type> EnabledOutcomes = new ();
+    internal static List<Type> EnabledOutcomes = new();
     
     internal static void SubscribeToEvents()
     {
@@ -108,7 +103,7 @@ internal static class PulloverEventHandler
     /// <returns>True/False</returns>
     private static bool ShouldEventHappen()
     {
-        long convertedChance = GenerateChance();
+        var convertedChance = GenerateChance();
         Normal("Chance: " + convertedChance);
         
         return convertedChance < Chance;

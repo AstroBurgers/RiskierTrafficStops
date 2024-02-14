@@ -19,13 +19,13 @@ internal class Revving : Outcome
         }
     }
 
-    internal override void StartOutcome()
+    internal virtual void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
 
         Suspect.RevEngine(SuspectVehicle, new[] { 2, 4 }, new[] { 2, 4 }, 2);
 
-        long chance = GenerateChance();
+        var chance = GenerateChance();
         switch (chance)
         {
             case <= 25:

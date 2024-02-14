@@ -28,7 +28,7 @@ internal class HostageTaking : Outcome
         }
     }
 
-    internal override void StartOutcome()
+    internal virtual void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
 
@@ -88,31 +88,31 @@ internal class HostageTaking : Outcome
             GameFiber.Wait(4500);
 
             // Less than 2 suspects
-            Node commitSuicide = new Node(true, null, null, CommitSuicide);
-            Node shootOut = new Node(false, null, null, ShootOut);
-            Node surrender = new Node(true, null, null, Surrender);
+            var commitSuicide = new Node(true, null, null, CommitSuicide);
+            var shootOut = new Node(false, null, null, ShootOut);
+            var surrender = new Node(true, null, null, Surrender);
 
-            Node wantsToSurvive = new Node(_suspect.WantToSurvive, shootOut, surrender);
-            Node wantsToDieByCop = new Node(_suspect.WantsToDieByCop, commitSuicide, shootOut);
-            Node isSuicidal = new Node(_suspect.IsSuicidal, wantsToSurvive, wantsToDieByCop);
+            var wantsToSurvive = new Node(_suspect.WantToSurvive, shootOut, surrender);
+            var wantsToDieByCop = new Node(_suspect.WantsToDieByCop, commitSuicide, shootOut);
+            var isSuicidal = new Node(_suspect.IsSuicidal, wantsToSurvive, wantsToDieByCop);
 
             // More than 2 suspects
-            Node shootItOut = new Node(false, null, null, ShootOutAllSuspects);
-            Node allSurrender = new Node(true, null, null, AllSuspectsSurrender);
-            Node shootAtEachOther = new Node(true, null, null, ShootAtEachOther);
-            Node killHostageThenShootOut = new Node(true, null, null, KillHostageThenShootOut);
-            Node detonateBomb = new Node(true, null, null, DetonateBomb);
+            var shootItOut = new Node(false, null, null, ShootOutAllSuspects);
+            var allSurrender = new Node(true, null, null, AllSuspectsSurrender);
+            var shootAtEachOther = new Node(true, null, null, ShootAtEachOther);
+            var killHostageThenShootOut = new Node(true, null, null, KillHostageThenShootOut);
+            var detonateBomb = new Node(true, null, null, DetonateBomb);
 
-            Node allWantToSurvive = new Node(_suspect.WantToSurvive, shootItOut, allSurrender);
-            Node areAnySuicidal = new Node(_suspect.IsSuicidal, allWantToSurvive, shootAtEachOther);
-            Node areTerrorists = new Node(_suspect.IsTerrorist, killHostageThenShootOut, detonateBomb);
-            Node hateHostage = new Node(_suspect.HatesHostage, areAnySuicidal, areTerrorists);
+            var allWantToSurvive = new Node(_suspect.WantToSurvive, shootItOut, allSurrender);
+            var areAnySuicidal = new Node(_suspect.IsSuicidal, allWantToSurvive, shootAtEachOther);
+            var areTerrorists = new Node(_suspect.IsTerrorist, killHostageThenShootOut, detonateBomb);
+            var hateHostage = new Node(_suspect.HatesHostage, areAnySuicidal, areTerrorists);
 
             // Root Node
-            Node moreThan2Suspects = new Node(_pedsInVehicle.Count > 2, isSuicidal, hateHostage);
+            var moreThan2Suspects = new Node(_pedsInVehicle.Count > 2, isSuicidal, hateHostage);
 
             // Tree
-            Bdt bdt = new Bdt(moreThan2Suspects);
+            var bdt = new Bdt(moreThan2Suspects);
 
             bdt.FollowTruePath();
             InvokeEvent(RTSEventType.End);
@@ -123,7 +123,7 @@ internal class HostageTaking : Outcome
     {
         if (_suspect.IsAvailable())
         {
-            Vector3 suspectPos = SuspectVehicle.GetOffsetPosition(new Vector3(-1.5f, -0.5f, 0f));
+            var suspectPos = SuspectVehicle.GetOffsetPosition(new Vector3(-1.5f, -0.5f, 0f));
             Suspect.Tasks
                 .FollowNavigationMeshToPosition(suspectPos, MathHelper.RotateHeading(SuspectVehicle.Heading, 180), 2f)
                 .WaitForCompletion();
@@ -137,7 +137,7 @@ internal class HostageTaking : Outcome
         if (ped.IsAvailable())
         {
             ped.Tasks.LeaveVehicle(ped.LastVehicle, LeaveVehicleFlags.None).WaitForCompletion();
-            Vector3 pos = SuspectVehicle.GetOffsetPosition(new Vector3(-1.5f, -1.5f, 0f));
+            var pos = SuspectVehicle.GetOffsetPosition(new Vector3(-1.5f, -1.5f, 0f));
             ped.Tasks.FollowNavigationMeshToPosition(pos, MathHelper.RotateHeading(SuspectVehicle.Heading, 180), 2f)
                 .WaitForCompletion();
             if (ped.IsAvailable())
@@ -189,7 +189,7 @@ internal class HostageTaking : Outcome
 
         if (Suspect.Exists()) Suspect.RelationshipGroup = tempGroup;
 
-        for (int i = 0; i < _pedsInVehicle.Count(ped => ped.IsAvailable() && ped != _hostage.Ped); i++)
+        for (var i = 0; i < _pedsInVehicle.Count(ped => ped.IsAvailable() && ped != _hostage.Ped); i++)
         {
             _pedsInVehicle[i].RelationshipGroup = i % 2 == 0 ? SuspectRelateGroup : tempGroup;
         }
@@ -272,8 +272,8 @@ internal class HostageTaking : Outcome
 
     private static void HandlePlayerMovement()
     {
-        Vector3 movementVector = MainPlayer.Position - _playerLastPos;
-        float distanceMovedSquared = Vector3.Dot(movementVector, movementVector);
+        var movementVector = MainPlayer.Position - _playerLastPos;
+        var distanceMovedSquared = Vector3.Dot(movementVector, movementVector);
 
         if (distanceMovedSquared > 2f)
         {

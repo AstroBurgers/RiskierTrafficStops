@@ -29,11 +29,11 @@ internal abstract class Outcome
     /// Returns the Driver and its vehicle
     /// </summary>
     /// <returns>Ped, Vehicle</returns>
-    internal static bool GetSuspectAndSuspectVehicle(LHandle handle, out Ped suspect, out Vehicle suspectVehicle)
+    private static bool GetSuspectAndSuspectVehicle(LHandle handle, out Ped suspect, out Vehicle suspectVehicle)
     {
         Ped driver = null;
         Vehicle driverVehicle = null;
-        if ((handle != null) && Functions.IsPlayerPerformingPullover() && Functions.GetPulloverSuspect(handle).IsAvailable())
+        if (handle is not null && Functions.IsPlayerPerformingPullover() && Functions.GetPulloverSuspect(handle).IsAvailable())
         {
             Normal("Setting up Suspect");
             driver = Functions.GetPulloverSuspect(handle);

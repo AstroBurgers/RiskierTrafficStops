@@ -48,11 +48,9 @@ internal static class PursuitHelper
         for (var i = suspectList.Count - 1; i >= 0; i--)
         {
             GameFiber.Yield();
-            if (suspectList[i].IsAvailable())
-            {
-                Functions.AddPedToPursuit(pursuitLHandle, suspectList[i]);
-                RandomizePursuitAttributes(suspectList[i]);
-            }
+            if (!suspectList[i].IsAvailable()) continue;
+            Functions.AddPedToPursuit(pursuitLHandle, suspectList[i]);
+            RandomizePursuitAttributes(suspectList[i]);
         }
         return pursuitLHandle;
     }
@@ -69,11 +67,9 @@ internal static class PursuitHelper
         for (var i = suspectList.Length - 1; i >= 0; i--)
         {
             GameFiber.Yield();
-            if (suspectList[i].IsAvailable())
-            {
-                Functions.AddPedToPursuit(pursuitLHandle, suspectList[i]);
-                RandomizePursuitAttributes(suspectList[i]);
-            }
+            if (!suspectList[i].IsAvailable()) continue;
+            Functions.AddPedToPursuit(pursuitLHandle, suspectList[i]);
+            RandomizePursuitAttributes(suspectList[i]);
         }
         return pursuitLHandle;
     }
@@ -84,7 +80,7 @@ internal static class PursuitHelper
         {
             static float GenerateRandomFloat() => (float)Math.Round((float)(Rndm.NextDouble() * (2.0 - 0.1) + 0.1), 1);
                 
-            PedPursuitAttributes attributes = Functions.GetPedPursuitAttributes(suspect);
+            var attributes = Functions.GetPedPursuitAttributes(suspect);
                 
             attributes.MinDrivingSpeed = MphToMps(Rndm.Next(35, 60));
             attributes.MaxDrivingSpeed = MphToMps(Rndm.Next(61, 201));

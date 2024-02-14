@@ -35,15 +35,12 @@ internal class Flee : Outcome
         Normal("Getting all vehicle occupants");
         var pedsInVehicle = SuspectVehicle.Occupants.ToList();
 
-        foreach (var ped in pedsInVehicle)
+        foreach (var ped in pedsInVehicle.Where(ped => ped.IsAvailable() && PedsToIgnore.Contains(ped)))
         {
-            if (ped.IsAvailable() && PedsToIgnore.Contains(ped))
-            {
-                pedsInVehicle.Remove(ped);
-            }
+            pedsInVehicle.Remove(ped);
         }
         
-        FleeOutcomes chosenFleeOutcome = AllFleeOutcomes.PickRandom();
+        var chosenFleeOutcome = AllFleeOutcomes.PickRandom();
 
         switch (chosenFleeOutcome)
         {
@@ -76,12 +73,9 @@ internal class Flee : Outcome
                 PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                 break;
             case FleeOutcomes.LeaveVehicle:
-                foreach (var i in pedsInVehicle)
+                foreach (var i in pedsInVehicle.Where(i => i.IsAvailable()))
                 {
-                    if (i.IsAvailable())
-                    {
-                        i.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
-                    }
+                    i.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
                 }
 
                 if (Functions.GetCurrentPullover() == null) return;

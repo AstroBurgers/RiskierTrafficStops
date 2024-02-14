@@ -14,7 +14,7 @@ using TTask = System.Threading.Tasks.Task;
 namespace RiskierTrafficStops.Engine.InternalSystems;
 
 [EditorBrowsable(EditorBrowsableState.Never)]
-public class UpdateChecker
+internal class UpdateChecker
 {
     private readonly Assembly _assembly;
     private readonly Uri _apiUrl;
@@ -26,13 +26,13 @@ public class UpdateChecker
     private readonly TTask _asyncUpdateTask;
     private readonly CancellationTokenSource _cts;
 
-    public class UpdateCompletedEventArgs : EventArgs
+    internal class UpdateCompletedEventArgs : EventArgs
     {
-        public bool Failed { get; private set; }
-        public bool UpdateAvailable { get; private set; }
-        public Version LatestVersion { get; private set; }
+        internal bool Failed { get; private set; }
+        internal bool UpdateAvailable { get; private set; }
+        internal Version LatestVersion { get; private set; }
 
-        public UpdateCompletedEventArgs(bool failed, bool updateAvailable, Version latestVersion)
+        internal UpdateCompletedEventArgs(bool failed, bool updateAvailable, Version latestVersion)
         {
             Failed = failed;
             UpdateAvailable = updateAvailable;
@@ -40,11 +40,11 @@ public class UpdateChecker
         }
     }
 
-    public event EventHandler<UpdateCompletedEventArgs> OnCompleted;
+    internal event EventHandler<UpdateCompletedEventArgs> OnCompleted;
 
-    public UpdateChecker(int fileId, Assembly assembly)
+    internal UpdateChecker(Assembly assembly)
     {
-        if (!Uri.TryCreate($"https://www.lcpdfr.com/applications/downloadsng/interface/api.php?do=checkForUpdates&fileId=44036&textOnly=1", UriKind.Absolute, out _apiUrl))
+        if (!Uri.TryCreate("https://www.lcpdfr.com/applications/downloadsng/interface/api.php?do=checkForUpdates&fileId=44036&textOnly=1", UriKind.Absolute, out _apiUrl))
         {
             throw new UriFormatException(nameof(_apiUrl));
         }
@@ -69,11 +69,11 @@ public class UpdateChecker
         OnCompleted?.Invoke(this, new UpdateCompletedEventArgs(_failure, _latestVersion > _currentVersion, _latestVersion));
     }
 
-    public async TTask CheckForUpdatesAsync(CancellationToken cts)
+    internal async TTask CheckForUpdatesAsync(CancellationToken cts)
     {
         try
         {
-            string updateText = await DownloadUpdateTextAsync(_apiUrl, cts);
+            var updateText = await DownloadUpdateTextAsync(_apiUrl, cts);
 
             cts.ThrowIfCancellationRequested();
 
@@ -92,13 +92,12 @@ public class UpdateChecker
         catch (Exception)
         {
             _failure = true;
-            return;
         }
     }
 
     private async Task<string> DownloadUpdateTextAsync(Uri url, CancellationToken cts)
     {
-        using (HttpClient httpClient = new HttpClient())
+        using (var httpClient = new HttpClient())
         {
             httpClient.Timeout = TimeSpan.FromMilliseconds(30000);
 

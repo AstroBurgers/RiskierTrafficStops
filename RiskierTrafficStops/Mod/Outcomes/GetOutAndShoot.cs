@@ -46,17 +46,14 @@ internal class GetOutAndShoot : Outcome
         
         if (_pedsInVehicle.Count < 1) throw new ArgumentNullException(nameof(_pedsInVehicle));
 
-        foreach (var ped in _pedsInVehicle)
+        foreach (var ped in _pedsInVehicle.Where(ped => ped.IsAvailable() && PedsToIgnore.Contains(ped)))
         {
-            if (ped.IsAvailable() && PedsToIgnore.Contains(ped))
-            {
-                _pedsInVehicle.Remove(ped);
-            }
+            _pedsInVehicle.Remove(ped);
         }
         
         SetRelationshipGroups(SuspectRelateGroup);
 
-        foreach (Ped ped in _pedsInVehicle)
+        foreach (var ped in _pedsInVehicle)
         {
             ped.GiveWeapon();
             GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => GetPedOutOfVehicle(ped)));
@@ -80,13 +77,10 @@ internal class GetOutAndShoot : Outcome
                 PursuitLHandle = SetupPursuitWithList(true, _pedsInVehicle);
                 break;
             case GetOutAndShootOutcomes.KeepShooting:
-                foreach (var i in _pedsInVehicle)
+                foreach (var i in _pedsInVehicle.Where(i => i.IsAvailable()))
                 {
-                    if (i.IsAvailable())
-                    {
-                        Normal("Giving Suspect FightAgainstClosestHatedTarget Task");
-                        i.Tasks.FightAgainstClosestHatedTarget(40f, -1);
-                    }
+                    Normal("Giving Suspect FightAgainstClosestHatedTarget Task");
+                    i.Tasks.FightAgainstClosestHatedTarget(40f, -1);
                 }
 
                 break;

@@ -5,10 +5,10 @@ namespace RiskierTrafficStops.API;
 internal enum RTSEventType
 {
     Start,
-    End,
+    End
 }
 
-public class APIs
+public static class APIs
 {
     /// <summary>
     /// Disables RTS Outcomes for the current/next pullover
@@ -29,12 +29,9 @@ public class APIs
             }
         }
 
-        foreach (var ped in Outcome.PedsToIgnore)
+        foreach (var ped in Outcome.PedsToIgnore.Where(ped => !ped.IsAvailable()))
         {
-            if (!ped.IsAvailable())
-            {
-                Outcome.PedsToIgnore.Remove(ped);
-            }
+            Outcome.PedsToIgnore.Remove(ped);
         }
     }
     
