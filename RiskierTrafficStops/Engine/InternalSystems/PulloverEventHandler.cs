@@ -1,4 +1,5 @@
 ﻿using RiskierTrafficStops.API.ExternalAPIs;
+using RiskierTrafficStops.Mod.Outcomes;
 
 namespace RiskierTrafficStops.Engine.InternalSystems;
 
@@ -80,15 +81,17 @@ internal static class PulloverEventHandler
         {
             if (ShouldEventHappen())
             {
-                Normal($"DisableRTSForCurrentStop: {DisableRTSForCurrentStop}");
-                
-                Normal("Choosing Outcome");
-                _chosenOutcome = EnabledOutcomes.Count <= 1 ? EnabledOutcomes[Rndm.Next(EnabledOutcomes.Count)] : EnabledOutcomes[Rndm.Next(EnabledOutcomes.Where(i => i != _lastOutcome).ToList().Count)];
-                Normal($"Chosen Outcome: {_chosenOutcome}");
-                
-                _lastOutcome = _chosenOutcome;
+                Activator.CreateInstance(typeof(HostageTaking), args: handle);
 
-                Activator.CreateInstance(_chosenOutcome, args: handle);
+                // Normal($"DisableRTSForCurrentStop: {DisableRTSForCurrentStop}");
+                //
+                // Normal("Choosing Outcome");
+                // _chosenOutcome = EnabledOutcomes.Count <= 1 ? EnabledOutcomes[Rndm.Next(EnabledOutcomes.Count)] : EnabledOutcomes[Rndm.Next(EnabledOutcomes.Where(i => i != _lastOutcome).ToList().Count)];
+                // Normal($"Chosen Outcome: {_chosenOutcome}");
+                //
+                // _lastOutcome = _chosenOutcome;
+                //
+                // Activator.CreateInstance(_chosenOutcome, args: handle);
             }
         }
         catch (Exception e)
@@ -99,6 +102,10 @@ internal static class PulloverEventHandler
         }
     }
         
+    /// <summary>
+    /// Does a chance generation and check to determine if a outcome should happen
+    /// </summary>
+    /// <returns>True/False</returns>
     private static bool ShouldEventHappen()
     {
         long convertedChance = GenerateChance();

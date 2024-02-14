@@ -7,6 +7,19 @@ internal static class MathHelper
     internal static readonly Random Rndm = new(DateTime.Now.Millisecond);
     internal static readonly RNGCryptoServiceProvider ImprovedRandom = new();
     
+    internal static float GetOppositeHeading(double heading)
+    {
+        double oppositeHeading = heading - 180; // Subtract 180 degrees
+        oppositeHeading %= 360; // Ensure the result is within 0 to 360 degrees range
+
+        if (oppositeHeading < 0)
+        {
+            oppositeHeading += 360; // If the result is negative, add 360 to get the positive equivalent
+        }
+
+        return (float)oppositeHeading;
+    }
+    
     internal static bool CheckZDistance(float z1, float z2, float range)
     {
         var difference = Math.Abs(z1 - z2);
