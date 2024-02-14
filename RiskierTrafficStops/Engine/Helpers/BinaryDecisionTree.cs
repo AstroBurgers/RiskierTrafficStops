@@ -1,109 +1,109 @@
 namespace RiskierTrafficStops.Engine.Helpers;
 
-public class BDT {
+public class Bdt {
     
     public class Node {
-        public Node left;
-        public Node right;
-        public bool value;
-        public Action outcomeAssociated;
+        public Node Left;
+        public Node Right;
+        public bool Value;
+        public Action OutcomeAssociated;
 
         public Node(bool value, Node left, Node right, Action outcomeAssociated) {
-            this.value = value;
-            this.left = left;
-            this.right = right;
-            this.outcomeAssociated = outcomeAssociated;
+            this.Value = value;
+            this.Left = left;
+            this.Right = right;
+            this.OutcomeAssociated = outcomeAssociated;
         }
 
         public Node(bool value, Node left, Node right)
         {
-            this.value = value;
-            this.left = left;
-            this.right = right;
-            outcomeAssociated = null;
+            this.Value = value;
+            this.Left = left;
+            this.Right = right;
+            OutcomeAssociated = null;
         }
     }
 
-    private Node root;
+    private Node _root;
 
-    public BDT() {
-        root = null;
+    public Bdt() {
+        _root = null;
     }
-    public BDT(Node root) {
-        this.root = root;
+    public Bdt(Node root) {
+        this._root = root;
     }
     
     
     public void FollowTruePath()
     {
-        FollowTruePath(root);
+        FollowTruePath(_root);
     }
 
     private void FollowTruePath(Node subroot)
     {
         // Follow the true path recursively
-        if (subroot.value)
+        if (subroot.Value)
         {
-            if (subroot.right == null && subroot.outcomeAssociated != null)
+            if (subroot.Right == null && subroot.OutcomeAssociated != null)
             {
-                subroot.outcomeAssociated();
+                subroot.OutcomeAssociated();
             }
             else
             {
-                FollowTruePath(subroot.right);
+                FollowTruePath(subroot.Right);
             }
         }
         else
         {
-            if (subroot.left == null && subroot.outcomeAssociated != null)
+            if (subroot.Left == null && subroot.OutcomeAssociated != null)
             {
-                subroot.outcomeAssociated();
+                subroot.OutcomeAssociated();
             }
             else
             {
-                FollowTruePath(subroot.left);
+                FollowTruePath(subroot.Left);
             }
         }
     }
 
-    public bool isEmpty() {
-        return root == null;
+    public bool IsEmpty() {
+        return _root == null;
     }
 
-    public void add(Node node, bool insertToLeft)
+    public void Add(Node node, bool insertToLeft)
     {
-        if (isEmpty())
+        if (IsEmpty())
         {
-            root = node;
+            _root = node;
         }
         else
         {
-            add(root, node, insertToLeft);
+            Add(_root, node, insertToLeft);
         }
     }
 
-    private void add(Node parentRoot, Node node, bool insertToLeft)
+    private void Add(Node parentRoot, Node node, bool insertToLeft)
     {
         if (insertToLeft)
         {
-            if (parentRoot.left == null)
+            if (parentRoot.Left == null)
             {
-                parentRoot.left = new Node(node.value, null, null, node.outcomeAssociated);
+                parentRoot.Left = new Node(node.Value, null, null, node.OutcomeAssociated);
             }
             else
             {
-                add(parentRoot.left, node, insertToLeft);
+                Add(parentRoot.Left, node, insertToLeft);
             }
         }
         else
         {
-            if (parentRoot.right == null)
+            if (parentRoot.Right == null)
             {
-                parentRoot.right = new Node(node.value, null, null, node.outcomeAssociated);
+                parentRoot.Right = new Node(node.Value, null, null, node.OutcomeAssociated);
             }
             else
             {
-                add(parentRoot.right, node, insertToLeft);
+                Add(parentRoot.Right, node, insertToLeft);
             }
         }
     }

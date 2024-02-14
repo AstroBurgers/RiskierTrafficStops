@@ -32,25 +32,25 @@ public class Main : Plugin
                 Normal("Checking for updates...");
                 new UpdateChecker(44036, Assembly.GetExecutingAssembly()).OnCompleted += (s, e) =>
                 {
-                    bool UpdateAvailable = e.UpdateAvailable;
-                    var UpdateVersion = e.LatestVersion;
+                    bool updateAvailable = e.UpdateAvailable;
+                    var updateVersion = e.LatestVersion;
 
-                    if (UpdateAvailable)
+                    if (updateAvailable)
                     {
                         Game.DisplayNotification("3dtextures",
                             "mpgroundlogo_cops",
                             "Riskier Traffic Stops",
                             "~b~By Astro",
                             $"Plugin is ~r~out of to date~s~!\n" +
-                            $"Online Version: ~g~{UpdateVersion}~s~\n" +
+                            $"Online Version: ~g~{updateVersion}~s~\n" +
                             $"Installed version: ~y~{Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}~s~\n" +
                             $"Please update ~r~ASAP~s~!");
-                        Normal($"Online Version: {UpdateVersion} | Installed Version: {Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}");
+                        Normal($"Online Version: {updateVersion} | Installed Version: {Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}");
                         Normal("Plugin is outdated, please up date to the latest version as soon as possible");
                     }
                     else if (!e.Failed)
                     {
-                        Normal($"Online Version: {UpdateVersion} | Installed Version: {Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}");
+                        Normal($"Online Version: {updateVersion} | Installed Version: {Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}");
                         Game.DisplayNotification("3dtextures",
                             "mpgroundlogo_cops",
                             "Riskier Traffic Stops",

@@ -24,7 +24,7 @@ internal static class Arrays
         "Good policing, Officer!"
     };
 
-    internal static readonly string[] hostageSituationText =
+    internal static readonly string[] HostageSituationText =
     {
         "~y~Suspect(s)~s~: Move and their dead!",
         "~y~Suspect(s)~s~: Don't move or I'll shoot!",

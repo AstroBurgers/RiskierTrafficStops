@@ -39,15 +39,15 @@ internal class AttributeNode : DecisionNode
 
 internal class DecisionLeaf : DecisionNode
 {
-    private string decision;
+    private string _decision;
 
     internal DecisionLeaf(string value)
     {
-        decision = value;
+        _decision = value;
     }
 
     internal override string Evaluate(Dictionary<string, object> inputs)
     {
-        return decision;
+        return _decision;
     }
 }

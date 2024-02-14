@@ -17,14 +17,14 @@ namespace RiskierTrafficStops.Engine.InternalSystems;
 public class UpdateChecker
 {
     private readonly Assembly _assembly;
-    private readonly Uri apiUrl;
-    private readonly Version currentVersion;
+    private readonly Uri _apiUrl;
+    private readonly Version _currentVersion;
 
-    private Version latestVersion;
-    private bool failure;
+    private Version _latestVersion;
+    private bool _failure;
 
-    private readonly TTask asyncUpdateTask;
-    private readonly CancellationTokenSource cts;
+    private readonly TTask _asyncUpdateTask;
+    private readonly CancellationTokenSource _cts;
 
     public class UpdateCompletedEventArgs : EventArgs
     {
@@ -44,18 +44,18 @@ public class UpdateChecker
 
     public UpdateChecker(int fileId, Assembly assembly)
     {
-        if (!Uri.TryCreate($"https://www.lcpdfr.com/applications/downloadsng/interface/api.php?do=checkForUpdates&fileId=44036&textOnly=1", UriKind.Absolute, out apiUrl))
+        if (!Uri.TryCreate($"https://www.lcpdfr.com/applications/downloadsng/interface/api.php?do=checkForUpdates&fileId=44036&textOnly=1", UriKind.Absolute, out _apiUrl))
         {
-            throw new UriFormatException(nameof(apiUrl));
+            throw new UriFormatException(nameof(_apiUrl));
         }
         _assembly = assembly;
 
-        currentVersion = latestVersion = _assembly.GetName().Version;
+        _currentVersion = _latestVersion = _assembly.GetName().Version;
 
-        cts = new CancellationTokenSource();
-        cts.CancelAfter(30000);
+        _cts = new CancellationTokenSource();
+        _cts.CancelAfter(30000);
 
-        asyncUpdateTask = TTask.Run(() => CheckForUpdatesAsync(cts.Token));
+        _asyncUpdateTask = TTask.Run(() => CheckForUpdatesAsync(_cts.Token));
 
         GameFiber.StartNew(WaitFiber);
     }
@@ -64,34 +64,34 @@ public class UpdateChecker
     {
         GameFiber.Wait(1000);
 
-        GameFiber.WaitUntil(() => asyncUpdateTask.IsCompleted);
+        GameFiber.WaitUntil(() => _asyncUpdateTask.IsCompleted);
 
-        OnCompleted?.Invoke(this, new UpdateCompletedEventArgs(failure, latestVersion > currentVersion, latestVersion));
+        OnCompleted?.Invoke(this, new UpdateCompletedEventArgs(_failure, _latestVersion > _currentVersion, _latestVersion));
     }
 
     public async TTask CheckForUpdatesAsync(CancellationToken cts)
     {
         try
         {
-            string updateText = await DownloadUpdateTextAsync(apiUrl, cts);
+            string updateText = await DownloadUpdateTextAsync(_apiUrl, cts);
 
             cts.ThrowIfCancellationRequested();
 
             if (!string.IsNullOrWhiteSpace(updateText))
             {
-                if (!Version.TryParse(updateText.Trim('v'), out latestVersion))
+                if (!Version.TryParse(updateText.Trim('v'), out _latestVersion))
                 {
-                    failure = true;
+                    _failure = true;
                 }
             }
             else
             {
-                failure = true;
+                _failure = true;
             }
         }
         catch (Exception)
         {
-            failure = true;
+            _failure = true;
             return;
         }
     }
@@ -106,7 +106,7 @@ public class UpdateChecker
         }
     }
 
-    private static void SetTLS()
+    private static void SetTls()
     {
         ServicePointManager.Expect100Continue = true;
         ServicePointManager.MaxServicePointIdleTime = 2000;
@@ -122,7 +122,7 @@ public class UpdateChecker
         {
             cts.CancelAfter(client.Timeout);
 
-            SetTLS();
+            SetTls();
 
             using var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
             using (var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cts.Token))
