@@ -1,4 +1,5 @@
-﻿using RiskierTrafficStops.Engine.Helpers;
+﻿using RiskierTrafficStops.Engine.Data;
+using RiskierTrafficStops.Engine.Helpers;
 using static RiskierTrafficStops.Engine.Helpers.Bdt;
 using MathHelper = Rage.MathHelper;
 
@@ -78,10 +79,7 @@ internal class HostageTaking : Outcome
         Game.DisplaySubtitle(HostageSituationText.PickRandom());
         _playerLastPos = MainPlayer.Position;
         
-        Debug($"IsSuicidal: {_suspect.IsSuicidal}");
-        Debug($"HatesHostage: {_suspect.HatesHostage}");
-        Debug($"WantToSurvive: {_suspect.WantToSurvive}");
-        Debug($"WantsToDieByCop: {_suspect.WantsToDieByCop}");
+        DebugSuspectProperties();
 
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() =>
         {
@@ -119,6 +117,14 @@ internal class HostageTaking : Outcome
         }, "Riskier Traffic Stops BDT Fiber"));
     }
 
+    private void DebugSuspectProperties()
+    {
+        Debug($"IsSuicidal: {_suspect.IsSuicidal}");
+        Debug($"HatesHostage: {_suspect.HatesHostage}");
+        Debug($"WantToSurvive: {_suspect.WantToSurvive}");
+        Debug($"WantsToDieByCop: {_suspect.WantsToDieByCop}");
+    }
+    
     private static void HandleSuspect()
     {
         if (_suspect.IsAvailable())
@@ -150,7 +156,22 @@ internal class HostageTaking : Outcome
         }
     }
 
-    private static void DetonateBomb()
+    private static void HandlePlayerMovement()
+    {
+        var movementVector = MainPlayer.Position - _playerLastPos;
+        var distanceMovedSquared = Vector3.Dot(movementVector, movementVector);
+
+        if (distanceMovedSquared > 2f)
+        {
+            foreach (var ped in _pedsInVehicle.Where(i => i.IsAvailable() && i != _hostage.Ped))
+            {
+                NativeFunction.Natives.x08DA95E8298AE772(ped, _hostage.Ped, -1,
+                    Game.GetHashKey("FIRING_PATTERN_FULL_AUTO")); // TASK_SHOOT_AT_ENTITY
+            }
+        }
+    }
+    
+        private static void DetonateBomb()
     {
         Debug("DetonateBomb");
         if (SuspectVehicle.IsAvailable())
@@ -267,21 +288,6 @@ internal class HostageTaking : Outcome
         {
             Suspect.RelationshipGroup = SuspectRelateGroup;
             Suspect.Tasks.FightAgainstClosestHatedTarget(50f, -1);
-        }
-    }
-
-    private static void HandlePlayerMovement()
-    {
-        var movementVector = MainPlayer.Position - _playerLastPos;
-        var distanceMovedSquared = Vector3.Dot(movementVector, movementVector);
-
-        if (distanceMovedSquared > 2f)
-        {
-            foreach (var ped in _pedsInVehicle.Where(i => i.IsAvailable() && i != _hostage.Ped))
-            {
-                NativeFunction.Natives.x08DA95E8298AE772(ped, _hostage.Ped, -1,
-                    Game.GetHashKey("FIRING_PATTERN_FULL_AUTO")); // TASK_SHOOT_AT_ENTITY
-            }
         }
     }
 }

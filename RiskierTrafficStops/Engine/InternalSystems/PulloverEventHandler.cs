@@ -8,6 +8,9 @@ internal static class PulloverEventHandler
     internal static bool HasEventHappened;
     
     internal static List<Type> EnabledOutcomes = new();
+
+    internal static Type _chosenOutcome = null;
+    internal static Type _lastOutcome = null;
     
     internal static void SubscribeToEvents()
     {
@@ -76,17 +79,15 @@ internal static class PulloverEventHandler
         {
             if (ShouldEventHappen())
             {
-                Activator.CreateInstance(typeof(HostageTaking), args: handle);
-
-                // Normal($"DisableRTSForCurrentStop: {DisableRTSForCurrentStop}");
-                //
-                // Normal("Choosing Outcome");
-                // _chosenOutcome = EnabledOutcomes.Count <= 1 ? EnabledOutcomes[Rndm.Next(EnabledOutcomes.Count)] : EnabledOutcomes[Rndm.Next(EnabledOutcomes.Where(i => i != _lastOutcome).ToList().Count)];
-                // Normal($"Chosen Outcome: {_chosenOutcome}");
-                //
-                // _lastOutcome = _chosenOutcome;
-                //
-                // Activator.CreateInstance(_chosenOutcome, args: handle);
+                Normal($"DisableRTSForCurrentStop: {DisableRTSForCurrentStop}");
+                
+                Normal("Choosing Outcome");
+                _chosenOutcome = EnabledOutcomes.Count <= 1 ? EnabledOutcomes[Rndm.Next(EnabledOutcomes.Count)] : EnabledOutcomes[Rndm.Next(EnabledOutcomes.Where(i => i != _lastOutcome).ToList().Count)];
+                Normal($"Chosen Outcome: {_chosenOutcome}");
+                
+                _lastOutcome = _chosenOutcome;
+                
+                Activator.CreateInstance(_chosenOutcome, args: handle);
             }
         }
         catch (Exception e)

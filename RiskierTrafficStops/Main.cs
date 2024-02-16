@@ -66,6 +66,8 @@ public class Main : Plugin
                     "~b~By Astro",
                     $"{PluginLoadText.PickRandom()}");
 
+                if (DebugMode) Game.DisplayNotification("RTS: DEBUG MODE IS ENABLED FUCK TARD");
+                
                 //Subscribes to events
                 PulloverEventHandler.SubscribeToEvents();
 
