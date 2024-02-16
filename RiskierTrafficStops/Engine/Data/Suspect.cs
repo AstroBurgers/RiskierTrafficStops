@@ -1,4 +1,4 @@
-﻿namespace RiskierTrafficStops.Mod;
+﻿namespace RiskierTrafficStops.Engine.Data;
 
 internal class Suspect : Ped
 {
