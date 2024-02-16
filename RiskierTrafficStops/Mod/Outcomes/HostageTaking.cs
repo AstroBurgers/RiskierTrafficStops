@@ -11,7 +11,7 @@ internal class HostageTaking : Outcome
     private static List<Ped> _pedsInVehicle = new();
     private static Suspect _suspect = new(Suspect);
     private static Suspect _hostage;
-    
+
     public HostageTaking(LHandle handle) : base(handle)
     {
         try
@@ -29,56 +29,31 @@ internal class HostageTaking : Outcome
         }
     }
 
-    internal virtual void StartOutcome()
+    internal override void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
 
         Normal("Getting all vehicle occupants");
         _pedsInVehicle = SuspectVehicle.Occupants.ToList();
 
-        foreach (var ped in _pedsInVehicle)
-        {
-            if (ped.IsAvailable() && PedsToIgnore.Contains(ped))
-            {
-                _pedsInVehicle.Remove(ped);
-            }
+        RemoveIgnoredPedsAndBlockEvents();
 
-            ped.BlockPermanentEvents = true;
-        }
+        if (_pedsInVehicle.Count <= 1) CleanupOutcome(true);
 
-        if (_pedsInVehicle.Count <= 1)
-        {
-            CleanupOutcome(true);
-            return;
-        }
-        
         _hostage = new Suspect(_pedsInVehicle[1]);
 
         // Hostage stuff
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => GetOutAndSurrender(_hostage.Ped)));
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(HandleSuspect));
 
-        if (_pedsInVehicle.Count > 2)
+        foreach (var ped in _pedsInVehicle.Where(i => i.IsAvailable() && i != _hostage.Ped && i != Suspect))
         {
-            foreach (var ped in _pedsInVehicle.Where(i => i != _hostage.Ped && i.IsAvailable() && i != Suspect))
-            {
-                if (!ped.IsAvailable())
-                {
-                    _pedsInVehicle.Remove(ped);
-                }
-
-                GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() =>
-                {
-                    ped.Tasks.LeaveVehicle(ped.LastVehicle, LeaveVehicleFlags.None).WaitForCompletion();
-                    ped.GiveWeapon();
-                    NativeFunction.Natives.x9B53BB6E8943AF53(ped, MainPlayer, -1, false); // TASK_AIM_GUN_AT_ENTITY
-                }));
-            }
+            GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => MakePedLeaveVehicle(ped)));
         }
 
         Game.DisplaySubtitle(HostageSituationText.PickRandom());
         _playerLastPos = MainPlayer.Position;
-        
+
         DebugSuspectProperties();
 
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() =>
@@ -117,6 +92,12 @@ internal class HostageTaking : Outcome
         }, "Riskier Traffic Stops BDT Fiber"));
     }
 
+    private void RemoveIgnoredPedsAndBlockEvents()
+    {
+        _pedsInVehicle.RemoveAll(ped => ped.IsAvailable() && PedsToIgnore.Contains(ped));
+        _pedsInVehicle.ForEach(ped => ped.BlockPermanentEvents = true);
+    }
+
     private void DebugSuspectProperties()
     {
         Debug($"IsSuicidal: {_suspect.IsSuicidal}");
@@ -124,7 +105,14 @@ internal class HostageTaking : Outcome
         Debug($"WantToSurvive: {_suspect.WantToSurvive}");
         Debug($"WantsToDieByCop: {_suspect.WantsToDieByCop}");
     }
-    
+
+    private static void MakePedLeaveVehicle(Ped ped)
+    {
+        ped.Tasks.LeaveVehicle(ped.LastVehicle, LeaveVehicleFlags.None).WaitForCompletion();
+        ped.GiveWeapon();
+        NativeFunction.Natives.x9B53BB6E8943AF53(ped, MainPlayer, -1, false); // TASK_AIM_GUN_AT_ENTITY
+    }
+
     private static void HandleSuspect()
     {
         if (_suspect.IsAvailable())
@@ -137,7 +125,7 @@ internal class HostageTaking : Outcome
             NativeFunction.Natives.x9B53BB6E8943AF53(Suspect, _hostage.Ped, -1, false); // TASK_AIM_GUN_AT_ENTITY
         }
     }
-    
+
     private static void GetOutAndSurrender(Ped ped)
     {
         if (ped.IsAvailable())
@@ -170,8 +158,8 @@ internal class HostageTaking : Outcome
             }
         }
     }
-    
-        private static void DetonateBomb()
+
+    private static void DetonateBomb()
     {
         Debug("DetonateBomb");
         if (SuspectVehicle.IsAvailable())
