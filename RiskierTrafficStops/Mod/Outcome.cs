@@ -12,6 +12,12 @@ internal abstract class Outcome
     
     internal virtual void StartOutcome(){}
 
+    internal void RemoveIgnoredPedsAndBlockEvents(List<Ped> peds)
+    {
+        peds.RemoveAll(ped => ped.IsAvailable() && PedsToIgnore.Contains(ped));
+        peds.ForEach(ped => ped.BlockPermanentEvents = true);
+    }
+    
     internal static bool MeetsRequirements(LHandle handle)
     {
         if (!GetSuspectAndSuspectVehicle(handle, out Suspect, out SuspectVehicle) || Functions.GetCurrentPullover() == null)

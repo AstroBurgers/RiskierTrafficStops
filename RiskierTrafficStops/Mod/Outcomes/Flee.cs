@@ -35,10 +35,7 @@ internal class Flee : Outcome
         Normal("Getting all vehicle occupants");
         var pedsInVehicle = SuspectVehicle.Occupants.ToList();
 
-        foreach (var ped in pedsInVehicle.Where(ped => ped.IsAvailable() && PedsToIgnore.Contains(ped)))
-        {
-            pedsInVehicle.Remove(ped);
-        }
+        RemoveIgnoredPedsAndBlockEvents(pedsInVehicle);
         
         var chosenFleeOutcome = AllFleeOutcomes.PickRandom();
 
@@ -47,14 +44,11 @@ internal class Flee : Outcome
             case FleeOutcomes.Flee:
                 Normal("Starting pursuit");
 
-                if (Functions.GetCurrentPullover() == null)
-                {
-                    CleanupOutcome(false);
-                    return;
-                }
+                if (Functions.GetCurrentPullover() == null) CleanupOutcome(false);
 
                 PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                 break;
+            
             case FleeOutcomes.BurnOut:
                 Normal("Making suspect do burnout");
                 Suspect.Tasks.PerformDrivingManeuver(SuspectVehicle, VehicleManeuver.BurnOut, 2000)
@@ -64,12 +58,7 @@ internal class Flee : Outcome
                     .WaitForCompletion(750);
                 Normal("Starting pursuit");
 
-                if (Functions.GetCurrentPullover() == null)
-                {
-                    CleanupOutcome(false);
-                    return;
-                }
-
+                if (Functions.GetCurrentPullover() == null) CleanupOutcome(false);
                 PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                 break;
             case FleeOutcomes.LeaveVehicle:
@@ -78,12 +67,11 @@ internal class Flee : Outcome
                     i.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
                 }
 
-                if (Functions.GetCurrentPullover() == null) return;
+                if (Functions.GetCurrentPullover() == null) CleanupOutcome(false);;
 
                 PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                 break;
         }
-            
         GameFiberHandling.CleanupFibers();
         InvokeEvent(RTSEventType.End);
     }
