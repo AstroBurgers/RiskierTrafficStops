@@ -67,7 +67,7 @@ internal class Flee : Outcome
                     i.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
                 }
 
-                if (Functions.GetCurrentPullover() == null) CleanupOutcome(false);;
+                if (Functions.GetCurrentPullover() == null) CleanupOutcome(false);
 
                 PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                 break;

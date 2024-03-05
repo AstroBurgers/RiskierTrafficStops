@@ -30,7 +30,7 @@ public class Main : Plugin
                 Normal("Adding console commands...");
                 Game.AddConsoleCommands();
                 Normal("Checking for updates...");
-                new UpdateChecker(Assembly.GetExecutingAssembly()).OnCompleted += (s, e) =>
+                new UpdateChecker(Assembly.GetExecutingAssembly()).OnCompleted += (_, e) =>
                 {
                     var updateAvailable = e.UpdateAvailable;
                     var updateVersion = e.LatestVersion;
