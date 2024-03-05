@@ -38,7 +38,11 @@ internal class HostageTaking : Outcome
 
         RemoveIgnoredPedsAndBlockEvents();
 
-        if (_pedsInVehicle.Count <= 1 || _pedsInVehicle.Count == 0) CleanupOutcome(true);
+        if (_pedsInVehicle.Count <= 1 || _pedsInVehicle.Count == 0)
+        {
+            CleanupOutcome(true);
+            return;
+        }
 
         _hostage = new Suspect(_pedsInVehicle[1]);
 
