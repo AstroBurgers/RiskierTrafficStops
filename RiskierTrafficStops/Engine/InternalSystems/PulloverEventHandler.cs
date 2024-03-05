@@ -1,5 +1,4 @@
 ﻿using RiskierTrafficStops.API.ExternalAPIs;
-using RiskierTrafficStops.Mod.Outcomes;
 
 namespace RiskierTrafficStops.Engine.InternalSystems;
 
@@ -9,8 +8,8 @@ internal static class PulloverEventHandler
     
     internal static List<Type> EnabledOutcomes = new();
 
-    internal static Type _chosenOutcome = null;
-    internal static Type _lastOutcome = null;
+    private static Type _chosenOutcome;
+    private static Type _lastOutcome;
     
     internal static void SubscribeToEvents()
     {
