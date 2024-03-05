@@ -27,7 +27,9 @@ internal class Ramming : Outcome
         {
             Suspect.Tasks.DriveToPosition(MainPlayer.LastVehicle.Position, 100f, VehicleDrivingFlags.Reverse, 0.1f);
             GameFiber.Wait(3500);
-            Suspect.Tasks.Clear();
+            if (Suspect.IsAvailable()) {
+                Suspect.Tasks.Clear();
+            }
         }
 
         if (Functions.GetCurrentPullover() == null)
