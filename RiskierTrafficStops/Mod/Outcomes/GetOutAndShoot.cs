@@ -10,14 +10,8 @@ internal class GetOutAndShoot : Outcome
 
     private static GetOutAndShootOutcomes[] _allGoasOutcomes =
         (GetOutAndShootOutcomes[])Enum.GetValues(typeof(GetOutAndShootOutcomes));
-    
-    private static List<Ped> _pedsInVehicle = SuspectVehicle.Occupants.ToList();
-    
-    private enum GetOutAndShootOutcomes
-    {
-        Flee,
-        KeepShooting
-    }
+
+    private static List<Ped> _pedsInVehicle = null;
 
     // RTSGetOutAndShootSuspects
     public GetOutAndShoot(LHandle handle) : base(handle)
@@ -43,6 +37,11 @@ internal class GetOutAndShoot : Outcome
         InvokeEvent(RTSEventType.Start);
 
         Normal("Adding all suspect in the vehicle to a list");
+
+        if (SuspectVehicle.IsAvailable()) {
+            _pedsInVehicle = SuspectVehicle.Occupants.ToList();
+        }
+        
         
         if (_pedsInVehicle.Count < 1) throw new ArgumentNullException(nameof(_pedsInVehicle));
 
@@ -101,5 +100,11 @@ internal class GetOutAndShoot : Outcome
         }
         Normal("Giving Suspect FightAgainstClosestHatedTarget Task");
         ped.Tasks.FightAgainstClosestHatedTarget(40f, 7000).WaitForCompletion(7001);
+    }
+
+    private enum GetOutAndShootOutcomes
+    {
+        Flee,
+        KeepShooting
     }
 }
