@@ -1,18 +1,15 @@
 ﻿using RiskierTrafficStops.API.ExternalAPIs;
-using RiskierTrafficStops.Mod.Outcomes;
 
 namespace RiskierTrafficStops.Engine.InternalSystems;
 
 internal static class PulloverEventHandler
 {
-    private static Type _chosenOutcome;
     internal static bool HasEventHappened;
     
-    #nullable enable
-    private static Type? _lastOutcome;
-    #nullable disable
-    
-    internal static List<Type> EnabledOutcomes = new ();
+    internal static List<Type> EnabledOutcomes = new();
+
+    private static Type _chosenOutcome;
+    private static Type _lastOutcome;
     
     internal static void SubscribeToEvents()
     {
@@ -81,17 +78,15 @@ internal static class PulloverEventHandler
         {
             if (ShouldEventHappen())
             {
-                Activator.CreateInstance(typeof(HostageTaking), args: handle);
-
-                // Normal($"DisableRTSForCurrentStop: {DisableRTSForCurrentStop}");
-                //
-                // Normal("Choosing Outcome");
-                // _chosenOutcome = EnabledOutcomes.Count <= 1 ? EnabledOutcomes[Rndm.Next(EnabledOutcomes.Count)] : EnabledOutcomes[Rndm.Next(EnabledOutcomes.Where(i => i != _lastOutcome).ToList().Count)];
-                // Normal($"Chosen Outcome: {_chosenOutcome}");
-                //
-                // _lastOutcome = _chosenOutcome;
-                //
-                // Activator.CreateInstance(_chosenOutcome, args: handle);
+                Normal($"DisableRTSForCurrentStop: {DisableRTSForCurrentStop}");
+                
+                Normal("Choosing Outcome");
+                _chosenOutcome = EnabledOutcomes.Count <= 1 ? EnabledOutcomes[Rndm.Next(EnabledOutcomes.Count)] : EnabledOutcomes[Rndm.Next(EnabledOutcomes.Where(i => i != _lastOutcome).ToList().Count)];
+                Normal($"Chosen Outcome: {_chosenOutcome}");
+                
+                _lastOutcome = _chosenOutcome;
+                
+                Activator.CreateInstance(_chosenOutcome, args: handle);
             }
         }
         catch (Exception e)
@@ -108,7 +103,7 @@ internal static class PulloverEventHandler
     /// <returns>True/False</returns>
     private static bool ShouldEventHappen()
     {
-        long convertedChance = GenerateChance();
+        var convertedChance = GenerateChance();
         Normal("Chance: " + convertedChance);
         
         return convertedChance < Chance;

@@ -1,4 +1,5 @@
-﻿using RiskierTrafficStops.Engine.Helpers;
+﻿using RiskierTrafficStops.Engine.Data;
+using RiskierTrafficStops.Engine.Helpers;
 using static RiskierTrafficStops.Engine.Helpers.Bdt;
 using MathHelper = Rage.MathHelper;
 
@@ -10,7 +11,7 @@ internal class HostageTaking : Outcome
     private static List<Ped> _pedsInVehicle = new();
     private static Suspect _suspect = new(Suspect);
     private static Suspect _hostage;
-    
+
     public HostageTaking(LHandle handle) : base(handle)
     {
         try
@@ -35,95 +36,88 @@ internal class HostageTaking : Outcome
         Normal("Getting all vehicle occupants");
         _pedsInVehicle = SuspectVehicle.Occupants.ToList();
 
-        foreach (var ped in _pedsInVehicle)
-        {
-            if (ped.IsAvailable() && PedsToIgnore.Contains(ped))
-            {
-                _pedsInVehicle.Remove(ped);
-            }
+        RemoveIgnoredPedsAndBlockEvents();
 
-            ped.BlockPermanentEvents = true;
-        }
+        if (_pedsInVehicle.Count <= 1 || _pedsInVehicle.Count == 0) CleanupOutcome(true);
 
-        if (_pedsInVehicle.Count <= 1)
-        {
-            CleanupOutcome(true);
-            return;
-        }
-        
         _hostage = new Suspect(_pedsInVehicle[1]);
 
         // Hostage stuff
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => GetOutAndSurrender(_hostage.Ped)));
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(HandleSuspect));
 
-        if (_pedsInVehicle.Count > 2)
+        foreach (var ped in _pedsInVehicle.Where(i => i.IsAvailable() && i != _hostage.Ped && i != Suspect))
         {
-            foreach (var ped in _pedsInVehicle.Where(i => i != _hostage.Ped && i.IsAvailable() && i != Suspect))
-            {
-                if (!ped.IsAvailable())
-                {
-                    _pedsInVehicle.Remove(ped);
-                }
-
-                GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() =>
-                {
-                    ped.Tasks.LeaveVehicle(ped.LastVehicle, LeaveVehicleFlags.None).WaitForCompletion();
-                    ped.GiveWeapon();
-                    NativeFunction.Natives.x9B53BB6E8943AF53(ped, MainPlayer, -1, false); // TASK_AIM_GUN_AT_ENTITY
-                }));
-            }
+            GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => MakePedLeaveVehicle(ped)));
         }
 
         Game.DisplaySubtitle(HostageSituationText.PickRandom());
         _playerLastPos = MainPlayer.Position;
-        
-        Debug($"IsSuicidal: {_suspect.IsSuicidal}");
-        Debug($"HatesHostage: {_suspect.HatesHostage}");
-        Debug($"WantToSurvive: {_suspect.WantToSurvive}");
-        Debug($"WantsToDieByCop: {_suspect.WantsToDieByCop}");
+
+        DebugSuspectProperties();
 
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() =>
         {
             GameFiber.Wait(4500);
 
             // Less than 2 suspects
-            Node commitSuicide = new Node(true, null, null, CommitSuicide);
-            Node shootOut = new Node(false, null, null, ShootOut);
-            Node surrender = new Node(true, null, null, Surrender);
+            var commitSuicide = new Node(true, null, null, CommitSuicide);
+            var shootOut = new Node(false, null, null, ShootOut);
+            var surrender = new Node(true, null, null, Surrender);
 
-            Node wantsToSurvive = new Node(_suspect.WantToSurvive, shootOut, surrender);
-            Node wantsToDieByCop = new Node(_suspect.WantsToDieByCop, commitSuicide, shootOut);
-            Node isSuicidal = new Node(_suspect.IsSuicidal, wantsToSurvive, wantsToDieByCop);
+            var wantsToSurvive = new Node(_suspect.WantToSurvive, shootOut, surrender);
+            var wantsToDieByCop = new Node(_suspect.WantsToDieByCop, commitSuicide, shootOut);
+            var isSuicidal = new Node(_suspect.IsSuicidal, wantsToSurvive, wantsToDieByCop);
 
             // More than 2 suspects
-            Node shootItOut = new Node(false, null, null, ShootOutAllSuspects);
-            Node allSurrender = new Node(true, null, null, AllSuspectsSurrender);
-            Node shootAtEachOther = new Node(true, null, null, ShootAtEachOther);
-            Node killHostageThenShootOut = new Node(true, null, null, KillHostageThenShootOut);
-            Node detonateBomb = new Node(true, null, null, DetonateBomb);
+            var shootItOut = new Node(false, null, null, ShootOutAllSuspects);
+            var allSurrender = new Node(true, null, null, AllSuspectsSurrender);
+            var shootAtEachOther = new Node(true, null, null, ShootAtEachOther);
+            var killHostageThenShootOut = new Node(true, null, null, KillHostageThenShootOut);
+            var detonateBomb = new Node(true, null, null, DetonateBomb);
 
-            Node allWantToSurvive = new Node(_suspect.WantToSurvive, shootItOut, allSurrender);
-            Node areAnySuicidal = new Node(_suspect.IsSuicidal, allWantToSurvive, shootAtEachOther);
-            Node areTerrorists = new Node(_suspect.IsTerrorist, killHostageThenShootOut, detonateBomb);
-            Node hateHostage = new Node(_suspect.HatesHostage, areAnySuicidal, areTerrorists);
+            var allWantToSurvive = new Node(_suspect.WantToSurvive, shootItOut, allSurrender);
+            var areAnySuicidal = new Node(_suspect.IsSuicidal, allWantToSurvive, shootAtEachOther);
+            var areTerrorists = new Node(_suspect.IsTerrorist, killHostageThenShootOut, detonateBomb);
+            var hateHostage = new Node(_suspect.HatesHostage, areAnySuicidal, areTerrorists);
 
             // Root Node
-            Node moreThan2Suspects = new Node(_pedsInVehicle.Count > 2, isSuicidal, hateHostage);
+            var moreThan2Suspects = new Node(_pedsInVehicle.Count > 2, isSuicidal, hateHostage);
 
             // Tree
-            Bdt bdt = new Bdt(moreThan2Suspects);
+            var bdt = new Bdt(moreThan2Suspects);
 
             bdt.FollowTruePath();
             InvokeEvent(RTSEventType.End);
         }, "Riskier Traffic Stops BDT Fiber"));
     }
 
+    private void RemoveIgnoredPedsAndBlockEvents()
+    {
+        _pedsInVehicle.RemoveAll(ped => ped.IsAvailable() && PedsToIgnore.Contains(ped));
+        _pedsInVehicle.ForEach(ped => ped.BlockPermanentEvents = true);
+    }
+
+    private void DebugSuspectProperties()
+    {
+        Debug($"IsSuicidal: {_suspect.IsSuicidal}");
+        Debug($"HatesHostage: {_suspect.HatesHostage}");
+        Debug($"WantToSurvive: {_suspect.WantToSurvive}");
+        Debug($"WantsToDieByCop: {_suspect.WantsToDieByCop}");
+    }
+
+    private static void MakePedLeaveVehicle(Ped ped)
+    {
+        ped.Tasks.LeaveVehicle(ped.LastVehicle, LeaveVehicleFlags.None).WaitForCompletion();
+        ped.GiveWeapon();
+        NativeFunction.Natives.x9B53BB6E8943AF53(ped, MainPlayer, -1, false); // TASK_AIM_GUN_AT_ENTITY
+    }
+
     private static void HandleSuspect()
     {
         if (_suspect.IsAvailable())
         {
-            Vector3 suspectPos = SuspectVehicle.GetOffsetPosition(new Vector3(-1.5f, -0.5f, 0f));
+            var suspectPos = SuspectVehicle.GetOffsetPosition(new Vector3(-1.5f, -0.5f, 0f));
             Suspect.Tasks
                 .FollowNavigationMeshToPosition(suspectPos, MathHelper.RotateHeading(SuspectVehicle.Heading, 180), 2f)
                 .WaitForCompletion();
@@ -131,13 +125,13 @@ internal class HostageTaking : Outcome
             NativeFunction.Natives.x9B53BB6E8943AF53(Suspect, _hostage.Ped, -1, false); // TASK_AIM_GUN_AT_ENTITY
         }
     }
-    
+
     private static void GetOutAndSurrender(Ped ped)
     {
         if (ped.IsAvailable())
         {
             ped.Tasks.LeaveVehicle(ped.LastVehicle, LeaveVehicleFlags.None).WaitForCompletion();
-            Vector3 pos = SuspectVehicle.GetOffsetPosition(new Vector3(-1.5f, -1.5f, 0f));
+            var pos = SuspectVehicle.GetOffsetPosition(new Vector3(-1.5f, -1.5f, 0f));
             ped.Tasks.FollowNavigationMeshToPosition(pos, MathHelper.RotateHeading(SuspectVehicle.Heading, 180), 2f)
                 .WaitForCompletion();
             if (ped.IsAvailable())
@@ -146,6 +140,21 @@ internal class HostageTaking : Outcome
                     AnimationFlags.StayInEndFrame).WaitForCompletion(2500);
                 ped.Tasks.PlayAnimation(new AnimationDictionary("random@arrests@busted"), "idle_c", 1f,
                     AnimationFlags.Loop);
+            }
+        }
+    }
+
+    private static void HandlePlayerMovement()
+    {
+        var movementVector = MainPlayer.Position - _playerLastPos;
+        var distanceMovedSquared = Vector3.Dot(movementVector, movementVector);
+
+        if (distanceMovedSquared > 2f)
+        {
+            foreach (var ped in _pedsInVehicle.Where(i => i.IsAvailable() && i != _hostage.Ped))
+            {
+                NativeFunction.Natives.x08DA95E8298AE772(ped, _hostage.Ped, -1,
+                    Game.GetHashKey("FIRING_PATTERN_FULL_AUTO")); // TASK_SHOOT_AT_ENTITY
             }
         }
     }
@@ -189,7 +198,7 @@ internal class HostageTaking : Outcome
 
         if (Suspect.Exists()) Suspect.RelationshipGroup = tempGroup;
 
-        for (int i = 0; i < _pedsInVehicle.Count(ped => ped.IsAvailable() && ped != _hostage.Ped); i++)
+        for (var i = 0; i < _pedsInVehicle.Count(ped => ped.IsAvailable() && ped != _hostage.Ped); i++)
         {
             _pedsInVehicle[i].RelationshipGroup = i % 2 == 0 ? SuspectRelateGroup : tempGroup;
         }
@@ -267,21 +276,6 @@ internal class HostageTaking : Outcome
         {
             Suspect.RelationshipGroup = SuspectRelateGroup;
             Suspect.Tasks.FightAgainstClosestHatedTarget(50f, -1);
-        }
-    }
-
-    private static void HandlePlayerMovement()
-    {
-        Vector3 movementVector = MainPlayer.Position - _playerLastPos;
-        float distanceMovedSquared = Vector3.Dot(movementVector, movementVector);
-
-        if (distanceMovedSquared > 2f)
-        {
-            foreach (var ped in _pedsInVehicle.Where(i => i.IsAvailable() && i != _hostage.Ped))
-            {
-                NativeFunction.Natives.x08DA95E8298AE772(ped, _hostage.Ped, -1,
-                    Game.GetHashKey("FIRING_PATTERN_FULL_AUTO")); // TASK_SHOOT_AT_ENTITY
-            }
         }
     }
 }

@@ -7,7 +7,13 @@ internal static class Logger
     // Thanks Khori
     internal static void Error(Exception ex, string location) => Game.LogTrivial($"[ERROR] RiskierTrafficStops: {ex}");
 
-    internal static void Debug(string msg) => Game.LogTrivial($"[DEBUG] RiskierTrafficStops: {msg}");
+    internal static void Debug(string msg)
+    {
+        if (DebugMode)
+        {
+            Game.LogTrivial($"[DEBUG] RiskierTrafficStops: {msg}");
+        }
+    }
 
     internal static void Normal(string msg) => Game.LogTrivial($"[NORMAL] RiskierTrafficStops: {msg}");
 }

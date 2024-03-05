@@ -24,15 +24,12 @@ internal class ShootAndFlee : Outcome
         InvokeEvent(RTSEventType.Start);
 
         var pedsInVehicle = SuspectVehicle.Occupants.ToList();
-        foreach (var ped in pedsInVehicle)
+        foreach (var ped in pedsInVehicle.Where(ped => ped.IsAvailable() && PedsToIgnore.Contains(ped)))
         {
-            if (ped.IsAvailable() && PedsToIgnore.Contains(ped))
-            {
-                pedsInVehicle.Remove(ped);
-            }
+            pedsInVehicle.Remove(ped);
         }
         
-        long chance = GenerateChance();
+        var chance = GenerateChance();
         switch (chance)
         {
             case <= 60:
@@ -51,9 +48,8 @@ internal class ShootAndFlee : Outcome
 
     private static void AllSuspects(List<Ped> peds)
     {
-        foreach (var i in peds)
+        foreach (var i in peds.Where(i => i.IsAvailable()))
         {
-            if (!i.IsAvailable()) continue;
             i.Tasks.PlayAnimation(new AnimationDictionary("anim@gangops@facility@servers@bodysearch@"), "player_search",
                 8f, AnimationFlags.SecondaryTask | AnimationFlags.UpperBodyOnly);
             GameFiber.Wait(Rndm.Next(1, 4) * 750);

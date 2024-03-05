@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Net;
 using System.Reflection;
 
 namespace RiskierTrafficStops.Engine.InternalSystems;
@@ -11,7 +10,7 @@ internal static class VersionChecker
     {
         try
         {
-            AssemblyName assemblyName2 = AssemblyName.GetAssemblyName(AppDomain.CurrentDomain.BaseDirectory + "/" + assemblyName);
+            var assemblyName2 = AssemblyName.GetAssemblyName(AppDomain.CurrentDomain.BaseDirectory + "/" + assemblyName);
             if (assemblyName2.Version >= new Version(version))
             {
                 Normal($"{assemblyName} is available ({assemblyName2.Version}).");
@@ -20,7 +19,7 @@ internal static class VersionChecker
             Normal($"{assemblyName} does not meet minimum requirements ({assemblyName2.Version} < {version}).");
             return false;
         }
-        catch (Exception ex) when (ex is FileNotFoundException || ex is BadImageFormatException)
+        catch (Exception ex) when (ex is FileNotFoundException or BadImageFormatException)
         {
             Normal(assemblyName + " is not available.");
             return false;

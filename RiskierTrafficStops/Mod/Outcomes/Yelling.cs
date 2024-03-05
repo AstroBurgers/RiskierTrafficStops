@@ -48,12 +48,10 @@ internal class Yelling : Outcome
 
         for (var i = 0; i < timesToSpeak; i++)
         {
-            if (Suspect.IsAvailable())
-            {
-                Normal($"Making Suspect Yell, time: {i}");
-                Suspect.PlayAmbientSpeech(VoiceLines[Rndm.Next(VoiceLines.Length)]);
-                GameFiber.WaitWhile(() => Suspect.IsAvailable() && Suspect.IsAnySpeechPlaying, 30000);
-            }
+            if (!Suspect.IsAvailable()) CleanupOutcome(false);
+            Normal($"Making Suspect Yell, time: {i}");
+            Suspect.PlayAmbientSpeech(VoiceLines[Rndm.Next(VoiceLines.Length)]);
+            GameFiber.WaitWhile(() => Suspect.IsAvailable() && Suspect.IsAnySpeechPlaying, 30000);
         }
 
         Normal("Choosing outcome from possible Yelling outcomes");

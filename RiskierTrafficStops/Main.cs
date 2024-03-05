@@ -30,9 +30,9 @@ public class Main : Plugin
                 Normal("Adding console commands...");
                 Game.AddConsoleCommands();
                 Normal("Checking for updates...");
-                new UpdateChecker(44036, Assembly.GetExecutingAssembly()).OnCompleted += (s, e) =>
+                new UpdateChecker(Assembly.GetExecutingAssembly()).OnCompleted += (_, e) =>
                 {
-                    bool updateAvailable = e.UpdateAvailable;
+                    var updateAvailable = e.UpdateAvailable;
                     var updateVersion = e.LatestVersion;
 
                     if (updateAvailable)
@@ -66,6 +66,8 @@ public class Main : Plugin
                     "~b~By Astro",
                     $"{PluginLoadText.PickRandom()}");
 
+                if (DebugMode) Game.DisplayNotification("RTS: DEBUG MODE IS ENABLED FUCK TARD");
+                
                 //Subscribes to events
                 PulloverEventHandler.SubscribeToEvents();
 

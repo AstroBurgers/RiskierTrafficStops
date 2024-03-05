@@ -66,6 +66,7 @@
     <Compile Include="API\APIs.cs" />
     <Compile Include="API\ExternalAPIs\IAEFunctions.cs" />
     <Compile Include="Engine\Data\Arrays.cs" />
+    <Compile Include="Engine\Data\Suspect.cs" />
     <Compile Include="Engine\FrontendSystems\ConfigMenu.cs" />
     <Compile Include="Engine\FrontendSystems\ConsoleCommands.cs" />
     <Compile Include="Engine\Helper.cs" />
@@ -77,7 +78,6 @@
     <Compile Include="Engine\Helpers\Extensions\VehicleExtensions.cs" />
     <Compile Include="Engine\Helpers\MathHelper.cs" />
     <Compile Include="Engine\Helpers\PursuitHelper.cs" />
-    <Compile Include="Engine\InternalSystems\DecisionTree.cs" />
     <Compile Include="Engine\InternalSystems\GameFiberHandling.cs" />
     <Compile Include="Engine\InternalSystems\Localization.cs" />
     <Compile Include="Engine\InternalSystems\Logger.cs" />
@@ -97,7 +97,6 @@
     <Compile Include="Mod\Outcomes\YellInCar.cs" />
     <Compile Include="Mod\Outcomes\Yelling.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="Mod\Suspect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
