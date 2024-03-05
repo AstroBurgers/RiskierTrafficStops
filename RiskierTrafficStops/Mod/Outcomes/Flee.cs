@@ -4,9 +4,9 @@ internal class Flee : Outcome
 {
     private enum FleeOutcomes
     {
-        Flee,
-        BurnOut,
-        LeaveVehicle,
+        Flee = 0,
+        BurnOut = 1,
+        LeaveVehicle = 2,
     }
 
     private static readonly FleeOutcomes[] AllFleeOutcomes = (FleeOutcomes[])Enum.GetValues(typeof(FleeOutcomes));
