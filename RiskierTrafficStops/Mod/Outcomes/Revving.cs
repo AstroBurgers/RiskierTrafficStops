@@ -19,7 +19,7 @@ internal class Revving : Outcome
         }
     }
 
-    internal virtual void StartOutcome()
+    internal override void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
 
