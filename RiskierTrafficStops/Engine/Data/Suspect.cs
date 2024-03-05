@@ -2,7 +2,7 @@
 
 internal class Suspect : Ped
 {
-    internal Ped Ped;
+    internal readonly Ped Ped;
 
     internal bool IsSuicidal { get; private set; }
     internal bool WantToSurvive { get; private set; }
