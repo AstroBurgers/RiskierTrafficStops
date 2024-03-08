@@ -81,6 +81,7 @@
     <Compile Include="Engine\InternalSystems\GameFiberHandling.cs" />
     <Compile Include="Engine\InternalSystems\Localization.cs" />
     <Compile Include="Engine\InternalSystems\Logger.cs" />
+    <Compile Include="Engine\InternalSystems\Processes.cs" />
     <Compile Include="Engine\InternalSystems\PulloverEventHandler.cs" />
     <Compile Include="Engine\InternalSystems\Settings.cs" />
     <Compile Include="Engine\InternalSystems\UpdateChecker.cs" />
