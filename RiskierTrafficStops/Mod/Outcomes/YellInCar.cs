@@ -23,6 +23,20 @@ internal class YellInCar : Outcome
     {
         InvokeEvent(RTSEventType.Start);
 
+        Normal("Adding all suspect in the vehicle to a list");
+        var _pedsInVehicle = new List<Ped>();
+        if (SuspectVehicle.IsAvailable()) {
+            _pedsInVehicle = SuspectVehicle.Occupants.ToList();
+        }
+
+        if (_pedsInVehicle.Count < 1)
+        {
+            CleanupOutcome(true);
+            return;
+        }
+        
+        RemoveIgnoredPedsAndBlockEvents(ref _pedsInVehicle);
+        
         Suspect.PlayAmbientSpeech(VoiceLines[Rndm.Next(VoiceLines.Length)]);
         GameFiber.WaitWhile(() => Suspect.IsAvailable() && Suspect.IsAnySpeechPlaying);
         

@@ -23,18 +23,26 @@ internal class ShootAndFlee : Outcome
     {
         InvokeEvent(RTSEventType.Start);
 
-        var pedsInVehicle = SuspectVehicle.Occupants.ToList();
-        foreach (var ped in pedsInVehicle.Where(ped => ped.IsAvailable() && PedsToIgnore.Contains(ped)))
-        {
-            pedsInVehicle.Remove(ped);
+        Normal("Adding all suspect in the vehicle to a list");
+        var _pedsInVehicle = new List<Ped>();
+        if (SuspectVehicle.IsAvailable()) {
+            _pedsInVehicle = SuspectVehicle.Occupants.ToList();
         }
+
+        if (_pedsInVehicle.Count < 1)
+        {
+            CleanupOutcome(true);
+            return;
+        }
+        
+        RemoveIgnoredPedsAndBlockEvents(ref _pedsInVehicle);
         
         var chance = GenerateChance();
         switch (chance)
         {
             case <= 60:
                 Normal("Starting all suspects outcome");
-                AllSuspects(pedsInVehicle);
+                AllSuspects(_pedsInVehicle);
                 break;
             default:
                 Normal("Starting driver only outcome");

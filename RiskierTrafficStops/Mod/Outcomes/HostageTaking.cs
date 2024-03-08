@@ -33,16 +33,19 @@ internal class HostageTaking : Outcome
     {
         InvokeEvent(RTSEventType.Start);
 
-        Normal("Getting all vehicle occupants");
-        _pedsInVehicle = SuspectVehicle.Occupants.ToList();
+        Normal("Adding all suspect in the vehicle to a list");
 
-        RemoveIgnoredPedsAndBlockEvents();
+        if (SuspectVehicle.IsAvailable()) {
+            _pedsInVehicle = SuspectVehicle.Occupants.ToList();
+        }
 
-        if (_pedsInVehicle.Count <= 1 || _pedsInVehicle.Count == 0)
+        if (_pedsInVehicle.Count < 1)
         {
             CleanupOutcome(true);
             return;
         }
+        
+        RemoveIgnoredPedsAndBlockEvents(ref _pedsInVehicle);
 
         _hostage = new Suspect(_pedsInVehicle[1]);
 

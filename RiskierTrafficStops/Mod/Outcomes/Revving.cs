@@ -23,6 +23,20 @@ internal class Revving : Outcome
     {
         InvokeEvent(RTSEventType.Start);
 
+        Normal("Adding all suspect in the vehicle to a list");
+        var _pedsInVehicle = new List<Ped>();
+        if (SuspectVehicle.IsAvailable()) {
+            _pedsInVehicle = SuspectVehicle.Occupants.ToList();
+        }
+
+        if (_pedsInVehicle.Count < 1)
+        {
+            CleanupOutcome(true);
+            return;
+        }
+        
+        RemoveIgnoredPedsAndBlockEvents(ref _pedsInVehicle);
+        
         Suspect.RevEngine(SuspectVehicle, new[] { 2, 4 }, new[] { 2, 4 }, 2);
 
         var chance = GenerateChance();

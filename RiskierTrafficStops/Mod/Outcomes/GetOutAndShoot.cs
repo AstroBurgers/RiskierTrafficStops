@@ -41,14 +41,14 @@ internal class GetOutAndShoot : Outcome
         if (SuspectVehicle.IsAvailable()) {
             _pedsInVehicle = SuspectVehicle.Occupants.ToList();
         }
-        
-        
-        if (_pedsInVehicle.Count < 1) throw new ArgumentNullException(nameof(_pedsInVehicle));
 
-        foreach (var ped in _pedsInVehicle.Where(ped => ped.IsAvailable() && PedsToIgnore.Contains(ped)))
+        if (_pedsInVehicle.Count < 1)
         {
-            _pedsInVehicle.Remove(ped);
+            CleanupOutcome(true);
+            return;
         }
+        
+        RemoveIgnoredPedsAndBlockEvents(ref _pedsInVehicle);
         
         SetRelationshipGroups(SuspectRelateGroup);
 
