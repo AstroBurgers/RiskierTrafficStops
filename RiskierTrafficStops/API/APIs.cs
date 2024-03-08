@@ -12,13 +12,18 @@ public static class APIs
 {
     /// <summary>
     /// Disables RTS Outcomes for the current/next pullover
+    /// Notes:
+    ///     Reset after every pullover
     /// </summary>
     public static bool DisableRTSForCurrentStop { get; set; }
 
     /// <summary>
-    /// Disables RTS interaction for the input peds
+    /// Stops RTS from interfering with the supplied Suspects
+    /// Notes:
+    ///     The list is cleared every 10 minutes
+    ///     If one of the supplied peds is the driver, the outcome is ended immediately 
     /// </summary>
-    /// <param name="peds">Peds to have RTS ignore</param>
+    /// <param name="peds">Peds to be ignored</param>
     public static void DisableRTSForPeds(params Ped[] peds)
     {
         foreach (var ped in peds)
