@@ -29,6 +29,8 @@ public class Main : Plugin
                 ConfigMenu.CreateMenu();
                 Normal("Adding console commands...");
                 Game.AddConsoleCommands();
+                Normal("Starting process to handle API lists...");
+                GameFiber.StartNew(Processes.HandleIgnoredPedsList);
                 Normal("Checking for updates...");
                 new UpdateChecker(Assembly.GetExecutingAssembly()).OnCompleted += (_, e) =>
                 {

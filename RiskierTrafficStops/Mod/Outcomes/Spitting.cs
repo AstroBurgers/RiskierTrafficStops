@@ -23,6 +23,20 @@ internal class Spitting : Outcome
     {
         InvokeEvent(RTSEventType.Start);
 
+        Normal("Adding all suspect in the vehicle to a list");
+        var _pedsInVehicle = new List<Ped>();
+        if (SuspectVehicle.IsAvailable()) {
+            _pedsInVehicle = SuspectVehicle.Occupants.ToList();
+        }
+
+        if (_pedsInVehicle.Count < 1)
+        {
+            CleanupOutcome(true);
+            return;
+        }
+        
+        RemoveIgnoredPedsAndBlockEvents(ref _pedsInVehicle);
+        
         GameFiber.WaitWhile(
             () => Suspect.IsAvailable() && MainPlayer.DistanceTo(Suspect) >= 3f && Suspect.IsInAnyVehicle(true),
             120000);

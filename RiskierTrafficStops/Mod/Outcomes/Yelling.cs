@@ -38,6 +38,20 @@ internal class Yelling : Outcome
     {
         InvokeEvent(RTSEventType.Start);
 
+        Normal("Adding all suspect in the vehicle to a list");
+        var _pedsInVehicle = new List<Ped>();
+        if (SuspectVehicle.IsAvailable()) {
+            _pedsInVehicle = SuspectVehicle.Occupants.ToList();
+        }
+
+        if (_pedsInVehicle.Count < 1)
+        {
+            CleanupOutcome(true);
+            return;
+        }
+        
+        RemoveIgnoredPedsAndBlockEvents(ref _pedsInVehicle);
+        
         Normal("Making Suspect Leave Vehicle");
         Suspect.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen).WaitForCompletion(30000);
         Normal("Making Suspect Face Player");

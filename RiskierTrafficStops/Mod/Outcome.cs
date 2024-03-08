@@ -12,8 +12,13 @@ internal abstract class Outcome
     
     internal virtual void StartOutcome(){}
 
-    internal void RemoveIgnoredPedsAndBlockEvents(List<Ped> peds)
+    internal void RemoveIgnoredPedsAndBlockEvents(ref List<Ped> peds)
     {
+        if (Suspect.IsAvailable() && peds.Contains(Suspect))
+        {
+            CleanupOutcome(true);
+        }
+        
         peds.RemoveAll(ped => ped.IsAvailable() && PedsToIgnore.Contains(ped));
         peds.ForEach(ped => ped.BlockPermanentEvents = true);
     }
