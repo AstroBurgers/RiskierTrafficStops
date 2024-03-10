@@ -70,9 +70,16 @@ public class Main : Plugin
                     "~b~By Astro",
                     $"{PluginLoadText.PickRandom()}");
 
-                if (DebugMode) Game.DisplayNotification("RTS: DEBUG MODE IS ENABLED FUCK TARD");
+                if (DebugMode)
+                {
+                    Game.DisplayNotification("3dtextures",
+                        "mpgroundlogo_cops",
+                        "Riskier Traffic Stops",
+                        "~b~By Astro",
+                        $"Debug mode is enabled, please let me know.");
+                }
 
-                //Subscribes to events
+            //Subscribes to events
                 PulloverEventHandler.SubscribeToEvents();
 
                 AppDomain.CurrentDomain.DomainUnload += Cleanup;
