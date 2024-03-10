@@ -23,7 +23,6 @@ internal static class MathHelper
     /// <summary>
     /// Returns the nearest vehicle to a position
     /// </summary>
-
     internal static Vehicle GetNearestVehicle(Vector3 position, float maxDistance = 40f)
     {
         var vehicles = MainPlayer.GetNearbyVehicles(16).ToList();

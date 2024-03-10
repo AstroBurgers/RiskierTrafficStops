@@ -39,7 +39,7 @@ internal class HostageTaking : Outcome
             _pedsInVehicle = SuspectVehicle.Occupants.ToList();
         }
 
-        if (_pedsInVehicle.Count < 1)
+        if (_pedsInVehicle.Count <= 1)
         {
             CleanupOutcome(true);
             return;
