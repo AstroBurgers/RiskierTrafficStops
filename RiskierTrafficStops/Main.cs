@@ -47,12 +47,14 @@ public class Main : Plugin
                             $"Online Version: ~g~{updateVersion}~s~\n" +
                             $"Installed version: ~y~{Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}~s~\n" +
                             $"Please update ~r~ASAP~s~!");
-                        Normal($"Online Version: {updateVersion} | Installed Version: {Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}");
+                        Normal(
+                            $"Online Version: {updateVersion} | Installed Version: {Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}");
                         Normal("Plugin is outdated, please up date to the latest version as soon as possible");
                     }
                     else if (!e.Failed)
                     {
-                        Normal($"Online Version: {updateVersion} | Installed Version: {Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}");
+                        Normal(
+                            $"Online Version: {updateVersion} | Installed Version: {Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}");
                         Game.DisplayNotification("3dtextures",
                             "mpgroundlogo_cops",
                             "Riskier Traffic Stops",
@@ -69,7 +71,7 @@ public class Main : Plugin
                     $"{PluginLoadText.PickRandom()}");
 
                 if (DebugMode) Game.DisplayNotification("RTS: DEBUG MODE IS ENABLED FUCK TARD");
-                
+
                 //Subscribes to events
                 PulloverEventHandler.SubscribeToEvents();
 
