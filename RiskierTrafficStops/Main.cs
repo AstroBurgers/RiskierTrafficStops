@@ -74,12 +74,12 @@ public class Main : Plugin
                 {
                     Game.DisplayNotification("3dtextures",
                         "mpgroundlogo_cops",
-                        "Riskier Traffic Stops",
+                        "Riskier Traffic Stops", 
                         "~b~By Astro",
                         $"Debug mode is enabled, please let me know.");
                 }
 
-            //Subscribes to events
+                //Subscribes to events
                 PulloverEventHandler.SubscribeToEvents();
 
                 AppDomain.CurrentDomain.DomainUnload += Cleanup;
