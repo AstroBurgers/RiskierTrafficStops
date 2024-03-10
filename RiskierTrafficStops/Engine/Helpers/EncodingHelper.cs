@@ -1,6 +1,6 @@
 ﻿namespace RiskierTrafficStops.Engine.Helpers;
 
-public class EncodingHelper
+internal class EncodingHelper
 {
     internal static string ToBase64Encode(string text)
     {
