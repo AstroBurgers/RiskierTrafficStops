@@ -14,7 +14,7 @@ internal abstract class Outcome
 
     internal void RemoveIgnoredPedsAndBlockEvents(ref List<Ped> peds)
     {
-        if (Suspect.IsAvailable() && peds.Contains(Suspect))
+        if (Suspect.IsAvailable() && PedsToIgnore.Contains(Suspect))
         {
             CleanupOutcome(true);
         }
