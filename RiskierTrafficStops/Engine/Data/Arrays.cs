@@ -109,7 +109,7 @@ internal static class Arrays
     };
 
     /// <summary>
-    /// List of all Weapons that can be fired from inside of a vehicle
+    /// List of all Weapons that can be fired from inside a vehicle
     /// </summary>
     internal static readonly string[] PistolList =
     {

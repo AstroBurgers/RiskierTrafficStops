@@ -36,7 +36,7 @@ internal static class ConfigMenu
         MainMenu.AddItems(SetChance, SafOutcomeEnabled, GoasOutcomeEnabled, YicOutcomeEnabled, RiyOutcomeEnabled, FleeOutcomeEnabled, RevOutcomeEnabled, YellOutcomeEnabled, SpitEnabled, HostageTakingEnabled, SaveToIni);
         SaveToIni.BackColor = Color.Green;
 
-        MainMenu.OnItemSelect += (_, selectedItem, _) => //Easier way to do simple things in RNUI that dont require a lot of code
+        MainMenu.OnItemSelect += (_, selectedItem, _) => //Easier way to do simple things in RNUI that don't require a lot of code
         {
             if (selectedItem.Equals(SaveToIni))
             {

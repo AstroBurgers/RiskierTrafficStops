@@ -39,18 +39,18 @@ internal class Yelling : Outcome
         InvokeEvent(RTSEventType.Start);
 
         Normal("Adding all suspect in the vehicle to a list");
-        var _pedsInVehicle = new List<Ped>();
+        var pedsInVehicle = new List<Ped>();
         if (SuspectVehicle.IsAvailable()) {
-            _pedsInVehicle = SuspectVehicle.Occupants.ToList();
+            pedsInVehicle = SuspectVehicle.Occupants.ToList();
         }
 
-        if (_pedsInVehicle.Count < 1)
+        if (pedsInVehicle.Count < 1)
         {
             CleanupOutcome(true);
             return;
         }
         
-        RemoveIgnoredPedsAndBlockEvents(ref _pedsInVehicle);
+        RemoveIgnoredPedsAndBlockEvents(ref pedsInVehicle);
         
         Normal("Making Suspect Leave Vehicle");
         Suspect.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen).WaitForCompletion(30000);
@@ -75,7 +75,7 @@ internal class Yelling : Outcome
         switch (_chosenOutcome)
         {
             case YellingScenarioOutcomes.GetBackInVehicle:
-                if (Suspect.IsAvailable() && !Functions.IsPedArrested(Suspect)) //Double checking if suspect exists
+                if (Suspect.IsAvailable() && !Functions.IsPedArrested(Suspect)) //Double-checking if suspect exists
                 {
                     Suspect.Tasks.EnterVehicle(SuspectVehicle, -1);
                 }

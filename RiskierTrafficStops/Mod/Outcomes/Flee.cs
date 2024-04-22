@@ -33,18 +33,18 @@ internal class Flee : Outcome
         InvokeEvent(RTSEventType.Start);
             
         Normal("Adding all suspect in the vehicle to a list");
-        var _pedsInVehicle = new List<Ped>();
+        var pedsInVehicle = new List<Ped>();
         if (SuspectVehicle.IsAvailable()) {
-            _pedsInVehicle = SuspectVehicle.Occupants.ToList();
+            pedsInVehicle = SuspectVehicle.Occupants.ToList();
         }
 
-        if (_pedsInVehicle.Count < 1)
+        if (pedsInVehicle.Count < 1)
         {
             CleanupOutcome(true);
             return;
         }
         
-        RemoveIgnoredPedsAndBlockEvents(ref _pedsInVehicle);
+        RemoveIgnoredPedsAndBlockEvents(ref pedsInVehicle);
         
         var chosenFleeOutcome = AllFleeOutcomes.PickRandom();
 
@@ -55,7 +55,7 @@ internal class Flee : Outcome
 
                 if (Functions.GetCurrentPullover() == null) CleanupOutcome(false);
 
-                PursuitLHandle = SetupPursuitWithList(true, _pedsInVehicle);
+                PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                 break;
             
             case FleeOutcomes.BurnOut:
@@ -68,17 +68,17 @@ internal class Flee : Outcome
                 Normal("Starting pursuit");
 
                 if (Functions.GetCurrentPullover() == null) CleanupOutcome(false);
-                PursuitLHandle = SetupPursuitWithList(true, _pedsInVehicle);
+                PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                 break;
             case FleeOutcomes.LeaveVehicle:
-                foreach (var i in _pedsInVehicle.Where(i => i.IsAvailable()))
+                foreach (var i in pedsInVehicle.Where(i => i.IsAvailable()))
                 {
                     i.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
                 }
 
                 if (Functions.GetCurrentPullover() == null) CleanupOutcome(false);
 
-                PursuitLHandle = SetupPursuitWithList(true, _pedsInVehicle);
+                PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                 break;
         }
         GameFiberHandling.CleanupFibers();

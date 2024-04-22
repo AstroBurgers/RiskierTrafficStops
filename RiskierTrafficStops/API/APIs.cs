@@ -43,12 +43,12 @@ public static class APIs
     public delegate void RTSEvent();
 
     /// <summary>
-    /// Invoked when a RTS Outcome is started
+    /// Invoked when an RTS Outcome is started
     /// </summary>
     public static event RTSEvent OnRTSOutcomeStarted;
 
     /// <summary>
-    /// Invoked when a RTS Outcome is ended
+    /// Invoked when an RTS Outcome is ended
     /// </summary>
     public static event RTSEvent OnRTSOutcomeEnded;
     
