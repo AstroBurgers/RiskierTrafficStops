@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace RiskierTrafficStops.Engine.InternalSystems;
 
-internal static class VersionChecker
+internal static class DependencyVersionChecker
 {
     // Credit to Opus49 for this method
     internal static bool IsAssemblyAvailable(string assemblyName, string version)

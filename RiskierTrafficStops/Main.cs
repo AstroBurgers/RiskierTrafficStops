@@ -32,7 +32,7 @@ public class Main : Plugin
                 Normal("Starting process to handle API lists...");
                 GameFiber.StartNew(Processes.HandleIgnoredPedsList);
                 Normal("Checking for updates...");
-                new UpdateChecker(Assembly.GetExecutingAssembly()).OnCompleted += (_, e) =>
+                new PluginUpdateChecker(Assembly.GetExecutingAssembly()).OnCompleted += (_, e) =>
                 {
                     var updateAvailable = e.UpdateAvailable;
                     var updateVersion = e.LatestVersion;

@@ -14,7 +14,7 @@ using TTask = System.Threading.Tasks.Task;
 namespace RiskierTrafficStops.Engine.InternalSystems;
 
 [EditorBrowsable(EditorBrowsableState.Never)]
-internal class UpdateChecker
+internal class PluginUpdateChecker
 {
     private readonly Assembly _assembly;
     private readonly Uri _apiUrl;
@@ -42,7 +42,7 @@ internal class UpdateChecker
 
     internal event EventHandler<UpdateCompletedEventArgs> OnCompleted;
 
-    internal UpdateChecker(Assembly assembly)
+    internal PluginUpdateChecker(Assembly assembly)
     {
         if (!Uri.TryCreate("https://www.lcpdfr.com/applications/downloadsng/interface/api.php?do=checkForUpdates&fileId=44036&textOnly=1", UriKind.Absolute, out _apiUrl))
         {

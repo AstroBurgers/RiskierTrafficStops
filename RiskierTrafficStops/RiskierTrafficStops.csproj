@@ -84,8 +84,8 @@
     <Compile Include="Engine\InternalSystems\Processes.cs" />
     <Compile Include="Engine\InternalSystems\PulloverEventHandler.cs" />
     <Compile Include="Engine\InternalSystems\Settings.cs" />
-    <Compile Include="Engine\InternalSystems\UpdateChecker.cs" />
-    <Compile Include="Engine\InternalSystems\VersionChecker.cs" />
+    <Compile Include="Engine\InternalSystems\PluginUpdateChecker.cs" />
+    <Compile Include="Engine\InternalSystems\DependencyVersionChecker.cs" />
     <Compile Include="GlobalUsings.cs" />
     <Compile Include="Mod\Outcome.cs" />
     <Compile Include="Mod\Outcomes\Flee.cs" />

@@ -6,7 +6,7 @@ internal static class DependencyHelper
         
     internal static bool VerifyDependencies()
     {
-        if (!VersionChecker.IsAssemblyAvailable("RAGENativeUI.dll", "1.9.2")) _missingFiles += "~n~- RAGENativeUI.dll";
+        if (!DependencyVersionChecker.IsAssemblyAvailable("RAGENativeUI.dll", "1.9.2")) _missingFiles += "~n~- RAGENativeUI.dll";
             
         if (_missingFiles.Length > 0)
         {
