@@ -1,6 +1,6 @@
 ﻿namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal class Flee : Outcome
+internal class Flee : Outcome, IUpdateable
 {
     private enum FleeOutcomes
     {
@@ -31,20 +31,20 @@ internal class Flee : Outcome
     internal override void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
-            
+        GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));
         Normal("Adding all suspect in the vehicle to a list");
-        var _pedsInVehicle = new List<Ped>();
+        var pedsInVehicle = new List<Ped>();
         if (SuspectVehicle.IsAvailable()) {
-            _pedsInVehicle = SuspectVehicle.Occupants.ToList();
+            pedsInVehicle = SuspectVehicle.Occupants.ToList();
         }
 
-        if (_pedsInVehicle.Count < 1)
+        if (pedsInVehicle.Count < 1)
         {
             CleanupOutcome(true);
             return;
         }
         
-        RemoveIgnoredPedsAndBlockEvents(ref _pedsInVehicle);
+        RemoveIgnoredPedsAndBlockEvents(ref pedsInVehicle);
         
         var chosenFleeOutcome = AllFleeOutcomes.PickRandom();
 
@@ -52,10 +52,8 @@ internal class Flee : Outcome
         {
             case FleeOutcomes.Flee:
                 Normal("Starting pursuit");
-
-                if (Functions.GetCurrentPullover() == null) CleanupOutcome(false);
-
-                PursuitLHandle = SetupPursuitWithList(true, _pedsInVehicle);
+                
+                PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                 break;
             
             case FleeOutcomes.BurnOut:
@@ -66,22 +64,39 @@ internal class Flee : Outcome
                 Suspect.Tasks.PerformDrivingManeuver(SuspectVehicle, VehicleManeuver.GoForwardStraight, 750)
                     .WaitForCompletion(750);
                 Normal("Starting pursuit");
-
-                if (Functions.GetCurrentPullover() == null) CleanupOutcome(false);
-                PursuitLHandle = SetupPursuitWithList(true, _pedsInVehicle);
+                
+                PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                 break;
             case FleeOutcomes.LeaveVehicle:
-                foreach (var i in _pedsInVehicle.Where(i => i.IsAvailable()))
+                foreach (var i in pedsInVehicle.Where(i => i.IsAvailable()))
                 {
                     i.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
                 }
 
-                if (Functions.GetCurrentPullover() == null) CleanupOutcome(false);
-
-                PursuitLHandle = SetupPursuitWithList(true, _pedsInVehicle);
+                PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                 break;
         }
         GameFiberHandling.CleanupFibers();
         InvokeEvent(RTSEventType.End);
+    }
+    
+    // Processing methods
+    public void Start()
+    {
+        Normal($"Started checks for {ActiveOutcome}");
+        
+        while (ActiveOutcome is not null)
+        {
+            GameFiber.Yield();
+            if (Functions.GetCurrentPullover() is null || !MainPlayer.IsAvailable())
+            {
+                Abort();
+            }
+        }
+    }
+    
+    public void Abort()
+    {
+        CleanupOutcome(false);
     }
 }

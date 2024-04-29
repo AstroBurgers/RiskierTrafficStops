@@ -1,4 +1,4 @@
-﻿namespace RiskierTrafficStops.Engine;
+﻿namespace RiskierTrafficStops.Engine.Helpers;
 
 internal static class Helper
 {

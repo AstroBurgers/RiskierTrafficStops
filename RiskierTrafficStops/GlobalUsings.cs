@@ -13,7 +13,7 @@ global using RiskierTrafficStops.Engine.Helpers.Extensions;
 global using RiskierTrafficStops.Engine.InternalSystems;
 global using static RiskierTrafficStops.API.APIs;
 global using static RiskierTrafficStops.Engine.Data.Arrays;
-global using static RiskierTrafficStops.Engine.Helper;
+global using static RiskierTrafficStops.Engine.Helpers.Helper;
 global using static RiskierTrafficStops.Engine.Helpers.MathHelper;
 global using static RiskierTrafficStops.Engine.Helpers.PursuitHelper;
 global using static RiskierTrafficStops.Engine.InternalSystems.Logger;

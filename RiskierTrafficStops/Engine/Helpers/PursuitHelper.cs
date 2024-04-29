@@ -3,7 +3,7 @@
 internal static class PursuitHelper
 {
     /// <summary>
-    /// Setup a Pursuit with an Array of suspects
+    /// Set up a Pursuit with an Array of suspects
     /// </summary>
     /// <param name="isSuspectsPulledOver"></param>
     /// <param name="suspects"></param>

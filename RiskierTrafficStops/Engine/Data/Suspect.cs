@@ -12,11 +12,11 @@ internal class Suspect : Ped
     
     internal Suspect(Ped ped)
     {
-        Ped = ped;
-        IsSuicidal = GenerateChance() < IsSuicidalChance;
-        WantToSurvive = GenerateChance() < WantsToSurviveChance;
-        WantsToDieByCop = GenerateChance() < WantsToDieBieCopChance;
-        HatesHostage = GenerateChance() < HatesHostageChance;
-        IsTerrorist = GenerateChance() < IsTerroristChance;
-    }
+            Ped = ped;
+            IsSuicidal = GenerateChance() < IsSuicidalChance;
+            WantToSurvive = GenerateChance() < WantsToSurviveChance;
+            WantsToDieByCop = GenerateChance() < WantsToDieBieCopChance;
+            HatesHostage = GenerateChance() < HatesHostageChance;
+            IsTerrorist = GenerateChance() < IsTerroristChance;
+        }
 }

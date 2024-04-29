@@ -7,14 +7,15 @@ internal abstract class Outcome
     internal static RelationshipGroup SuspectRelateGroup;
     internal static LHandle PursuitLHandle;
     internal static LHandle TrafficStopLHandle;
+    internal static Outcome ActiveOutcome;
 
     internal static List<Ped> PedsToIgnore = new();
     
     internal virtual void StartOutcome(){}
-
+    
     internal void RemoveIgnoredPedsAndBlockEvents(ref List<Ped> peds)
     {
-        if (Suspect.IsAvailable() && peds.Contains(Suspect))
+        if (Suspect.IsAvailable() && PedsToIgnore.Contains(Suspect))
         {
             CleanupOutcome(true);
         }
@@ -74,5 +75,6 @@ internal abstract class Outcome
     internal Outcome(LHandle handle)
     {
         TrafficStopLHandle = handle;
+        ActiveOutcome = this;
     }
 }

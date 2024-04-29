@@ -5,7 +5,7 @@ using MathHelper = Rage.MathHelper;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal class HostageTaking : Outcome
+internal class HostageTaking : Outcome, IUpdateable
 {
     private static Vector3 _playerLastPos = Vector3.Zero;
     private static List<Ped> _pedsInVehicle = new();
@@ -32,41 +32,50 @@ internal class HostageTaking : Outcome
     internal override void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
-
+        GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));
         Normal("Adding all suspect in the vehicle to a list");
 
         if (SuspectVehicle.IsAvailable()) {
             _pedsInVehicle = SuspectVehicle.Occupants.ToList();
         }
 
-        if (_pedsInVehicle.Count < 1)
+        Debug("Checking pedsinveh");
+        Debug($"{_pedsInVehicle.Count}");
+        if (_pedsInVehicle.Count <= 1)
         {
             CleanupOutcome(true);
             return;
         }
         
+        Debug("RemoveIgnoredPedsAndBlockEvents");
         RemoveIgnoredPedsAndBlockEvents(ref _pedsInVehicle);
 
+        Debug("Settings hostage");
         _hostage = new Suspect(_pedsInVehicle[1]);
 
         // Hostage stuff
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => GetOutAndSurrender(_hostage.Ped)));
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(HandleSuspect));
 
+        Debug("MakePedLeaveVehicle");
         foreach (var ped in _pedsInVehicle.Where(i => i.IsAvailable() && i != _hostage.Ped && i != Suspect))
         {
             GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => MakePedLeaveVehicle(ped)));
         }
 
+        Debug("Displaying subtitle");
         Game.DisplaySubtitle(HostageSituationText.PickRandom());
+        Debug("Settings playLastPos");
         _playerLastPos = MainPlayer.Position;
 
+        Debug("DebugSuspectProperties");
         DebugSuspectProperties();
 
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() =>
         {
             GameFiber.Wait(4500);
 
+            Debug("Doing tree shit");
             // Less than 2 suspects
             var commitSuicide = new Node(true, null, null, CommitSuicide);
             var shootOut = new Node(false, null, null, ShootOut);
@@ -94,7 +103,9 @@ internal class HostageTaking : Outcome
             // Tree
             var bdt = new Bdt(moreThan2Suspects);
 
+            Debug("bdt.FollowTruePath();");
             bdt.FollowTruePath();
+            Debug("InvokeEvent(RTSEventType.End);");
             InvokeEvent(RTSEventType.End);
         }, "Riskier Traffic Stops BDT Fiber"));
     }
@@ -284,5 +295,25 @@ internal class HostageTaking : Outcome
             Suspect.RelationshipGroup = SuspectRelateGroup;
             Suspect.Tasks.FightAgainstClosestHatedTarget(50f, -1);
         }
+    }
+    
+    // Processing methods
+    public void Start()
+    {
+        Normal($"Started checks for {ActiveOutcome}");
+        
+        while (ActiveOutcome is not null)
+        {
+            GameFiber.Yield();
+            if (Functions.GetCurrentPullover() is null || !MainPlayer.IsAvailable())
+            {
+                Abort();
+            }
+        }
+    }
+
+    public void Abort()
+    {
+        CleanupOutcome(false);
     }
 }

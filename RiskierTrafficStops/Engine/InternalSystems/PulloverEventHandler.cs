@@ -98,7 +98,7 @@ internal static class PulloverEventHandler
     }
         
     /// <summary>
-    /// Does a chance generation and check to determine if a outcome should happen
+    /// Does a chance generation and check to determine if an outcome should happen
     /// </summary>
     /// <returns>True/False</returns>
     private static bool ShouldEventHappen()

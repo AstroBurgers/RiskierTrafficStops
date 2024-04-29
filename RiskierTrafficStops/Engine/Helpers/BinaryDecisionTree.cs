@@ -9,103 +9,103 @@ internal class Bdt {
         internal Action OutcomeAssociated;
 
         internal Node(bool value, Node left, Node right, Action outcomeAssociated) {
-            Value = value;
-            Left = left;
-            Right = right;
-            OutcomeAssociated = outcomeAssociated;
-        }
+                Value = value;
+                Left = left;
+                Right = right;
+                OutcomeAssociated = outcomeAssociated;
+            }
 
         internal Node(bool value, Node left, Node right)
         {
-            Value = value;
-            Left = left;
-            Right = right;
-            OutcomeAssociated = null;
-        }
+                Value = value;
+                Left = left;
+                Right = right;
+                OutcomeAssociated = null;
+            }
     }
 
     private Node _root;
 
     internal Bdt() {
-        _root = null;
-    }
+            _root = null;
+        }
     internal Bdt(Node root) {
-        _root = root;
-    }
+            _root = root;
+        }
     
     
     internal void FollowTruePath()
     {
-        FollowTruePath(_root);
-    }
+            FollowTruePath(_root);
+        }
 
     private void FollowTruePath(Node subroot)
     {
-        // Follow the true path recursively
-        if (subroot.Value)
-        {
-            if (subroot.Right == null && subroot.OutcomeAssociated != null)
+            // Follow the true path recursively
+            if (subroot.Value)
             {
-                subroot.OutcomeAssociated();
+                if (subroot.Right == null && subroot.OutcomeAssociated != null)
+                {
+                    subroot.OutcomeAssociated();
+                }
+                else
+                {
+                    FollowTruePath(subroot.Right);
+                }
             }
             else
             {
-                FollowTruePath(subroot.Right);
+                if (subroot.Left == null && subroot.OutcomeAssociated != null)
+                {
+                    subroot.OutcomeAssociated();
+                }
+                else
+                {
+                    FollowTruePath(subroot.Left);
+                }
             }
         }
-        else
-        {
-            if (subroot.Left == null && subroot.OutcomeAssociated != null)
-            {
-                subroot.OutcomeAssociated();
-            }
-            else
-            {
-                FollowTruePath(subroot.Left);
-            }
-        }
-    }
 
     internal bool IsEmpty() {
-        return _root == null;
-    }
+            return _root == null;
+        }
 
     internal void Add(Node node, bool insertToLeft)
     {
-        if (IsEmpty())
-        {
-            _root = node;
+            if (IsEmpty())
+            {
+                _root = node;
+            }
+            else
+            {
+                Add(_root, node, insertToLeft);
+            }
         }
-        else
-        {
-            Add(_root, node, insertToLeft);
-        }
-    }
 
     private void Add(Node parentRoot, Node node, bool insertToLeft)
     {
-        if (insertToLeft)
-        {
-            if (parentRoot.Left == null)
+            if (insertToLeft)
             {
-                parentRoot.Left = new Node(node.Value, null, null, node.OutcomeAssociated);
+                if (parentRoot.Left == null)
+                {
+                    parentRoot.Left = new Node(node.Value, null, null, node.OutcomeAssociated);
+                }
+                else
+                {
+                    Add(parentRoot.Left, node, insertToLeft);
+                }
             }
             else
             {
-                Add(parentRoot.Left, node, insertToLeft);
+                if (parentRoot.Right == null)
+                {
+                    parentRoot.Right = new Node(node.Value, null, null, node.OutcomeAssociated);
+                }
+                else
+                {
+                    Add(parentRoot.Right, node, insertToLeft);
+                }
             }
         }
-        else
-        {
-            if (parentRoot.Right == null)
-            {
-                parentRoot.Right = new Node(node.Value, null, null, node.OutcomeAssociated);
-            }
-            else
-            {
-                Add(parentRoot.Right, node, insertToLeft);
-            }
-        }
-    }
 
 }
