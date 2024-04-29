@@ -24,25 +24,25 @@ internal class ShootAndFlee : Outcome, IUpdateable
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));
         Normal("Adding all suspect in the vehicle to a list");
-        var _pedsInVehicle = new List<Ped>();
+        var pedsInVehicle = new List<Ped>();
         if (SuspectVehicle.IsAvailable()) {
-            _pedsInVehicle = SuspectVehicle.Occupants.ToList();
+            pedsInVehicle = SuspectVehicle.Occupants.ToList();
         }
 
-        if (_pedsInVehicle.Count < 1)
+        if (pedsInVehicle.Count < 1)
         {
             CleanupOutcome(true);
             return;
         }
         
-        RemoveIgnoredPedsAndBlockEvents(ref _pedsInVehicle);
+        RemoveIgnoredPedsAndBlockEvents(ref pedsInVehicle);
         
         var chance = GenerateChance();
         switch (chance)
         {
             case <= 60:
                 Normal("Starting all suspects outcome");
-                AllSuspects(_pedsInVehicle);
+                AllSuspects(pedsInVehicle);
                 break;
             default:
                 Normal("Starting driver only outcome");
@@ -64,7 +64,8 @@ internal class ShootAndFlee : Outcome, IUpdateable
             i.GivePistol();
 
             Normal($"Making Suspect #{i} shoot at Player");
-            NativeFunction.Natives.x10AB107B887214D8(i, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
+            i.Tasks.FireWeaponAt(MainPlayer, Rndm.Next(1, 4) * 750, FiringPattern.FullAutomatic);
+            //NativeFunction.Natives.x10AB107B887214D8(i, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
         }
 
         GameFiber.Wait(5000);
@@ -82,7 +83,8 @@ internal class ShootAndFlee : Outcome, IUpdateable
         Suspect.GivePistol();
 
         Normal("Giving Suspect Tasks");
-        NativeFunction.Natives.x10AB107B887214D8(Suspect, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
+        Suspect.Tasks.FireWeaponAt(MainPlayer, Rndm.Next(1, 4) * 750, FiringPattern.FullAutomatic);
+        //NativeFunction.Natives.x10AB107B887214D8(Suspect, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
         GameFiber.Wait(5000);
 
         PursuitLHandle = SetupPursuit(true, Suspect);

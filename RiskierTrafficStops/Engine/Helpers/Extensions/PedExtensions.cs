@@ -8,7 +8,15 @@ internal static class PedExtensions
             var pedWeapons = ped.Inventory.Weapons;
             var weapon = ped.Inventory.HasLoadedWeapon ? pedWeapons[Rndm.Next(pedWeapons.Count)] : PistolList[Rndm.Next(PistolList.Length)];
             Normal($"Giving {ped.Model.Name} {weapon}");
-        }
+            if (ped.Inventory.Weapons.Contains(weapon))
+            {
+                ped.Inventory.EquippedWeapon = weapon;
+            }
+            else
+            {
+                ped.Inventory.GiveNewWeapon(weapon, -1, true);
+            }
+    }
     
     /// <summary>
     /// Handles all relationship group changes
@@ -51,8 +59,16 @@ internal static class PedExtensions
     {
             if (!ped.IsAvailable()) return;
             var pedWeapons = ped.Inventory.Weapons;
-            var weapon = ped.Inventory.HasLoadedWeapon ? pedWeapons[Rndm.Next(pedWeapons.Count)] : WeaponList[Rndm.Next(WeaponList.Length)];;
-            Normal($"Giving {ped.Model.Name} {weapon}");
+            var weapon = ped.Inventory.HasLoadedWeapon ? pedWeapons[Rndm.Next(pedWeapons.Count)] : WeaponList[Rndm.Next(WeaponList.Length)];
+            Normal($"Giving {ped.Model.Name} weapon");
+            if (ped.Inventory.Weapons.Contains(weapon))
+            {
+                ped.Inventory.EquippedWeapon = weapon;
+            }
+            else
+            {
+                ped.Inventory.GiveNewWeapon(weapon, -1, true);
+            }
         }
     
     /// <summary>

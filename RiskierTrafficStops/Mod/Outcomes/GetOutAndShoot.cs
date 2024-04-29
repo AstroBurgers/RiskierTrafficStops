@@ -110,7 +110,7 @@ internal class GetOutAndShoot : Outcome, IUpdateable
         while (ActiveOutcome is not null)
         {
             GameFiber.Yield();
-            if (Functions.GetCurrentPullover() is null || !MainPlayer.IsAvailable())
+            if (!MainPlayer.IsAvailable())
             {
                 Abort();
             }

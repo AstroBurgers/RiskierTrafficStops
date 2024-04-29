@@ -131,6 +131,7 @@ internal class Yelling : Outcome, IUpdateable
 
         while (ActiveOutcome is not null)
         {
+            GameFiber.Yield();
             if (Functions.GetCurrentPullover() is null || !Suspect.IsAvailable() || Functions.IsPedArrested(Suspect) ||
                 Functions.IsPedGettingArrested(Suspect) || !MainPlayer.IsAvailable())
             {
