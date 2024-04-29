@@ -31,7 +31,7 @@ internal class Flee : Outcome, IUpdateable
     internal override void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
-            
+        GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));
         Normal("Adding all suspect in the vehicle to a list");
         var pedsInVehicle = new List<Ped>();
         if (SuspectVehicle.IsAvailable()) {
@@ -87,6 +87,7 @@ internal class Flee : Outcome, IUpdateable
         
         while (ActiveOutcome is not null)
         {
+            GameFiber.Yield();
             if (Functions.GetCurrentPullover() is null || !MainPlayer.IsAvailable())
             {
                 Abort();
