@@ -1,6 +1,6 @@
 ﻿namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal class ShootAndFlee : Outcome
+internal class ShootAndFlee : Outcome, IUpdateable
 {
     public ShootAndFlee(LHandle handle) : base(handle)
     {
@@ -69,12 +69,6 @@ internal class ShootAndFlee : Outcome
 
         GameFiber.Wait(5000);
 
-        if ((Functions.GetCurrentPullover() == null) || !MainPlayer.IsAvailable())
-        {
-            CleanupOutcome(false);
-            return;
-        }
-
         PursuitLHandle = SetupPursuitWithList(true, peds);
     }
 
@@ -91,12 +85,25 @@ internal class ShootAndFlee : Outcome
         NativeFunction.Natives.x10AB107B887214D8(Suspect, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
         GameFiber.Wait(5000);
 
-        if (Functions.GetCurrentPullover() == null || !MainPlayer.IsAvailable())
-        {
-            CleanupOutcome(false);
-            return;
-        }
-
         PursuitLHandle = SetupPursuit(true, Suspect);
+    }
+    
+    // Processing methods
+    public void Start()
+    {
+        Normal($"Started checks for {ActiveOutcome}");
+        
+        while (ActiveOutcome is not null)
+        {
+            if (Functions.GetCurrentCallout() is null || !MainPlayer.IsAvailable())
+            {
+                Abort();
+            }
+        }
+    }
+
+    public void Abort()
+    {
+        CleanupOutcome(false);
     }
 }

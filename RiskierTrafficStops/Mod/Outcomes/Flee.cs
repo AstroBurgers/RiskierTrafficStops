@@ -52,9 +52,7 @@ internal class Flee : Outcome, IUpdateable
         {
             case FleeOutcomes.Flee:
                 Normal("Starting pursuit");
-
-                if (Functions.GetCurrentPullover() == null) CleanupOutcome(false);
-
+                
                 PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                 break;
             
@@ -66,8 +64,7 @@ internal class Flee : Outcome, IUpdateable
                 Suspect.Tasks.PerformDrivingManeuver(SuspectVehicle, VehicleManeuver.GoForwardStraight, 750)
                     .WaitForCompletion(750);
                 Normal("Starting pursuit");
-
-                if (Functions.GetCurrentPullover() == null) CleanupOutcome(false);
+                
                 PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                 break;
             case FleeOutcomes.LeaveVehicle:
@@ -76,12 +73,29 @@ internal class Flee : Outcome, IUpdateable
                     i.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
                 }
 
-                if (Functions.GetCurrentPullover() == null) CleanupOutcome(false);
-
                 PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
                 break;
         }
         GameFiberHandling.CleanupFibers();
         InvokeEvent(RTSEventType.End);
+    }
+    
+    // Processing methods
+    public void Start()
+    {
+        Normal($"Started checks for {ActiveOutcome}");
+        
+        while (ActiveOutcome is not null)
+        {
+            if (Functions.GetCurrentCallout() is null || !MainPlayer.IsAvailable())
+            {
+                Abort();
+            }
+        }
+    }
+    
+    public void Abort()
+    {
+        CleanupOutcome(false);
     }
 }

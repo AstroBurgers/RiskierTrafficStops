@@ -5,7 +5,7 @@ using MathHelper = Rage.MathHelper;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal class HostageTaking : Outcome
+internal class HostageTaking : Outcome, IUpdateable
 {
     private static Vector3 _playerLastPos = Vector3.Zero;
     private static List<Ped> _pedsInVehicle = new();
@@ -32,7 +32,7 @@ internal class HostageTaking : Outcome
     internal override void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
-
+        Start();
         Normal("Adding all suspect in the vehicle to a list");
 
         if (SuspectVehicle.IsAvailable()) {
@@ -295,5 +295,24 @@ internal class HostageTaking : Outcome
             Suspect.RelationshipGroup = SuspectRelateGroup;
             Suspect.Tasks.FightAgainstClosestHatedTarget(50f, -1);
         }
+    }
+    
+    // Processing methods
+    public void Start()
+    {
+        Normal($"Started checks for {ActiveOutcome}");
+        
+        while (ActiveOutcome is not null)
+        {
+            if (Functions.GetCurrentCallout() is null || !MainPlayer.IsAvailable())
+            {
+                Abort();
+            }
+        }
+    }
+
+    public void Abort()
+    {
+        CleanupOutcome(false);
     }
 }

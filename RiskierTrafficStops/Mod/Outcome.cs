@@ -1,6 +1,6 @@
 ﻿namespace RiskierTrafficStops.Mod;
 
-internal abstract class Outcome : IUpdateable
+internal abstract class Outcome
 {
     internal static Ped Suspect;
     internal static Vehicle SuspectVehicle;
@@ -77,7 +77,4 @@ internal abstract class Outcome : IUpdateable
         TrafficStopLHandle = handle;
         ActiveOutcome = this;
     }
-    
-    // Processing methods n shit
-    
 }

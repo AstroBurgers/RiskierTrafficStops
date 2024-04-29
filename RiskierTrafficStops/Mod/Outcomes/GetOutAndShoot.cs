@@ -4,7 +4,7 @@
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal class GetOutAndShoot : Outcome
+internal class GetOutAndShoot : Outcome, IUpdateable
 {
     private static GetOutAndShootOutcomes _chosenOutcome;
 
@@ -35,7 +35,7 @@ internal class GetOutAndShoot : Outcome
     internal override void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
-
+        Start();
         Normal("Adding all suspect in the vehicle to a list");
 
         if (SuspectVehicle.IsAvailable()) {
@@ -106,5 +106,24 @@ internal class GetOutAndShoot : Outcome
     {
         Flee,
         KeepShooting
+    }
+    
+    // Processing methods
+    public void Start()
+    {
+        Normal($"Started checks for {ActiveOutcome}");
+        
+        while (ActiveOutcome is not null)
+        {
+            if (Functions.GetCurrentCallout() is null || !MainPlayer.IsAvailable())
+            {
+                Abort();
+            }
+        }
+    }
+    
+    public void Abort()
+    {
+        CleanupOutcome(false);
     }
 }
