@@ -69,13 +69,13 @@
     <Compile Include="Engine\Data\Suspect.cs" />
     <Compile Include="Engine\FrontendSystems\ConfigMenu.cs" />
     <Compile Include="Engine\FrontendSystems\ConsoleCommands.cs" />
-    <Compile Include="Engine\Helper.cs" />
     <Compile Include="Engine\Helpers\BinaryDecisionTree.cs" />
     <Compile Include="Engine\Helpers\DependencyHelper.cs" />
     <Compile Include="Engine\Helpers\EncodingHelper.cs" />
     <Compile Include="Engine\Helpers\Extensions\EnumExtensions.cs" />
     <Compile Include="Engine\Helpers\Extensions\PedExtensions.cs" />
     <Compile Include="Engine\Helpers\Extensions\VehicleExtensions.cs" />
+    <Compile Include="Engine\Helpers\Helper.cs" />
     <Compile Include="Engine\Helpers\MathHelper.cs" />
     <Compile Include="Engine\Helpers\PursuitHelper.cs" />
     <Compile Include="Engine\InternalSystems\GameFiberHandling.cs" />
