@@ -2,7 +2,7 @@
 
 namespace RiskierTrafficStops.Engine.InternalSystems;
 
-internal class Processes
+internal class Processing
 {
     internal static void HandleIgnoredPedsList()
     {
@@ -17,4 +17,11 @@ internal class Processes
             }
         }
     }
+}
+
+internal interface IUpdateable
+{
+    internal void Start();
+
+    internal void Abort();
 }

@@ -1,17 +1,18 @@
 ﻿namespace RiskierTrafficStops.Mod;
 
-internal abstract class Outcome
+internal abstract class Outcome : IUpdateable
 {
     internal static Ped Suspect;
     internal static Vehicle SuspectVehicle;
     internal static RelationshipGroup SuspectRelateGroup;
     internal static LHandle PursuitLHandle;
     internal static LHandle TrafficStopLHandle;
+    internal static Outcome ActiveOutcome;
 
     internal static List<Ped> PedsToIgnore = new();
     
     internal virtual void StartOutcome(){}
-
+    
     internal void RemoveIgnoredPedsAndBlockEvents(ref List<Ped> peds)
     {
         if (Suspect.IsAvailable() && PedsToIgnore.Contains(Suspect))
@@ -74,5 +75,9 @@ internal abstract class Outcome
     internal Outcome(LHandle handle)
     {
         TrafficStopLHandle = handle;
+        ActiveOutcome = this;
     }
+    
+    // Processing methods n shit
+    
 }

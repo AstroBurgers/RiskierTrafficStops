@@ -1,6 +1,6 @@
 ﻿namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal class Flee : Outcome
+internal class Flee : Outcome, IUpdateable
 {
     private enum FleeOutcomes
     {

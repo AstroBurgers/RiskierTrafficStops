@@ -30,7 +30,7 @@ public class Main : Plugin
                     Normal("Adding console commands...");
                     Game.AddConsoleCommands();
                     Normal("Starting process to handle API lists...");
-                    GameFiber.StartNew(Processes.HandleIgnoredPedsList);
+                    GameFiber.StartNew(Processing.HandleIgnoredPedsList);
                     Normal("Checking for updates...");
                     new PluginUpdateChecker(Assembly.GetExecutingAssembly()).OnCompleted += (_, e) =>
                     {
