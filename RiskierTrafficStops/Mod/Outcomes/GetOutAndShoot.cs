@@ -67,12 +67,6 @@ internal class GetOutAndShoot : Outcome, IUpdateable
         switch (_chosenOutcome)
         {
             case GetOutAndShootOutcomes.Flee:
-                if (Functions.GetCurrentPullover() == null)
-                {
-                    CleanupOutcome(false);
-                    return;
-                }
-
                 PursuitLHandle = SetupPursuitWithList(true, _pedsInVehicle);
                 break;
             case GetOutAndShootOutcomes.KeepShooting:
@@ -115,7 +109,7 @@ internal class GetOutAndShoot : Outcome, IUpdateable
         
         while (ActiveOutcome is not null)
         {
-            if (Functions.GetCurrentCallout() is null || !MainPlayer.IsAvailable())
+            if (Functions.GetCurrentPullover() is null || !MainPlayer.IsAvailable())
             {
                 Abort();
             }

@@ -95,7 +95,7 @@ internal class ShootAndFlee : Outcome, IUpdateable
         
         while (ActiveOutcome is not null)
         {
-            if (Functions.GetCurrentCallout() is null || !MainPlayer.IsAvailable())
+            if (Functions.GetCurrentPullover() is null || !MainPlayer.IsAvailable())
             {
                 Abort();
             }
