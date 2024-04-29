@@ -29,8 +29,7 @@ internal static class Arrays
             "Error Code = G3TxTR01L3D",
             "You have a pending brutality lawsuit against you.",
             "Everyone disliked that.",
-            "Everyone liked that",
-            "RXJyb3IgQ29kZSA9IEczVHhUUjAxTDNE"
+            "Everyone liked that"
         };
 
     internal static readonly string[] HostageSituationText =
