@@ -164,6 +164,9 @@ internal class HostageTaking : Outcome, IUpdateable
 
     private static void HandlePlayerMovement()
     {
+        Normal("Started Player movement process");
+        _playerLastPos = MainPlayer.Position;
+        GameFiber.Wait(500);
         var movementVector = MainPlayer.Position - _playerLastPos;
         var distanceMovedSquared = Vector3.Dot(movementVector, movementVector);
 

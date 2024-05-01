@@ -38,6 +38,9 @@
     <Reference Include="ImmersiveAmbientEvents">
       <HintPath>..\..\..\..\..\References\ImmersiveAmbientEvents.dll</HintPath>
     </Reference>
+    <Reference Include="irrKlang.NET4">
+      <HintPath>..\..\..\..\..\References\irrKlang.NET4.dll</HintPath>
+    </Reference>
     <Reference Include="LSPD First Response">
       <HintPath>..\..\..\..\..\References\LSPD First Response.dll</HintPath>
     </Reference>
