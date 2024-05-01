@@ -11,6 +11,7 @@ internal class HostageTaking : Outcome, IUpdateable
     private static List<Ped> _pedsInVehicle = new();
     private static Suspect _suspect = new(Suspect);
     private static Suspect _hostage;
+    private static SoundPlayer _soundPlayer = new(@"plugins\RiskierTrafficStops\bomb_beep.wav");
 
     public HostageTaking(LHandle handle) : base(handle)
     {
@@ -185,6 +186,8 @@ internal class HostageTaking : Outcome, IUpdateable
         Debug("DetonateBomb");
         if (SuspectVehicle.IsAvailable())
         {
+            GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(_soundPlayer.PlaySound2D));
+            GameFiber.Wait(6639);
             NativeFunction.Natives.EXPLODE_VEHICLE(SuspectVehicle, true, false);
         }
     }
