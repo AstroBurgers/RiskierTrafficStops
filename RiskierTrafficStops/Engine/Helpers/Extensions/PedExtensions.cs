@@ -2,6 +2,8 @@
 
 internal static class PedExtensions
 {
+    internal static bool HasLosOnEntity(this Entity entity, Entity entity2) => NativeFunction.Natives.xFCDFF7B72D23A1AC<bool>(entity, entity2, 17); // HAS_ENTITY_CLEAR_LOS_TO_ENTITY
+    
     internal static void GivePistol(this Ped ped)
     {
             if (!ped.IsAvailable()) return;
