@@ -64,8 +64,8 @@ internal class ShootAndFlee : Outcome, IUpdateable
             i.GivePistol();
 
             Normal($"Making Suspect #{i} shoot at Player");
-            i.Tasks.FireWeaponAt(MainPlayer, Rndm.Next(1, 4) * 750, FiringPattern.FullAutomatic);
-            //NativeFunction.Natives.x10AB107B887214D8(i, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
+            //i.Tasks.FireWeaponAt(MainPlayer, Rndm.Next(1, 4) * 750, FiringPattern.FullAutomatic);
+            NativeFunction.Natives.x10AB107B887214D8(i, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
         }
 
         GameFiber.Wait(5000);
@@ -83,8 +83,8 @@ internal class ShootAndFlee : Outcome, IUpdateable
         Suspect.GivePistol();
 
         Normal("Giving Suspect Tasks");
-        Suspect.Tasks.FireWeaponAt(MainPlayer, Rndm.Next(1, 4) * 750, FiringPattern.FullAutomatic);
-        //NativeFunction.Natives.x10AB107B887214D8(Suspect, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
+        //Suspect.Tasks.FireWeaponAt(MainPlayer, Rndm.Next(1, 4) * 750, FiringPattern.FullAutomatic);
+        NativeFunction.Natives.x10AB107B887214D8(Suspect, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
         GameFiber.Wait(5000);
 
         PursuitLHandle = SetupPursuit(true, Suspect);
