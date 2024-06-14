@@ -11,5 +11,5 @@ internal static class ConsoleCommands
             {
                 ConfigMenu.MainMenu.Visible = true;
             }
-        }
+    }
 }

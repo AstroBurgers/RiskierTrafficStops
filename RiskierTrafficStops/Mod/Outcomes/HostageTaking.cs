@@ -112,12 +112,6 @@ internal class HostageTaking : Outcome, IUpdateable
         }, "Riskier Traffic Stops BDT Fiber"));
     }
 
-    private void RemoveIgnoredPedsAndBlockEvents()
-    {
-        _pedsInVehicle.RemoveAll(ped => ped.IsAvailable() && PedsToIgnore.Contains(ped));
-        _pedsInVehicle.ForEach(ped => ped.BlockPermanentEvents = true);
-    }
-
     private void DebugSuspectProperties()
     {
         Debug($"IsSuicidal: {_suspect.IsSuicidal}");
