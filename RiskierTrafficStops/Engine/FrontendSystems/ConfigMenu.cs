@@ -130,10 +130,10 @@ internal static class ConfigMenu
             {
                 Error(e, "Menu.cs: MenuPoolProcess");
             }
-        }
+    }
 
     internal static bool MenuRequirements() // The aforementioned menu requirements
     {
-            return !UIMenu.IsAnyMenuVisible && !TabView.IsAnyPauseMenuVisible; // Makes sure that the player is not paused/in a Compulite style menu. Checks if any other menus are open
-        }
+        return !UIMenu.IsAnyMenuVisible && !TabView.IsAnyPauseMenuVisible; // Makes sure that the player is not paused/in a Compulite style menu. Checks if any other menus are open
+    }
 }
