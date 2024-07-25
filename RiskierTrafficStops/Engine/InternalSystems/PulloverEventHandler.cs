@@ -42,9 +42,9 @@ internal static class PulloverEventHandler
         {
             if (!IaeFunctions.IaeCompatibilityCheck(handle) || Functions.IsCalloutRunning() || DisableRTSForCurrentStop) return;
 
-            GameFiber.WaitWhile(() => !MainPlayer.LastVehicle.IsSirenOn && Functions.IsPlayerPerformingPullover());
+            GameFiber.WaitWhile(() => MainPlayer.IsAvailable() && MainPlayer.LastVehicle.IsAvailable() && !MainPlayer.LastVehicle.IsSirenOn && Functions.IsPlayerPerformingPullover());
 
-            if (MainPlayer.LastVehicle.IsSirenOn && Functions.IsPlayerPerformingPullover())
+            if (MainPlayer.IsAvailable() && MainPlayer.LastVehicle.IsAvailable() && MainPlayer.LastVehicle.IsSirenOn && Functions.IsPlayerPerformingPullover())
             {
                 HasEventHappened = true;
                 ChooseOutcome(handle);
