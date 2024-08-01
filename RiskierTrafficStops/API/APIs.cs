@@ -26,7 +26,7 @@ public static class APIs
     /// <param name="peds">Peds to be ignored</param>
     public static void DisableRTSForPeds(params Ped[] peds)
     {
-        foreach (var ped in peds)
+        foreach (var ped in peds.ToList())
         {
             if (ped.IsAvailable())
             {
@@ -34,7 +34,7 @@ public static class APIs
             }
         }
 
-        foreach (var ped in Outcome.PedsToIgnore.Where(ped => !ped.IsAvailable()))
+        foreach (var ped in Outcome.PedsToIgnore.Where(ped => !ped.IsAvailable()).ToList())
         {
             Outcome.PedsToIgnore.Remove(ped);
         }

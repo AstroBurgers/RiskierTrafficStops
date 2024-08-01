@@ -2,6 +2,8 @@
 
 internal static class PedExtensions
 {
+    internal static bool HasLosOnEntity(this Entity entity, Entity entity2) => NativeFunction.Natives.xFCDFF7B72D23A1AC<bool>(entity, entity2, 17); // HAS_ENTITY_CLEAR_LOS_TO_ENTITY
+    
     internal static void GivePistol(this Ped ped)
     {
             if (!ped.IsAvailable()) return;
@@ -69,23 +71,23 @@ internal static class PedExtensions
             {
                 ped.Inventory.GiveNewWeapon(weapon, -1, true);
             }
-        }
+    }
     
     /// <summary>
     /// Makes a ped rev their vehicles engine, the int list parameters each need a minimum and maximum value
     /// </summary>
     internal static void RevEngine(this Ped driver, Vehicle suspectVehicle, int[] timeBetweenRevs, int[] timeForRevsToLast, int totalNumberOfRevs)
     {
-            Normal("Starting Rev Engine method");
-            for (var i = 0; i < totalNumberOfRevs; i++)
-            {
-                GameFiber.Yield();
-                var time = Rndm.Next(timeForRevsToLast[0], timeForRevsToLast[1]) * 1000;
-                driver.Tasks.PerformDrivingManeuver(suspectVehicle, VehicleManeuver.RevEngine, time);
-                GameFiber.Wait(time);
-                var time2 = Rndm.Next(timeBetweenRevs[0], timeBetweenRevs[1]) * 1000;
-                GameFiber.Wait(time2);
-            }
+        Normal("Starting Rev Engine method");
+        for (var i = 0; i < totalNumberOfRevs; i++)
+        {
+            GameFiber.Yield();
+            var time = Rndm.Next(timeForRevsToLast[0], timeForRevsToLast[1]) * 1000;
+            driver.Tasks.PerformDrivingManeuver(suspectVehicle, VehicleManeuver.RevEngine, time);
+            GameFiber.Wait(time);
+            var time2 = Rndm.Next(timeBetweenRevs[0], timeBetweenRevs[1]) * 1000;
+            GameFiber.Wait(time2);
         }
+    }
 
 }

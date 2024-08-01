@@ -64,48 +64,48 @@ internal class Bdt {
                     FollowTruePath(subroot.Left);
                 }
             }
-        }
+    }
 
     internal bool IsEmpty() {
-            return _root == null;
-        }
+        return _root == null;
+    }
 
     internal void Add(Node node, bool insertToLeft)
     {
-            if (IsEmpty())
-            {
-                _root = node;
-            }
-            else
-            {
-                Add(_root, node, insertToLeft);
-            }
+        if (IsEmpty())
+        {
+            _root = node;
         }
+        else
+        {
+            Add(_root, node, insertToLeft);
+        }
+    }
 
     private void Add(Node parentRoot, Node node, bool insertToLeft)
     {
-            if (insertToLeft)
+        if (insertToLeft)
+        {
+            if (parentRoot.Left == null)
             {
-                if (parentRoot.Left == null)
-                {
-                    parentRoot.Left = new Node(node.Value, null, null, node.OutcomeAssociated);
-                }
-                else
-                {
-                    Add(parentRoot.Left, node, insertToLeft);
-                }
+                parentRoot.Left = new Node(node.Value, null, null, node.OutcomeAssociated);
             }
             else
             {
-                if (parentRoot.Right == null)
-                {
-                    parentRoot.Right = new Node(node.Value, null, null, node.OutcomeAssociated);
-                }
-                else
-                {
-                    Add(parentRoot.Right, node, insertToLeft);
-                }
+                Add(parentRoot.Left, node, insertToLeft);
             }
         }
+        else
+        {
+            if (parentRoot.Right == null)
+            {
+                parentRoot.Right = new Node(node.Value, null, null, node.OutcomeAssociated);
+            }
+            else
+            {
+                Add(parentRoot.Right, node, insertToLeft);
+            }
+        }
+    }
 
 }

@@ -11,7 +11,6 @@ internal static class Arrays
             "Hope you don't get shot.",
             "POCKET FENTANYL!",
             "Thanks for installing!",
-            "RiskierTrafficStops cause your risking a crash.",
             "Looks like you corrupted the INI file. *jk*",
             "Watch out for the guy with an RPG.",
             "Don't get sued for police brutality!",
@@ -26,7 +25,6 @@ internal static class Arrays
             "Hope you had a good patrol!",
             "Looks like you weren't shot at.",
             "Good policing, Officer!",
-            "Error Code = G3TxTR01L3D",
             "You have a pending brutality lawsuit against you.",
             "Everyone disliked that.",
             "Everyone liked that"

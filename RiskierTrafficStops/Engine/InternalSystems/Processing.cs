@@ -11,7 +11,7 @@ internal class Processing
             GameFiber.Yield();
             GameFiber.Wait(600000);
             if (PedsToIgnore is null) continue;
-            foreach (var ped in PedsToIgnore.Where(i => !i.IsAvailable()))
+            foreach (var ped in PedsToIgnore.Where(i => !i.IsAvailable()).ToList())
             {
                 PedsToIgnore.Remove(ped);
             }

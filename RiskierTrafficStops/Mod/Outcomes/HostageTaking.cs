@@ -1,6 +1,5 @@
 ﻿using RiskierTrafficStops.Engine.Data;
 using RiskierTrafficStops.Engine.Helpers;
-using static RiskierTrafficStops.Engine.Helpers.Bdt;
 using MathHelper = Rage.MathHelper;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
@@ -11,6 +10,7 @@ internal class HostageTaking : Outcome, IUpdateable
     private static List<Ped> _pedsInVehicle = new();
     private static Suspect _suspect = new(Suspect);
     private static Suspect _hostage;
+    //private static SoundPlayer _soundPlayer = new(@"LSPDFR\RiskierTrafficStops\bomb_beep.wav");
 
     public HostageTaking(LHandle handle) : base(handle)
     {
@@ -77,43 +77,39 @@ internal class HostageTaking : Outcome, IUpdateable
 
             Debug("Doing tree shit");
             // Less than 2 suspects
-            var commitSuicide = new Node(true, null, null, CommitSuicide);
-            var shootOut = new Node(false, null, null, ShootOut);
-            var surrender = new Node(true, null, null, Surrender);
-
-            var wantsToSurvive = new Node(_suspect.WantToSurvive, shootOut, surrender);
-            var wantsToDieByCop = new Node(_suspect.WantsToDieByCop, commitSuicide, shootOut);
-            var isSuicidal = new Node(_suspect.IsSuicidal, wantsToSurvive, wantsToDieByCop);
-
+            var commitSuicide = new Bdt.Node(true, null, null, CommitSuicide);
+            var shootOut = new Bdt.Node(false, null, null, ShootOut);
+            var surrender = new Bdt.Node(true, null, null, Surrender);
+            
+            var wantsToSurvive = new Bdt.Node(_suspect.WantToSurvive, shootOut, surrender);
+            var wantsToDieByCop = new Bdt.Node(_suspect.WantsToDieByCop, commitSuicide, shootOut);
+            var isSuicidal = new Bdt.Node(_suspect.IsSuicidal, wantsToSurvive, wantsToDieByCop);
+            
             // More than 2 suspects
-            var shootItOut = new Node(false, null, null, ShootOutAllSuspects);
-            var allSurrender = new Node(true, null, null, AllSuspectsSurrender);
-            var shootAtEachOther = new Node(true, null, null, ShootAtEachOther);
-            var killHostageThenShootOut = new Node(true, null, null, KillHostageThenShootOut);
-            var detonateBomb = new Node(true, null, null, DetonateBomb);
-
-            var allWantToSurvive = new Node(_suspect.WantToSurvive, shootItOut, allSurrender);
-            var areAnySuicidal = new Node(_suspect.IsSuicidal, allWantToSurvive, shootAtEachOther);
-            var areTerrorists = new Node(_suspect.IsTerrorist, killHostageThenShootOut, detonateBomb);
-            var hateHostage = new Node(_suspect.HatesHostage, areAnySuicidal, areTerrorists);
-
+            var shootItOut = new Bdt.Node(false, null, null, ShootOutAllSuspects);
+            var allSurrender = new Bdt.Node(true, null, null, AllSuspectsSurrender);
+            var shootAtEachOther = new Bdt.Node(true, null, null, ShootAtEachOther);
+            var killHostageThenShootOut = new Bdt.Node(true, null, null, KillHostageThenShootOut);
+            var detonateBomb = new Bdt.Node(true, null, null, DetonateBomb);
+            
+            var allWantToSurvive = new Bdt.Node(_suspect.WantToSurvive, shootItOut, allSurrender);
+            var areAnySuicidal = new Bdt.Node(_suspect.IsSuicidal, allWantToSurvive, shootAtEachOther);
+            var areTerrorists = new Bdt.Node(_suspect.IsTerrorist, killHostageThenShootOut, detonateBomb);
+            var hateHostage = new Bdt.Node(_suspect.HatesHostage, areAnySuicidal, areTerrorists);
+            
             // Root Node
-            var moreThan2Suspects = new Node(_pedsInVehicle.Count > 2, isSuicidal, hateHostage);
-
+            var moreThan2Suspects = new Bdt.Node(_pedsInVehicle.Count > 2, isSuicidal, hateHostage);
+            
             // Tree
             var bdt = new Bdt(moreThan2Suspects);
-
+            
             Debug("bdt.FollowTruePath();");
             bdt.FollowTruePath();
             Debug("InvokeEvent(RTSEventType.End);");
             InvokeEvent(RTSEventType.End);
+            
+            //DetonateBomb();
         }, "Riskier Traffic Stops BDT Fiber"));
-    }
-
-    private void RemoveIgnoredPedsAndBlockEvents()
-    {
-        _pedsInVehicle.RemoveAll(ped => ped.IsAvailable() && PedsToIgnore.Contains(ped));
-        _pedsInVehicle.ForEach(ped => ped.BlockPermanentEvents = true);
     }
 
     private void DebugSuspectProperties()
@@ -122,6 +118,7 @@ internal class HostageTaking : Outcome, IUpdateable
         Debug($"HatesHostage: {_suspect.HatesHostage}");
         Debug($"WantToSurvive: {_suspect.WantToSurvive}");
         Debug($"WantsToDieByCop: {_suspect.WantsToDieByCop}");
+        Debug($"IsTerrorist: {_suspect.IsTerrorist}");
     }
 
     private static void MakePedLeaveVehicle(Ped ped)
@@ -164,6 +161,9 @@ internal class HostageTaking : Outcome, IUpdateable
 
     private static void HandlePlayerMovement()
     {
+        Normal("Started Player movement process");
+        _playerLastPos = MainPlayer.Position;
+        GameFiber.Wait(500);
         var movementVector = MainPlayer.Position - _playerLastPos;
         var distanceMovedSquared = Vector3.Dot(movementVector, movementVector);
 
@@ -182,6 +182,10 @@ internal class HostageTaking : Outcome, IUpdateable
         Debug("DetonateBomb");
         if (SuspectVehicle.IsAvailable())
         {
+            //GameFiber.StartNew(_soundPlayer.PlaySound2D);
+            //GameFiberHandling.OutcomeGameFibers.Add();
+            Game.DisplayHelp("A bomb is going to detonate any second!");
+            GameFiber.Wait(6639);
             NativeFunction.Natives.EXPLODE_VEHICLE(SuspectVehicle, true, false);
         }
     }

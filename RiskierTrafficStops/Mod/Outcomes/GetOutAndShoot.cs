@@ -11,7 +11,7 @@ internal class GetOutAndShoot : Outcome, IUpdateable
     private static GetOutAndShootOutcomes[] _allGoasOutcomes =
         (GetOutAndShootOutcomes[])Enum.GetValues(typeof(GetOutAndShootOutcomes));
 
-    private static List<Ped> _pedsInVehicle = null;
+    private static List<Ped> _pedsInVehicle;
 
     // RTSGetOutAndShootSuspects
     public GetOutAndShoot(LHandle handle) : base(handle)
