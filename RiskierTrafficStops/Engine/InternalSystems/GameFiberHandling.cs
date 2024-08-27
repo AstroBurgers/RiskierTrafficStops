@@ -12,12 +12,9 @@ internal static class GameFiberHandling
             Debug("Cleaning up running GameFibers...");
             OutcomeGameFibers.RemoveAll(fiber =>
             {
-                if (fiber.IsAlive)
-                {
-                    fiber.Abort();
-                    return true;
-                }
-                return false;
+                if (!fiber.IsAlive) return false;
+                fiber.Abort();
+                return true;
             });
         });
     }

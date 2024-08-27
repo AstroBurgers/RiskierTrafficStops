@@ -19,7 +19,7 @@ internal class Revving : Outcome, IUpdateable
         }
     }
 
-    internal override void StartOutcome()
+    internal virtual void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));
@@ -37,7 +37,7 @@ internal class Revving : Outcome, IUpdateable
         
         RemoveIgnoredPedsAndBlockEvents(ref pedsInVehicle);
         
-        Suspect.RevEngine(SuspectVehicle, new[] { 2, 4 }, new[] { 2, 4 }, 2);
+        Suspect.RevEngine(SuspectVehicle, [2, 4], [2, 4], 2);
 
         var chance = GenerateChance();
         switch (chance)
@@ -49,7 +49,7 @@ internal class Revving : Outcome, IUpdateable
             default:
                 if (Suspect.IsAvailable())
                 {
-                    PursuitLHandle = SetupPursuit(true, Suspect);
+                    SetupPursuit(true, Suspect);
                 }
                 break;
         }

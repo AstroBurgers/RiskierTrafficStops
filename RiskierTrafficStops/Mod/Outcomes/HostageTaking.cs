@@ -29,7 +29,7 @@ internal class HostageTaking : Outcome, IUpdateable
         }
     }
 
-    internal override void StartOutcome()
+    internal virtual void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));

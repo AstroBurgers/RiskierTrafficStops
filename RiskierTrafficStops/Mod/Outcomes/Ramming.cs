@@ -19,7 +19,7 @@ internal class Ramming : Outcome, IUpdateable
         }
     }
 
-    internal override void StartOutcome()
+    internal virtual void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));
@@ -44,7 +44,7 @@ internal class Ramming : Outcome, IUpdateable
                 Suspect.Tasks.Clear();
             }
         }
-        PursuitLHandle = SetupPursuitWithList(true, SuspectVehicle.Occupants);
+        SetupPursuitWithList(true, SuspectVehicle.Occupants);
     }
     
     // Processing methods

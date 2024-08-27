@@ -34,7 +34,7 @@ internal class Yelling : Outcome, IUpdateable
 
     private static YellingScenarioOutcomes _chosenOutcome;
 
-    internal override void StartOutcome()
+    internal virtual void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));

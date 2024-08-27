@@ -28,7 +28,7 @@ internal class Flee : Outcome, IUpdateable
         }
     }
 
-    internal override void StartOutcome()
+    internal virtual void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));
@@ -53,7 +53,7 @@ internal class Flee : Outcome, IUpdateable
             case FleeOutcomes.Flee:
                 Normal("Starting pursuit");
                 
-                PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
+                SetupPursuitWithList(true, pedsInVehicle);
                 break;
             
             case FleeOutcomes.BurnOut:
@@ -65,7 +65,7 @@ internal class Flee : Outcome, IUpdateable
                     .WaitForCompletion(750);
                 Normal("Starting pursuit");
                 
-                PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
+                SetupPursuitWithList(true, pedsInVehicle);
                 break;
             case FleeOutcomes.LeaveVehicle:
                 foreach (var i in pedsInVehicle.Where(i => i.IsAvailable()))
@@ -73,7 +73,7 @@ internal class Flee : Outcome, IUpdateable
                     i.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
                 }
 
-                PursuitLHandle = SetupPursuitWithList(true, pedsInVehicle);
+                SetupPursuitWithList(true, pedsInVehicle);
                 break;
         }
         GameFiberHandling.CleanupFibers();
