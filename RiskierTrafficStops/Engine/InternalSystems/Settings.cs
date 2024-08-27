@@ -3,6 +3,13 @@ using RiskierTrafficStops.Mod.Outcomes;
 
 namespace RiskierTrafficStops.Engine.InternalSystems;
 
+internal enum ChancesSettingEnum
+{
+    EStaticChance,
+    ERandomChance,
+    ECompoundingChance
+}
+
 internal static class Settings
 {
     internal static int Chance = 15;
