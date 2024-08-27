@@ -10,6 +10,8 @@ internal static class PulloverEventHandler
 
     private static Type _chosenOutcome;
     private static Type _lastOutcome;
+
+    internal static long CurrChance = Chance;
     
     internal static void SubscribeToEvents()
     {
@@ -85,8 +87,17 @@ internal static class PulloverEventHandler
                 Normal($"Chosen Outcome: {_chosenOutcome}");
                 
                 _lastOutcome = _chosenOutcome;
+
+                if (ChanceSetting == ChancesSettingEnum.ECompoundingChance)
+                {
+                    CurrChance = Chance;
+                }
                 
                 Activator.CreateInstance(_chosenOutcome, args: handle);
+            }
+            else
+            {
+                CurrChance += Chance;
             }
         }
         catch (Exception e)
@@ -103,9 +114,26 @@ internal static class PulloverEventHandler
     /// <returns>True/False</returns>
     private static bool ShouldEventHappen()
     {
-        var convertedChance = GenerateChance();
-        Normal("Chance: " + convertedChance);
-        
-        return convertedChance < Chance;
+        long convertedChance = 0;
+        switch (ChanceSetting)
+        {
+            case ChancesSettingEnum.EStaticChance:
+                convertedChance = GenerateChance();
+                Normal("Chance: " + convertedChance);
+                return convertedChance < Chance;
+
+            case ChancesSettingEnum.ERandomChance:
+                convertedChance = GenerateChance();
+                Normal("Chance: " + convertedChance);
+                return convertedChance < GenerateChance();
+
+            case ChancesSettingEnum.ECompoundingChance:
+                convertedChance = GenerateChance();
+                Normal("Chance: " + convertedChance);
+                return convertedChance < CurrChance;
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 }
