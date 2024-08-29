@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using RAGENativeUI.Elements;
 using RAGENativeUI.PauseMenu;
-using static RiskierTrafficStops.Engine.InternalSystems.Localization;
+using static RiskierTrafficStops.Engine.publicSystems.Localization;
 
 namespace RiskierTrafficStops.Engine.FrontendSystems;
 

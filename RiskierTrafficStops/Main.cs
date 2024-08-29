@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using RiskierTrafficStops.Engine.FrontendSystems;
 using static RiskierTrafficStops.Engine.Helpers.DependencyHelper;
-using Localization = RiskierTrafficStops.Engine.InternalSystems.Localization;
 
 namespace RiskierTrafficStops;
 
@@ -27,7 +26,7 @@ public class Main : Plugin
                 Normal("Setting up INI File...");
                 IniFileSetup();
                 Normal("Deserializing and reading Json...");
-                Localization.ReadJson();
+                Engine.publicSystems.Localization.ReadJson();
                 Normal("Creating config menu menu...");
                 ConfigMenu.CreateMenu();
                 Normal("Adding console commands...");
