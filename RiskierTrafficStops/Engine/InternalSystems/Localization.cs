@@ -51,7 +51,6 @@ internal static class Localization
             YicMenuItem = data.YicMenuItem;
             YellMenuItem = data.YellMenuItem;
             RiyMenuItem = data.RiyMenuItem;
-            FleeMenuItem = data.RiyMenuItem;
             FleeMenuItem = data.FleeMenuItem;
             RevMenuItem = data.RevMenuItem;
             SafMenuItem = data.SafMenuItem;

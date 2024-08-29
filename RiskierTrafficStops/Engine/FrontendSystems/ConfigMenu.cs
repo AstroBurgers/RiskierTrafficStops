@@ -1,24 +1,25 @@
 ﻿using System.Drawing;
 using RAGENativeUI.Elements;
 using RAGENativeUI.PauseMenu;
+using static RiskierTrafficStops.Engine.InternalSystems.Localization;
 
 namespace RiskierTrafficStops.Engine.FrontendSystems;
 
 internal static class ConfigMenu
 {
-    private static readonly UIMenuNumericScrollerItem<int> SetChance = new("Chance", "Chance that an event happens", 0, 100, 1);
-    private static readonly UIMenuListScrollerItem<bool> GoasOutcomeEnabled = new("Get Out And Shoot", "Enable or disable this outcome", new[] { true, false });
-    private static readonly UIMenuListScrollerItem<bool> YicOutcomeEnabled = new("Yell In Car", "Enable or disable this outcome", new[] { true, false });
-    private static readonly UIMenuListScrollerItem<bool> YellOutcomeEnabled = new("Yell", "Enable or disable this outcome", new[] { true, false });
-    private static readonly UIMenuListScrollerItem<bool> RiyOutcomeEnabled = new("Ram Into You", "Enable or disable this outcome", new[] { true, false });
-    private static readonly UIMenuListScrollerItem<bool> FleeOutcomeEnabled = new("Flee", "Enable or disable this outcome", new[] { true, false });
-    private static readonly UIMenuListScrollerItem<bool> RevOutcomeEnabled = new("Rev Engine", "Enable or disable this outcome", new[] { true, false });
-    private static readonly UIMenuListScrollerItem<bool> SafOutcomeEnabled = new("Shoot And Flee", "Enable Or disable this outcome", new[] { true, false });
-    private static readonly UIMenuListScrollerItem<bool> SpitEnabled = new("Spitting", "Enable or disable this outcome", new[] { true, false });
-    private static readonly UIMenuListScrollerItem<bool> HostageTakingEnabled = new("Hostage Taking", "Enable or disable this outcome", new[] { true, false });
-    private static readonly UIMenuItem SaveToIni = new("Save To INI", "Saves the current values to the INI file and reloads the INI");
+    private static readonly UIMenuNumericScrollerItem<int> SetChance = new(SetChanceMenuItem, SetChanceMenuItemDescription, 0, 100, 1);
+    private static readonly UIMenuListScrollerItem<bool> GoasOutcomeEnabled = new(GoasMenuItem, GoasMenuItemDescription, new[] { true, false });
+    private static readonly UIMenuListScrollerItem<bool> YicOutcomeEnabled = new(YicMenuItem, YicMenuItemDescription, new[] { true, false });
+    private static readonly UIMenuListScrollerItem<bool> YellOutcomeEnabled = new(YellMenuItem, YellMenuItemDescription, new[] { true, false });
+    private static readonly UIMenuListScrollerItem<bool> RiyOutcomeEnabled = new(RiyMenuItem, RiyMenuItemDescription, new[] { true, false });
+    private static readonly UIMenuListScrollerItem<bool> FleeOutcomeEnabled = new(FleeMenuItem, FleeMenuItemDescription, new[] { true, false });
+    private static readonly UIMenuListScrollerItem<bool> RevOutcomeEnabled = new(RevMenuItem, RevMenuItemDescription, new[] { true, false });
+    private static readonly UIMenuListScrollerItem<bool> SafOutcomeEnabled = new(SafMenuItem, SafMenuItemDescription, new[] { true, false });
+    private static readonly UIMenuListScrollerItem<bool> SpitEnabled = new(SpitMenuItem, SpitMenuItemDescription, new[] { true, false });
+    private static readonly UIMenuListScrollerItem<bool> HostageTakingEnabled = new(HostageTakingMenuItem, HostageTakingMenuItemDescription, new[] { true, false });
+    private static readonly UIMenuItem SaveToIni = new(SaveToIniMenuItem, SaveToIniMenuItemDescription);
 
-    internal static readonly UIMenu MainMenu = new("RTS Config", "Configure Riskier Traffic Stops");
+    internal static readonly UIMenu MainMenu = new(MenuTitle, MenuDesc);
 
     private static readonly MenuPool MainMenuPool = new();
 

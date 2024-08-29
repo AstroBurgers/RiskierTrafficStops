@@ -1,4 +1,5 @@
 ﻿using static RiskierTrafficStops.Engine.Helpers.Extensions.PedExtensions;
+using static RiskierTrafficStops.Engine.InternalSystems.Localization;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 
@@ -100,7 +101,7 @@ internal class Yelling : Outcome, IUpdateable
     private static void KeyPressed()
     {
         Game.DisplayHelp(
-            $"~BLIP_INFO_ICON~ Press ~{GetBackInKey.GetInstructionalId()}~ to have the suspect get back in their vehicle",
+            $"~BLIP_INFO_ICON~ Press ~{GetBackInKey.GetInstructionalId()}~ {YellingNotiText}",
             10000);
         while (SuspectVehicle.IsAvailable() && !Suspect.IsInAnyVehicle(false))
         {
