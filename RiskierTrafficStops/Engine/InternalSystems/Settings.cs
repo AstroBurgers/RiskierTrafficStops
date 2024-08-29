@@ -17,7 +17,7 @@ internal static class Settings
     internal static Keys GetBackInKey = Keys.Y;
     internal static InitializationFile Inifile; // Defining a new INI File
     internal static ChancesSettingEnum ChanceSetting = ChancesSettingEnum.EStaticChance;
-    
+
     // Event Booleans
     internal static bool GetOutAndShootEnabled = true;
     internal static bool RamEnabled = true;
@@ -43,7 +43,8 @@ internal static class Settings
 
         Chance = Inifile.ReadInt32("General_Settings", "Chance", Chance);
         GetBackInKey = Inifile.ReadEnum("General_Settings", "Keybind", GetBackInKey);
-
+        ChanceSetting = Inifile.ReadEnum("General_Settings", "Chance_Setting", ChanceSetting); 
+        
         // Reading event Booleans
         GetOutAndShootEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Get Out And Shoot Outcome Enabled", GetOutAndShootEnabled);
         RamEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Ramming Outcome Enabled", RamEnabled);
