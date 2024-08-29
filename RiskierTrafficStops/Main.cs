@@ -103,7 +103,7 @@ public class Main : Plugin
         }
         catch (Exception ex)
         {
-            Error(ex, nameof(Cleanup));
+            Error(ex);
         }
     }
 

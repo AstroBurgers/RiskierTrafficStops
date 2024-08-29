@@ -128,7 +128,7 @@ internal static class ConfigMenu
             }
             catch (Exception e)
             {
-                Error(e, "Menu.cs: MenuPoolProcess");
+                Error(e);
             }
     }
 

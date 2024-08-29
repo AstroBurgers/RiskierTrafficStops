@@ -103,7 +103,7 @@ internal static class PulloverEventHandler
         catch (Exception e)
         {
             if (e is ThreadAbortException) return;
-            Error(e, "PulloverEvents.cs: ChooseEvent()");
+            Error(e);
             GameFiberHandling.CleanupFibers();
         }
     }
