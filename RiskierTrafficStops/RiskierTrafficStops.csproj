@@ -42,6 +42,9 @@
       <HintPath>..\..\..\..\..\References\LSPD First Response.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="RAGENativeUI">
       <HintPath>..\..\..\..\..\References\RAGENativeUI.dll</HintPath>
     </Reference>
@@ -104,7 +107,7 @@
     <None Include="RiskierTrafficStops.ini" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Localization.ini" />
+    <Content Include="Localization.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

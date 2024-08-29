@@ -25,6 +25,8 @@ public class Main : Plugin
                 // Setting up INI And checking for updates
                 Normal("Setting up INI File...");
                 IniFileSetup();
+                Normal("Deserializing and reading Json...");
+                Engine.publicSystems.Localization.ReadJson();
                 Normal("Creating config menu menu...");
                 ConfigMenu.CreateMenu();
                 Normal("Adding console commands...");
