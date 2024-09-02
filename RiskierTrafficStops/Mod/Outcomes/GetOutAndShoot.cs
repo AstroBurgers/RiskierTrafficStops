@@ -27,12 +27,12 @@ internal class GetOutAndShoot : Outcome, IUpdateable
         catch (Exception e)
         {
             if (e is ThreadAbortException) return;
-            Error(e, nameof(StartOutcome));
+            Error(e);
             CleanupOutcome(true);
         }
     }
 
-    internal override void StartOutcome()
+    internal virtual void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));
@@ -67,7 +67,7 @@ internal class GetOutAndShoot : Outcome, IUpdateable
         switch (_chosenOutcome)
         {
             case GetOutAndShootOutcomes.Flee:
-                PursuitLHandle = SetupPursuitWithList(true, _pedsInVehicle);
+                SetupPursuitWithList(true, _pedsInVehicle);
                 break;
             case GetOutAndShootOutcomes.KeepShooting:
                 foreach (var i in _pedsInVehicle.Where(i => i.IsAvailable()))

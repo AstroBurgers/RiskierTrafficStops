@@ -14,12 +14,12 @@ internal class Spitting : Outcome, IUpdateable
         catch (Exception e)
         {
             if (e is ThreadAbortException) return;
-            Error(e, nameof(StartOutcome));
+            Error(e);
             CleanupOutcome(true);
         }
     }
 
-    internal override void StartOutcome()
+    internal virtual void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));

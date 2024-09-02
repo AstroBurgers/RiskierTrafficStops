@@ -24,12 +24,12 @@ internal class HostageTaking : Outcome, IUpdateable
         }
         catch (Exception e) when (e is not ThreadAbortException)
         {
-            Error(e, nameof(StartOutcome));
+            Error(e);
             CleanupOutcome(true);
         }
     }
 
-    internal override void StartOutcome()
+    internal virtual void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));

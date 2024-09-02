@@ -127,7 +127,7 @@ internal static class PursuitHelper
         catch (Exception e)
         {
             if (e is ThreadAbortException) return;
-            Error(e, nameof(RandomizePursuitAttributes));
+            Error(e);
         }
     }
 }
