@@ -8,9 +8,11 @@ internal static class DependencyHelper
         
     internal static bool VerifyDependencies()
     {
-            if (!DependencyVersionChecker.IsAssemblyAvailable("RAGENativeUI.dll", "1.9.2")) _missingFiles += "~n~- RAGENativeUI.dll";
-            //if (!File.Exists("irrKlang.NET4.dll")) _missingFiles += "~n~ irrKlang.NET4.dll";
 
+            if (!DependencyVersionChecker.IsAssemblyAvailable("RAGENativeUI.dll", "1.9.2")) _missingFiles += "~n~- RAGENativeUI.dll";
+            if (!File.Exists("Newtonsoft.Json.dll")) _missingFiles += "~n~ Newtonsoft.Json.dll";
+            //if (!File.Exists("irrKlang.NET4.dll")) _missingFiles += "~n~ irrKlang.NET4.dll"
+            
             if (_missingFiles.Length <= 0) return true;
             Normal($"Failed to load because of these required files were not found: {_missingFiles.Replace("~n~", "")}"); // note to astro: replacing ~n~ is important otherwise the log will look weird
             Game.DisplayNotification("commonmenu", "mp_alerttriangle", "RiskierTrafficStops", "~r~Missing files!", $"These files were not found: ~y~{_missingFiles}");
