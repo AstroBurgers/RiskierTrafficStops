@@ -14,12 +14,12 @@ internal class Ramming : Outcome, IUpdateable
         catch (Exception e)
         {
             if (e is ThreadAbortException) return;
-            Error(e, nameof(StartOutcome));
+            Error(e);
             CleanupOutcome(true);
         }
     }
 
-    internal override void StartOutcome()
+    internal virtual void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));
@@ -44,7 +44,7 @@ internal class Ramming : Outcome, IUpdateable
                 Suspect.Tasks.Clear();
             }
         }
-        PursuitLHandle = SetupPursuitWithList(true, SuspectVehicle.Occupants);
+        SetupPursuitWithList(true, SuspectVehicle.Occupants);
     }
     
     // Processing methods

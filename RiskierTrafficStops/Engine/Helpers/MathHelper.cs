@@ -48,5 +48,5 @@ internal static class MathHelper
             var convertedChance = randomNumber % 100;
         
             return convertedChance;
-        }
+    }
 }

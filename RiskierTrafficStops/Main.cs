@@ -17,11 +17,10 @@ public class Main : Plugin
     private static void Functions_OnOnDutyStateChanged(bool onDuty)
     {
         OnDuty = onDuty;
-        if (onDuty)
+        if (onDuty && VerifyDependencies())
         {
             GameFiber.StartNew(() =>
             {
-                if (!VerifyDependencies()) return;
                 // Setting up INI And checking for updates
                 Normal("Setting up INI File...");
                 IniFileSetup();
@@ -78,7 +77,7 @@ public class Main : Plugin
                         "mpgroundlogo_cops",
                         "Riskier Traffic Stops",
                         "~b~By Astro",
-                        $"Debug mode is enabled, please let me know.");
+                        "Debug mode is enabled, please let me know.");
                 }
 
                 //Subscribes to events
@@ -106,7 +105,7 @@ public class Main : Plugin
         }
         catch (Exception ex)
         {
-            Error(ex, nameof(Cleanup));
+            Error(ex);
         }
     }
 

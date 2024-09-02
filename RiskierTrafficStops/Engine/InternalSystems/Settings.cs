@@ -3,12 +3,20 @@ using RiskierTrafficStops.Mod.Outcomes;
 
 namespace RiskierTrafficStops.Engine.InternalSystems;
 
+internal enum ChancesSettingEnum
+{
+    EStaticChance,
+    ERandomChance,
+    ECompoundingChance
+}
+
 internal static class Settings
 {
-    internal static int Chance = 15;
+    internal static int Chance = 5;
     private static readonly List<(bool enabled, Type outcome)> AllOutcomes = new();
     internal static Keys GetBackInKey = Keys.Y;
     internal static InitializationFile Inifile; // Defining a new INI File
+    internal static ChancesSettingEnum ChanceSetting = ChancesSettingEnum.EStaticChance;
 
     // Event Booleans
     internal static bool GetOutAndShootEnabled = true;
@@ -35,7 +43,8 @@ internal static class Settings
 
         Chance = Inifile.ReadInt32("General_Settings", "Chance", Chance);
         GetBackInKey = Inifile.ReadEnum("General_Settings", "Keybind", GetBackInKey);
-
+        ChanceSetting = Inifile.ReadEnum("General_Settings", "Chance_Setting", ChanceSetting); 
+        
         // Reading event Booleans
         GetOutAndShootEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Get Out And Shoot Outcome Enabled", GetOutAndShootEnabled);
         RamEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Ramming Outcome Enabled", RamEnabled);

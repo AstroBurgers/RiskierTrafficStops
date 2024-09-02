@@ -3,5 +3,5 @@
 internal static class Helper
 {
     internal static Ped MainPlayer => Game.LocalPlayer.Character;
-    internal static bool DebugMode = false;
+    internal static readonly bool DebugMode = false;
 }

@@ -14,12 +14,12 @@ internal class ShootAndFlee : Outcome, IUpdateable
         catch (Exception e)
         {
             if (e is ThreadAbortException) return;
-            Error(e, nameof(StartOutcome));
+            Error(e);
             CleanupOutcome(true);
         }
     }
 
-    internal override void StartOutcome()
+    internal virtual void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));
@@ -70,7 +70,7 @@ internal class ShootAndFlee : Outcome, IUpdateable
 
         GameFiber.Wait(5000);
 
-        PursuitLHandle = SetupPursuitWithList(true, peds);
+        SetupPursuitWithList(true, peds);
     }
 
     private static void DriverOnly()
@@ -87,7 +87,7 @@ internal class ShootAndFlee : Outcome, IUpdateable
         NativeFunction.Natives.x10AB107B887214D8(Suspect, MainPlayer, 20.0f); // TASK_VEHICLE_SHOOT_AT_PED
         GameFiber.Wait(5000);
 
-        PursuitLHandle = SetupPursuit(true, Suspect);
+        SetupPursuit(true, Suspect);
     }
     
     // Processing methods
