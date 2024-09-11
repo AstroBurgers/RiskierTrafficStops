@@ -84,6 +84,7 @@ public class Main : Plugin
                 PulloverEventHandler.SubscribeToEvents();
 
                 AppDomain.CurrentDomain.DomainUnload += Cleanup;
+                AppDomain.CurrentDomain.UnhandledException += GlobalExceptionHandler;
                 Normal("Loaded successfully");
             });
         }
@@ -96,7 +97,7 @@ public class Main : Plugin
             Game.DisplayNotification("3dtextures",
                 "mpgroundlogo_cops",
                 "Riskier Traffic Stops",
-                "~b~By Astro",
+                "~b~NOT A CRASH MESSAGE",
                 $"{PluginUnloadText.PickRandom()}");
             //Unsubscribes from events
             PulloverEventHandler.UnsubscribeFromEvents();
@@ -106,6 +107,23 @@ public class Main : Plugin
         catch (Exception ex)
         {
             Error(ex);
+        }
+    }
+    
+    private static void GlobalExceptionHandler(object sender, UnhandledExceptionEventArgs e)
+    {
+        // Credit to Khori for this
+        if (e.ExceptionObject is Exception exception)
+        {
+            // Log or handle the exception here
+            Normal("Global exception caught");
+            Normal($"Terminating={e.IsTerminating}");
+            Error(exception);
+        }
+        else
+        {
+            // It's not an Exception object; handle it accordingly
+            Normal("Global exception thrown but no exception was provided");
         }
     }
 
