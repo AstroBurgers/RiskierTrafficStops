@@ -43,8 +43,8 @@ internal class Spitting : Outcome, IUpdateable
         if (Functions.IsPlayerPerformingPullover() && Suspect.IsAvailable() &&
             MainPlayer.DistanceTo(Suspect) <= 2.5f && Suspect.IsInAnyVehicle(true))
         {
-            Game.DisplaySubtitle(SpittingText[Rndm.Next(SpittingText.Length+1)], 6000);
-            Suspect.PlayAmbientSpeech(VoiceLines[Rndm.Next(VoiceLines.Length+1)]);
+            Game.DisplaySubtitle(SpittingText[Rndm.Next(SpittingText.Length)], 6000);
+            Suspect.PlayAmbientSpeech(VoiceLines[Rndm.Next(VoiceLines.Length)]);
         }
 
         GameFiberHandling.CleanupFibers();
