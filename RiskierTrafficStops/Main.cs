@@ -64,7 +64,7 @@ public class Main : Plugin
                     }
                 };
 
-                // Displaying startup Notification
+                // Displaying startup Notifications
                 Game.DisplayNotification("3dtextures",
                     "mpgroundlogo_cops",
                     "Riskier Traffic Stops",
