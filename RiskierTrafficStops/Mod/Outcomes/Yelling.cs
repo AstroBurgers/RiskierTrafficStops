@@ -1,5 +1,5 @@
 ﻿using static RiskierTrafficStops.Engine.Helpers.Extensions.PedExtensions;
-using static RiskierTrafficStops.Engine.publicSystems.Localization;
+using static RiskierTrafficStops.Engine.InternalSystems.Localization;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 

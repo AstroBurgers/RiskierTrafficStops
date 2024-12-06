@@ -16,11 +16,9 @@ internal class HostageTaking : Outcome, IUpdateable
     {
         try
         {
-            if (MeetsRequirements(TrafficStopLHandle))
-            {
-                SuspectRelateGroup = new RelationshipGroup("RTSHostageTakingSuspects");
-                GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
-            }
+            if (!MeetsRequirements(TrafficStopLHandle)) return;
+            SuspectRelateGroup = new RelationshipGroup("RTSHostageTakingSuspects");
+            GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
         }
         catch (Exception e) when (e is not ThreadAbortException)
         {
