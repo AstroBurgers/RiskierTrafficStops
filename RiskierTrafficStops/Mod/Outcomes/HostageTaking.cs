@@ -37,6 +37,9 @@ internal class HostageTaking : Outcome, IUpdateable
             _pedsInVehicle = SuspectVehicle.Occupants.ToList();
         }
 
+        Debug("RemoveIgnoredPedsAndBlockEvents");
+        RemoveIgnoredPedsAndBlockEvents(ref _pedsInVehicle);
+        
         Debug("Checking pedsinveh");
         Debug($"{_pedsInVehicle.Count}");
         if (_pedsInVehicle.Count <= 1)
@@ -44,9 +47,6 @@ internal class HostageTaking : Outcome, IUpdateable
             CleanupOutcome(true);
             return;
         }
-        
-        Debug("RemoveIgnoredPedsAndBlockEvents");
-        RemoveIgnoredPedsAndBlockEvents(ref _pedsInVehicle);
 
         Debug("Settings hostage");
         _hostage = new Suspect(_pedsInVehicle[1]);
