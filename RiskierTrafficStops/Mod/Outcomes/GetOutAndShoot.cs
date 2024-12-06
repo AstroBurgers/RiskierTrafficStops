@@ -42,8 +42,7 @@ internal class GetOutAndShoot : Outcome, IUpdateable
             _pedsInVehicle = SuspectVehicle.Occupants.ToList();
         }
 
-        if (_pedsInVehicle.Count < 1)
-        {
+        if (_pedsInVehicle.Count < 1) {
             CleanupOutcome(true);
             return;
         }
@@ -52,7 +51,7 @@ internal class GetOutAndShoot : Outcome, IUpdateable
         
         SetRelationshipGroups(SuspectRelateGroup);
 
-        foreach (var ped in _pedsInVehicle)
+        foreach (var ped in _pedsInVehicle.Where(ped => ped.IsAvailable()))
         {
             ped.GiveWeapon();
             GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => GetPedOutOfVehicle(ped)));

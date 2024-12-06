@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using RiskierTrafficStops.Engine.FrontendSystems;
 using static RiskierTrafficStops.Engine.Helpers.DependencyHelper;
+using Localization = RiskierTrafficStops.Engine.InternalSystems.Localization;
 
 namespace RiskierTrafficStops;
 
@@ -17,7 +18,7 @@ public class Main : Plugin
     private static void Functions_OnOnDutyStateChanged(bool onDuty)
     {
         OnDuty = onDuty;
-        if (onDuty && VerifyDependencies())
+        if (onDuty && VerifyDependencies() && Localization.DoesJsonFileExist())
         {
             GameFiber.StartNew(() =>
             {
@@ -25,7 +26,7 @@ public class Main : Plugin
                 Normal("Setting up INI File...");
                 IniFileSetup();
                 Normal("Deserializing and reading Json...");
-                Engine.publicSystems.Localization.ReadJson();
+                Localization.ReadJson();
                 Normal("Creating config menu menu...");
                 ConfigMenu.CreateMenu();
                 Normal("Adding console commands...");
@@ -64,7 +65,7 @@ public class Main : Plugin
                     }
                 };
 
-                // Displaying startup Notification
+                // Displaying startup Notifications
                 Game.DisplayNotification("3dtextures",
                     "mpgroundlogo_cops",
                     "Riskier Traffic Stops",
@@ -77,13 +78,14 @@ public class Main : Plugin
                         "mpgroundlogo_cops",
                         "Riskier Traffic Stops",
                         "~b~By Astro",
-                        "Debug mode is enabled, please let me know.");
+                        "Debug mode is enabled, please let the developer know.");
                 }
 
                 //Subscribes to events
                 PulloverEventHandler.SubscribeToEvents();
 
                 AppDomain.CurrentDomain.DomainUnload += Cleanup;
+                AppDomain.CurrentDomain.UnhandledException += GlobalExceptionHandler;
                 Normal("Loaded successfully");
             });
         }
@@ -93,11 +95,6 @@ public class Main : Plugin
     {
         try
         {
-            Game.DisplayNotification("3dtextures",
-                "mpgroundlogo_cops",
-                "Riskier Traffic Stops",
-                "~b~By Astro",
-                $"{PluginUnloadText.PickRandom()}");
             //Unsubscribes from events
             PulloverEventHandler.UnsubscribeFromEvents();
 
@@ -108,9 +105,31 @@ public class Main : Plugin
             Error(ex);
         }
     }
+    
+    private static void GlobalExceptionHandler(object sender, UnhandledExceptionEventArgs e)
+    {
+        // Credit to Khori for this
+        if (e.ExceptionObject is Exception exception)
+        {
+            // Log or handle the exception here
+            Normal("Global exception caught");
+            Normal($"Terminating={e.IsTerminating}");
+            Error(exception);
+        }
+        else
+        {
+            // It's not an Exception object; handle it accordingly
+            Normal("Global exception thrown but no exception was provided");
+        }
+    }
 
 
     public override void Finally()
     {
+        Game.DisplayNotification("3dtextures",
+            "mpgroundlogo_cops",
+            "Riskier Traffic Stops",
+            "~b~Unload Message",
+            $"{PluginUnloadText.PickRandom()}");
     }
 }
