@@ -71,7 +71,7 @@ internal class HostageTaking : Outcome, IUpdateable
 
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() =>
         {
-            GameFiber.Wait(4500);
+            GameFiber.Wait(9000);
 
             Debug("Doing tree shit");
             // Less than 2 suspects
