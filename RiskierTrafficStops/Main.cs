@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using RiskierTrafficStops.Engine.FrontendSystems;
-using static RiskierTrafficStops.Engine.Helpers.DependencyHelper;
 using Localization = RiskierTrafficStops.Engine.InternalSystems.Localization;
 
 namespace RiskierTrafficStops;
@@ -18,7 +17,7 @@ public class Main : Plugin
     private static void Functions_OnOnDutyStateChanged(bool onDuty)
     {
         OnDuty = onDuty;
-        if (onDuty && VerifyDependencies() && Localization.DoesJsonFileExist())
+        if (onDuty && Localization.DoesJsonFileExist())
         {
             GameFiber.StartNew(() =>
             {
