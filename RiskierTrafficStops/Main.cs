@@ -92,17 +92,10 @@ public class Main : Plugin
 
     private static void Cleanup(object sender, EventArgs e)
     {
-        try
-        {
-            //Unsubscribes from events
-            PulloverEventHandler.UnsubscribeFromEvents();
+        //Unsubscribes from events
+        PulloverEventHandler.UnsubscribeFromEvents();
 
-            Normal("Unloaded successfully");
-        }
-        catch (Exception ex)
-        {
-            Error(ex);
-        }
+        Normal("Unloaded successfully");
     }
 
     private static void GlobalExceptionHandler(object sender, UnhandledExceptionEventArgs e)

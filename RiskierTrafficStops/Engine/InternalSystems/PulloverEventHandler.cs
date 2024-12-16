@@ -85,40 +85,31 @@ internal static class PulloverEventHandler
     /// <param name="handle">Handle of the current traffic stop</param>
     private static void ChooseOutcome(LHandle handle)
     {
-        try
+        if (ShouldEventHappen())
         {
-            if (ShouldEventHappen())
+            Normal($"DisableRTSForCurrentStop: {DisableRTSForCurrentStop}");
+
+            Normal("Choosing Outcome");
+            _chosenOutcome = EnabledOutcomes.Count <= 1
+                ? EnabledOutcomes[Rndm.Next(EnabledOutcomes.Count)]
+                : EnabledOutcomes[Rndm.Next(EnabledOutcomes.Where(i => i != _lastOutcome).ToList().Count)];
+            Normal($"Chosen Outcome: {_chosenOutcome}");
+
+            _lastOutcome = _chosenOutcome;
+
+            if (ChanceSetting == ChancesSettingEnum.ECompoundingChance)
             {
-                Normal($"DisableRTSForCurrentStop: {DisableRTSForCurrentStop}");
-
-                Normal("Choosing Outcome");
-                _chosenOutcome = EnabledOutcomes.Count <= 1
-                    ? EnabledOutcomes[Rndm.Next(EnabledOutcomes.Count)]
-                    : EnabledOutcomes[Rndm.Next(EnabledOutcomes.Where(i => i != _lastOutcome).ToList().Count)];
-                Normal($"Chosen Outcome: {_chosenOutcome}");
-
-                _lastOutcome = _chosenOutcome;
-
-                if (ChanceSetting == ChancesSettingEnum.ECompoundingChance)
-                {
-                    _currentChance = Chance;
-                }
-
-                Activator.CreateInstance(_chosenOutcome, args: handle);
+                _currentChance = Chance;
             }
-            else
-            {
-                if (ChanceSetting == ChancesSettingEnum.ECompoundingChance)
-                {
-                    _currentChance += Chance;
-                }
-            }
+
+            Activator.CreateInstance(_chosenOutcome, args: handle);
         }
-        catch (Exception e)
+        else
         {
-            if (e is ThreadAbortException) return;
-            Error(e);
-            GameFiberHandling.CleanupFibers();
+            if (ChanceSetting == ChancesSettingEnum.ECompoundingChance)
+            {
+                _currentChance += Chance;
+            }
         }
     }
 
@@ -128,6 +119,7 @@ internal static class PulloverEventHandler
     /// <returns>True/False</returns>
     private static bool ShouldEventHappen()
     {
+        if (EnabledOutcomes.Count == 0) return false;
         long convertedChance = 0;
         switch (ChanceSetting)
         {
