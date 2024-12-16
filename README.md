@@ -1,4 +1,4 @@
-# RiskierTrafficStops [![wakatime](https://wakatime.com/badge/user/018e10f6-d034-48ad-85ad-4fe3ce2c16bc/project/018e10f8-4966-406b-9897-2889acbf6bf1.svg)](https://wakatime.com/badge/user/018e10f6-d034-48ad-85ad-4fe3ce2c16bc/project/018e10f8-4966-406b-9897-2889acbf6bf1)
+# RiskierTrafficStops [![wakatime](https://wakatime.com/badge/github/AstroBurgers/RiskierTrafficStops.svg)](https://wakatime.com/badge/github/AstroBurgers/RiskierTrafficStops)
 A LSPDFR Plugin to make traffic stops more interesting
 
 ## Contributing Information
