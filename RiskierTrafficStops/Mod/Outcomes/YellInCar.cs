@@ -1,6 +1,6 @@
 ﻿namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal class YellInCar : Outcome, IUpdateable
+internal sealed class YellInCar : Outcome, IUpdateable
 {
     public YellInCar(LHandle handle) : base(handle)
     {
@@ -17,7 +17,7 @@ internal class YellInCar : Outcome, IUpdateable
         }
     }
 
-    internal virtual void StartOutcome()
+    internal void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));

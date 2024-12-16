@@ -4,7 +4,7 @@
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal class GetOutAndShoot : Outcome, IUpdateable
+internal sealed class GetOutAndShoot : Outcome, IUpdateable
 {
     private static GetOutAndShootOutcomes _chosenOutcome;
 
@@ -30,7 +30,7 @@ internal class GetOutAndShoot : Outcome, IUpdateable
         }
     }
 
-    internal virtual void StartOutcome()
+    internal void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));

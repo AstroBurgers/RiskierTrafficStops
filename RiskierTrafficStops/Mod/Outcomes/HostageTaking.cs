@@ -4,7 +4,7 @@ using MathHelper = Rage.MathHelper;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal class HostageTaking : Outcome, IUpdateable
+internal sealed class HostageTaking : Outcome, IUpdateable
 {
     private static Vector3 _playerLastPos = Vector3.Zero;
     private static List<Ped> _pedsInVehicle = new();
@@ -27,7 +27,7 @@ internal class HostageTaking : Outcome, IUpdateable
         }
     }
 
-    internal virtual void StartOutcome()
+    internal void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));

@@ -1,6 +1,6 @@
 ﻿namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal class Flee : Outcome, IUpdateable
+internal sealed class Flee : Outcome, IUpdateable
 {
     private enum FleeOutcomes
     {
@@ -26,7 +26,7 @@ internal class Flee : Outcome, IUpdateable
         }
     }
 
-    internal virtual void StartOutcome()
+    internal void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));

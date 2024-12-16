@@ -1,6 +1,6 @@
 ﻿namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal class ShootAndFlee : Outcome, IUpdateable
+internal sealed class ShootAndFlee : Outcome, IUpdateable
 {
     public ShootAndFlee(LHandle handle) : base(handle)
     {
@@ -17,7 +17,7 @@ internal class ShootAndFlee : Outcome, IUpdateable
         }
     }
 
-    internal virtual void StartOutcome()
+    internal void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));

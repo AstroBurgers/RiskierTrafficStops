@@ -3,7 +3,7 @@ using static RiskierTrafficStops.Engine.InternalSystems.Localization;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal class Yelling : Outcome, IUpdateable
+internal sealed class Yelling : Outcome, IUpdateable
 {
     private static readonly YellingScenarioOutcomes[] AllYellingOutcomes =
         (YellingScenarioOutcomes[])Enum.GetValues(typeof(YellingScenarioOutcomes));
@@ -33,7 +33,7 @@ internal class Yelling : Outcome, IUpdateable
 
     private static YellingScenarioOutcomes _chosenOutcome;
 
-    internal virtual void StartOutcome()
+    internal void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));

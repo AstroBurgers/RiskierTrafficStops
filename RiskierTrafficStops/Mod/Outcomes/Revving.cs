@@ -1,6 +1,6 @@
 ﻿namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal class Revving : Outcome, IUpdateable
+internal sealed class Revving : Outcome, IUpdateable
 {
     public Revving(LHandle handle) : base(handle)
     {
@@ -17,7 +17,7 @@ internal class Revving : Outcome, IUpdateable
         }
     }
 
-    internal virtual void StartOutcome()
+    internal void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));
