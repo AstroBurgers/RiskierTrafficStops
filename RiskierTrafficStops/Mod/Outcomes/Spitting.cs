@@ -1,6 +1,6 @@
 ﻿namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal sealed class Spitting : Outcome, IUpdateable
+internal sealed class Spitting : Outcome, IProccessing
 {
     public Spitting(LHandle handle) : base(handle)
     {

@@ -1,6 +1,6 @@
 ﻿namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal sealed class Ramming : Outcome, IUpdateable
+internal sealed class Ramming : Outcome, IProccessing
 {
     public Ramming(LHandle handle) : base(handle)
     {

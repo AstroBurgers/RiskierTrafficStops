@@ -3,7 +3,7 @@ using static RiskierTrafficStops.Engine.InternalSystems.Localization;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal sealed class Yelling : Outcome, IUpdateable
+internal sealed class Yelling : Outcome, IProccessing
 {
     private static readonly YellingScenarioOutcomes[] AllYellingOutcomes =
         (YellingScenarioOutcomes[])Enum.GetValues(typeof(YellingScenarioOutcomes));

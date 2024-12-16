@@ -1,6 +1,6 @@
 ﻿namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal sealed class Revving : Outcome, IUpdateable
+internal sealed class Revving : Outcome, IProccessing
 {
     public Revving(LHandle handle) : base(handle)
     {

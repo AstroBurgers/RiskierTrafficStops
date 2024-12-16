@@ -4,7 +4,7 @@ using MathHelper = Rage.MathHelper;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal sealed class HostageTaking : Outcome, IUpdateable
+internal sealed class HostageTaking : Outcome, IProccessing
 {
     private static Vector3 _playerLastPos = Vector3.Zero;
     private static List<Ped> _pedsInVehicle = new();

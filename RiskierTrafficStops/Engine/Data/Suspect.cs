@@ -9,14 +9,14 @@ internal class Suspect : Ped
     internal bool HatesHostage { get; private set; }
     internal bool WantsToDieByCop { get; private set; }
     internal bool IsTerrorist { get; private set; }
-    
+
     internal Suspect(Ped ped)
     {
-            Ped = ped;
-            IsSuicidal = GenerateChance() < IsSuicidalChance;
-            WantToSurvive = GenerateChance() < WantsToSurviveChance;
-            WantsToDieByCop = GenerateChance() < WantsToDieBieCopChance;
-            HatesHostage = GenerateChance() < HatesHostageChance;
-            IsTerrorist = GenerateChance() < IsTerroristChance;
-        }
+        Ped = ped;
+        IsSuicidal = GenerateChance() < IsSuicidalChance;
+        WantToSurvive = GenerateChance() < WantsToSurviveChance;
+        WantsToDieByCop = GenerateChance() < WantsToDieBieCopChance;
+        HatesHostage = GenerateChance() < HatesHostageChance;
+        IsTerrorist = GenerateChance() < IsTerroristChance;
+    }
 }

@@ -51,10 +51,10 @@ public static class Localization
     
     internal static void ReadJson()
     {
-        using (StreamReader sr = new StreamReader(@"plugins\LSPDFR\RiskierTrafficStops\Localization.json"))
+        using (var sr = new StreamReader(@"plugins\LSPDFR\RiskierTrafficStops\Localization.json"))
         {
-            string json = sr.ReadToEnd();
-            JSONStruct data = JsonConvert.DeserializeObject<JSONStruct>(json);
+            var json = sr.ReadToEnd();
+            var data = JsonConvert.DeserializeObject<JSONStruct>(json);
 
             MenuTitle = data.MenuTitle;
             SetChanceMenuItem = data.SetChanceMenuItem;

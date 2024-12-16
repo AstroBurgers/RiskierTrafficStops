@@ -1,6 +1,6 @@
 ﻿namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal sealed class ShootAndFlee : Outcome, IUpdateable
+internal sealed class ShootAndFlee : Outcome, IProccessing
 {
     public ShootAndFlee(LHandle handle) : base(handle)
     {

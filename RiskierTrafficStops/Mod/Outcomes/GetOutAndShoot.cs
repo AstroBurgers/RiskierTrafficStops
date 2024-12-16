@@ -4,7 +4,7 @@
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal sealed class GetOutAndShoot : Outcome, IUpdateable
+internal sealed class GetOutAndShoot : Outcome, IProccessing
 {
     private static GetOutAndShootOutcomes _chosenOutcome;
 

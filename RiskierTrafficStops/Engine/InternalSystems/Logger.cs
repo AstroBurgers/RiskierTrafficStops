@@ -12,10 +12,8 @@ internal static class Logger
 
     internal static void Debug(string msg)
     {
-        if (DebugMode)
-        {
-            Game.LogTrivial($"[DEBUG] RiskierTrafficStops: {msg}");
-        }
+        if (!DebugMode) return;
+        Game.LogTrivial($"[DEBUG] RiskierTrafficStops: {msg}");
     }
 
     internal static void Normal(string msg) => Game.LogTrivial($"[NORMAL] RiskierTrafficStops: {msg}");

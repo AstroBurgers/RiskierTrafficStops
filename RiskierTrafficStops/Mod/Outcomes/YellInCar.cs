@@ -1,6 +1,6 @@
 ﻿namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal sealed class YellInCar : Outcome, IUpdateable
+internal sealed class YellInCar : Outcome, IProccessing
 {
     public YellInCar(LHandle handle) : base(handle)
     {

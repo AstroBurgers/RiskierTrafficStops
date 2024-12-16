@@ -5,26 +5,26 @@ namespace RiskierTrafficStops.Engine.InternalSystems;
 internal static class PulloverEventHandler
 {
     internal static bool HasEventHappened;
-    
+
     internal static List<Type> EnabledOutcomes = new();
 
     private static Type _chosenOutcome;
     private static Type _lastOutcome;
 
-    internal static long CurrChance = Chance;
-    
+    private static long _currentChance = Chance;
+
     internal static void SubscribeToEvents()
     {
         //Subscribing to events
         Normal("Subscribing to: OnPulloverOfficerApproachDriver");
         Events.OnPulloverOfficerApproachDriver += Events_OnPulloverOfficerApproachDriver;
-        //\\
+
         Normal("Subscribing to: OnPulloverDriverStopped");
         Events.OnPulloverDriverStopped += Events_OnPulloverDriverStopped;
-        //\\
+
         Normal("Subscribing to: OnPulloverStarted");
         Events.OnPulloverStarted += Events_OnPulloverStarted;
-        //\\
+
         Normal("Subscribing to: OnPulloverEnded");
         Events.OnPulloverEnded += Events_OnPulloverEnded;
     }
@@ -42,15 +42,18 @@ internal static class PulloverEventHandler
     {
         GameFiber.StartNew(() =>
         {
-            if (!IaeFunctions.IaeCompatibilityCheck(handle) || Functions.IsCalloutRunning() || DisableRTSForCurrentStop) return;
+            if (!IaeFunctions.IaeCompatibilityCheck(handle) || Functions.IsCalloutRunning() ||
+                DisableRTSForCurrentStop) return;
 
-            GameFiber.WaitWhile(() => MainPlayer.IsAvailable() && MainPlayer.LastVehicle.IsAvailable() && !MainPlayer.LastVehicle.IsSirenOn && Functions.IsPlayerPerformingPullover());
+            GameFiber.WaitWhile(() =>
+                MainPlayer.IsAvailable() && MainPlayer.LastVehicle.IsAvailable() && !MainPlayer.LastVehicle.IsSirenOn &&
+                Functions.IsPlayerPerformingPullover());
 
-            if (MainPlayer.IsAvailable() && MainPlayer.LastVehicle.IsAvailable() && MainPlayer.LastVehicle.IsSirenOn && Functions.IsPlayerPerformingPullover())
-            {
-                HasEventHappened = true;
-                ChooseOutcome(handle);
-            }
+            if (!MainPlayer.IsAvailable() || !MainPlayer.LastVehicle.IsAvailable() ||
+                !MainPlayer.LastVehicle.IsSirenOn ||
+                !Functions.IsPlayerPerformingPullover()) return;
+            HasEventHappened = true;
+            ChooseOutcome(handle);
         });
     }
 
@@ -62,12 +65,18 @@ internal static class PulloverEventHandler
 
     private static void Events_OnPulloverDriverStopped(LHandle handle)
     {
-        if (!HasEventHappened && IaeFunctions.IaeCompatibilityCheck(handle) && !DisableRTSForCurrentStop) { GameFiber.StartNew(() => ChooseOutcome(handle)); }
+        if (!HasEventHappened && IaeFunctions.IaeCompatibilityCheck(handle) && !DisableRTSForCurrentStop)
+        {
+            GameFiber.StartNew(() => ChooseOutcome(handle));
+        }
     }
 
     private static void Events_OnPulloverOfficerApproachDriver(LHandle handle)
     {
-        if (!HasEventHappened && IaeFunctions.IaeCompatibilityCheck(handle) && !DisableRTSForCurrentStop) { GameFiber.StartNew(() => ChooseOutcome(handle)); }
+        if (!HasEventHappened && IaeFunctions.IaeCompatibilityCheck(handle) && !DisableRTSForCurrentStop)
+        {
+            GameFiber.StartNew(() => ChooseOutcome(handle));
+        }
     }
 
     /// <summary>
@@ -81,23 +90,28 @@ internal static class PulloverEventHandler
             if (ShouldEventHappen())
             {
                 Normal($"DisableRTSForCurrentStop: {DisableRTSForCurrentStop}");
-                
+
                 Normal("Choosing Outcome");
-                _chosenOutcome = EnabledOutcomes.Count <= 1 ? EnabledOutcomes[Rndm.Next(EnabledOutcomes.Count)] : EnabledOutcomes[Rndm.Next(EnabledOutcomes.Where(i => i != _lastOutcome).ToList().Count)];
+                _chosenOutcome = EnabledOutcomes.Count <= 1
+                    ? EnabledOutcomes[Rndm.Next(EnabledOutcomes.Count)]
+                    : EnabledOutcomes[Rndm.Next(EnabledOutcomes.Where(i => i != _lastOutcome).ToList().Count)];
                 Normal($"Chosen Outcome: {_chosenOutcome}");
-                
+
                 _lastOutcome = _chosenOutcome;
 
                 if (ChanceSetting == ChancesSettingEnum.ECompoundingChance)
                 {
-                    CurrChance = Chance;
+                    _currentChance = Chance;
                 }
-                
+
                 Activator.CreateInstance(_chosenOutcome, args: handle);
             }
             else
             {
-                CurrChance += Chance;
+                if (ChanceSetting == ChancesSettingEnum.ECompoundingChance)
+                {
+                    _currentChance += Chance;
+                }
             }
         }
         catch (Exception e)
@@ -107,7 +121,7 @@ internal static class PulloverEventHandler
             GameFiberHandling.CleanupFibers();
         }
     }
-        
+
     /// <summary>
     /// Does a chance generation and check to determine if an outcome should happen
     /// </summary>
@@ -130,7 +144,7 @@ internal static class PulloverEventHandler
             case ChancesSettingEnum.ECompoundingChance:
                 convertedChance = GenerateChance();
                 Normal("Chance: " + convertedChance);
-                return convertedChance < CurrChance;
+                return convertedChance < _currentChance;
 
             default:
                 throw new ArgumentOutOfRangeException();

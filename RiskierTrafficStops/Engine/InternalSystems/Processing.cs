@@ -19,7 +19,7 @@ internal class Processing
     }
 }
 
-internal interface IUpdateable
+internal interface IProccessing
 {
     internal void Start();
 

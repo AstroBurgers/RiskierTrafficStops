@@ -104,7 +104,7 @@ public class Main : Plugin
             Error(ex);
         }
     }
-    
+
     private static void GlobalExceptionHandler(object sender, UnhandledExceptionEventArgs e)
     {
         // Credit to Khori for this
