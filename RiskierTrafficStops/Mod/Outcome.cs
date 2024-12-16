@@ -8,9 +8,9 @@ internal abstract class Outcome
     internal static LHandle TrafficStopLHandle;
     internal static Outcome ActiveOutcome;
 
-    internal static List<Ped> PedsToIgnore = new();
+    internal static readonly List<Ped> PedsToIgnore = new();
 
-    internal void RemoveIgnoredPedsAndBlockEvents(ref List<Ped> peds)
+    internal static void RemoveIgnoredPedsAndBlockEvents(ref List<Ped> peds)
     {
         if (Suspect.IsAvailable() && PedsToIgnore.Contains(Suspect))
         {
@@ -23,14 +23,12 @@ internal abstract class Outcome
     
     internal static bool MeetsRequirements(LHandle handle)
     {
-        if (!GetSuspectAndSuspectVehicle(handle, out Suspect, out SuspectVehicle) || Functions.GetCurrentPullover() == null)
-        {
-            Normal("Failed to get suspect and vehicle, cleaning up RTS event...");
-            CleanupOutcome(false);
-            return false;
-        }
+        if (GetSuspectAndSuspectVehicle(handle, out Suspect, out SuspectVehicle) &&
+            Functions.GetCurrentPullover() != null) return true;
+        Normal("Failed to get suspect and vehicle, cleaning up RTS event...");
+        CleanupOutcome(false);
+        return false;
 
-        return true;
     }
     
     

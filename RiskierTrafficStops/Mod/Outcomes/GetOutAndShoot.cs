@@ -18,11 +18,9 @@ internal class GetOutAndShoot : Outcome, IUpdateable
     {
         try
         {
-            if (MeetsRequirements(TrafficStopLHandle))
-            {
-                SuspectRelateGroup = new RelationshipGroup("RTSGetOutAndShootSuspects");
-                GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
-            }
+            if (!MeetsRequirements(TrafficStopLHandle)) return;
+            SuspectRelateGroup = new RelationshipGroup("RTSGetOutAndShootSuspects");
+            GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
         }
         catch (Exception e)
         {

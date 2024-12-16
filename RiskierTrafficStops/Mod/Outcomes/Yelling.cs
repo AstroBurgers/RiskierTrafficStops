@@ -12,11 +12,9 @@ internal class Yelling : Outcome, IUpdateable
     {
         try
         {
-            if (MeetsRequirements(TrafficStopLHandle))
-            {
-                SuspectRelateGroup = new RelationshipGroup("RTSYellingSuspects");
-                GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
-            }
+            if (!MeetsRequirements(TrafficStopLHandle)) return;
+            SuspectRelateGroup = new RelationshipGroup("RTSYellingSuspects");
+            GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
         }
         catch (Exception e)
         {
