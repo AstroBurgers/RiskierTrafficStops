@@ -85,6 +85,7 @@ internal class GetOutAndShoot : Outcome, IUpdateable
 
     private static void GetPedOutOfVehicle(Ped ped)
     {
+        if (!ped.IsAvailable()) return;
         ped.RelationshipGroup = SuspectRelateGroup;
         if (ped.IsInVehicle(ped.LastVehicle, false) && ped.LastVehicle.IsAvailable())
         {
