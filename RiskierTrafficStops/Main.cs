@@ -21,17 +21,22 @@ public class Main : Plugin
         {
             GameFiber.StartNew(() =>
             {
-                // Setting up INI And checking for updates
+                // Reading INI File
                 Normal("Setting up INI File...");
                 IniFileSetup();
+                // Reading Json
                 Normal("Deserializing and reading Json...");
                 Localization.ReadJson();
+                // Creating Menu
                 Normal("Creating config menu menu...");
                 ConfigMenu.CreateMenu();
+                // Loading console commands
                 Normal("Adding console commands...");
                 Game.AddConsoleCommands();
+                // Handling ignored peds list
                 Normal("Starting process to handle API lists...");
                 GameFiber.StartNew(Processing.HandleIgnoredPedsList);
+                // Checking for updates
                 Normal("Checking for updates...");
                 new PluginUpdateChecker(Assembly.GetExecutingAssembly()).OnCompleted += (_, e) =>
                 {
