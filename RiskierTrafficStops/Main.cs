@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using RiskierTrafficStops.Engine.FrontendSystems;
-using Localization = RiskierTrafficStops.Engine.InternalSystems.Localization;
+using static RiskierTrafficStops.Engine.InternalSystems.Localization;
 
 namespace RiskierTrafficStops;
 
@@ -17,7 +17,7 @@ public class Main : Plugin
     private static void Functions_OnOnDutyStateChanged(bool onDuty)
     {
         OnDuty = onDuty;
-        if (onDuty && Localization.DoesJsonFileExist())
+        if (onDuty && DoesJsonFileExist())
         {
             GameFiber.StartNew(() =>
             {
@@ -26,7 +26,7 @@ public class Main : Plugin
                 IniFileSetup();
                 // Reading Json
                 Normal("Deserializing and reading Json...");
-                Localization.ReadJson();
+                ReadJson();
                 // Creating Menu
                 Normal("Creating config menu menu...");
                 ConfigMenu.CreateMenu();
@@ -106,12 +106,11 @@ public class Main : Plugin
     private static void GlobalExceptionHandler(object sender, UnhandledExceptionEventArgs e)
     {
         // Credit to Khori for this
-        if (e.ExceptionObject is Exception exception)
+        if (e.ExceptionObject is Exception)
         {
             // Log or handle the exception here
             Normal("Global exception caught");
             Normal($"Terminating={e.IsTerminating}");
-            Error(exception);
         }
         else
         {
