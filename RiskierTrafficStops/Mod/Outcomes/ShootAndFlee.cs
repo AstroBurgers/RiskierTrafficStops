@@ -17,7 +17,7 @@ internal sealed class ShootAndFlee : Outcome, IProccessing
         }
     }
 
-    internal void StartOutcome()
+    private void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));

@@ -33,7 +33,7 @@ internal sealed class Yelling : Outcome, IProccessing
 
     private static YellingScenarioOutcomes _chosenOutcome;
 
-    internal void StartOutcome()
+    private void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));
