@@ -12,10 +12,12 @@ internal enum ChancesSettingEnum
 
 internal static class Settings
 {
+    internal static readonly Config UserConfig = new();
+    internal static IniReflector<Config> IniReflector = new ("plugins/lspdfr/RiskierTrarfficStops.ini");
+    
     internal static int Chance = 5;
     private static readonly List<(bool enabled, Type outcome)> AllOutcomes = new();
     internal static Keys GetBackInKey = Keys.Y;
-    internal static InitializationFile Inifile; // Defining a new INI File
     internal static ChancesSettingEnum ChanceSetting = ChancesSettingEnum.EStaticChance;
 
     // Event Booleans
@@ -30,25 +32,7 @@ internal static class Settings
 
     internal static void IniFileSetup()
     {
-        Inifile = new InitializationFile(@"Plugins/Lspdfr/RiskierTrafficStops.ini");
-        Inifile.Create();
-
-        Chance = Inifile.ReadInt32("General_Settings", "Chance", Chance);
-        GetBackInKey = Inifile.ReadEnum("General_Settings", "Keybind", GetBackInKey);
-        ChanceSetting = Inifile.ReadEnum("General_Settings", "Chance_Setting", ChanceSetting);
-
-        // Reading event Booleans
-        GetOutAndShootEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Get Out And Shoot Outcome Enabled",
-            GetOutAndShootEnabled);
-        RamEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Ramming Outcome Enabled", RamEnabled);
-        FleeEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Flee Outcome Enabled", FleeEnabled);
-        RevEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Revving Outcome Enabled", RevEnabled);
-        YellEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Yelling Outcome Enabled", YellEnabled);
-        YellInCarEnabled =
-            Inifile.ReadBoolean("Outcome_Configuration", "Yelling In Car Outcome Enabled", YellInCarEnabled);
-        ShootAndFleeEnabled =
-            Inifile.ReadBoolean("Outcome_Configuration", "Shoot And Flee Outcome Enabled", ShootAndFleeEnabled);
-        SpittingEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Spitting Outcome Enabled", SpittingEnabled);
+        IniReflector.Read(UserConfig, true);
 
         ValidateIniValues();
         FilterOutcomes();
@@ -89,4 +73,41 @@ internal static class Settings
                 )));
         Normal("----Enabled Outcomes----");
     }
+}
+
+[IniReflectorSection("General_Settings")]
+[IniReflectorSection("Outcome_Configuration")]
+internal class Config
+{
+    [IniReflectorValue(defaultValue: 5, description: "Chance value for any outcome to happen", name: "Chance")]
+    public static int Chance;
+    [IniReflectorValue(defaultValue: Keys.Y, description: "Used for certain outcomes, button to make suspect re-enter vehicle (where applicable)")]
+    public static Keys GetBackInKey;
+    [IniReflectorValue(defaultValue: ChancesSettingEnum.EStaticChance, description: "What chance setting to use", name: "Chance_Setting")]
+    public static ChancesSettingEnum ChanceSetting;
+    
+    [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true, description:"Whether or not an outcome can happen")]
+    public static bool GetOutAndShootEnabled;
+    
+    [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
+    public static bool RamEnabled;
+    
+    [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
+    public static bool FleeEnabled;
+    
+    [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
+    public static bool RevEnabled;
+    
+    [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
+    public static bool YellEnabled;
+    
+    [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
+    public static bool YellInCarEnabled;
+    
+    [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
+    public static bool ShootAndFleeEnabled;
+    
+    [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
+    public static bool SpittingEnabled;
+    
 }
