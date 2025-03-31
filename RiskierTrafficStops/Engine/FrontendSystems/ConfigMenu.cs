@@ -73,15 +73,15 @@ internal static class ConfigMenu
     private static void SetupMenu()
     {
         Normal("Assigning Menu values to their respective INI Values...");
-        SetChance.Value = Chance;
-        YellOutcomeEnabled.SelectedItem = YellEnabled;
-        GoasOutcomeEnabled.SelectedItem = GetOutAndShootEnabled;
-        YicOutcomeEnabled.SelectedItem = YellInCarEnabled;
-        RiyOutcomeEnabled.SelectedItem = RamEnabled;
-        FleeOutcomeEnabled.SelectedItem = FleeEnabled;
-        RevOutcomeEnabled.SelectedItem = RevEnabled;
-        SafOutcomeEnabled.SelectedItem = ShootAndFleeEnabled;
-        SpitEnabled.SelectedItem = SpittingEnabled;
+        SetChance.Value = UserConfig.Chance;
+        YellOutcomeEnabled.SelectedItem = UserConfig.YellEnabled;
+        GoasOutcomeEnabled.SelectedItem = UserConfig.GetOutAndShootEnabled;
+        YicOutcomeEnabled.SelectedItem = UserConfig.YellInCarEnabled;
+        RiyOutcomeEnabled.SelectedItem = UserConfig.RamEnabled;
+        FleeOutcomeEnabled.SelectedItem = UserConfig.FleeEnabled;
+        RevOutcomeEnabled.SelectedItem = UserConfig.RevEnabled;
+        SafOutcomeEnabled.SelectedItem = UserConfig.ShootAndFleeEnabled;
+        SpitEnabled.SelectedItem = UserConfig.SpittingEnabled;
         Normal("Assigned Values");
     }
 

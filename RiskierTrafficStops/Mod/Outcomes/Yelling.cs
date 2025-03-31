@@ -99,12 +99,12 @@ internal sealed class Yelling : Outcome, IProccessing
     private static void KeyPressed()
     {
         Game.DisplayHelp(
-            $"~BLIP_INFO_ICON~ Press ~{GetBackInKey.GetInstructionalId()}~ {YellingNotiText}",
+            $"~BLIP_INFO_ICON~ Press ~{UserConfig.GetBackInKey.GetInstructionalId()}~ {YellingNotiText}",
             10000);
         while (SuspectVehicle.IsAvailable() && !Suspect.IsInAnyVehicle(false))
         {
             GameFiber.Yield();
-            if (Game.IsKeyDown(GetBackInKey))
+            if (Game.IsKeyDown(UserConfig.GetBackInKey))
             {
                 Suspect.Tasks.EnterVehicle(SuspectVehicle, -1).WaitForCompletion();
                 break;

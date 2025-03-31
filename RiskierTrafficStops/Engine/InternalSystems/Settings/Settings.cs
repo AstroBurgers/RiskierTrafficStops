@@ -27,9 +27,9 @@ internal static class Settings
 
     private static void ValidateIniValues()
     {
-        if (Chance <= 100) return;
+        if (UserConfig.Chance <= 100) return;
         Normal("Chance value was greater than 100, setting value to 100...");
-        Chance = 100;
+        UserConfig.Chance = 100;
         Game.DisplayNotification("commonmenu", "mp_alerttriangle", "Riskier Traffic Stops", "~b~By Astro",
             "Chance value is ~r~over 100~w~!!");
         Normal("Chance value set to 100");
@@ -40,14 +40,14 @@ internal static class Settings
         Normal("Adding enabled outcomes to enabledOutcomes");
         AllOutcomes.Clear();
 
-        AllOutcomes.Add((GetOutAndShootEnabled, typeof(GetOutAndShoot)));
-        AllOutcomes.Add((RamEnabled, typeof(Ramming)));
-        AllOutcomes.Add((FleeEnabled, typeof(Flee)));
-        AllOutcomes.Add((RevEnabled, typeof(Revving)));
-        AllOutcomes.Add((YellEnabled, typeof(Yelling)));
-        AllOutcomes.Add((YellInCarEnabled, typeof(YellInCar)));
-        AllOutcomes.Add((ShootAndFleeEnabled, typeof(ShootAndFlee)));
-        AllOutcomes.Add((SpittingEnabled, typeof(Spitting)));
+        AllOutcomes.Add((UserConfig.GetOutAndShootEnabled, typeof(GetOutAndShoot)));
+        AllOutcomes.Add((UserConfig.RamEnabled, typeof(Ramming)));
+        AllOutcomes.Add((UserConfig.FleeEnabled, typeof(Flee)));
+        AllOutcomes.Add((UserConfig.RevEnabled, typeof(Revving)));
+        AllOutcomes.Add((UserConfig.YellEnabled, typeof(Yelling)));
+        AllOutcomes.Add((UserConfig.YellInCarEnabled, typeof(YellInCar)));
+        AllOutcomes.Add((UserConfig.ShootAndFleeEnabled, typeof(ShootAndFlee)));
+        AllOutcomes.Add((UserConfig.SpittingEnabled, typeof(Spitting)));
 
         PulloverEventHandler.EnabledOutcomes = AllOutcomes.Where(i => i.enabled).Select(i => i.outcome).ToList();
 
@@ -62,39 +62,37 @@ internal static class Settings
     }
 }
 
-[IniReflectorSection("General_Settings")]
-[IniReflectorSection("Outcome_Configuration")]
 internal class Config
 {
-    [IniReflectorValue(defaultValue: 5, description: "Chance value for any outcome to happen", name: "Chance")]
-    public static int Chance;
-    [IniReflectorValue(defaultValue: Keys.Y, description: "Used for certain outcomes, button to make suspect re-enter vehicle (where applicable)")]
-    public static Keys GetBackInKey;
-    [IniReflectorValue(defaultValue: ChancesSettingEnum.EStaticChance, description: "What chance setting to use", name: "Chance_Setting")]
-    public static ChancesSettingEnum ChanceSetting;
-    
-    [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true, description:"Whether or not an outcome can happen")]
-    public static bool GetOutAndShootEnabled;
+    [IniReflectorValue(sectionName: "General_Settings", defaultValue: 15, name: "Chance")]
+    public int Chance;
+    [IniReflectorValue(sectionName: "General_Settings", defaultValue: Keys.Y)]
+    public Keys GetBackInKey;
+    [IniReflectorValue(sectionName: "General_Settings", defaultValue: ChancesSettingEnum.EStaticChance, name: "Chance_Setting")]
+    public ChancesSettingEnum ChanceSetting;
     
     [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
-    public static bool RamEnabled;
+    public bool GetOutAndShootEnabled;
     
     [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
-    public static bool FleeEnabled;
+    public bool RamEnabled;
     
     [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
-    public static bool RevEnabled;
+    public bool FleeEnabled;
     
     [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
-    public static bool YellEnabled;
+    public bool RevEnabled;
     
     [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
-    public static bool YellInCarEnabled;
+    public bool YellEnabled;
     
     [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
-    public static bool ShootAndFleeEnabled;
+    public bool YellInCarEnabled;
     
     [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
-    public static bool SpittingEnabled;
+    public bool ShootAndFleeEnabled;
+    
+    [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
+    public bool SpittingEnabled;
     
 }

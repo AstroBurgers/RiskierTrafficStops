@@ -12,7 +12,7 @@ internal static class PulloverEventHandler
     private static Type _chosenOutcome;
     private static Type _lastOutcome;
 
-    private static long _currentChance = Chance;
+    private static long _currentChance = UserConfig.Chance;
 
     internal static void SubscribeToEvents()
     {
@@ -98,18 +98,18 @@ internal static class PulloverEventHandler
 
             _lastOutcome = _chosenOutcome;
 
-            if (ChanceSetting == ChancesSettingEnum.ECompoundingChance)
+            if (UserConfig.ChanceSetting == ChancesSettingEnum.ECompoundingChance)
             {
-                _currentChance = Chance;
+                _currentChance = UserConfig.Chance;
             }
 
             Activator.CreateInstance(_chosenOutcome, args: handle);
         }
         else
         {
-            if (ChanceSetting == ChancesSettingEnum.ECompoundingChance)
+            if (UserConfig.ChanceSetting == ChancesSettingEnum.ECompoundingChance)
             {
-                _currentChance += Chance;
+                _currentChance += UserConfig.Chance;
             }
         }
     }
@@ -122,12 +122,12 @@ internal static class PulloverEventHandler
     {
         if (EnabledOutcomes.Count == 0) return false;
         long convertedChance = 0;
-        switch (ChanceSetting)
+        switch (UserConfig.ChanceSetting)
         {
             case ChancesSettingEnum.EStaticChance:
                 convertedChance = GenerateChance();
                 Normal("Chance: " + convertedChance);
-                return convertedChance < Chance;
+                return convertedChance < UserConfig.Chance;
 
             case ChancesSettingEnum.ERandomChance:
                 convertedChance = GenerateChance();
