@@ -100,7 +100,7 @@ internal static class ConfigMenu
         Normal("Finished Appending to INI");
 
         Normal("Reading new Values...");
-        Settings.IniReflector.Read(Settings.UserConfig, true);
+        Settings.IniReflector.Read(UserConfig, true);
         Normal("Finished reading new values");
 
         /*Normal("----INI Values---");

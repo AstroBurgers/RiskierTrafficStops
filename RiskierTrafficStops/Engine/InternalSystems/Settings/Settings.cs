@@ -13,23 +13,10 @@ internal enum ChancesSettingEnum
 internal static class Settings
 {
     internal static readonly Config UserConfig = new();
-    internal static IniReflector<Config> IniReflector = new ("plugins/lspdfr/RiskierTrarfficStops.ini");
+    internal static IniReflector<Config> IniReflector = new ("plugins/LSPDFR/RiskierTrafficStops.ini");
     
-    internal static int Chance = 5;
     private static readonly List<(bool enabled, Type outcome)> AllOutcomes = new();
-    internal static Keys GetBackInKey = Keys.Y;
-    internal static ChancesSettingEnum ChanceSetting = ChancesSettingEnum.EStaticChance;
-
-    // Event Booleans
-    internal static bool GetOutAndShootEnabled = true;
-    internal static bool RamEnabled = true;
-    internal static bool FleeEnabled = true;
-    internal static bool RevEnabled = true;
-    internal static bool YellEnabled = true;
-    internal static bool YellInCarEnabled = true;
-    internal static bool ShootAndFleeEnabled = true;
-    internal static bool SpittingEnabled = true;
-
+    
     internal static void IniFileSetup()
     {
         IniReflector.Read(UserConfig, true);
