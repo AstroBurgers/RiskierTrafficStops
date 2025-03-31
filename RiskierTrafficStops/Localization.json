@@ -9,7 +9,6 @@
   "RevMenuItem": "Rev Engine",
   "SafMenuItem": "Shoot And Flee",
   "SpitMenuItem": "Spitting",
-  "HostageTakingMenuItem": "Hostage Taking",
   "SaveToIniMenuItem": "Save To INI",
   
   "MenuDesc": "Configure Riskier Traffic Stops",
@@ -22,7 +21,6 @@
   "RevMenuItemDescription": "Enable or disable this outcome",
   "SafMenuItemDescription": "Enable or disable this outcome",
   "SpitMenuItemDescription": "Enable or disable this outcome",
-  "HostageTakingMenuItemDescription": "Enable or disable this outcome",
   "SaveToIniMenuItemDescription": "Saves the current values to the INI file and reloads the INI",
   
   "YellingNotiText": "to have the suspect get back in their vehicle"

@@ -30,21 +30,6 @@ internal static class Arrays
         "Everyone liked that"
     };
 
-    internal static readonly string[] HostageSituationText =
-    {
-        "~y~Suspect(s)~s~: Move and their dead!",
-        "~y~Suspect(s)~s~: Don't move or I'll shoot!",
-        "~y~Suspect(s)~s~: If you value their life I'd stay put!",
-        "~y~Suspect(s)~s~: We will fucking shoot them!",
-        "~y~Suspect(s)~s~: I'd stay put if I were you!",
-        "~y~Suspect(s)~s~: Do your job and fucking stay put!",
-        "~y~Suspect(s)~s~: I'm not afraid to shoot them!",
-        "~y~Suspect(s)~s~: I'll fucking kill them! Don't think I won't!",
-        "~y~Suspect(s)~s~: I'll fucking do it!",
-        "~y~Suspect(s)~s~: Listen here pig, I'll do it, so I suggest you stay put!",
-        "~y~Suspect(s)~s~: You move and they are dead!"
-    };
-
     /// <summary>
     /// Text used in the spitting outcome
     /// </summary>

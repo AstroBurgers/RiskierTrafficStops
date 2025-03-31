@@ -70,7 +70,6 @@
     <Compile Include="API\APIs.cs" />
     <Compile Include="API\ExternalAPIs\IAEFunctions.cs" />
     <Compile Include="Engine\Data\Arrays.cs" />
-    <Compile Include="Engine\Data\Suspect.cs" />
     <Compile Include="Engine\FrontendSystems\ConfigMenu.cs" />
     <Compile Include="Engine\FrontendSystems\ConsoleCommands.cs" />
     <Compile Include="Engine\Helpers\BinaryDecisionTree.cs" />
@@ -85,14 +84,14 @@
     <Compile Include="Engine\InternalSystems\Logger.cs" />
     <Compile Include="Engine\InternalSystems\Processing.cs" />
     <Compile Include="Engine\InternalSystems\PulloverEventHandler.cs" />
-    <Compile Include="Engine\InternalSystems\Settings.cs" />
     <Compile Include="Engine\InternalSystems\PluginUpdateChecker.cs" />
     <Compile Include="Engine\InternalSystems\DependencyVersionChecker.cs" />
+    <Compile Include="Engine\InternalSystems\Settings\IniReflector.cs" />
+    <Compile Include="Engine\InternalSystems\Settings\Settings.cs" />
     <Compile Include="GlobalUsings.cs" />
     <Compile Include="Mod\Outcome.cs" />
     <Compile Include="Mod\Outcomes\Flee.cs" />
     <Compile Include="Mod\Outcomes\GetOutAndShoot.cs" />
-    <Compile Include="Mod\Outcomes\HostageTaking.cs" />
     <Compile Include="Mod\Outcomes\Ramming.cs" />
     <Compile Include="Mod\Outcomes\Revving.cs" />
     <Compile Include="Mod\Outcomes\ShootAndFlee.cs" />
