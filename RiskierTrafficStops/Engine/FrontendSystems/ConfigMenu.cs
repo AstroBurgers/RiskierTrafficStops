@@ -12,29 +12,31 @@ internal static class ConfigMenu
         SetChanceMenuItemDescription, 0, 100, 1);
 
     private static readonly UIMenuListScrollerItem<bool> GoasOutcomeEnabled =
-        new(GoasMenuItem, GoasMenuItemDescription, new[] { true, false });
+        new(GoasMenuItem, GoasMenuItemDescription, [true, false]);
 
     private static readonly UIMenuListScrollerItem<bool> YicOutcomeEnabled =
-        new(YicMenuItem, YicMenuItemDescription, new[] { true, false });
+        new(YicMenuItem, YicMenuItemDescription, [true, false]);
 
     private static readonly UIMenuListScrollerItem<bool> YellOutcomeEnabled =
-        new(YellMenuItem, YellMenuItemDescription, new[] { true, false });
+        new(YellMenuItem, YellMenuItemDescription, [true, false]);
 
     private static readonly UIMenuListScrollerItem<bool> RiyOutcomeEnabled =
-        new(RiyMenuItem, RiyMenuItemDescription, new[] { true, false });
+        new(RiyMenuItem, RiyMenuItemDescription, [true, false]);
 
     private static readonly UIMenuListScrollerItem<bool> FleeOutcomeEnabled =
-        new(FleeMenuItem, FleeMenuItemDescription, new[] { true, false });
+        new(FleeMenuItem, FleeMenuItemDescription, [true, false]);
 
     private static readonly UIMenuListScrollerItem<bool> RevOutcomeEnabled =
-        new(RevMenuItem, RevMenuItemDescription, new[] { true, false });
+        new(RevMenuItem, RevMenuItemDescription, [true, false]);
 
     private static readonly UIMenuListScrollerItem<bool> SafOutcomeEnabled =
-        new(SafMenuItem, SafMenuItemDescription, new[] { true, false });
+        new(SafMenuItem, SafMenuItemDescription, [true, false]);
 
     private static readonly UIMenuListScrollerItem<bool> SpitEnabled = new(SpitMenuItem, SpitMenuItemDescription,
-        new[] { true, false });
+        [true, false]);
     
+    private static readonly UIMenuListScrollerItem<bool> GoRoEnabled = new(GoRoMenuItem, GoRoMenuItemDescription,
+        [true, false]);
 
     private static readonly UIMenuItem SaveToIni = new(SaveToIniMenuItem, SaveToIniMenuItemDescription);
 
@@ -54,7 +56,7 @@ internal static class ConfigMenu
         Normal("Adding Items to Menu");
 
         MainMenu.AddItems(SetChance, SafOutcomeEnabled, GoasOutcomeEnabled, YicOutcomeEnabled, RiyOutcomeEnabled,
-            FleeOutcomeEnabled, RevOutcomeEnabled, YellOutcomeEnabled, SpitEnabled, SaveToIni);
+            FleeOutcomeEnabled, RevOutcomeEnabled, YellOutcomeEnabled, SpitEnabled, GoRoEnabled, SaveToIni);
         SaveToIni.BackColor = Color.Green;
 
         MainMenu.OnItemSelect +=
@@ -82,6 +84,7 @@ internal static class ConfigMenu
         RevOutcomeEnabled.SelectedItem = UserConfig.RevEnabled;
         SafOutcomeEnabled.SelectedItem = UserConfig.ShootAndFleeEnabled;
         SpitEnabled.SelectedItem = UserConfig.SpittingEnabled;
+        GoRoEnabled.SelectedItem = UserConfig.GetOutROEnabled;
         Normal("Assigned Values");
     }
 
@@ -97,6 +100,7 @@ internal static class ConfigMenu
         Settings.IniReflector.WriteSingle("YellInCarEnabled", YicOutcomeEnabled.SelectedItem);
         Settings.IniReflector.WriteSingle("ShootAndFleeEnabled", SafOutcomeEnabled.SelectedItem);
         Settings.IniReflector.WriteSingle("SpittingEnabled", SpitEnabled.SelectedItem);
+        Settings.IniReflector.WriteSingle("GetOutROEnabled", GoRoEnabled.SelectedItem);
         Normal("Finished Appending to INI");
 
         Normal("Reading new Values...");

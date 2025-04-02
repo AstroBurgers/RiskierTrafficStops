@@ -1,7 +1,5 @@
 ﻿using static RiskierTrafficStops.Engine.Helpers.Extensions.PedExtensions;
 
-// ReSharper disable HeapView.BoxingAllocation
-
 namespace RiskierTrafficStops.Mod.Outcomes;
 
 internal sealed class GetOutAndShoot : Outcome, IProccessing

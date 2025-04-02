@@ -119,7 +119,6 @@ public class Main : Plugin
         }
     }
 
-
     public override void Finally()
     {
         Game.DisplayNotification("3dtextures",

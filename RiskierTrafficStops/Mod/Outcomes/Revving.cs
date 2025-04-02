@@ -35,7 +35,7 @@ internal sealed class Revving : Outcome, IProccessing
         
         RemoveIgnoredPedsAndBlockEvents(ref pedsInVehicle);
         
-        Suspect.RevEngine(SuspectVehicle, new []{2,4}, new []{2,4}, 2);
+        Suspect.RevEngine(SuspectVehicle, [2,4], [2,4], 2);
 
         var chance = GenerateChance();
         switch (chance)

@@ -17,6 +17,7 @@ public static class Localization
     public static string RevMenuItem { get; private set; }
     public static string SafMenuItem { get; private set; }
     public static string SpitMenuItem { get; private set; }
+    public static string GoRoMenuItem { get; private set; }
     public static string SaveToIniMenuItem { get; private set; }
 
     public static string MenuDesc { get; private set; }
@@ -29,6 +30,7 @@ public static class Localization
     public static string RevMenuItemDescription { get; private set; }
     public static string SafMenuItemDescription { get; private set; }
     public static string SpitMenuItemDescription { get; private set; }
+    public static string GoRoMenuItemDescription { get; private set; }
     public static string SaveToIniMenuItemDescription { get; private set; }
 
     public static string YellingNotiText { get; private set; }
@@ -64,6 +66,7 @@ public static class Localization
             RevMenuItem = data.RevMenuItem;
             SafMenuItem = data.SafMenuItem;
             SpitMenuItem = data.SpitMenuItem;
+            GoRoMenuItem = data.GoRoMenuItem;
             SaveToIniMenuItem = data.SaveToIniMenuItem;
 
             MenuDesc = data.MenuDesc;
@@ -76,6 +79,7 @@ public static class Localization
             RevMenuItemDescription = data.RevMenuItemDescription;
             SafMenuItemDescription = data.SafMenuItemDescription;
             SpitMenuItemDescription = data.SpitMenuItemDescription;
+            GoRoMenuItemDescription = data.GoRoMenuItemDescription;
             SaveToIniMenuItemDescription = data.SaveToIniMenuItemDescription;
             YellingNotiText = data.YellingNotiText;
         }
@@ -121,6 +125,7 @@ public sealed class JSONStruct
     public string RevMenuItem { get; set; }
     public string SafMenuItem { get; set; }
     public string SpitMenuItem { get; set; }
+    public string GoRoMenuItem { get; set; }
     public string SaveToIniMenuItem { get; set; }
 
     #endregion
@@ -137,6 +142,7 @@ public sealed class JSONStruct
     public string RevMenuItemDescription { get; set; }
     public string SafMenuItemDescription { get; set; }
     public string SpitMenuItemDescription { get; set; }
+    public string GoRoMenuItemDescription { get; set; }
     public string SaveToIniMenuItemDescription { get; set; }
 
     #endregion
