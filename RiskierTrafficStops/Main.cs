@@ -11,10 +11,10 @@ public class Main : Plugin
     public override void Initialize()
     {
         Normal("Plugin initialized, go on duty to fully load plugin.");
-        Functions.OnOnDutyStateChanged += Functions_OnOnDutyStateChanged;
+        Functions.OnOnDutyStateChanged += Functions_OnDutyStateChanged;
     }
 
-    private static void Functions_OnOnDutyStateChanged(bool onDuty)
+    private static void Functions_OnDutyStateChanged(bool onDuty)
     {
         OnDuty = onDuty;
         if (onDuty && DoesJsonFileExist())
