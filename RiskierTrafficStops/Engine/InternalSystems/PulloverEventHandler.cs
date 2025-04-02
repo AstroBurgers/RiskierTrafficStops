@@ -1,5 +1,6 @@
 ﻿using RiskierTrafficStops.API.ExternalAPIs;
 using RiskierTrafficStops.Engine.InternalSystems.Settings;
+using RiskierTrafficStops.Mod.Outcomes;
 
 namespace RiskierTrafficStops.Engine.InternalSystems;
 
@@ -54,7 +55,7 @@ internal static class PulloverEventHandler
                 !MainPlayer.LastVehicle.IsSirenOn ||
                 !Functions.IsPlayerPerformingPullover()) return;
             HasEventHappened = true;
-            ChooseOutcome(handle);
+            ChooseOutcome(handle, true);
         });
     }
 
@@ -84,25 +85,45 @@ internal static class PulloverEventHandler
     /// Chooses an outcome from the enabled outcomes
     /// </summary>
     /// <param name="handle">Handle of the current traffic stop</param>
-    private static void ChooseOutcome(LHandle handle)
+    /// <param name="onPulloverStarted">Whether the method was triggered from the on pullover started event</param>
+    private static void ChooseOutcome(LHandle handle, bool onPulloverStarted = false)
     {
         if (ShouldEventHappen())
         {
             Normal($"DisableRTSForCurrentStop: {DisableRTSForCurrentStop}");
-
             Normal("Choosing Outcome");
-            _chosenOutcome = EnabledOutcomes.Count <= 1
-                ? EnabledOutcomes[Rndm.Next(EnabledOutcomes.Count)]
-                : EnabledOutcomes[Rndm.Next(EnabledOutcomes.Where(i => i != _lastOutcome).ToList().Count)];
-            Normal($"Chosen Outcome: {_chosenOutcome}");
 
+            var filteredOutcomes = EnabledOutcomes
+                .Where(o => !onPulloverStarted ||
+                            o != typeof(GetOutAndShoot) && o != typeof(Yelling) && o != typeof(GetOutRo) && o != typeof(Spitting))
+                .ToList();
+
+            switch (filteredOutcomes.Count)
+            {
+                // If there are no valid outcomes after filtering, return early.
+                case 0:
+                    Normal("No valid outcomes available");
+                    HasEventHappened = false;
+                    return;
+                case <= 1:
+                    _chosenOutcome = filteredOutcomes[Rndm.Next(filteredOutcomes.Count)];
+                    break;
+                default:
+                {
+                    var availableOutcomes = filteredOutcomes.Where(o => o != _lastOutcome).ToList();
+                    _chosenOutcome = availableOutcomes[Rndm.Next(availableOutcomes.Count)];
+                    break;
+                }
+            }
+
+            Normal($"Chosen Outcome: {_chosenOutcome}");
             _lastOutcome = _chosenOutcome;
 
             if (UserConfig.ChanceSetting == ChancesSettingEnum.ECompoundingChance)
             {
                 _currentChance = UserConfig.Chance;
             }
-
+            
             Activator.CreateInstance(_chosenOutcome, args: handle);
         }
         else
