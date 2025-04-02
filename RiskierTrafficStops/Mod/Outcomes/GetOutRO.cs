@@ -150,11 +150,11 @@ internal sealed class GetOutRo : Outcome, IProccessing
             }
             ped.Face(MainPlayer);
             // fake draw
-            // TODO, Give weapon mid animation instead of waiting for completion
-            ped.Tasks.PlayAnimation(new AnimationDictionary("reaction@intimidation@1h"), "intro", 5f, AnimationFlags.None).WaitForCompletion();
+            ped.Tasks.PlayAnimation(new AnimationDictionary("reaction@intimidation@1h"), "intro", 6f,
+                AnimationFlags.None);
+            GameFiber.Wait(2175);
             // give weapon
             ped.Inventory.GiveNewWeapon(MeleeWeapons.PickRandom(), -1, true);
-            ped.Tasks.PlayAnimation(new AnimationDictionary("reaction@intimidation@1h"), "step_bwd ", 5f, AnimationFlags.None).WaitForCompletion();
             
             ped.Tasks.FightAgainst(MainPlayer, -1);
         }
@@ -208,10 +208,11 @@ internal sealed class GetOutRo : Outcome, IProccessing
             }
             ped.Face(MainPlayer);
             // fake draw
-            ped.Tasks.PlayAnimation(new AnimationDictionary("reaction@intimidation@1h"), "intro", 5f, AnimationFlags.None).WaitForCompletion();
+            ped.Tasks.PlayAnimation(new AnimationDictionary("reaction@intimidation@1h"), "intro", 6f,
+                AnimationFlags.None);
+            GameFiber.Wait(2175);
             // give weapon
             ped.GivePistol();
-            ped.Tasks.PlayAnimation(new AnimationDictionary("reaction@intimidation@1h"), "step_bwd ", 5f, AnimationFlags.None).WaitForCompletion();
             
             switch (outcome)
             {
