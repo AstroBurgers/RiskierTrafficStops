@@ -119,7 +119,7 @@ internal sealed class Yelling : Outcome, IProccessing
         SetRelationshipGroups(SuspectRelateGroup);
         Suspect.RelationshipGroup = SuspectRelateGroup;
 
-        Normal("Giving Suspect FightAgainstClosestHatedTarget Task");
+        Normal("Giving Suspect FighAgainst Task");
         Suspect.Tasks.FightAgainst(MainPlayer, -1);
     }
 

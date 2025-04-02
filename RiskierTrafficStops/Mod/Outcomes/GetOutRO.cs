@@ -62,7 +62,13 @@ internal sealed class GetOutRo : Outcome, IProccessing
         
         SetRelationshipGroups(SuspectRelateGroup);
 
-        //
+        var driver = _pedsInVehicle[0];
+        if (driver.IsAvailable() && driver.IsInAnyVehicle(false))
+        {
+            driver.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen).WaitForCompletion();
+        }
+        driver.Face(MainPlayer);
+        // Play fake draw and wait for completion
         
         var outcome = _allGoRoOutcomes.PickRandom();
 
@@ -97,33 +103,13 @@ internal sealed class GetOutRo : Outcome, IProccessing
 
         // Start recording
         driver.PlayAmbientSpeech(VoiceLines.PickRandom());
-        // Play animation and wait for completion
+        NativeFunction.Natives.x142A02425FF02BD9(driver, "world_human_mobile_film_shocking", 0, true);
     }
 
     private static void KnifeOutcome(List<Ped> pedsInVehicle)
     {
         Normal("Starting knife outcome");
-        
-        void GetPedOutOfVehicle(Ped ped)
-        {
-            if (!ped.IsAvailable())
-            {
-                Normal("Ped is not available.");
-                return;
-            }
-            
-            Normal($"Making ped exit vehicle with knife");
-            ped.BlockPermanentEvents = true;
-            ped.IsPersistent = true;
-            if (ped.IsInAnyVehicle(false))
-            {
-                ped.Tasks.LeaveVehicle(SuspectVehicle, LeaveVehicleFlags.None).WaitForCompletion();
-            }
-            ped.Face(MainPlayer);
-            ped.Inventory.GiveNewWeapon(MeleeWeapons.PickRandom(), -1, true);
-            ped.Tasks.FightAgainstClosestHatedTarget(40f, -1);
-        }
-        
+
         var chance = GenerateChance();
         if (chance <= 50)
         {
@@ -142,6 +128,35 @@ internal sealed class GetOutRo : Outcome, IProccessing
             {
                 GetPedOutOfVehicle(ped);
             }
+        }
+
+        return;
+
+        void GetPedOutOfVehicle(Ped ped)
+        {
+            if (!ped.IsAvailable())
+            {
+                Normal("Ped is not available.");
+                return;
+            }
+            
+            Normal($"Making ped exit vehicle with knife");
+            ped.RelationshipGroup = SuspectRelateGroup;
+            ped.BlockPermanentEvents = true;
+            ped.IsPersistent = true;
+            if (ped.IsInAnyVehicle(false))
+            {
+                ped.Tasks.LeaveVehicle(SuspectVehicle, LeaveVehicleFlags.None).WaitForCompletion();
+            }
+            ped.Face(MainPlayer);
+            // fake draw
+            // TODO, Give weapon mid animation instead of waiting for completion
+            ped.Tasks.PlayAnimation(new AnimationDictionary("reaction@intimidation@1h"), "intro", 5f, AnimationFlags.None).WaitForCompletion();
+            // give weapon
+            ped.Inventory.GiveNewWeapon(MeleeWeapons.PickRandom(), -1, true);
+            ped.Tasks.PlayAnimation(new AnimationDictionary("reaction@intimidation@1h"), "step_bwd ", 5f, AnimationFlags.None).WaitForCompletion();
+            
+            ped.Tasks.FightAgainst(MainPlayer, -1);
         }
     }
     
@@ -184,6 +199,7 @@ internal sealed class GetOutRo : Outcome, IProccessing
             
             Normal($"Making ped exit vehicle with a gun");
             
+            ped.RelationshipGroup = SuspectRelateGroup;
             ped.BlockPermanentEvents = true;
             ped.IsPersistent = true;
             if (ped.IsInAnyVehicle(false))
@@ -191,7 +207,11 @@ internal sealed class GetOutRo : Outcome, IProccessing
                 ped.Tasks.LeaveVehicle(SuspectVehicle, LeaveVehicleFlags.None).WaitForCompletion();
             }
             ped.Face(MainPlayer);
+            // fake draw
+            ped.Tasks.PlayAnimation(new AnimationDictionary("reaction@intimidation@1h"), "intro", 5f, AnimationFlags.None).WaitForCompletion();
+            // give weapon
             ped.GivePistol();
+            ped.Tasks.PlayAnimation(new AnimationDictionary("reaction@intimidation@1h"), "step_bwd ", 5f, AnimationFlags.None).WaitForCompletion();
             
             switch (outcome)
             {
