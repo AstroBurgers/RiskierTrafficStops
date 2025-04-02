@@ -114,7 +114,6 @@ internal static class Arrays
         "weapon_snspistol_mk2",
         "weapon_heavypistol",
         "weapon_microsmg",
-        "weapon_stungun"
     ];
 
     /// <summary>
