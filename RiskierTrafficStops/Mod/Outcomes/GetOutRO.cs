@@ -67,8 +67,8 @@ internal sealed class GetOutRo : Outcome, IProccessing
         {
             driver.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen).WaitForCompletion();
         }
-        driver.Face(MainPlayer);
-        // Play fake draw and wait for completion
+
+        NativeFunction.Natives.TASK_TURN_PED_TO_FACE_ENTITY(driver, MainPlayer, 750);
         
         var outcome = _allGoRoOutcomes.PickRandom();
 
@@ -148,9 +148,9 @@ internal sealed class GetOutRo : Outcome, IProccessing
             {
                 ped.Tasks.LeaveVehicle(SuspectVehicle, LeaveVehicleFlags.None).WaitForCompletion();
             }
-            ped.Face(MainPlayer);
+            NativeFunction.Natives.TASK_TURN_PED_TO_FACE_ENTITY(ped, MainPlayer, 750);
             // fake draw
-            ped.Tasks.PlayAnimation(new AnimationDictionary("reaction@intimidation@1h"), "intro", 6f,
+            ped.Tasks.PlayAnimation(new AnimationDictionary("reaction@intimidation@1h"), "intro", 5f,
                 AnimationFlags.None);
             GameFiber.Wait(2175);
             // give weapon
@@ -206,9 +206,9 @@ internal sealed class GetOutRo : Outcome, IProccessing
             {
                 ped.Tasks.LeaveVehicle(SuspectVehicle, LeaveVehicleFlags.None).WaitForCompletion();
             }
-            ped.Face(MainPlayer);
+            NativeFunction.Natives.TASK_TURN_PED_TO_FACE_ENTITY(ped, MainPlayer, 750);
             // fake draw
-            ped.Tasks.PlayAnimation(new AnimationDictionary("reaction@intimidation@1h"), "intro", 6f,
+            ped.Tasks.PlayAnimation(new AnimationDictionary("reaction@intimidation@1h"), "intro", 5f,
                 AnimationFlags.None);
             GameFiber.Wait(2175);
             // give weapon
@@ -223,7 +223,7 @@ internal sealed class GetOutRo : Outcome, IProccessing
                     ped.Tasks.FightAgainstClosestHatedTarget(60f, -1);
                     break;
                 case GunOutcomes.Flee:
-                    ped.Tasks.Flee(ped, 100f, 10000).WaitForCompletion();
+                    ped.Tasks.Flee(ped, 100f, 10000).WaitForCompletion(10002);
                     ped.Tasks.FightAgainstClosestHatedTarget(100f, -1);
                     break;
                 default:
