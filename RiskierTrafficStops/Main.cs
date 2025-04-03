@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using RiskierTrafficStops.Engine.FrontendSystems;
-using Localization = RiskierTrafficStops.Engine.InternalSystems.Localization;
+using static RiskierTrafficStops.Engine.InternalSystems.Localization;
 
 namespace RiskierTrafficStops;
 
@@ -11,27 +11,32 @@ public class Main : Plugin
     public override void Initialize()
     {
         Normal("Plugin initialized, go on duty to fully load plugin.");
-        Functions.OnOnDutyStateChanged += Functions_OnOnDutyStateChanged;
+        Functions.OnOnDutyStateChanged += Functions_OnDutyStateChanged;
     }
 
-    private static void Functions_OnOnDutyStateChanged(bool onDuty)
+    private static void Functions_OnDutyStateChanged(bool onDuty)
     {
         OnDuty = onDuty;
-        if (onDuty && Localization.DoesJsonFileExist())
+        if (onDuty && DoesJsonFileExist())
         {
             GameFiber.StartNew(() =>
             {
-                // Setting up INI And checking for updates
+                // Reading INI File
                 Normal("Setting up INI File...");
                 IniFileSetup();
+                // Reading Json
                 Normal("Deserializing and reading Json...");
-                Localization.ReadJson();
+                ReadJson();
+                // Creating Menu
                 Normal("Creating config menu menu...");
                 ConfigMenu.CreateMenu();
+                // Loading console commands
                 Normal("Adding console commands...");
                 Game.AddConsoleCommands();
+                // Handling ignored peds list
                 Normal("Starting process to handle API lists...");
                 GameFiber.StartNew(Processing.HandleIgnoredPedsList);
+                // Checking for updates
                 Normal("Checking for updates...");
                 new PluginUpdateChecker(Assembly.GetExecutingAssembly()).OnCompleted += (_, e) =>
                 {
@@ -92,28 +97,20 @@ public class Main : Plugin
 
     private static void Cleanup(object sender, EventArgs e)
     {
-        try
-        {
-            //Unsubscribes from events
-            PulloverEventHandler.UnsubscribeFromEvents();
+        //Unsubscribes from events
+        PulloverEventHandler.UnsubscribeFromEvents();
 
-            Normal("Unloaded successfully");
-        }
-        catch (Exception ex)
-        {
-            Error(ex);
-        }
+        Normal("Unloaded successfully");
     }
-    
+
     private static void GlobalExceptionHandler(object sender, UnhandledExceptionEventArgs e)
     {
         // Credit to Khori for this
-        if (e.ExceptionObject is Exception exception)
+        if (e.ExceptionObject is Exception)
         {
             // Log or handle the exception here
             Normal("Global exception caught");
             Normal($"Terminating={e.IsTerminating}");
-            Error(exception);
         }
         else
         {
@@ -121,7 +118,6 @@ public class Main : Plugin
             Normal("Global exception thrown but no exception was provided");
         }
     }
-
 
     public override void Finally()
     {

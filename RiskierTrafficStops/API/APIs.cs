@@ -19,6 +19,7 @@ public static class APIs
 
     /// <summary>
     /// Stops RTS from interfering with the supplied Suspects
+    /// Also removes invalid peds from the list at the same time
     /// Notes:
     ///     The list is cleared every 10 minutes
     ///     If one of the supplied peds is the driver, the outcome is ended immediately 
@@ -26,12 +27,9 @@ public static class APIs
     /// <param name="peds">Peds to be ignored</param>
     public static void DisableRTSForPeds(params Ped[] peds)
     {
-        foreach (var ped in peds.ToList())
+        foreach (var ped in peds.ToList().Where(ped => ped.IsAvailable()))
         {
-            if (ped.IsAvailable())
-            {
-                Outcome.PedsToIgnore.Add(ped);
-            }
+            Outcome.PedsToIgnore.Add(ped);
         }
 
         foreach (var ped in Outcome.PedsToIgnore.Where(ped => !ped.IsAvailable()).ToList())
@@ -49,6 +47,7 @@ public static class APIs
 
     /// <summary>
     /// Invoked when an RTS Outcome is ended
+    /// Usually not invoked when an error is thrown.
     /// </summary>
     public static event RTSEvent OnRTSOutcomeEnded;
     
@@ -63,6 +62,9 @@ public static class APIs
             case RTSEventType.End:
                 OnRTSOutcomeEnded?.Invoke();
                 Normal("OnRTSOutcomeEnded Invoked");
+                break;
+            default:
+                Normal("How the fuck? Not a valid event type.");
                 break;
         }
     }

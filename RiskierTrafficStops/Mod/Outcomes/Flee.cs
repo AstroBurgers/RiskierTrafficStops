@@ -1,6 +1,6 @@
 ﻿namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal class Flee : Outcome, IUpdateable
+internal sealed class Flee : Outcome, IProccessing
 {
     private enum FleeOutcomes
     {
@@ -15,10 +15,8 @@ internal class Flee : Outcome, IUpdateable
     {
         try
         {
-            if (MeetsRequirements(TrafficStopLHandle))
-            {
-                GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
-            }
+            if (!MeetsRequirements(TrafficStopLHandle)) return;
+            GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
         }
         catch (Exception e)
         {
@@ -28,7 +26,7 @@ internal class Flee : Outcome, IUpdateable
         }
     }
 
-    internal virtual void StartOutcome()
+    private void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));

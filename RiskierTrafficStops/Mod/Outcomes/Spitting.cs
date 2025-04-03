@@ -1,15 +1,13 @@
 ﻿namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal class Spitting : Outcome, IUpdateable
+internal sealed class Spitting : Outcome, IProccessing
 {
     public Spitting(LHandle handle) : base(handle)
     {
         try
         {
-            if (MeetsRequirements(TrafficStopLHandle))
-            {
-                GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
-            }
+            if (!MeetsRequirements(TrafficStopLHandle)) return;
+            GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
         }
         catch (Exception e)
         {
@@ -19,7 +17,7 @@ internal class Spitting : Outcome, IUpdateable
         }
     }
 
-    internal virtual void StartOutcome()
+    private void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));

@@ -3,7 +3,7 @@
 internal static class VehicleExtensions
 {
     /// <summary>
-    /// Checks if a ped both exists and is alive
+    /// Checks if the vehicle exists, is valid, and has a valid model.
     /// </summary>
     /// <param name="veh"></param>
     /// <returns></returns>

@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using RAGENativeUI.Elements;
 using RAGENativeUI.PauseMenu;
+using RiskierTrafficStops.Engine.InternalSystems.Settings;
 using static RiskierTrafficStops.Engine.InternalSystems.Localization;
 
 namespace RiskierTrafficStops.Engine.FrontendSystems;
@@ -11,31 +12,31 @@ internal static class ConfigMenu
         SetChanceMenuItemDescription, 0, 100, 1);
 
     private static readonly UIMenuListScrollerItem<bool> GoasOutcomeEnabled =
-        new(GoasMenuItem, GoasMenuItemDescription, new[] { true, false });
+        new(GoasMenuItem, GoasMenuItemDescription, [true, false]);
 
     private static readonly UIMenuListScrollerItem<bool> YicOutcomeEnabled =
-        new(YicMenuItem, YicMenuItemDescription, new[] { true, false });
+        new(YicMenuItem, YicMenuItemDescription, [true, false]);
 
     private static readonly UIMenuListScrollerItem<bool> YellOutcomeEnabled =
-        new(YellMenuItem, YellMenuItemDescription, new[] { true, false });
+        new(YellMenuItem, YellMenuItemDescription, [true, false]);
 
     private static readonly UIMenuListScrollerItem<bool> RiyOutcomeEnabled =
-        new(RiyMenuItem, RiyMenuItemDescription, new[] { true, false });
+        new(RiyMenuItem, RiyMenuItemDescription, [true, false]);
 
     private static readonly UIMenuListScrollerItem<bool> FleeOutcomeEnabled =
-        new(FleeMenuItem, FleeMenuItemDescription, new[] { true, false });
+        new(FleeMenuItem, FleeMenuItemDescription, [true, false]);
 
     private static readonly UIMenuListScrollerItem<bool> RevOutcomeEnabled =
-        new(RevMenuItem, RevMenuItemDescription, new[] { true, false });
+        new(RevMenuItem, RevMenuItemDescription, [true, false]);
 
     private static readonly UIMenuListScrollerItem<bool> SafOutcomeEnabled =
-        new(SafMenuItem, SafMenuItemDescription, new[] { true, false });
+        new(SafMenuItem, SafMenuItemDescription, [true, false]);
 
     private static readonly UIMenuListScrollerItem<bool> SpitEnabled = new(SpitMenuItem, SpitMenuItemDescription,
-        new[] { true, false });
-
-    private static readonly UIMenuListScrollerItem<bool> HostageTakingEnabled =
-        new(HostageTakingMenuItem, HostageTakingMenuItemDescription, new[] { true, false });
+        [true, false]);
+    
+    private static readonly UIMenuListScrollerItem<bool> GoRoEnabled = new(GoRoMenuItem, GoRoMenuItemDescription,
+        [true, false]);
 
     private static readonly UIMenuItem SaveToIni = new(SaveToIniMenuItem, SaveToIniMenuItemDescription);
 
@@ -55,7 +56,7 @@ internal static class ConfigMenu
         Normal("Adding Items to Menu");
 
         MainMenu.AddItems(SetChance, SafOutcomeEnabled, GoasOutcomeEnabled, YicOutcomeEnabled, RiyOutcomeEnabled,
-            FleeOutcomeEnabled, RevOutcomeEnabled, YellOutcomeEnabled, SpitEnabled, HostageTakingEnabled, SaveToIni);
+            FleeOutcomeEnabled, RevOutcomeEnabled, YellOutcomeEnabled, SpitEnabled, GoRoEnabled, SaveToIni);
         SaveToIni.BackColor = Color.Green;
 
         MainMenu.OnItemSelect +=
@@ -74,52 +75,39 @@ internal static class ConfigMenu
     private static void SetupMenu()
     {
         Normal("Assigning Menu values to their respective INI Values...");
-        SetChance.Value = Chance;
-        YellOutcomeEnabled.SelectedItem = YellEnabled;
-        GoasOutcomeEnabled.SelectedItem = GetOutAndShootEnabled;
-        YicOutcomeEnabled.SelectedItem = YellInCarEnabled;
-        RiyOutcomeEnabled.SelectedItem = RamEnabled;
-        FleeOutcomeEnabled.SelectedItem = FleeEnabled;
-        RevOutcomeEnabled.SelectedItem = RevEnabled;
-        SafOutcomeEnabled.SelectedItem = ShootAndFleeEnabled;
-        SpitEnabled.SelectedItem = SpittingEnabled;
-        HostageTakingEnabled.SelectedItem = Settings.HostageTakingEnabled;
+        SetChance.Value = UserConfig.Chance;
+        YellOutcomeEnabled.SelectedItem = UserConfig.YellEnabled;
+        GoasOutcomeEnabled.SelectedItem = UserConfig.GetOutAndShootEnabled;
+        YicOutcomeEnabled.SelectedItem = UserConfig.YellInCarEnabled;
+        RiyOutcomeEnabled.SelectedItem = UserConfig.RamEnabled;
+        FleeOutcomeEnabled.SelectedItem = UserConfig.FleeEnabled;
+        RevOutcomeEnabled.SelectedItem = UserConfig.RevEnabled;
+        SafOutcomeEnabled.SelectedItem = UserConfig.ShootAndFleeEnabled;
+        SpitEnabled.SelectedItem = UserConfig.SpittingEnabled;
+        GoRoEnabled.SelectedItem = UserConfig.GetOutROEnabled;
         Normal("Assigned Values");
     }
 
     private static void AppendToIni()
     {
         Normal("Appending to INI...");
-        Inifile.Write("General_Settings", "Chance", SetChance.Value);
-        Inifile.Write("Outcome_Configuration", "Get Out And Shoot Outcome Enabled", GoasOutcomeEnabled.SelectedItem);
-        Inifile.Write("Outcome_Configuration", "Ramming Outcome Enabled", RiyOutcomeEnabled.SelectedItem);
-        Inifile.Write("Outcome_Configuration", "Flee Outcome Enabled", FleeOutcomeEnabled.SelectedItem);
-        Inifile.Write("Outcome_Configuration", "Revving Outcome Enabled", RevOutcomeEnabled.SelectedItem);
-        Inifile.Write("Outcome_Configuration", "Yelling Outcome Enabled", YellOutcomeEnabled.SelectedItem);
-        Inifile.Write("Outcome_Configuration", "Yelling In Car Outcome Enabled", YicOutcomeEnabled.SelectedItem);
-        Inifile.Write("Outcome_Configuration", "Shoot And Flee Outcome Enabled", SafOutcomeEnabled.SelectedItem);
-        Inifile.Write("Outcome_Configuration", "Spitting Outcome Enabled", SpitEnabled.SelectedItem);
-        Inifile.Write("Outcome_Configuration", "Hostage Taking Outcome Enabled", HostageTakingEnabled.SelectedItem);
+        Settings.IniReflector.WriteSingle("Chance", SetChance.Value);
+        Settings.IniReflector.WriteSingle("GetOutAndShootEnabled", GoasOutcomeEnabled.SelectedItem);
+        Settings.IniReflector.WriteSingle("RamEnabled", RiyOutcomeEnabled.SelectedItem);
+        Settings.IniReflector.WriteSingle("FleeEnabled", FleeOutcomeEnabled.SelectedItem);
+        Settings.IniReflector.WriteSingle("RevEnabled", RevOutcomeEnabled.SelectedItem);
+        Settings.IniReflector.WriteSingle("YellEnabled", YellOutcomeEnabled.SelectedItem);
+        Settings.IniReflector.WriteSingle("YellInCarEnabled", YicOutcomeEnabled.SelectedItem);
+        Settings.IniReflector.WriteSingle("ShootAndFleeEnabled", SafOutcomeEnabled.SelectedItem);
+        Settings.IniReflector.WriteSingle("SpittingEnabled", SpitEnabled.SelectedItem);
+        Settings.IniReflector.WriteSingle("GetOutROEnabled", GoRoEnabled.SelectedItem);
         Normal("Finished Appending to INI");
 
         Normal("Reading new Values...");
-        Chance = Inifile.ReadInt32("General_Settings", "Chance", 15);
-        GetOutAndShootEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Get Out And Shoot Outcome Enabled",
-            GetOutAndShootEnabled);
-        RamEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Ramming Outcome Enabled", RamEnabled);
-        FleeEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Flee Outcome Enabled", FleeEnabled);
-        RevEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Revving Outcome Enabled", RevEnabled);
-        YellEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Yelling Outcome Enabled", YellEnabled);
-        YellInCarEnabled =
-            Inifile.ReadBoolean("Outcome_Configuration", "Yelling In Car Outcome Enabled", YellInCarEnabled);
-        ShootAndFleeEnabled =
-            Inifile.ReadBoolean("Outcome_Configuration", "Shoot And Flee Outcome Enabled", ShootAndFleeEnabled);
-        SpittingEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Spitting Outcome Enabled", SpittingEnabled);
-        Settings.HostageTakingEnabled = Inifile.ReadBoolean("Outcome_Configuration", "Hostage Taking Outcome Enabled",
-            Settings.HostageTakingEnabled);
+        Settings.IniReflector.Read(UserConfig, true);
         Normal("Finished reading new values");
 
-        Normal("----INI Values---");
+        /*Normal("----INI Values---");
         Normal($"Chance: {Chance}");
         Normal($"Get Out And Shoot Outcome Enabled: {GetOutAndShootEnabled}");
         Normal($"Ramming Outcome Enabled: {RamEnabled}");
@@ -129,8 +117,7 @@ internal static class ConfigMenu
         Normal($"Yelling in Car Outcome Enabled: {YellInCarEnabled}");
         Normal($"Shoot And Flee Outcome Enabled: {ShootAndFleeEnabled}");
         Normal($"Spitting Outcome Enabled: {SpittingEnabled}");
-        Normal($"Hostage Taking Enabled: {Settings.HostageTakingEnabled}");
-        Normal("----INI Values---");
+        Normal("----INI Values---");*/
 
         Normal("Reloading Enabled events...");
         FilterOutcomes();

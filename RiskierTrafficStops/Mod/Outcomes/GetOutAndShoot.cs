@@ -1,10 +1,8 @@
 ﻿using static RiskierTrafficStops.Engine.Helpers.Extensions.PedExtensions;
 
-// ReSharper disable HeapView.BoxingAllocation
-
 namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal class GetOutAndShoot : Outcome, IUpdateable
+internal sealed class GetOutAndShoot : Outcome, IProccessing
 {
     private static GetOutAndShootOutcomes _chosenOutcome;
 
@@ -18,11 +16,9 @@ internal class GetOutAndShoot : Outcome, IUpdateable
     {
         try
         {
-            if (MeetsRequirements(TrafficStopLHandle))
-            {
-                SuspectRelateGroup = new RelationshipGroup("RTSGetOutAndShootSuspects");
-                GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
-            }
+            if (!MeetsRequirements(TrafficStopLHandle)) return;
+            SuspectRelateGroup = new RelationshipGroup("RTSGetOutAndShootSuspects");
+            GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
         }
         catch (Exception e)
         {
@@ -32,7 +28,7 @@ internal class GetOutAndShoot : Outcome, IUpdateable
         }
     }
 
-    internal virtual void StartOutcome()
+    private void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));
@@ -85,6 +81,7 @@ internal class GetOutAndShoot : Outcome, IUpdateable
 
     private static void GetPedOutOfVehicle(Ped ped)
     {
+        if (!ped.IsAvailable()) return;
         ped.RelationshipGroup = SuspectRelateGroup;
         if (ped.IsInVehicle(ped.LastVehicle, false) && ped.LastVehicle.IsAvailable())
         {

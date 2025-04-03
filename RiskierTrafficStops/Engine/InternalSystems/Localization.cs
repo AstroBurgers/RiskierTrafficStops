@@ -17,7 +17,7 @@ public static class Localization
     public static string RevMenuItem { get; private set; }
     public static string SafMenuItem { get; private set; }
     public static string SpitMenuItem { get; private set; }
-    public static string HostageTakingMenuItem { get; private set; }
+    public static string GoRoMenuItem { get; private set; }
     public static string SaveToIniMenuItem { get; private set; }
 
     public static string MenuDesc { get; private set; }
@@ -30,7 +30,7 @@ public static class Localization
     public static string RevMenuItemDescription { get; private set; }
     public static string SafMenuItemDescription { get; private set; }
     public static string SpitMenuItemDescription { get; private set; }
-    public static string HostageTakingMenuItemDescription { get; private set; }
+    public static string GoRoMenuItemDescription { get; private set; }
     public static string SaveToIniMenuItemDescription { get; private set; }
 
     public static string YellingNotiText { get; private set; }
@@ -51,10 +51,10 @@ public static class Localization
     
     internal static void ReadJson()
     {
-        using (StreamReader sr = new StreamReader(@"plugins\LSPDFR\RiskierTrafficStops\Localization.json"))
+        using (var sr = new StreamReader(@"plugins\LSPDFR\RiskierTrafficStops\Localization.json"))
         {
-            string json = sr.ReadToEnd();
-            JSONStruct data = JsonConvert.DeserializeObject<JSONStruct>(json);
+            var json = sr.ReadToEnd();
+            var data = JsonConvert.DeserializeObject<JSONStruct>(json);
 
             MenuTitle = data.MenuTitle;
             SetChanceMenuItem = data.SetChanceMenuItem;
@@ -66,7 +66,7 @@ public static class Localization
             RevMenuItem = data.RevMenuItem;
             SafMenuItem = data.SafMenuItem;
             SpitMenuItem = data.SpitMenuItem;
-            HostageTakingMenuItem = data.HostageTakingMenuItem;
+            GoRoMenuItem = data.GoRoMenuItem;
             SaveToIniMenuItem = data.SaveToIniMenuItem;
 
             MenuDesc = data.MenuDesc;
@@ -79,7 +79,7 @@ public static class Localization
             RevMenuItemDescription = data.RevMenuItemDescription;
             SafMenuItemDescription = data.SafMenuItemDescription;
             SpitMenuItemDescription = data.SpitMenuItemDescription;
-            HostageTakingMenuItemDescription = data.HostageTakingMenuItemDescription;
+            GoRoMenuItemDescription = data.GoRoMenuItemDescription;
             SaveToIniMenuItemDescription = data.SaveToIniMenuItemDescription;
             YellingNotiText = data.YellingNotiText;
         }
@@ -94,7 +94,6 @@ public static class Localization
         Normal($"RevMenuItem: {RevMenuItem}");
         Normal($"SafMenuItem: {SafMenuItem}");
         Normal($"SpitMenuItem: {SpitMenuItem}");
-        Normal($"HostageTakingMenuItem: {HostageTakingMenuItem}");
         Normal($"SaveToIniMenuItem: {SaveToIniMenuItem}");
 
         Normal($"MenuDesc: {MenuDesc}");
@@ -107,7 +106,6 @@ public static class Localization
         Normal($"RevMenuItemDescription: {RevMenuItemDescription}");
         Normal($"SafMenuItemDescription: {SafMenuItemDescription}");
         Normal($"SpitMenuItemDescription: {SpitMenuItemDescription}");
-        Normal($"HostageTakingMenuItemDescription: {HostageTakingMenuItemDescription}");
         Normal($"SaveToIniMenuItemDescription: {SaveToIniMenuItemDescription}");
         Normal($"YellingNotiText: {YellingNotiText}");
     }
@@ -127,7 +125,7 @@ public sealed class JSONStruct
     public string RevMenuItem { get; set; }
     public string SafMenuItem { get; set; }
     public string SpitMenuItem { get; set; }
-    public string HostageTakingMenuItem { get; set; }
+    public string GoRoMenuItem { get; set; }
     public string SaveToIniMenuItem { get; set; }
 
     #endregion
@@ -144,7 +142,7 @@ public sealed class JSONStruct
     public string RevMenuItemDescription { get; set; }
     public string SafMenuItemDescription { get; set; }
     public string SpitMenuItemDescription { get; set; }
-    public string HostageTakingMenuItemDescription { get; set; }
+    public string GoRoMenuItemDescription { get; set; }
     public string SaveToIniMenuItemDescription { get; set; }
 
     #endregion

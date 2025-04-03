@@ -25,6 +25,7 @@ internal static class PedExtensions
 
     /// <summary>
     /// Handles all relationship group changes
+    /// Makes passed in relationship group hate the main player and cop relationship groups
     /// </summary>
     /// <param name="suspectRelationshipGroup"></param>
     internal static void SetRelationshipGroups(RelationshipGroup suspectRelationshipGroup)

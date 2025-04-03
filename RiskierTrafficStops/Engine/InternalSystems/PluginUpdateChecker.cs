@@ -44,10 +44,13 @@ internal class PluginUpdateChecker
 
     internal PluginUpdateChecker(Assembly assembly)
     {
-        if (!Uri.TryCreate("https://www.lcpdfr.com/applications/downloadsng/interface/api.php?do=checkForUpdates&fileId=44036&textOnly=1", UriKind.Absolute, out _apiUrl))
+        if (!Uri.TryCreate(
+                "https://www.lcpdfr.com/applications/downloadsng/interface/api.php?do=checkForUpdates&fileId=44036&textOnly=1",
+                UriKind.Absolute, out _apiUrl))
         {
             throw new UriFormatException(nameof(_apiUrl));
         }
+
         _assembly = assembly;
 
         _currentVersion = _latestVersion = _assembly.GetName().Version;
@@ -66,7 +69,8 @@ internal class PluginUpdateChecker
 
         GameFiber.WaitUntil(() => _asyncUpdateTask.IsCompleted);
 
-        OnCompleted?.Invoke(this, new UpdateCompletedEventArgs(_failure, _latestVersion > _currentVersion, _latestVersion));
+        OnCompleted?.Invoke(this,
+            new UpdateCompletedEventArgs(_failure, _latestVersion > _currentVersion, _latestVersion));
     }
 
     internal async TTask CheckForUpdatesAsync(CancellationToken cts)
@@ -115,7 +119,8 @@ internal class PluginUpdateChecker
                                                | SecurityProtocolType.Ssl3;
     }
 
-    private static async Task<string> GetStringWithTimeoutAsync(HttpClient client, Uri requestUri, CancellationToken cancellationToken)
+    private static async Task<string> GetStringWithTimeoutAsync(HttpClient client, Uri requestUri,
+        CancellationToken cancellationToken)
     {
         using (var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
         {

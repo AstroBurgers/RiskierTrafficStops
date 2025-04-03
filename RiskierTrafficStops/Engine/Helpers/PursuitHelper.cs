@@ -15,20 +15,25 @@ internal static class PursuitHelper
         {
             Functions.ForceEndCurrentPullover();
         }
+
         var pursuitLHandle = Functions.CreatePursuit();
 
         Functions.SetPursuitIsActiveForPlayer(pursuitLHandle, true);
 
         for (var i = suspects.Length - 1; i >= 0; i--)
         {
-            if (!suspects[i].Exists()) { continue; }
+            if (!suspects[i].Exists())
+            {
+                continue;
+            }
+
             Functions.AddPedToPursuit(pursuitLHandle, suspects[i]);
             RandomizePursuitAttributes(suspects[i]);
         }
 
         return pursuitLHandle;
     }
-    
+
     /// <summary>
     /// Same as SetupPursuit but with a suspect list
     /// </summary>
@@ -41,6 +46,7 @@ internal static class PursuitHelper
         {
             Functions.ForceEndCurrentPullover();
         }
+
         var pursuitLHandle = Functions.CreatePursuit();
 
         Functions.SetPursuitIsActiveForPlayer(pursuitLHandle, true);
@@ -52,14 +58,17 @@ internal static class PursuitHelper
             Functions.AddPedToPursuit(pursuitLHandle, suspectList[i]);
             RandomizePursuitAttributes(suspectList[i]);
         }
+
         return pursuitLHandle;
     }
+
     internal static LHandle SetupPursuitWithList(bool isSuspectsPulledOver, Ped[] suspectList)
     {
         if (isSuspectsPulledOver)
         {
             Functions.ForceEndCurrentPullover();
         }
+
         var pursuitLHandle = Functions.CreatePursuit();
 
         Functions.SetPursuitIsActiveForPlayer(pursuitLHandle, true);
@@ -71,17 +80,18 @@ internal static class PursuitHelper
             Functions.AddPedToPursuit(pursuitLHandle, suspectList[i]);
             RandomizePursuitAttributes(suspectList[i]);
         }
+
         return pursuitLHandle;
     }
-    
-    internal static void RandomizePursuitAttributes(Ped suspect)
+
+    private static void RandomizePursuitAttributes(Ped suspect)
     {
         try
         {
             static float GenerateRandomFloat() => (float)Math.Round((float)(Rndm.NextDouble() * (2.0 - 0.1) + 0.1), 1);
-                
+
             var attributes = Functions.GetPedPursuitAttributes(suspect);
-                
+
             attributes.MinDrivingSpeed = MphToMps(Rndm.Next(35, 60));
             attributes.MaxDrivingSpeed = MphToMps(Rndm.Next(61, 201));
 
@@ -100,28 +110,28 @@ internal static class PursuitHelper
 
             attributes.AverageBurstTireSurrenderTime = Rndm.Next(700, 2000);
             attributes.AverageSurrenderTime = Rndm.Next(1000, 3000);
-                
+
             attributes.AverageFightTime = Rndm.Next(400, 2000);
-                
+
             Normal($"MaxDrivingSpeed: {attributes.MaxDrivingSpeed}");
             Normal($"MinDrivingSpeed: {attributes.MinDrivingSpeed}");
-                
+
             Normal($"HandlingAbility: {attributes.HandlingAbility}");
             Normal($"HandlingAbilityTurns: {attributes.HandlingAbilityTurns}");
-                
+
             Normal($"BurstTireSurrenderMult: {attributes.BurstTireSurrenderMult}");
             Normal($"SurrenderChanceTireBurst: {attributes.SurrenderChanceTireBurst}");
             Normal($"SurrenderChanceTireBurstAndCrashed: {attributes.SurrenderChanceTireBurstAndCrashed}");
-                
+
             Normal($"SurrenderChanceCarBadlyDamaged: {attributes.SurrenderChanceCarBadlyDamaged}");
-                
+
             Normal($"SurrenderChancePitted: {attributes.SurrenderChancePitted}");
             Normal($"SurrenderChancePittedAndCrashed: {attributes.SurrenderChancePittedAndCrashed}");
             Normal($"SurrenderChancePittedAndSlowedDown: {attributes.SurrenderChancePittedAndSlowedDown}");
-                
+
             Normal($"AverageBurstTireSurrenderTime: {attributes.AverageBurstTireSurrenderTime}");
             Normal($"AverageSurrenderTime: {attributes.AverageSurrenderTime}");
-                
+
             Normal($"AverageFightTime: {attributes.AverageFightTime}");
         }
         catch (Exception e)

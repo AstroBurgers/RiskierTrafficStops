@@ -1,15 +1,13 @@
 ﻿namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal class Revving : Outcome, IUpdateable
+internal sealed class Revving : Outcome, IProccessing
 {
     public Revving(LHandle handle) : base(handle)
     {
         try
         {
-            if (MeetsRequirements(TrafficStopLHandle))
-            {
-                GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
-            }
+            if (!MeetsRequirements(TrafficStopLHandle)) return;
+            GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
         }
         catch (Exception e)
         {
@@ -19,7 +17,7 @@ internal class Revving : Outcome, IUpdateable
         }
     }
 
-    internal virtual void StartOutcome()
+    private void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));
@@ -37,7 +35,7 @@ internal class Revving : Outcome, IUpdateable
         
         RemoveIgnoredPedsAndBlockEvents(ref pedsInVehicle);
         
-        Suspect.RevEngine(SuspectVehicle, new []{2,4}, new []{2,4}, 2);
+        Suspect.RevEngine(SuspectVehicle, [2,4], [2,4], 2);
 
         var chance = GenerateChance();
         switch (chance)

@@ -3,7 +3,7 @@ using static RiskierTrafficStops.Engine.InternalSystems.Localization;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 
-internal class Yelling : Outcome, IUpdateable
+internal sealed class Yelling : Outcome, IProccessing
 {
     private static readonly YellingScenarioOutcomes[] AllYellingOutcomes =
         (YellingScenarioOutcomes[])Enum.GetValues(typeof(YellingScenarioOutcomes));
@@ -12,11 +12,9 @@ internal class Yelling : Outcome, IUpdateable
     {
         try
         {
-            if (MeetsRequirements(TrafficStopLHandle))
-            {
-                SuspectRelateGroup = new RelationshipGroup("RTSYellingSuspects");
-                GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
-            }
+            if (!MeetsRequirements(TrafficStopLHandle)) return;
+            SuspectRelateGroup = new RelationshipGroup("RTSYellingSuspects");
+            GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
         }
         catch (Exception e)
         {
@@ -35,7 +33,7 @@ internal class Yelling : Outcome, IUpdateable
 
     private static YellingScenarioOutcomes _chosenOutcome;
 
-    internal virtual void StartOutcome()
+    private void StartOutcome()
     {
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));
@@ -101,12 +99,12 @@ internal class Yelling : Outcome, IUpdateable
     private static void KeyPressed()
     {
         Game.DisplayHelp(
-            $"~BLIP_INFO_ICON~ Press ~{GetBackInKey.GetInstructionalId()}~ {YellingNotiText}",
+            $"~BLIP_INFO_ICON~ Press ~{UserConfig.GetBackInKey.GetInstructionalId()}~ {YellingNotiText}",
             10000);
         while (SuspectVehicle.IsAvailable() && !Suspect.IsInAnyVehicle(false))
         {
             GameFiber.Yield();
-            if (Game.IsKeyDown(GetBackInKey))
+            if (Game.IsKeyDown(UserConfig.GetBackInKey))
             {
                 Suspect.Tasks.EnterVehicle(SuspectVehicle, -1).WaitForCompletion();
                 break;
@@ -121,7 +119,7 @@ internal class Yelling : Outcome, IUpdateable
         SetRelationshipGroups(SuspectRelateGroup);
         Suspect.RelationshipGroup = SuspectRelateGroup;
 
-        Normal("Giving Suspect FightAgainstClosestHatedTarget Task");
+        Normal("Giving Suspect FighAgainst Task");
         Suspect.Tasks.FightAgainst(MainPlayer, -1);
     }
 
