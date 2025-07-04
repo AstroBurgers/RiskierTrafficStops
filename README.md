@@ -1,4 +1,5 @@
-# RiskierTrafficStops [![wakatime](https://wakatime.com/badge/github/AstroBurgers/RiskierTrafficStops.svg)](https://wakatime.com/badge/github/AstroBurgers/RiskierTrafficStops)
+# RiskierTrafficStops [![wakatime](https://wakatime.com/badge/github/AstroBurgers/RiskierTrafficStops.svg)](https://wakatime.com/badge/github/AstroBurgers/RiskierTrafficStops) ![LOC](https://img.shields.io/badge/Lines%20of%20Code-2.5k+-blue)
+
 
 A LSPDFR plugin that adds randomized risk and tension to traffic stops by injecting unique suspect behaviors—ranging from verbal confrontation to outright violence.
 
