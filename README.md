@@ -25,3 +25,10 @@ A LSPDFR Plugin to make traffic stops more interesting
     - Invoked every time the active RTS Outcome is ended
 
   *if you feel anything is missing from the documentation, please contact me!*
+
+## 🛠️ Built With
+- 🧠 C#
+- ⚙️ .NET Framework
+- 🎮 RAGEPluginHook
+- 🚔 LSPD:FR
+- 💖 A smidgen of love
