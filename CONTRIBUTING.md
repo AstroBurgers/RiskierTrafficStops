@@ -31,4 +31,4 @@ We welcome pull requests, suggestions, and bug reports! Here’s how to get star
 
 ## 📜 License
 
-By contributing, you agree to follow the terms in [LICENSE](../LICENSE).
+By contributing, you agree to follow the terms in [LICENSE](./LICENSE).
