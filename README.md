@@ -1,27 +1,50 @@
-# RiskierTrafficStops [![wakatime](https://wakatime.com/badge/user/018e10f6-d034-48ad-85ad-4fe3ce2c16bc/project/018e10f8-4966-406b-9897-2889acbf6bf1.svg)](https://wakatime.com/badge/user/018e10f6-d034-48ad-85ad-4fe3ce2c16bc/project/018e10f8-4966-406b-9897-2889acbf6bf1)
-A LSPDFR Plugin to make traffic stops more interesting
+# RiskierTrafficStops [![wakatime](https://wakatime.com/badge/github/AstroBurgers/RiskierTrafficStops.svg)](https://wakatime.com/badge/github/AstroBurgers/RiskierTrafficStops) ![LOC](https://img.shields.io/badge/Lines%20of%20Code-2.5k+-blue)
 
-## Contributing Information
-  - If you want to contribute or use my code please read the license, thanks!
-  - If you need help contributing, such as adding new outcomes, don't be afraid to send me a message on discord: astro.1181
 
-## API Documentation for developers
-- DisableRTSForCurrentStop
-  - Public get/set
-  - Disables RTS From interacting with the next/current pullover
-  - Reset after every pullover
+A LSPDFR plugin that adds randomized risk and tension to traffic stops by injecting unique suspect behaviors—ranging from verbal confrontation to outright violence.
 
-- DisableRTSForPeds
-  - Params:
-    - `params Ped[] peds` - Peds to have RTS not interact with
-  - All invalid peds are cleared from the list every 10 actively playing minutes
-  - If a ped is still valid it is not removed from the list on each pass
-  - If one of the supplied peds is the driver, the outcome is ended immediately 
+## 🔧 Features
 
-- Events
-  - OnRTSOutcomeStarted
-    - Invoked every time a RTS Outcome is started
-  - OnRTSOutcomeEnded
-    - Invoked every time the active RTS Outcome is ended
+- Randomized traffic stop outcomes to keep encounters unpredictable
+- Configurable via `.ini` and fully localizable via `.json`
+- Developer-friendly API and public event hooks
+- Supports sub-outcomes and mod extensibility
 
-  *if you feel anything is missing from the documentation, please contact me!*
+---
+
+## Current Outcomes
+
+- **Get Out and Shoot** – The suspect(s) exit and open fire on you and other officers.
+- **Flee** – The suspect(s) flee either in their vehicle or on foot.
+- **Yell** – The suspect exits the vehicle and verbally confronts you (3 sub-outcomes).
+- **Ramming** – The suspect reverses into your patrol vehicle before fleeing.
+- **Shoot and Flee** – The suspect fires from inside the vehicle, then flees.
+- **Spit** – The suspect spits at you from inside their vehicle.
+- **Get Out RO (Random Outcome)** – The suspect exits and reaches for something:
+  - They may pull a **gun**, a **knife**, or just a **phone**.
+  - Gun/knife outcomes each include 2–3 random behavioral variants.
+
+---
+
+## 🛠️ Built With
+
+- C#
+- .NET Framework
+- RAGEPluginHook
+- LSPD:FR
+- A smidgen of love
+
+---
+
+## 📚 Docs
+
+- [API Reference](./docs/API.md)
+- [How to Contribute](./CONTRIBUTING.md)
+- [Architecture Overview](./docs/Architecture.md)
+
+---
+
+## 📬 Need Help?
+
+Want to contribute, request features, or need guidance?  
+- Join the discussion or message me on Discord: `astro.1181`
