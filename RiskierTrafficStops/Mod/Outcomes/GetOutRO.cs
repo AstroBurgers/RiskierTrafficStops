@@ -1,6 +1,7 @@
 ﻿using RiskierTrafficStops.Engine.Data;
 using RiskierTrafficStops.Engine.Helpers;
 using static RiskierTrafficStops.Engine.Helpers.Extensions.PedExtensions;
+using Localization = RiskierTrafficStops.Engine.InternalSystems.Localization;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 
@@ -104,6 +105,8 @@ internal sealed class GetOutRo : Outcome, IProccessing
         // Start recording
         driver.PlayAmbientSpeech(VoiceLines.PickRandom());
         NativeFunction.Natives.x142A02425FF02BD9(driver, "world_human_mobile_film_shocking", 0, true);
+        GameFiber.Wait(1500);
+        GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(KeyPressed));
     }
 
     private static void KnifeOutcome(List<Ped> pedsInVehicle)
@@ -157,6 +160,21 @@ internal sealed class GetOutRo : Outcome, IProccessing
             ped.Inventory.GiveNewWeapon(MeleeWeapons.PickRandom(), -1, true);
             
             ped.Tasks.FightAgainst(MainPlayer, -1);
+        }
+    }
+    
+    private static void KeyPressed()
+    {
+        Game.DisplayHelp(
+            $"~BLIP_INFO_ICON~ Press ~{UserConfig.GetBackInKey.GetInstructionalId()}~ {Localization.YellingNotiText}",
+            10000);
+        while (SuspectVehicle.IsAvailable() && !Suspect.IsInAnyVehicle(false))
+        {
+            GameFiber.Yield();
+            if (!Game.IsKeyDown(UserConfig.GetBackInKey)) continue;
+            Suspect.Tasks.Clear();
+            Suspect.Tasks.EnterVehicle(SuspectVehicle, -1).WaitForCompletion();
+            break;
         }
     }
     
