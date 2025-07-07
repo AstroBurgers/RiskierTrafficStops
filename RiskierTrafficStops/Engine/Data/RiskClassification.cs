@@ -2,7 +2,6 @@
 using CommonDataFramework.Modules.PedDatabase;
 using CommonDataFramework.Modules.VehicleDatabase;
 using LSPD_First_Response.Engine.Scripting.Entities;
-using RiskierTrafficStops.Engine.Helpers;
 using RiskierTrafficStops.Mod.Outcomes;
 
 namespace RiskierTrafficStops.Engine.Data;

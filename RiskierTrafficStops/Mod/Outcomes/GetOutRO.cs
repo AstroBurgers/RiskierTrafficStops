@@ -1,6 +1,4 @@
-﻿using RiskierTrafficStops.Engine.Data;
-using RiskierTrafficStops.Engine.Helpers;
-using static RiskierTrafficStops.Engine.Helpers.Extensions.PedExtensions;
+﻿using static RiskierTrafficStops.Engine.Helpers.Extensions.PedExtensions;
 using Localization = RiskierTrafficStops.Engine.InternalSystems.Localization;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
@@ -21,8 +19,6 @@ internal sealed class GetOutRo : Outcome, IProccessing
         Flee
     }
     
-    private static GoRoOutcomes _chosenOutcome;
-
     private static GoRoOutcomes[] _allGoRoOutcomes =
         (GoRoOutcomes[])Enum.GetValues(typeof(GoRoOutcomes));
 
@@ -207,7 +203,7 @@ internal sealed class GetOutRo : Outcome, IProccessing
 
         return;
 
-        void GetPedOutOfVehicle(Ped ped, GunOutcomes outcome)
+        void GetPedOutOfVehicle(Ped ped, GunOutcomes gunOutcomes)
         {
             if (!ped.IsAvailable())
             {
@@ -232,7 +228,7 @@ internal sealed class GetOutRo : Outcome, IProccessing
             // give weapon
             ped.GivePistol();
             
-            switch (outcome)
+            switch (gunOutcomes)
             {
                 case GunOutcomes.ShootAtPlayer:
                     ped.Tasks.FightAgainst(MainPlayer);
@@ -245,7 +241,7 @@ internal sealed class GetOutRo : Outcome, IProccessing
                     ped.Tasks.FightAgainstClosestHatedTarget(100f, -1);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(outcome), outcome, null);
+                    throw new ArgumentOutOfRangeException(nameof(gunOutcomes), gunOutcomes, null);
             }
         }
     }

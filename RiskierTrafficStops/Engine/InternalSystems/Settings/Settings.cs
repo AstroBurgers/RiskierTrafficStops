@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
-using RiskierTrafficStops.Engine.Helpers;
 using RiskierTrafficStops.Mod.Outcomes;
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
 
 namespace RiskierTrafficStops.Engine.InternalSystems.Settings;
 

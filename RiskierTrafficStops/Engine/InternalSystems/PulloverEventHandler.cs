@@ -1,7 +1,5 @@
 ﻿using RiskierTrafficStops.API.ExternalAPIs;
-using RiskierTrafficStops.Engine.InternalSystems.Settings;
-using RiskierTrafficStops.Mod.Outcomes;
-using static RiskierTrafficStops.Engine.Helpers.OutcomeChooser;
+using static RiskierTrafficStops.Engine.InternalSystems.OutcomeChooser;
 
 namespace RiskierTrafficStops.Engine.InternalSystems;
 

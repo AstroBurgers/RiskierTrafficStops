@@ -4,7 +4,7 @@ using RiskierTrafficStops.Engine.Data;
 using RiskierTrafficStops.Engine.InternalSystems.Settings;
 using RiskierTrafficStops.Mod.Outcomes;
 
-namespace RiskierTrafficStops.Engine.Helpers;
+namespace RiskierTrafficStops.Engine.InternalSystems;
 
 internal static class OutcomeChooser
 {

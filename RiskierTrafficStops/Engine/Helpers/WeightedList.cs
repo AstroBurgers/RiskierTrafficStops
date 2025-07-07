@@ -128,6 +128,7 @@ internal class WeightedList<T> : IEnumerable<T>
         return clone;
     }
 
+    // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
     public void Contains(T item) => _list.Contains(item);
 
     public int IndexOf(T item) => _list.IndexOf(item);
@@ -205,7 +206,7 @@ internal class WeightedList<T> : IEnumerable<T>
     private readonly List<int> _alias = [];
     private readonly Random _rand;
     private int _totalWeight;
-    private bool _areAllProbabilitiesIdentical = false;
+    private bool _areAllProbabilitiesIdentical;
     private int _minWeight;
     private int _maxWeight;
 
