@@ -21,9 +21,9 @@ internal class IniReflector
     private readonly Type _iniModel;
     private readonly string _path;
     
-    private readonly List<IniReflectorSection> _sections = new();
-    private readonly List<Tuple<PropertyInfo, IniReflectorValue>> _validProperties = new();
-    private readonly List<Tuple<FieldInfo, IniReflectorValue>> _validFields = new();
+    private readonly List<IniReflectorSection> _sections = [];
+    private readonly List<Tuple<PropertyInfo, IniReflectorValue>> _validProperties = [];
+    private readonly List<Tuple<FieldInfo, IniReflectorValue>> _validFields = [];
     private readonly Dictionary<string, object> _defaultValues = new();
     private InitializationFile _iniFile;
     private bool _hasReadBefore;

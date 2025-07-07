@@ -3,7 +3,7 @@
 // Thanks for the help making this better Khori
 internal static class GameFiberHandling
 {
-    internal static readonly HashSet<GameFiber> OutcomeGameFibers = new();
+    internal static readonly HashSet<GameFiber> OutcomeGameFibers = [];
 
     internal static void CleanupFibers()
     {

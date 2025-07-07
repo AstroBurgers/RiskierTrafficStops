@@ -1,4 +1,7 @@
-﻿using RiskierTrafficStops.Engine.InternalSystems.Settings;
+﻿using CommonDataFramework.Modules.PedDatabase;
+using CommonDataFramework.Modules.VehicleDatabase;
+using RiskierTrafficStops.Engine.Data;
+using RiskierTrafficStops.Engine.InternalSystems.Settings;
 using RiskierTrafficStops.Mod.Outcomes;
 
 namespace RiskierTrafficStops.Engine.Helpers;
@@ -13,7 +16,7 @@ internal static class OutcomeChooser
     private static Type _lastOutcome;
 
     private static long _currentChance = UserConfig.Chance;
-    
+
     /// <summary>
     /// Chooses an outcome from the enabled outcomes
     /// </summary>
@@ -26,9 +29,23 @@ internal static class OutcomeChooser
             Normal($"DisableRTSForCurrentStop: {DisableRTSForCurrentStop}");
             Normal("Choosing Outcome");
 
+            if (UserConfig.ChanceSetting == ChancesSettingEnum.ESuspectBased)
+            {
+                var suspectData = Functions.GetPulloverSuspect(handle).GetPedData();
+                var vehicleData = Functions.GetPulloverSuspect(handle).LastVehicle.GetVehicleData();
+                var profile = new SuspectRiskProfile();
+                profile.Evaluate(suspectData, vehicleData);
+
+                var classification = profile.WeightedClassification(new Random());
+                _chosenOutcome =
+                    SuspectRiskProfile.PickWeightedOutcome(classification, Rndm);
+
+            }
+            
             var filteredOutcomes = EnabledOutcomes
                 .Where(o => !onPulloverStarted ||
-                            o != typeof(GetOutAndShoot) && o != typeof(Yelling) && o != typeof(GetOutRo) && o != typeof(Spitting))
+                            o != typeof(GetOutAndShoot) && o != typeof(Yelling) && o != typeof(GetOutRo) &&
+                            o != typeof(Spitting))
                 .ToList();
 
             switch (filteredOutcomes.Count)
@@ -56,7 +73,7 @@ internal static class OutcomeChooser
             {
                 _currentChance = UserConfig.Chance;
             }
-            
+
             Activator.CreateInstance(_chosenOutcome, args: handle);
         }
         else
@@ -83,7 +100,7 @@ internal static class OutcomeChooser
                 Normal("Chance: " + convertedChance);
                 return convertedChance < UserConfig.Chance;
 
-            case ChancesSettingEnum.ERandomChance:
+            case ChancesSettingEnum.ESuspectBased:
                 convertedChance = GenerateChance();
                 Normal("Chance: " + convertedChance);
                 return convertedChance < GenerateChance();

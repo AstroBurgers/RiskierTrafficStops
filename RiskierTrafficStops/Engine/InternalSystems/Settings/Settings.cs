@@ -7,7 +7,7 @@ namespace RiskierTrafficStops.Engine.InternalSystems.Settings;
 internal enum ChancesSettingEnum
 {
     EStaticChance,
-    ERandomChance,
+    ESuspectBased,
     ECompoundingChance
 }
 
@@ -16,7 +16,7 @@ internal static class Settings
     internal static readonly Config UserConfig = new();
     internal static IniReflector<Config> IniReflector = new ("plugins/LSPDFR/RiskierTrafficStops.ini");
     
-    private static readonly List<(bool enabled, Type outcome)> AllOutcomes = new();
+    private static readonly List<(bool enabled, Type outcome)> AllOutcomes = [];
     
     internal static void IniFileSetup()
     {

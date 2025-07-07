@@ -196,13 +196,13 @@ internal class WeightedList<T> : IEnumerable<T>
     }
 
     private List<T>
-        _list = new(); // 06.01.2024 by MarcelWRLD: removed 'readonly' modifier to allow cloning a weighted list
+        _list = []; // 06.01.2024 by MarcelWRLD: removed 'readonly' modifier to allow cloning a weighted list
 
     private List<int>
-        _weights = new(); // 06.01.2024 by MarcelWRLD: removed 'readonly' modifier to allow cloning a weighted list
+        _weights = []; // 06.01.2024 by MarcelWRLD: removed 'readonly' modifier to allow cloning a weighted list
 
-    private readonly List<int> _probabilities = new();
-    private readonly List<int> _alias = new();
+    private readonly List<int> _probabilities = [];
+    private readonly List<int> _alias = [];
     private readonly Random _rand;
     private int _totalWeight;
     private bool _areAllProbabilitiesIdentical = false;

@@ -73,6 +73,7 @@
     <Compile Include="API\APIs.cs" />
     <Compile Include="API\ExternalAPIs\IAEFunctions.cs" />
     <Compile Include="Engine\Data\Arrays.cs" />
+    <Compile Include="Engine\Data\RiskClassification.cs" />
     <Compile Include="Engine\FrontendSystems\ConfigMenu.cs" />
     <Compile Include="Engine\FrontendSystems\ConsoleCommands.cs" />
     <Compile Include="Engine\Helpers\BinaryDecisionTree.cs" />

@@ -11,7 +11,7 @@ internal abstract class Outcome
     internal static LHandle TrafficStopLHandle;
     internal static Outcome ActiveOutcome;
 
-    internal static readonly List<Ped> PedsToIgnore = new();
+    internal static readonly List<Ped> PedsToIgnore = [];
 
     internal static void RemoveIgnoredPedsAndBlockEvents(ref List<Ped> peds)
     {
