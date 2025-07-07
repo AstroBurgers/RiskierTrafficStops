@@ -94,14 +94,15 @@ internal static class OutcomeChooser
         if (EnabledOutcomes.Count == 0) return false;
 
         var convertedChance = GenerateChance();
-        Normal("Chance: " + convertedChance);
 
         switch (UserConfig.ChanceSetting)
         {
             case ChancesSettingEnum.EStaticChance:
+                Normal("Chance: " + convertedChance);
                 return convertedChance < UserConfig.Chance;
 
             case ChancesSettingEnum.ECompoundingChance:
+                Normal("Chance: " + convertedChance);
                 return convertedChance < _currentChance;
 
             case ChancesSettingEnum.ESuspectBased:
@@ -124,8 +125,10 @@ internal static class OutcomeChooser
                 // Normalize to 0–100 range for fair comparison with GenerateChance()
                 // Example: If totalScore is 100, full 100% chance
                 long suspectChance = Math.Min(totalScore, 100);
-                Normal($"Suspect-Based Total Score: {totalScore} → Chance: {suspectChance}");
-
+                Normal($"Suspect-Based Total Chance: {totalScore}");
+                Normal("Normal Chance: " + convertedChance);
+                Normal($"Should Event Happen: {convertedChance < suspectChance}");
+                
                 return convertedChance < suspectChance;
             }
 
