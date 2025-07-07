@@ -1,4 +1,6 @@
-﻿namespace RiskierTrafficStops.Mod;
+﻿using Debug = System.Diagnostics.Debug;
+
+namespace RiskierTrafficStops.Mod;
 
 internal abstract class Outcome
 {
@@ -46,7 +48,8 @@ internal abstract class Outcome
             driver = Functions.GetPulloverSuspect(handle);
             driver.BlockPermanentEvents = true;
         }
-        // ReSharper disable once PossibleNullReferenceException
+
+        Debug.Assert(driver != null, nameof(driver) + " != null");
         if (driver.IsAvailable() && driver.IsInAnyVehicle(false) && !driver.IsInAnyPoliceVehicle)
         {
             Normal("Setting up Suspect Vehicle");
