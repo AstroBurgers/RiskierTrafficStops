@@ -24,7 +24,7 @@ internal static class OutcomeChooser
     /// <param name="onPulloverStarted">Whether the method was triggered from the on pullover started event</param>
     internal static void ChooseOutcome(LHandle handle, bool onPulloverStarted = false)
     {
-        if (ShouldEventHappen())
+        if (ShouldEventHappen(handle))
         {
             Normal($"DisableRTSForCurrentStop: {DisableRTSForCurrentStop}");
             Normal("Choosing Outcome");
@@ -89,29 +89,49 @@ internal static class OutcomeChooser
     /// Does a chance generation and check to determine if an outcome should happen
     /// </summary>
     /// <returns>True/False</returns>
-    private static bool ShouldEventHappen()
+    private static bool ShouldEventHappen(LHandle handle)
     {
         if (EnabledOutcomes.Count == 0) return false;
-        long convertedChance = 0;
+
+        var convertedChance = GenerateChance();
+        Normal("Chance: " + convertedChance);
+
         switch (UserConfig.ChanceSetting)
         {
             case ChancesSettingEnum.EStaticChance:
-                convertedChance = GenerateChance();
-                Normal("Chance: " + convertedChance);
                 return convertedChance < UserConfig.Chance;
 
-            case ChancesSettingEnum.ESuspectBased:
-                convertedChance = GenerateChance();
-                Normal("Chance: " + convertedChance);
-                return convertedChance < GenerateChance();
-
             case ChancesSettingEnum.ECompoundingChance:
-                convertedChance = GenerateChance();
-                Normal("Chance: " + convertedChance);
                 return convertedChance < _currentChance;
+
+            case ChancesSettingEnum.ESuspectBased:
+            {
+                if (!Functions.IsPlayerPerformingPullover()) return false;
+                var suspect = Functions.GetPulloverSuspect(handle);
+                if (!suspect.Exists()) return false;
+
+                var pedData = suspect.GetPedData();
+                var vehicleData = suspect.LastVehicle.GetVehicleData();
+
+                var profile = new SuspectRiskProfile();
+                profile.Evaluate(pedData, vehicleData);
+
+                var totalScore = profile.ViolentScore + profile.NeutralScore + profile.SafeScore;
+                if (totalScore == 0)
+                    return false; // No factors, no chance
+
+                // Convert score to probability
+                // Normalize to 0–100 range for fair comparison with GenerateChance()
+                // Example: If totalScore is 100, full 100% chance
+                long suspectChance = Math.Min(totalScore, 100);
+                Normal($"Suspect-Based Total Score: {totalScore} → Chance: {suspectChance}");
+
+                return convertedChance < suspectChance;
+            }
 
             default:
                 throw new ArgumentOutOfRangeException();
         }
     }
+
 }
