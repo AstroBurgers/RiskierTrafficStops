@@ -1,4 +1,5 @@
-﻿using Debug = System.Diagnostics.Debug;
+﻿using RiskierTrafficStops.Engine.Helpers;
+using Debug = System.Diagnostics.Debug;
 
 namespace RiskierTrafficStops.Mod;
 
@@ -65,7 +66,7 @@ internal abstract class Outcome
     internal static void CleanupOutcome(bool throwEvent)
     {
         Normal("Cleaning up RTS Outcome...");
-        PulloverEventHandler.HasEventHappened = false;
+        OutcomeChooser.HasEventHappened = false;
         GameFiberHandling.CleanupFibers();
         if (throwEvent) InvokeEvent(RTSEventType.End);
     }

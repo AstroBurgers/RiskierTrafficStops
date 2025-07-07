@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using RiskierTrafficStops.Engine.Helpers;
 using RiskierTrafficStops.Mod.Outcomes;
 
 namespace RiskierTrafficStops.Engine.InternalSystems.Settings;
@@ -50,10 +51,10 @@ internal static class Settings
         AllOutcomes.Add((UserConfig.SpittingEnabled, typeof(Spitting)));
         AllOutcomes.Add((UserConfig.GetOutROEnabled, typeof(GetOutRo)));
         
-        PulloverEventHandler.EnabledOutcomes = AllOutcomes.Where(i => i.enabled).Select(i => i.outcome).ToList();
+        OutcomeChooser.EnabledOutcomes = AllOutcomes.Where(i => i.enabled).Select(i => i.outcome).ToList();
 
         Normal("----Enabled Outcomes----");
-        PulloverEventHandler.EnabledOutcomes.ForEach(i => Normal(
+        OutcomeChooser.EnabledOutcomes.ForEach(i => Normal(
             i.ToString()
                 .Substring(
                     i.ToString()
