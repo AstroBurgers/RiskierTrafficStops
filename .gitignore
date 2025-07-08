@@ -367,3 +367,4 @@ FodyWeavers.xsd
 .sonar/
 **/.sonarqube/
 **/.scannerwork/
+SonarQube-Scan.bat
