@@ -29,7 +29,7 @@ internal static class OutcomeChooser
             Normal($"DisableRTSForCurrentStop: {DisableRTSForCurrentStop}");
             Normal("Choosing Outcome");
 
-            if (UserConfig.ChanceSetting == ChancesSettingEnum.ESuspectBased)
+            if (UserConfig.ChanceSetting == ChancesSetting.ESuspectBased)
             {
                 var suspectData = Functions.GetPulloverSuspect(handle).GetPedData();
                 var vehicleData = Functions.GetPulloverSuspect(handle).LastVehicle.GetVehicleData();
@@ -69,7 +69,7 @@ internal static class OutcomeChooser
             Normal($"Chosen Outcome: {_chosenOutcome}");
             _lastOutcome = _chosenOutcome;
 
-            if (UserConfig.ChanceSetting == ChancesSettingEnum.ECompoundingChance)
+            if (UserConfig.ChanceSetting == ChancesSetting.ECompoundingChance)
             {
                 _currentChance = UserConfig.Chance;
             }
@@ -78,7 +78,7 @@ internal static class OutcomeChooser
         }
         else
         {
-            if (UserConfig.ChanceSetting == ChancesSettingEnum.ECompoundingChance)
+            if (UserConfig.ChanceSetting == ChancesSetting.ECompoundingChance)
             {
                 _currentChance += UserConfig.Chance;
             }
@@ -97,15 +97,15 @@ internal static class OutcomeChooser
 
         switch (UserConfig.ChanceSetting)
         {
-            case ChancesSettingEnum.EStaticChance:
+            case ChancesSetting.EStaticChance:
                 Normal("Chance: " + convertedChance);
                 return convertedChance < UserConfig.Chance;
 
-            case ChancesSettingEnum.ECompoundingChance:
+            case ChancesSetting.ECompoundingChance:
                 Normal("Chance: " + convertedChance);
                 return convertedChance < _currentChance;
 
-            case ChancesSettingEnum.ESuspectBased:
+            case ChancesSetting.ESuspectBased:
             {
                 if (!Functions.IsPlayerPerformingPullover()) return false;
                 var suspect = Functions.GetPulloverSuspect(handle);

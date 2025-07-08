@@ -4,7 +4,7 @@ using RiskierTrafficStops.Mod.Outcomes;
 
 namespace RiskierTrafficStops.Engine.InternalSystems.Settings;
 
-internal enum ChancesSettingEnum
+internal enum ChancesSetting
 {
     EStaticChance,
     ESuspectBased,
@@ -70,8 +70,8 @@ internal class Config
     public int Chance;
     [IniReflectorValue(sectionName: "General_Settings", defaultValue: Keys.Y)]
     public Keys GetBackInKey;
-    [IniReflectorValue(sectionName: "General_Settings", defaultValue: ChancesSettingEnum.EStaticChance, name: "Chance_Setting")]
-    public ChancesSettingEnum ChanceSetting;
+    [IniReflectorValue(sectionName: "General_Settings", defaultValue: ChancesSetting.EStaticChance, name: "Chance_Setting")]
+    public ChancesSetting ChanceSetting;
     
     [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
     public bool GetOutAndShootEnabled;
