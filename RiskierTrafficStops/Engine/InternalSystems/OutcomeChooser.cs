@@ -36,7 +36,7 @@ internal static class OutcomeChooser
                 var profile = new SuspectRiskProfile();
                 profile.Evaluate(suspectData, vehicleData);
 
-                var classification = profile.WeightedClassification(new Random());
+                var classification = profile.WeightedClassification(new Random(DateTime.Now.Millisecond));
                 _chosenOutcome =
                     SuspectRiskProfile.PickWeightedOutcome(classification, Rndm);
 

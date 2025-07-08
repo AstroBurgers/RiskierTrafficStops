@@ -7,7 +7,7 @@ internal abstract class Outcome
     internal static Ped Suspect;
     internal static Vehicle SuspectVehicle;
     internal static RelationshipGroup SuspectRelateGroup;
-    internal static LHandle TrafficStopLHandle;
+    private static LHandle _trafficStopLHandle;
     internal static Outcome ActiveOutcome;
 
     internal static readonly List<Ped> PedsToIgnore = [];
@@ -69,10 +69,28 @@ internal abstract class Outcome
         GameFiberHandling.CleanupFibers();
         if (throwEvent) InvokeEvent(RTSEventType.End);
     }
+
+    protected static void TryStartOutcomeFiber(ThreadStart fiberStartMethod)
+    {
+        try
+        {
+            if (!MeetsRequirements(_trafficStopLHandle)) return;
+
+            var fiber = GameFiber.StartNew(fiberStartMethod);
+            GameFiberHandling.OutcomeGameFibers.Add(fiber);
+        }
+        catch (Exception e)
+        {
+            if (e is ThreadAbortException) return;
+            Error(e);
+            CleanupOutcome(true);
+        }
+    }
+
     
     internal Outcome(LHandle handle)
     {
-        TrafficStopLHandle = handle;
+        _trafficStopLHandle = handle;
         ActiveOutcome = this;
     }
 }

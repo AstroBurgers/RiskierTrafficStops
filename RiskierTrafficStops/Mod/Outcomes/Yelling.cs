@@ -10,18 +10,8 @@ internal sealed class Yelling : Outcome, IProccessing
 
     public Yelling(LHandle handle) : base(handle)
     {
-        try
-        {
-            if (!MeetsRequirements(TrafficStopLHandle)) return;
-            SuspectRelateGroup = new RelationshipGroup("RTSYellingSuspects");
-            GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
-        }
-        catch (Exception e)
-        {
-            if (e is ThreadAbortException) return;
-            Error(e);
-            CleanupOutcome(true);
-        }
+        TryStartOutcomeFiber(StartOutcome);
+        SuspectRelateGroup = new RelationshipGroup("RTSYellingSuspects");
     }
 
     private enum YellingScenarioOutcomes

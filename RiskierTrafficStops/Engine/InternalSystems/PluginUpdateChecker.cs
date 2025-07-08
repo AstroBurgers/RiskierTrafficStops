@@ -51,7 +51,7 @@ internal class PluginUpdateChecker
 
         _currentVersion = _latestVersion = assembly.GetName().Version;
 
-        var cts = new CancellationTokenSource();
+        using var cts = new CancellationTokenSource();
         cts.CancelAfter(30000);
 
         _asyncUpdateTask = TTask.Run(() => CheckForUpdatesAsync(cts.Token));

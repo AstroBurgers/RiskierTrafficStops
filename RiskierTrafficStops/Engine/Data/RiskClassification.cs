@@ -124,6 +124,8 @@ internal class SuspectRiskProfile
                 return outcomeType;
         }
 
-        return filtered.Last().OutcomeType;
+        if (filtered.Count != 0) return filtered[filtered.Count - 1].OutcomeType;
+        Normal($"Filtered outcomes for classification {classification} was empty, using fallback");
+        return typeof(YellInCar);
     }
 }

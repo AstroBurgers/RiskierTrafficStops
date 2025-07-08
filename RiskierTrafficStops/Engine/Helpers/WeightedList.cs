@@ -21,7 +21,7 @@ internal class WeightedList<T> : IEnumerable<T>
     /// <param name="rand"></param>
     public WeightedList(Random rand = null)
     {
-        _rand = rand ?? new Random();
+        _rand = rand ?? new Random(DateTime.Now.Millisecond);
     }
 
     /// <summary>
@@ -29,7 +29,7 @@ internal class WeightedList<T> : IEnumerable<T>
     /// </summary>
     public WeightedList(IEnumerable<WeightedListItem<T>> listItems, Random rand = null)
     {
-        _rand = rand ?? new Random();
+        _rand = rand ?? new Random(DateTime.Now.Millisecond);
         foreach (var item in listItems)
         {
             _list.Add(item.Item);
