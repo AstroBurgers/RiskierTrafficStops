@@ -4,8 +4,6 @@ namespace RiskierTrafficStops.Mod.Outcomes;
 
 internal sealed class GetOutAndShoot : Outcome, IProccessing
 {
-    private static GetOutAndShootOutcomes _chosenOutcome;
-
     private static GetOutAndShootOutcomes[] _allGoasOutcomes =
         (GetOutAndShootOutcomes[])Enum.GetValues(typeof(GetOutAndShootOutcomes));
 
@@ -46,10 +44,10 @@ internal sealed class GetOutAndShoot : Outcome, IProccessing
         GameFiber.Wait(7010);
 
         Normal("Choosing outcome from GetOutAndShootOutcomes");
-        _chosenOutcome = _allGoasOutcomes.PickRandom();
-        Normal($"Chosen Outcome: {_chosenOutcome}");
+        var chosenOutcome = _allGoasOutcomes.PickRandom();
+        Normal($"Chosen Outcome: {chosenOutcome}");
 
-        switch (_chosenOutcome)
+        switch (chosenOutcome)
         {
             case GetOutAndShootOutcomes.Flee:
                 SetupPursuitWithList(true, _pedsInVehicle);
