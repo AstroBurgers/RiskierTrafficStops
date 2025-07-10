@@ -1,9 +1,12 @@
-﻿namespace RiskierTrafficStops.Engine.Data;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace RiskierTrafficStops.Engine.Data;
 
 /// <summary>
 /// Represents a detailed breakdown of risk scores for a suspect ped,
 /// including violent, neutral, and safe risk components.
 /// </summary>
+[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 public readonly struct PedRiskSummary(int violentScore, int neutralScore, int safeScore)
 {
     public int ViolentScore { get; } = violentScore;
