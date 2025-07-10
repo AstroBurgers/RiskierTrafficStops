@@ -27,7 +27,7 @@ internal class SuspectRiskProfile
                 NeutralScore += 5;
                 break;
             case ELicenseState.Suspended:
-                ViolentScore += 5;
+                ViolentScore += 10;
                 break;
         }
 
@@ -37,8 +37,8 @@ internal class SuspectRiskProfile
 
         if (suspect.Wanted)
         {
-            ViolentScore += 10;
-            NeutralScore += 5;
+            ViolentScore += 25;
+            NeutralScore += 10;
         }
 
         if (vehicle.HasAnyBOLOs)
@@ -49,7 +49,7 @@ internal class SuspectRiskProfile
         }
 
         if (vehicle.IsStolen)
-            ViolentScore += 15;
+            ViolentScore += 25;
 
         if (vehicle.Insurance.Status != EDocumentStatus.Valid)
         {
@@ -61,10 +61,11 @@ internal class SuspectRiskProfile
         {
             SafeScore += 5;
             NeutralScore += 5;
+            ViolentScore += 10;
         }
 
         if (vehicle.Vin.Status == EVinStatus.Scratched)
-            ViolentScore += 15;
+            ViolentScore += 20;
     }
 
     internal ERiskClassification WeightedClassification(Random rng)

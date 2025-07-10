@@ -1,39 +1,127 @@
-# ***Chancing***
-### DL State
-- Expired // Unlicensed
-	- +5 to Neutral
-- Suspended
-	 - +5 to Violent
+# Chancing System Overview
+
+This document outlines how Riskier Traffic Stops evaluates a suspect's risk profile using weighted factors and
+classifications. Each factor contributes points to one or more of the following categories:
+
+- Violent
+- Neutral
+- Safe
+
+These scores determine the risk classification and influence the outcome behavior during stops.
+
+---
+
+## Evaluation Criteria
+
+### Driver’s License State
+
+| License Status       | Risk Impact          |
+|----------------------|----------------------|
+| Expired / Unlicensed | +5 to Neutral        |
+| Suspended            | +10 to Violent       |
+
+---
+
 ### Times Stopped
-- For each time stopped, +1 to all
+
+For every time the suspect has been previously stopped:
+
+- +1 to Safe
+- +1 to Neutral
+- +1 to Violent
+
+---
+
 ### Wanted Status
-- If wanted, +10 to violent, +5 to neutral
+
+If the suspect has an active warrant:
+
+- +25 to Violent
+- +10 to Neutral
+
+---
+
 ### Vehicle BOLOs
-- If has any bolos
-	- Each BOLO +5 to violent, +5 to neutral
-### Vehicle Stolen Status
-- If vehicle is stolen, +15 to violent
+
+If the suspect's vehicle has active BOLOs:
+
+- Each BOLO adds:
+    - +5 to Violent
+    - +5 to Neutral
+
+---
+
+### Stolen Vehicle
+
+If the vehicle is flagged as stolen:
+
+- +25 to Violent
+
+---
+
 ### Insurance Status
-- If insurance is invalid (Expired, Revoked, or they just don't have it)
-	- +5 to neutral and safe
-### Reg Status
-- If Reg is invalid (Expired, Revoked, or they just don't have it)
-	- +5 to neutral and safe
-### Veh Vin
-- If Vin is scratched, +15 to violent
 
-# ***Classifications***
-### Violent
-- GetOutAndShoot
-- Ramming
-- Flee
-- ShootAndFlee
+If the vehicle’s insurance is invalid (expired, revoked, or missing):
 
-### Neutral
-- GetOutRO
-- Yelling
-- Revving
+- +5 to Safe
+- +5 to Neutral
 
-### Safe
-- YellInCar
-- Spitting
+---
+
+### Registration Status
+
+If the registration is invalid (expired, revoked, or missing):
+
+- +5 to Safe
+- +5 to Neutral
+- +10 to Violent
+
+---
+
+### VIN Status
+
+If the vehicle’s VIN is scratched or unreadable:
+
+- +20 to Violent
+
+---
+
+## Outcome Classifications
+
+Once the suspect’s scores are totaled, the risk classification is determined and used to pick a weighted outcome.
+
+### Violent Outcomes
+
+Selected for Violent classification:
+
+- `GetOutAndShoot`
+- `Ramming`
+- `Flee`
+- `ShootAndFlee`
+
+---
+
+### Neutral Outcomes
+
+Selected for Neutral classification:
+
+- `GetOutRO`
+- `Yelling`
+- `Revving`
+
+---
+
+### Safe Outcomes
+
+Selected for Safe classification:
+
+- `YellInCar`
+- `Spitting`
+
+---
+
+## Notes
+
+- The final classification is selected using a weighted random roll based on the total scores for each category.
+- Only enabled outcomes are eligible to be selected.
+- These values are subject to tuning and balancing in future updates.
