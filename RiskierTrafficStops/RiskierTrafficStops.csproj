@@ -74,6 +74,7 @@
     <Compile Include="API\APIs.cs" />
     <Compile Include="API\ExternalAPIs\IAEFunctions.cs" />
     <Compile Include="Engine\Data\Arrays.cs" />
+    <Compile Include="Engine\Data\PedRiskSummary.cs" />
     <Compile Include="Engine\Data\RiskClassification.cs"/>
     <Compile Include="Engine\FrontendSystems\ConfigMenu.cs" />
     <Compile Include="Engine\FrontendSystems\ConsoleCommands.cs" />
@@ -115,6 +116,15 @@
     <None Include="RiskierTrafficStops.ini" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\docs\API.md">
+      <Link>docs\API.md</Link>
+    </Content>
+    <Content Include="..\docs\Architecture.md">
+      <Link>docs\Architecture.md</Link>
+    </Content>
+    <Content Include="..\docs\Chancing.md">
+      <Link>docs\Chancing.md</Link>
+    </Content>
     <Content Include="FodyWeavers.xml" />
     <Content Include="Localization.json" />
   </ItemGroup>

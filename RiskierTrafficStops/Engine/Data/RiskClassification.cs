@@ -15,11 +15,11 @@ internal enum ERiskClassification
 
 internal class SuspectRiskProfile
 {
-    internal int ViolentScore { get; set; }
-    internal int NeutralScore { get; set; }
-    internal int SafeScore { get; set; }
+    public int ViolentScore { get; private set; }
+    public int NeutralScore { get; private set; }
+    public int SafeScore { get; private set; }
 
-    public void Evaluate(PedData suspect, VehicleData vehicle)
+    internal void Evaluate(PedData suspect, VehicleData vehicle)
     {
         switch (suspect.DriversLicenseState)
         {

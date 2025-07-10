@@ -1,4 +1,7 @@
-﻿using RiskierTrafficStops.Mod;
+﻿using CommonDataFramework.Modules.PedDatabase;
+using CommonDataFramework.Modules.VehicleDatabase;
+using RiskierTrafficStops.Engine.Data;
+using RiskierTrafficStops.Mod;
 
 namespace RiskierTrafficStops.API;
 
@@ -36,6 +39,59 @@ public static class APIs
         {
             Outcome.PedsToIgnore.Remove(ped);
         }
+    }
+
+    /// <summary>
+    /// Calculates the overall risk score of a suspect ped based on their profile and vehicle data.
+    /// </summary>
+    /// <param name="suspect">The ped suspect to evaluate risk for.</param>
+    /// <remarks>Requires that the suspect is in a vehicle, as RiskProfile is also based on the Suspect's LastVehicle data</remarks>
+    /// <returns>
+    /// An integer representing the combined risk score.
+    /// Returns 0 if the suspect does not exist or data is invalid.
+    /// </returns>
+    public static int GetPedRisk(Ped suspect)
+    {
+        if (!suspect.Exists())
+            return 0;
+
+        var pedData = suspect.GetPedData();
+        var vehicleData = suspect.LastVehicle?.GetVehicleData();
+
+        if (pedData == null || vehicleData == null)
+            return 0;
+
+        var profile = new SuspectRiskProfile();
+        profile.Evaluate(pedData, vehicleData);
+
+        return profile.ViolentScore + profile.NeutralScore + profile.SafeScore;
+    }
+
+    /// <summary>
+    /// Calculates a detailed risk summary for a suspect ped, breaking down the violent, neutral,
+    /// and safe risk scores separately.
+    /// </summary>
+    /// <param name="suspect">The ped suspect to evaluate risk for.</param>
+    /// <remarks>Requires that the suspect is in a vehicle, as RiskProfile is also based on the Suspect's LastVehicle data</remarks>
+    /// <returns>
+    /// A <see cref="PedRiskSummary"/> struct containing individual risk scores.
+    /// Returns default (all zeros) if the suspect does not exist or data is invalid.
+    /// </returns>
+    public static PedRiskSummary GetPedRiskSummary(Ped suspect)
+    {
+        if (!suspect.Exists())
+            return default;
+
+        var pedData = suspect.GetPedData();
+        var vehicleData = suspect.LastVehicle?.GetVehicleData();
+
+        if (pedData == null || vehicleData == null)
+            return default;
+
+        var profile = new SuspectRiskProfile();
+        profile.Evaluate(pedData, vehicleData);
+
+        return new PedRiskSummary(profile.ViolentScore, profile.NeutralScore, profile.SafeScore);
     }
     
     public delegate void RTSEvent();
