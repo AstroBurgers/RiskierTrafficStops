@@ -23,12 +23,13 @@ internal static class MathHelper
     /// <summary>
     /// Returns the nearest vehicle to a position
     /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     internal static Vehicle GetNearestVehicle(Vector3 position, float maxDistance = 40f)
     {
         var vehicles = MainPlayer.GetNearbyVehicles(16).ToList();
         if (vehicles.Count < 1)
             throw new ArgumentOutOfRangeException();
-        var vehicle = vehicles.OrderBy(vehicles1 => vehicles1.DistanceTo(position)).ToList().First();
+        var vehicle = vehicles.OrderBy(vehicles1 => vehicles1.DistanceTo(position)).ToList()[0];
 
         return vehicle;
     }

@@ -16,7 +16,6 @@ namespace RiskierTrafficStops.Engine.InternalSystems;
 [EditorBrowsable(EditorBrowsableState.Never)]
 internal class PluginUpdateChecker
 {
-    private readonly Assembly _assembly;
     private readonly Uri _apiUrl;
     private readonly Version _currentVersion;
 
@@ -24,7 +23,6 @@ internal class PluginUpdateChecker
     private bool _failure;
 
     private readonly TTask _asyncUpdateTask;
-    private readonly CancellationTokenSource _cts;
 
     internal class UpdateCompletedEventArgs : EventArgs
     {
@@ -51,14 +49,12 @@ internal class PluginUpdateChecker
             throw new UriFormatException(nameof(_apiUrl));
         }
 
-        _assembly = assembly;
+        _currentVersion = _latestVersion = assembly.GetName().Version;
 
-        _currentVersion = _latestVersion = _assembly.GetName().Version;
+        using var cts = new CancellationTokenSource();
+        cts.CancelAfter(30000);
 
-        _cts = new CancellationTokenSource();
-        _cts.CancelAfter(30000);
-
-        _asyncUpdateTask = TTask.Run(() => CheckForUpdatesAsync(_cts.Token));
+        _asyncUpdateTask = TTask.Run(() => CheckForUpdatesAsync(cts.Token));
 
         GameFiber.StartNew(WaitFiber);
     }

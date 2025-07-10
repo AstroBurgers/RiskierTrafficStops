@@ -1,6 +1,5 @@
-﻿using RiskierTrafficStops.Engine.Data;
-using RiskierTrafficStops.Engine.Helpers;
-using static RiskierTrafficStops.Engine.Helpers.Extensions.PedExtensions;
+﻿using static RiskierTrafficStops.Engine.Helpers.Extensions.PedExtensions;
+using Localization = RiskierTrafficStops.Engine.InternalSystems.Localization;
 
 namespace RiskierTrafficStops.Mod.Outcomes;
 
@@ -20,8 +19,6 @@ internal sealed class GetOutRo : Outcome, IProccessing
         Flee
     }
     
-    private static GoRoOutcomes _chosenOutcome;
-
     private static GoRoOutcomes[] _allGoRoOutcomes =
         (GoRoOutcomes[])Enum.GetValues(typeof(GoRoOutcomes));
 
@@ -29,18 +26,8 @@ internal sealed class GetOutRo : Outcome, IProccessing
     
     public GetOutRo(LHandle handle) : base(handle)
     {
-        try
-        {
-            if (!MeetsRequirements(TrafficStopLHandle)) return;
-            SuspectRelateGroup = new RelationshipGroup("RTSGoRoSuspects");
-            GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
-        }
-        catch (Exception e)
-        {
-            if (e is ThreadAbortException) return;
-            Error(e);
-            CleanupOutcome(true);
-        }
+        TryStartOutcomeFiber(StartOutcome);
+        SuspectRelateGroup = new RelationshipGroup("RTSGoRoSuspects");
     }
 
     private void StartOutcome()
@@ -104,6 +91,8 @@ internal sealed class GetOutRo : Outcome, IProccessing
         // Start recording
         driver.PlayAmbientSpeech(VoiceLines.PickRandom());
         NativeFunction.Natives.x142A02425FF02BD9(driver, "world_human_mobile_film_shocking", 0, true);
+        GameFiber.Wait(1500);
+        GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(KeyPressed));
     }
 
     private static void KnifeOutcome(List<Ped> pedsInVehicle)
@@ -160,6 +149,21 @@ internal sealed class GetOutRo : Outcome, IProccessing
         }
     }
     
+    private static void KeyPressed()
+    {
+        Game.DisplayHelp(
+            $"~BLIP_INFO_ICON~ Press ~{UserConfig.GetBackInKey.GetInstructionalId()}~ {Localization.YellingNotiText}",
+            10000);
+        while (SuspectVehicle.IsAvailable() && !Suspect.IsInAnyVehicle(false))
+        {
+            GameFiber.Yield();
+            if (!Game.IsKeyDown(UserConfig.GetBackInKey)) continue;
+            Suspect.Tasks.Clear();
+            Suspect.Tasks.EnterVehicle(SuspectVehicle, -1).WaitForCompletion();
+            break;
+        }
+    }
+    
     private static void GunOutcome(List<Ped> pedsInVehicle)
     {
         Normal("Starting Gun outcome");
@@ -189,7 +193,7 @@ internal sealed class GetOutRo : Outcome, IProccessing
 
         return;
 
-        void GetPedOutOfVehicle(Ped ped, GunOutcomes outcome)
+        void GetPedOutOfVehicle(Ped ped, GunOutcomes gunOutcomes)
         {
             if (!ped.IsAvailable())
             {
@@ -214,7 +218,7 @@ internal sealed class GetOutRo : Outcome, IProccessing
             // give weapon
             ped.GivePistol();
             
-            switch (outcome)
+            switch (gunOutcomes)
             {
                 case GunOutcomes.ShootAtPlayer:
                     ped.Tasks.FightAgainst(MainPlayer);
@@ -227,7 +231,7 @@ internal sealed class GetOutRo : Outcome, IProccessing
                     ped.Tasks.FightAgainstClosestHatedTarget(100f, -1);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(outcome), outcome, null);
+                    throw new ArgumentOutOfRangeException(nameof(gunOutcomes), gunOutcomes, null);
             }
         }
     }

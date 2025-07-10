@@ -107,18 +107,6 @@ internal static class ConfigMenu
         Settings.IniReflector.Read(UserConfig, true);
         Normal("Finished reading new values");
 
-        /*Normal("----INI Values---");
-        Normal($"Chance: {Chance}");
-        Normal($"Get Out And Shoot Outcome Enabled: {GetOutAndShootEnabled}");
-        Normal($"Ramming Outcome Enabled: {RamEnabled}");
-        Normal($"Flee Outcome Enabled: {FleeEnabled}");
-        Normal($"Revving Outcome Enabled: {RevEnabled}");
-        Normal($"Yelling Outcome Enabled: {YellEnabled}");
-        Normal($"Yelling in Car Outcome Enabled: {YellInCarEnabled}");
-        Normal($"Shoot And Flee Outcome Enabled: {ShootAndFleeEnabled}");
-        Normal($"Spitting Outcome Enabled: {SpittingEnabled}");
-        Normal("----INI Values---");*/
-
         Normal("Reloading Enabled events...");
         FilterOutcomes();
         Normal("Finished Reloading Enabled events");

@@ -1,14 +1,16 @@
-﻿namespace RiskierTrafficStops.Mod;
+﻿using Debug = System.Diagnostics.Debug;
+
+namespace RiskierTrafficStops.Mod;
 
 internal abstract class Outcome
 {
     internal static Ped Suspect;
     internal static Vehicle SuspectVehicle;
     internal static RelationshipGroup SuspectRelateGroup;
-    internal static LHandle TrafficStopLHandle;
+    private static LHandle _trafficStopLHandle;
     internal static Outcome ActiveOutcome;
 
-    internal static readonly List<Ped> PedsToIgnore = new();
+    internal static readonly List<Ped> PedsToIgnore = [];
 
     internal static void RemoveIgnoredPedsAndBlockEvents(ref List<Ped> peds)
     {
@@ -46,7 +48,8 @@ internal abstract class Outcome
             driver = Functions.GetPulloverSuspect(handle);
             driver.BlockPermanentEvents = true;
         }
-        // ReSharper disable once PossibleNullReferenceException
+
+        Debug.Assert(driver != null, nameof(driver) + " != null");
         if (driver.IsAvailable() && driver.IsInAnyVehicle(false) && !driver.IsInAnyPoliceVehicle)
         {
             Normal("Setting up Suspect Vehicle");
@@ -62,14 +65,32 @@ internal abstract class Outcome
     internal static void CleanupOutcome(bool throwEvent)
     {
         Normal("Cleaning up RTS Outcome...");
-        PulloverEventHandler.HasEventHappened = false;
+        OutcomeChooser.HasEventHappened = false;
         GameFiberHandling.CleanupFibers();
         if (throwEvent) InvokeEvent(RTSEventType.End);
     }
+
+    protected static void TryStartOutcomeFiber(ThreadStart fiberStartMethod)
+    {
+        try
+        {
+            if (!MeetsRequirements(_trafficStopLHandle)) return;
+
+            var fiber = GameFiber.StartNew(fiberStartMethod);
+            GameFiberHandling.OutcomeGameFibers.Add(fiber);
+        }
+        catch (Exception e)
+        {
+            if (e is ThreadAbortException) return;
+            Error(e);
+            CleanupOutcome(true);
+        }
+    }
+
     
     internal Outcome(LHandle handle)
     {
-        TrafficStopLHandle = handle;
+        _trafficStopLHandle = handle;
         ActiveOutcome = this;
     }
 }

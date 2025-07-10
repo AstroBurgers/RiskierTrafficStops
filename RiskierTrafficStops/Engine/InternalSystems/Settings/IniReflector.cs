@@ -21,9 +21,9 @@ internal class IniReflector
     private readonly Type _iniModel;
     private readonly string _path;
     
-    private readonly List<IniReflectorSection> _sections = new();
-    private readonly List<Tuple<PropertyInfo, IniReflectorValue>> _validProperties = new();
-    private readonly List<Tuple<FieldInfo, IniReflectorValue>> _validFields = new();
+    private readonly List<IniReflectorSection> _sections = [];
+    private readonly List<Tuple<PropertyInfo, IniReflectorValue>> _validProperties = [];
+    private readonly List<Tuple<FieldInfo, IniReflectorValue>> _validFields = [];
     private readonly Dictionary<string, object> _defaultValues = new();
     private InitializationFile _iniFile;
     private bool _hasReadBefore;
@@ -37,7 +37,7 @@ internal class IniReflector
 
     internal void Read(object obj, bool withLogging)
     {
-        Type objType = obj.GetType();
+        var objType = obj.GetType();
         if (objType != _iniModel)
         {
             Game.LogTrivial($"[WARN] Object of type '{objType.Name}' does NOT match ini model '{_iniModel.Name}'.");
@@ -49,11 +49,11 @@ internal class IniReflector
         
         // Read properties
         if (withLogging) Game.LogTrivial($"[DEBUG] IniReflector '{_iniModel.Name}': Reading {_validProperties.Count} properties.");
-        foreach ((PropertyInfo property, IniReflectorValue reflectorValue) in _validProperties)
+        foreach ((var property, var reflectorValue) in _validProperties)
         {
             // Get default value and ini key/section
-            object defaultValue = GetDefaultValueForMember(property.Name, reflectorValue, property.PropertyType);
-            GetIniValues(reflectorValue, property.Name, out string keyName, out string sectionName);
+            var defaultValue = GetDefaultValueForMember(property.Name, reflectorValue, property.PropertyType);
+            GetIniValues(reflectorValue, property.Name, out var keyName, out var sectionName);
             
             // Deserialize to property
             property.SetValue(obj, ReadValue(property.PropertyType, sectionName, keyName, defaultValue, reflectorValue.Description));
@@ -62,11 +62,11 @@ internal class IniReflector
         
         // Read fields
         if (withLogging) Game.LogTrivial($"[DEBUG] IniReflector '{_iniModel.Name}': Reading {_validFields.Count} fields.");
-        foreach ((FieldInfo field, IniReflectorValue reflectorValue) in _validFields)
+        foreach ((var field, var reflectorValue) in _validFields)
         {
             // Get default value and ini key/section
-            object defaultValue = GetDefaultValueForMember(field.Name, reflectorValue, field.FieldType);
-            GetIniValues(reflectorValue, field.Name, out string keyName, out string sectionName);
+            var defaultValue = GetDefaultValueForMember(field.Name, reflectorValue, field.FieldType);
+            GetIniValues(reflectorValue, field.Name, out var keyName, out var sectionName);
             
             // Deserialize to field
             field.SetValue(obj, ReadValue(field.FieldType, sectionName, keyName, defaultValue, reflectorValue.Description));
@@ -78,7 +78,7 @@ internal class IniReflector
 
     internal void Write(object obj, bool withLogging)
     {
-        Type objType = obj.GetType();
+        var objType = obj.GetType();
         if (objType != _iniModel)
         {
             Game.LogTrivial($"[WARN] Object of type '{objType.Name}' does NOT match ini model '{_iniModel.Name}'.");
@@ -90,11 +90,11 @@ internal class IniReflector
 
         // Write properties
         if (withLogging) Game.LogTrivial($"[DEBUG] IniReflector '{_iniModel.Name}': Writing {_validProperties.Count} properties.");
-        foreach ((PropertyInfo property, IniReflectorValue reflectorValue) in _validProperties)
+        foreach ((var property, var reflectorValue) in _validProperties)
         {
             // Get new value and ini key/section
-            object newValue = property.GetValue(obj) ?? GetDefaultValueForMember(property.Name, reflectorValue, property.PropertyType);
-            GetIniValues(reflectorValue, property.Name, out string keyName, out string sectionName);
+            var newValue = property.GetValue(obj) ?? GetDefaultValueForMember(property.Name, reflectorValue, property.PropertyType);
+            GetIniValues(reflectorValue, property.Name, out var keyName, out var sectionName);
             
             // Serialize property
             WriteValue(sectionName, keyName, newValue, reflectorValue.Description);
@@ -103,11 +103,11 @@ internal class IniReflector
         
         // Write fields
         if (withLogging) Game.LogTrivial($"[DEBUG] IniReflector '{_iniModel.Name}': Writing {_validFields.Count} fields.");
-        foreach ((FieldInfo field, IniReflectorValue reflectorValue) in _validFields)
+        foreach ((var field, var reflectorValue) in _validFields)
         {
             // Get new value and ini key/section
-            object newValue = field.GetValue(obj) ?? GetDefaultValueForMember(field.Name, reflectorValue, field.FieldType);
-            GetIniValues(reflectorValue, field.Name, out string keyName, out string sectionName);
+            var newValue = field.GetValue(obj) ?? GetDefaultValueForMember(field.Name, reflectorValue, field.FieldType);
+            GetIniValues(reflectorValue, field.Name, out var keyName, out var sectionName);
             
             // Serialize field
             WriteValue(sectionName, keyName, newValue, reflectorValue.Description);
@@ -123,7 +123,7 @@ internal class IniReflector
 
         IniReflectorValue reflectorValue;
         // Try to find property
-        Tuple<PropertyInfo, IniReflectorValue> pMember = _validProperties.Find(p => p.Item1.Name == memberName);
+        var pMember = _validProperties.Find(p => p.Item1.Name == memberName);
         if (pMember != null)
         {
             if (pMember.Item1.PropertyType != newValue.GetType()) return false; // Verify property type
@@ -132,12 +132,12 @@ internal class IniReflector
         else
         {
             // Try to find field
-            Tuple<FieldInfo, IniReflectorValue> fMember = _validFields.Find(f => f.Item1.Name == memberName);
+            var fMember = _validFields.Find(f => f.Item1.Name == memberName);
             if (fMember == null || fMember.Item1.FieldType != newValue.GetType()) return false; // We couldn't find the member or the field type mismatched
             reflectorValue = fMember.Item2;
         }
 
-        GetIniValues(reflectorValue, memberName, out string keyName, out string sectionName);
+        GetIniValues(reflectorValue, memberName, out var keyName, out var sectionName);
         WriteValue(sectionName, keyName, newValue, reflectorValue.Description);
         return true;
     }
@@ -145,12 +145,12 @@ internal class IniReflector
     private object GetDefaultValueForMember(string memberName, IniReflectorValue reflectorValue, Type memberType)
     {
         if (reflectorValue.DefaultValue != null) return reflectorValue.DefaultValue;
-        return _defaultValues.TryGetValue(memberName, out object defaultValue) ? defaultValue : GetDefaultValueOfType(memberType);
+        return _defaultValues.TryGetValue(memberName, out var defaultValue) ? defaultValue : GetDefaultValueOfType(memberType);
     }
 
     private void GetIniValues(IniReflectorValue reflectorValue, string memberName, out string keyName, out string sectionName)
     {
-        string initKeyName = reflectorValue.Name ?? memberName;
+        var initKeyName = reflectorValue.Name ?? memberName;
         sectionName = reflectorValue.SectionName;
         if (string.IsNullOrEmpty(sectionName))
         {
@@ -206,8 +206,8 @@ internal class IniReflector
         if (withLogging) Game.LogTrivial($"[DEBUG] IniReflector: Reflecting '{_iniModel.Name}'.");
         _sections.AddRange(_iniModel.GetCustomAttributes<IniReflectorSection>());
         
-        PropertyInfo[] properties = _iniModel.GetProperties(MemberFlags);
-        foreach (PropertyInfo property in properties)
+        var properties = _iniModel.GetProperties(MemberFlags);
+        foreach (var property in properties)
         {
             // Members starting with 'Default' are considered to be storing a default value of a different member
             if (property.Name.StartsWith("Default"))
@@ -223,22 +223,22 @@ internal class IniReflector
                 continue;
             
             // It must have our custom attribute
-            IniReflectorValue reflectorValue = property.GetCustomAttribute<IniReflectorValue>();
+            var reflectorValue = property.GetCustomAttribute<IniReflectorValue>();
             if (reflectorValue == null) continue;
             
             // Check if section name exists
             if (string.IsNullOrEmpty(reflectorValue.SectionName))
             {
                 // We prefer the defined name in the attribute, however if that doesn't exist then we use the name of the property
-                string nameToUse = string.IsNullOrEmpty(reflectorValue.Name) ? property.Name : reflectorValue.Name;
+                var nameToUse = string.IsNullOrEmpty(reflectorValue.Name) ? property.Name : reflectorValue.Name;
                 if (!_sections.Any(s => nameToUse.StartsWith(s.Name))) continue;
             }
             
             _validProperties.Add(new Tuple<PropertyInfo, IniReflectorValue>(property, reflectorValue));
         }
         
-        FieldInfo[] fields = _iniModel.GetFields(MemberFlags);
-        foreach (FieldInfo field in fields)
+        var fields = _iniModel.GetFields(MemberFlags);
+        foreach (var field in fields)
         {
             // Members starting with 'Default' are considered to be storing a default value of a different member
             if (field.Name.StartsWith("Default"))
@@ -252,14 +252,14 @@ internal class IniReflector
             if (field.IsStatic || field.IsInitOnly) continue;
             
             // It must have our custom attribute
-            IniReflectorValue reflectorValue = field.GetCustomAttribute<IniReflectorValue>();
+            var reflectorValue = field.GetCustomAttribute<IniReflectorValue>();
             if (reflectorValue == null) continue;
             
             // Check if section name exists
             if (string.IsNullOrEmpty(reflectorValue.SectionName))
             {
                 // We prefer the defined name in the attribute, however if that doesn't exist then we use the name of the field
-                string nameToUse = string.IsNullOrEmpty(reflectorValue.Name) ? field.Name : reflectorValue.Name;
+                var nameToUse = string.IsNullOrEmpty(reflectorValue.Name) ? field.Name : reflectorValue.Name;
                 if (!_sections.Any(s => nameToUse.StartsWith(s.Name))) continue;
             }
             

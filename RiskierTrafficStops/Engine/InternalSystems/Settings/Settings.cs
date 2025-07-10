@@ -1,12 +1,13 @@
 ﻿using System.Windows.Forms;
 using RiskierTrafficStops.Mod.Outcomes;
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
 
 namespace RiskierTrafficStops.Engine.InternalSystems.Settings;
 
-internal enum ChancesSettingEnum
+internal enum ChancesSetting
 {
     EStaticChance,
-    ERandomChance,
+    ESuspectBased,
     ECompoundingChance
 }
 
@@ -15,7 +16,7 @@ internal static class Settings
     internal static readonly Config UserConfig = new();
     internal static IniReflector<Config> IniReflector = new ("plugins/LSPDFR/RiskierTrafficStops.ini");
     
-    private static readonly List<(bool enabled, Type outcome)> AllOutcomes = new();
+    private static readonly List<(bool enabled, Type outcome)> AllOutcomes = [];
     
     internal static void IniFileSetup()
     {
@@ -50,10 +51,10 @@ internal static class Settings
         AllOutcomes.Add((UserConfig.SpittingEnabled, typeof(Spitting)));
         AllOutcomes.Add((UserConfig.GetOutROEnabled, typeof(GetOutRo)));
         
-        PulloverEventHandler.EnabledOutcomes = AllOutcomes.Where(i => i.enabled).Select(i => i.outcome).ToList();
+        OutcomeChooser.EnabledOutcomes = AllOutcomes.Where(i => i.enabled).Select(i => i.outcome).ToList();
 
         Normal("----Enabled Outcomes----");
-        PulloverEventHandler.EnabledOutcomes.ForEach(i => Normal(
+        OutcomeChooser.EnabledOutcomes.ForEach(i => Normal(
             i.ToString()
                 .Substring(
                     i.ToString()
@@ -69,8 +70,8 @@ internal class Config
     public int Chance;
     [IniReflectorValue(sectionName: "General_Settings", defaultValue: Keys.Y)]
     public Keys GetBackInKey;
-    [IniReflectorValue(sectionName: "General_Settings", defaultValue: ChancesSettingEnum.EStaticChance, name: "Chance_Setting")]
-    public ChancesSettingEnum ChanceSetting;
+    [IniReflectorValue(sectionName: "General_Settings", defaultValue: ChancesSetting.EStaticChance, name: "Chance_Setting")]
+    public ChancesSetting ChanceSetting;
     
     [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
     public bool GetOutAndShootEnabled;
@@ -98,4 +99,42 @@ internal class Config
 
     [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
     public bool GetOutROEnabled;
+
+    // Risk weightings for chancing system
+    
+    [IniReflectorValue(sectionName: "Chancing_Weights", defaultValue: 5, name: "LicenseExpiredOrUnlicensed")]
+    public int LicenseExpiredOrUnlicensedWeight;
+
+    [IniReflectorValue(sectionName: "Chancing_Weights", defaultValue: 10, name: "LicenseSuspendedWeight")]
+    public int LicenseSuspendedWeight;
+
+    [IniReflectorValue(sectionName: "Chancing_Weights", defaultValue: 1, name: "TimesStoppedWeight")]
+    public int TimesStoppedWeight;
+
+    [IniReflectorValue(sectionName: "Chancing_Weights", defaultValue: 25, name: "WantedViolentWeight")]
+    public int WantedViolentWeight;
+
+    [IniReflectorValue(sectionName: "Chancing_Weights", defaultValue: 10, name: "WantedNeutralWeight")]
+    public int WantedNeutralWeight;
+
+    [IniReflectorValue(sectionName: "Chancing_Weights", defaultValue: 5, name: "BoloWeightPerCount")]
+    public int BoloWeightPerCount;
+
+    [IniReflectorValue(sectionName: "Chancing_Weights", defaultValue: 25, name: "VehicleStolenWeight")]
+    public int VehicleStolenWeight;
+
+    [IniReflectorValue(sectionName: "Chancing_Weights", defaultValue: 5, name: "InvalidInsuranceWeight")]
+    public int InvalidInsuranceWeight;
+
+    [IniReflectorValue(sectionName: "Chancing_Weights", defaultValue: 5, name: "InvalidRegistrationSafeWeight")]
+    public int InvalidRegistrationSafeWeight;
+
+    [IniReflectorValue(sectionName: "Chancing_Weights", defaultValue: 5, name: "InvalidRegistrationNeutralWeight")]
+    public int InvalidRegistrationNeutralWeight;
+
+    [IniReflectorValue(sectionName: "Chancing_Weights", defaultValue: 10, name: "InvalidRegistrationViolentWeight")]
+    public int InvalidRegistrationViolentWeight;
+
+    [IniReflectorValue(sectionName: "Chancing_Weights", defaultValue: 20, name: "VinScratchedWeight")]
+    public int VinScratchedWeight;
 }

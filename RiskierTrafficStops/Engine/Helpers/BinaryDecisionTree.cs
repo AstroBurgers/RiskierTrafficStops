@@ -2,80 +2,28 @@ namespace RiskierTrafficStops.Engine.Helpers;
 
 internal class Bdt
 {
-
     internal class Node
     {
-        internal Node Left;
-        internal Node Right;
-        internal bool Value;
-        internal Action OutcomeAssociated;
+        internal Node Left { get; set; }
+        internal Node Right { get; set; }
+        internal bool Value { get; }
+        internal Action OutcomeAssociated { get; }
 
-        internal Node(bool value, Node left, Node right, Action outcomeAssociated)
+        internal Node(bool value, Node left = null, Node right = null, Action outcomeAssociated = null)
         {
             Value = value;
             Left = left;
             Right = right;
             OutcomeAssociated = outcomeAssociated;
         }
-
-        internal Node(bool value, Node left, Node right)
-        {
-            Value = value;
-            Left = left;
-            Right = right;
-            OutcomeAssociated = null;
-        }
     }
 
     private Node _root;
 
-    internal Bdt()
-    {
-        _root = null;
-    }
+    internal Bdt() => _root = null;
+    internal Bdt(Node root) => _root = root;
 
-    internal Bdt(Node root)
-    {
-        _root = root;
-    }
-
-
-    internal void FollowTruePath()
-    {
-        FollowTruePath(_root);
-    }
-
-    private void FollowTruePath(Node subroot)
-    {
-        // Follow the true path recursively
-        if (subroot.Value)
-        {
-            if (subroot.Right == null && subroot.OutcomeAssociated != null)
-            {
-                subroot.OutcomeAssociated();
-            }
-            else
-            {
-                FollowTruePath(subroot.Right);
-            }
-        }
-        else
-        {
-            if (subroot.Left == null && subroot.OutcomeAssociated != null)
-            {
-                subroot.OutcomeAssociated();
-            }
-            else
-            {
-                FollowTruePath(subroot.Left);
-            }
-        }
-    }
-
-    internal bool IsEmpty()
-    {
-        return _root == null;
-    }
+    internal bool IsEmpty() => _root == null;
 
     internal void Add(Node node, bool insertToLeft)
     {
@@ -85,33 +33,51 @@ internal class Bdt
         }
         else
         {
-            Add(_root, node, insertToLeft);
+            AddRecursive(_root, node, insertToLeft);
         }
     }
 
-    private void Add(Node parentRoot, Node node, bool insertToLeft)
+    private void AddRecursive(Node current, Node node, bool insertToLeft)
     {
         if (insertToLeft)
         {
-            if (parentRoot.Left == null)
-            {
-                parentRoot.Left = new Node(node.Value, null, null, node.OutcomeAssociated);
-            }
+            if (current.Left == null)
+                current.Left = node;
             else
-            {
-                Add(parentRoot.Left, node, insertToLeft);
-            }
+                AddRecursive(current.Left, node, true);
         }
         else
         {
-            if (parentRoot.Right == null)
-            {
-                parentRoot.Right = new Node(node.Value, null, null, node.OutcomeAssociated);
-            }
+            if (current.Right == null)
+                current.Right = node;
             else
+                AddRecursive(current.Right, node, false);
+        }
+    }
+
+    internal void FollowTruePath() => FollowTruePath(_root);
+
+    private void FollowTruePath(Node node)
+    {
+        if (node == null) return;
+
+        if (node.Value)
+        {
+            if (node.Right == null)
             {
-                Add(parentRoot.Right, node, insertToLeft);
+                node.OutcomeAssociated?.Invoke();
+                return;
             }
+            FollowTruePath(node.Right);
+        }
+        else
+        {
+            if (node.Left == null)
+            {
+                node.OutcomeAssociated?.Invoke();
+                return;
+            }
+            FollowTruePath(node.Left);
         }
     }
 }

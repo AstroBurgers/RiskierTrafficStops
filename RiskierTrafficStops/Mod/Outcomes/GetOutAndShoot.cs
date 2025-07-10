@@ -4,8 +4,6 @@ namespace RiskierTrafficStops.Mod.Outcomes;
 
 internal sealed class GetOutAndShoot : Outcome, IProccessing
 {
-    private static GetOutAndShootOutcomes _chosenOutcome;
-
     private static GetOutAndShootOutcomes[] _allGoasOutcomes =
         (GetOutAndShootOutcomes[])Enum.GetValues(typeof(GetOutAndShootOutcomes));
 
@@ -14,18 +12,8 @@ internal sealed class GetOutAndShoot : Outcome, IProccessing
     // RTSGetOutAndShootSuspects
     public GetOutAndShoot(LHandle handle) : base(handle)
     {
-        try
-        {
-            if (!MeetsRequirements(TrafficStopLHandle)) return;
-            SuspectRelateGroup = new RelationshipGroup("RTSGetOutAndShootSuspects");
-            GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
-        }
-        catch (Exception e)
-        {
-            if (e is ThreadAbortException) return;
-            Error(e);
-            CleanupOutcome(true);
-        }
+        TryStartOutcomeFiber(StartOutcome);
+        SuspectRelateGroup = new RelationshipGroup("RTSGetOutAndShootSuspects");
     }
 
     private void StartOutcome()
@@ -56,10 +44,10 @@ internal sealed class GetOutAndShoot : Outcome, IProccessing
         GameFiber.Wait(7010);
 
         Normal("Choosing outcome from GetOutAndShootOutcomes");
-        _chosenOutcome = _allGoasOutcomes.PickRandom();
-        Normal($"Chosen Outcome: {_chosenOutcome}");
+        var chosenOutcome = _allGoasOutcomes.PickRandom();
+        Normal($"Chosen Outcome: {chosenOutcome}");
 
-        switch (_chosenOutcome)
+        switch (chosenOutcome)
         {
             case GetOutAndShootOutcomes.Flee:
                 SetupPursuitWithList(true, _pedsInVehicle);

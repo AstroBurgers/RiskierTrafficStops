@@ -4,17 +4,7 @@ internal sealed class YellInCar : Outcome, IProccessing
 {
     public YellInCar(LHandle handle) : base(handle)
     {
-        try
-        {
-            if (!MeetsRequirements(TrafficStopLHandle)) return;
-            GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(StartOutcome));
-        }
-        catch (Exception e)
-        {
-            if (e is ThreadAbortException) return;
-            Error(e);
-            CleanupOutcome(true);
-        }
+        TryStartOutcomeFiber(StartOutcome);
     }
 
     private void StartOutcome()

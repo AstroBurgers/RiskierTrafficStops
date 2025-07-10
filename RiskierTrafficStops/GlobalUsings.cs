@@ -18,4 +18,3 @@ global using static RiskierTrafficStops.Engine.Helpers.MathHelper;
 global using static RiskierTrafficStops.Engine.Helpers.PursuitHelper;
 global using static RiskierTrafficStops.Engine.InternalSystems.Logger;
 global using static RiskierTrafficStops.Engine.InternalSystems.Settings.Settings;
-global using static RiskierTrafficStops.Engine.InternalSystems.Settings.Config;

@@ -4,6 +4,8 @@ namespace RiskierTrafficStops.API.ExternalAPIs;
 
 internal static class IaeFunctions
 {
+    private const string Logmsg = "Immersive Ambient Events cannot be found, user might not have it installed";
+
     /// <summary>
     /// Checks if an entity is being used by a normal IAE event
     /// </summary>
@@ -17,12 +19,12 @@ internal static class IaeFunctions
         }
         catch (FileNotFoundException)
         {
-            Normal("Immersive Ambient Events cannot be found, user might not have it installed");
+            Normal(Logmsg);
             return false;
         }
         catch (Exception)
         {
-            Normal("Immersive Ambient Events cannot be found, user might not have it installed");
+            Normal(Logmsg);
             return false;
         }
     }
@@ -40,12 +42,12 @@ internal static class IaeFunctions
         }
         catch (FileNotFoundException)
         {
-            Normal("Immersive Ambient Events cannot be found, user might not have it installed");
+            Normal(Logmsg);
             return false;
         }
         catch (Exception)
         {
-            Normal("Immersive Ambient Events cannot be found, user might not have it installed");
+            Normal(Logmsg);
             return false;
         }
     }
@@ -63,12 +65,12 @@ internal static class IaeFunctions
         }
         catch (FileNotFoundException)
         {
-            Normal("Immersive Ambient Events cannot be found, user might not have it installed");
+            Normal(Logmsg);
             return false;
         }
         catch (Exception)
         {
-            Normal("Immersive Ambient Events cannot be found, user might not have it installed");
+            Normal(Logmsg);
             return false;
         }
     }
@@ -97,12 +99,12 @@ internal static class IaeFunctions
         }
         catch (FileNotFoundException)
         {
-            Normal("Immersive Ambient Events cannot be found, user might not have it installed");
+            Normal(Logmsg);
             return true;
         }
         catch (Exception)
         {
-            Normal("Immersive Ambient Events cannot be found, user might not have it installed");
+            Normal(Logmsg);
             return true;
         }
     }
