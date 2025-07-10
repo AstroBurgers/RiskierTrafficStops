@@ -7,7 +7,7 @@ classifications. Each factor contributes points to one or more of the following 
 - Neutral
 - Safe
 
-These scores determine the risk classification and influence the outcome behavior during stops.
+These scores determine the risk classification and influence the outcome behavior during stops. There is still RNG involved, as a chance is still randomly generated, and if it's higher than the total calculated risk, nothing will happen.
 
 ---
 
@@ -124,4 +124,4 @@ Selected for Safe classification:
 
 - The final classification is selected using a weighted random roll based on the total scores for each category.
 - Only enabled outcomes are eligible to be selected.
-- These values are subject to tuning and balancing in future updates.
+- These values are editable via the RiskierTrafficStops.ini, and are only defaults.

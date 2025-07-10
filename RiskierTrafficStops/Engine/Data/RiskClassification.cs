@@ -2,6 +2,7 @@
 using CommonDataFramework.Modules.PedDatabase;
 using CommonDataFramework.Modules.VehicleDatabase;
 using LSPD_First_Response.Engine.Scripting.Entities;
+using RiskierTrafficStops.Engine.InternalSystems.Settings;
 using RiskierTrafficStops.Mod.Outcomes;
 
 namespace RiskierTrafficStops.Engine.Data;
@@ -21,51 +22,53 @@ internal class SuspectRiskProfile
 
     internal void Evaluate(PedData suspect, VehicleData vehicle)
     {
+        var config = UserConfig;
+
         switch (suspect.DriversLicenseState)
         {
             case ELicenseState.Expired or ELicenseState.Unlicensed:
-                NeutralScore += 5;
+                NeutralScore += config.LicenseExpiredOrUnlicensedWeight;
                 break;
             case ELicenseState.Suspended:
-                ViolentScore += 10;
+                ViolentScore += config.LicenseSuspendedWeight;
                 break;
         }
 
-        ViolentScore += suspect.TimesStopped;
-        NeutralScore += suspect.TimesStopped;
-        SafeScore += suspect.TimesStopped;
+        ViolentScore += config.TimesStoppedWeight * suspect.TimesStopped;
+        NeutralScore += config.TimesStoppedWeight * suspect.TimesStopped;
+        SafeScore += config.TimesStoppedWeight * suspect.TimesStopped;
 
         if (suspect.Wanted)
         {
-            ViolentScore += 25;
-            NeutralScore += 10;
+            ViolentScore += config.WantedViolentWeight;
+            NeutralScore += config.WantedNeutralWeight;
         }
 
         if (vehicle.HasAnyBOLOs)
         {
             var boloCount = vehicle.GetAllBOLOs().Length;
-            ViolentScore += 5 * boloCount;
-            NeutralScore += 5 * boloCount;
+            ViolentScore += config.BoloWeightPerCount * boloCount;
+            NeutralScore += config.BoloWeightPerCount * boloCount;
         }
 
         if (vehicle.IsStolen)
-            ViolentScore += 25;
+            ViolentScore += config.VehicleStolenWeight;
 
         if (vehicle.Insurance.Status != EDocumentStatus.Valid)
         {
-            SafeScore += 5;
-            NeutralScore += 5;
+            SafeScore += config.InvalidInsuranceWeight;
+            NeutralScore += config.InvalidInsuranceWeight;
         }
 
         if (vehicle.Registration.Status != EDocumentStatus.Valid)
         {
-            SafeScore += 5;
-            NeutralScore += 5;
-            ViolentScore += 10;
+            SafeScore += config.InvalidRegistrationSafeWeight;
+            NeutralScore += config.InvalidRegistrationNeutralWeight;
+            ViolentScore += config.InvalidRegistrationViolentWeight;
         }
 
         if (vehicle.Vin.Status == EVinStatus.Scratched)
-            ViolentScore += 20;
+            ViolentScore += config.VinScratchedWeight;
     }
 
     internal ERiskClassification WeightedClassification(Random rng)
