@@ -110,7 +110,8 @@ internal static class OutcomeChooser
                 if (!Functions.IsPlayerPerformingPullover()) return false;
                 var suspect = Functions.GetPulloverSuspect(handle);
                 if (!suspect.Exists()) return false;
-
+                if (!suspect.LastVehicle.Exists()) return false;
+                
                 var pedData = suspect.GetPedData();
                 var vehicleData = suspect.LastVehicle.GetVehicleData();
 

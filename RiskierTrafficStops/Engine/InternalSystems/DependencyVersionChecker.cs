@@ -19,6 +19,11 @@ internal static class DependencyVersionChecker
             }
 
             Normal($"{assemblyName} does not meet minimum requirements ({assemblyName2.Version} < {version}).");
+            Game.DisplayNotification("3dtextures",
+                "mpgroundlogo_cops",
+                "Riskier Traffic Stops",
+                "~b~By Astro",
+                $"{assemblyName} does not meet minimum requirements ({assemblyName2.Version} < {version}), or is not installed.\n~r~Please install the latest version of {assemblyName}!~s~\n~y~Unloading RTS...~s~");
             return false;
         }
         catch (Exception ex) when (ex is FileNotFoundException or BadImageFormatException)
