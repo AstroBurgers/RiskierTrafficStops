@@ -92,10 +92,18 @@ internal static class OutcomeChooser
     private static bool ShouldEventHappen(LHandle handle)
     {
         if (EnabledOutcomes.Count == 0) return false;
-
+        
+        var chanceSetting = UserConfig.ChanceSetting;
+        
         var convertedChance = GenerateChance();
 
-        switch (UserConfig.ChanceSetting)
+        if (UserConfig.ChanceSetting == ChancesSetting.EDynamicChance)
+        {
+            ChancesSetting[] chancesSettings = [ChancesSetting.EStaticChance, ChancesSetting.EDynamicChance];
+            chanceSetting = chancesSettings.PickRandom();
+        }
+        
+        switch (chanceSetting)
         {
             case ChancesSetting.EStaticChance:
                 Normal("Chance: " + convertedChance);
