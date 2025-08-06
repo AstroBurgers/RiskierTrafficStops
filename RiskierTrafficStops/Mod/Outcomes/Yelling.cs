@@ -54,7 +54,13 @@ internal sealed class Yelling : Outcome, IProccessing
         {
             Normal($"Making Suspect Yell, time: {i}");
             Suspect.PlayAmbientSpeech(VoiceLines[Rndm.Next(VoiceLines.Length)]);
-            GameFiber.WaitWhile(() => Suspect.IsAnySpeechPlaying, 30000);
+            GameFiber.WaitWhile(() =>
+            {
+                if (Suspect != null && Suspect.Exists()) return Suspect.IsAnySpeechPlaying;
+                Normal("Suspect no longer exists during yelling. Aborting wait.");
+                return false;
+
+            }, 30000);
         }
 
         Normal("Choosing outcome from possible Yelling outcomes");

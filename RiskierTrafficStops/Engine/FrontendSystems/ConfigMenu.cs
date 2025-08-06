@@ -11,6 +11,9 @@ internal static class ConfigMenu
     private static readonly UIMenuNumericScrollerItem<int> SetChance = new(SetChanceMenuItem,
         SetChanceMenuItemDescription, 0, 100, 1);
 
+    private static readonly UIMenuListScrollerItem<ChancesSetting> ChanceSetting = new(ChanceSettingMenuItem,
+        ChanceSettingMenuItemDescription, [ChancesSetting.EStaticChance, ChancesSetting.ECompoundingChance, ChancesSetting.ESuspectBased, ChancesSetting.EDynamicChance
+        ]);
     private static readonly UIMenuListScrollerItem<bool> GoasOutcomeEnabled =
         new(GoasMenuItem, GoasMenuItemDescription, [true, false]);
 
@@ -50,12 +53,25 @@ internal static class ConfigMenu
         MainMenuPool.Add(MainMenu);
         MainMenu.MouseControlsEnabled = false;
         MainMenu.AllowCameraMovement = true;
-        TextStyle style = new(TextFont.ChaletComprimeCologne, TextStyle.Current.Color, 1f, TextJustification.Center);
-        MainMenu.TitleStyle = style;
+        TextStyle mainMenuStyle = new(TextFont.ChaletComprimeCologne, TextStyle.Current.Color, 1f, TextJustification.Center)
+        {
+            DropShadow = true,
+            Color = Color.White
+        };
+        /*TextStyle descriptionStyle = new(
+            TextFont.ChaletComprimeCologne,
+            Color.LightGray
+        )
+        {
+            DropShadow = true,
+        };*/
+        MainMenu.TitleStyle = mainMenuStyle;
+        //MainMenu.DescriptionStyle = descriptionStyle;
 
         Normal("Adding Items to Menu");
 
-        MainMenu.AddItems(SetChance, SafOutcomeEnabled, GoasOutcomeEnabled, YicOutcomeEnabled, RiyOutcomeEnabled,
+        MainMenu.AddItems(SetChance, ChanceSetting, SafOutcomeEnabled, GoasOutcomeEnabled, YicOutcomeEnabled,
+            RiyOutcomeEnabled,
             FleeOutcomeEnabled, RevOutcomeEnabled, YellOutcomeEnabled, SpitEnabled, GoRoEnabled, SaveToIni);
         SaveToIni.BackColor = Color.Green;
 
@@ -74,8 +90,9 @@ internal static class ConfigMenu
 
     private static void SetupMenu()
     {
-        Normal("Assigning Menu values to their respective INI Values...");
+        Normal("Assigning Menu Values to their respective INI Values...");
         SetChance.Value = UserConfig.Chance;
+        ChanceSetting.SelectedItem = UserConfig.ChanceSetting;
         YellOutcomeEnabled.SelectedItem = UserConfig.YellEnabled;
         GoasOutcomeEnabled.SelectedItem = UserConfig.GetOutAndShootEnabled;
         YicOutcomeEnabled.SelectedItem = UserConfig.YellInCarEnabled;
@@ -92,6 +109,7 @@ internal static class ConfigMenu
     {
         Normal("Appending to INI...");
         Settings.IniReflector.WriteSingle("Chance", SetChance.Value);
+        Settings.IniReflector.WriteSingle("ChanceSetting", ChanceSetting.SelectedItem);
         Settings.IniReflector.WriteSingle("GetOutAndShootEnabled", GoasOutcomeEnabled.SelectedItem);
         Settings.IniReflector.WriteSingle("RamEnabled", RiyOutcomeEnabled.SelectedItem);
         Settings.IniReflector.WriteSingle("FleeEnabled", FleeOutcomeEnabled.SelectedItem);
@@ -105,7 +123,7 @@ internal static class ConfigMenu
 
         Normal("Reading new Values...");
         Settings.IniReflector.Read(UserConfig, true);
-        Normal("Finished reading new values");
+        Normal("Finished reading new Values");
 
         Normal("Reloading Enabled events...");
         FilterOutcomes();

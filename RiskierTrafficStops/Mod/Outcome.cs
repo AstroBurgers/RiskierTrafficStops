@@ -21,6 +21,9 @@ internal abstract class Outcome
         
         peds.RemoveAll(ped => ped.IsAvailable() && PedsToIgnore.Contains(ped));
         peds.ForEach(ped => ped.BlockPermanentEvents = true);
+        
+        if (peds.Count == 0)
+            CleanupOutcome(false);
     }
     
     internal static bool MeetsRequirements(LHandle handle)

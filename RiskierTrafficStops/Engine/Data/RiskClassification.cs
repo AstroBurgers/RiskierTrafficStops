@@ -2,7 +2,6 @@
 using CommonDataFramework.Modules.PedDatabase;
 using CommonDataFramework.Modules.VehicleDatabase;
 using LSPD_First_Response.Engine.Scripting.Entities;
-using RiskierTrafficStops.Engine.InternalSystems.Settings;
 using RiskierTrafficStops.Mod.Outcomes;
 
 namespace RiskierTrafficStops.Engine.Data;
@@ -22,6 +21,15 @@ internal class SuspectRiskProfile
 
     internal void Evaluate(PedData suspect, VehicleData vehicle)
     {
+        // make sure neither object is null
+        if (suspect is null || vehicle is null)
+        {
+            ViolentScore = 0;
+            NeutralScore = 0;
+            SafeScore = 0;
+            return;
+        }
+        
         var config = UserConfig;
 
         switch (suspect.DriversLicenseState)

@@ -78,6 +78,7 @@
     <Compile Include="Engine\Data\RiskClassification.cs"/>
     <Compile Include="Engine\FrontendSystems\ConfigMenu.cs" />
     <Compile Include="Engine\FrontendSystems\ConsoleCommands.cs" />
+    <Compile Include="Engine\Helpers\DependencyHelper.cs" />
     <Compile Include="Engine\Helpers\Extensions\EnumExtensions.cs" />
     <Compile Include="Engine\Helpers\Extensions\PedExtensions.cs" />
     <Compile Include="Engine\Helpers\Extensions\VehicleExtensions.cs" />

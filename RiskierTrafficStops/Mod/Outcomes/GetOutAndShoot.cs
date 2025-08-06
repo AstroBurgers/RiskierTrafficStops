@@ -70,15 +70,32 @@ internal sealed class GetOutAndShoot : Outcome, IProccessing
     private static void GetPedOutOfVehicle(Ped ped)
     {
         if (!ped.IsAvailable()) return;
+
         ped.RelationshipGroup = SuspectRelateGroup;
+
         if (ped.IsInVehicle(ped.LastVehicle, false) && ped.LastVehicle.IsAvailable())
         {
             Normal("Making Suspect leave vehicle");
             ped.Tasks.LeaveVehicle(ped.LastVehicle, LeaveVehicleFlags.LeaveDoorOpen).WaitForCompletion();
         }
+
+        // Add small delay after getting out of vehicle to let ped fully stand up
+        GameFiber.Sleep(100);
+
+        if (!ped.IsAvailable()) return;
+
         Normal("Giving Suspect FightAgainstClosestHatedTarget Task");
-        ped.Tasks.FightAgainstClosestHatedTarget(40f, 7000).WaitForCompletion(7001);
+
+        try
+        {
+            ped.Tasks.FightAgainstClosestHatedTarget(40f, 7000).WaitForCompletion(7001);
+        }
+        catch (Exception ex)
+        {
+            Error(new Exception("Failed to assign FightAgainstClosestHatedTarget task", ex));
+        }
     }
+
 
     private enum GetOutAndShootOutcomes
     {

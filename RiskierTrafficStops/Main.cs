@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
+using CommonDataFramework.API;
 using RiskierTrafficStops.Engine.FrontendSystems;
+using static RiskierTrafficStops.Engine.Helpers.DependencyHelper;
 using static RiskierTrafficStops.Engine.InternalSystems.Localization;
 
 namespace RiskierTrafficStops;
@@ -17,10 +19,13 @@ public class Main : Plugin
     private static void Functions_OnDutyStateChanged(bool onDuty)
     {
         OnDuty = onDuty;
-        if (onDuty && DoesJsonFileExist())
+        if (onDuty && DoesJsonFileExist() && VerifyDependencies())
         {
             GameFiber.StartNew(() =>
             {
+                // Wait for CDF to load before doing anything else
+                GameFiber.WaitUntil(CDFFunctions.IsPluginReady, 30000);
+                
                 // Reading INI File
                 Normal("Setting up INI File...");
                 IniFileSetup();
