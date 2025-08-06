@@ -31,15 +31,27 @@ internal static class OutcomeChooser
 
             if (UserConfig.ChanceSetting == ChancesSetting.ESuspectBased)
             {
-                var suspectData = Functions.GetPulloverSuspect(handle).GetPedData();
-                var vehicleData = Functions.GetPulloverSuspect(handle).LastVehicle.GetVehicleData();
-                var profile = new SuspectRiskProfile();
-                profile.Evaluate(suspectData, vehicleData);
+                try
+                {
+                    var suspect = Functions.GetPulloverSuspect(handle);
+                    if (!suspect.Exists() || !suspect.LastVehicle.Exists()) return;
 
-                var classification = profile.WeightedClassification(new Random(DateTime.Now.Millisecond));
-                _chosenOutcome =
-                    SuspectRiskProfile.PickWeightedOutcome(classification, Rndm);
+                    var suspectData = suspect.GetPedData(); // can throw
+                    var vehicleData = suspect.LastVehicle.GetVehicleData();
 
+                    var profile = new SuspectRiskProfile();
+                    profile.Evaluate(suspectData, vehicleData);
+
+                    var classification = profile.WeightedClassification(new Random(DateTime.Now.Millisecond));
+                    _chosenOutcome = SuspectRiskProfile.PickWeightedOutcome(classification, Rndm);
+                }
+                catch (Exception ex)
+                {
+                    Error(new Exception("Suspect-based outcome selection failed (probably due to CDF)", ex));
+                    HasEventHappened = false;
+                    GameFiberHandling.CleanupFibers();
+                    return;
+                }
             }
             
             var filteredOutcomes = EnabledOutcomes
