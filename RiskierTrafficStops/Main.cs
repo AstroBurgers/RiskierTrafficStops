@@ -2,7 +2,6 @@
 using CommonDataFramework.API;
 using RiskierTrafficStops.Engine.FrontendSystems;
 using static RiskierTrafficStops.Engine.Helpers.DependencyHelper;
-using static RiskierTrafficStops.Engine.InternalSystems.DependencyVersionChecker;
 using static RiskierTrafficStops.Engine.InternalSystems.Localization;
 
 namespace RiskierTrafficStops;

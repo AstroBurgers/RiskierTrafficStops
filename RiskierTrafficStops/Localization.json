@@ -1,6 +1,7 @@
 ﻿{
   "MenuTitle": "RTS Config",
   "SetChanceMenuItem": "Chance",
+  "ChanceSettingMenuItem": "Chance Setting",
   "GoasMenuItem": "Get Out And Shoot",
   "YicMenuItem": "Yell In Car",
   "YellMenuItem": "Yell",
@@ -14,6 +15,7 @@
   
   "MenuDesc": "Configure Riskier Traffic Stops",
   "SetChanceMenuItemDescription": "Chance that an event happens",
+  "ChanceSettingMenuItemDescription": "Determines how the chance value is calculated. See INI for more info.",
   "GoasMenuItemDescription": "Enable or disable this outcome",
   "YicMenuItemDescription": "Enable or disable this outcome",
   "YellMenuItemDescription": "Enable or disable this outcome",

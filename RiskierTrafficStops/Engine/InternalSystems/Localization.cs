@@ -10,6 +10,7 @@ public static class Localization
 
     public static string MenuTitle { get; private set; }
     public static string SetChanceMenuItem { get; private set; }
+    public static string ChanceSettingMenuItem { get; private set; }
     public static string GoasMenuItem { get; private set; }
     public static string YicMenuItem { get; private set; }
     public static string YellMenuItem { get; private set; }
@@ -23,6 +24,7 @@ public static class Localization
 
     public static string MenuDesc { get; private set; }
     public static string SetChanceMenuItemDescription { get; private set; }
+    public static string ChanceSettingMenuItemDescription { get; private set; }
     public static string GoasMenuItemDescription { get; private set; }
     public static string YicMenuItemDescription { get; private set; }
     public static string YellMenuItemDescription { get; private set; }
@@ -59,6 +61,7 @@ public static class Localization
 
             MenuTitle = data.MenuTitle;
             SetChanceMenuItem = data.SetChanceMenuItem;
+            ChanceSettingMenuItem = data.ChanceSettingMenuItem;
             GoasMenuItem = data.GoasMenuItem;
             YicMenuItem = data.YicMenuItem;
             YellMenuItem = data.YellMenuItem;
@@ -72,6 +75,7 @@ public static class Localization
 
             MenuDesc = data.MenuDesc;
             SetChanceMenuItemDescription = data.SetChanceMenuItemDescription;
+            ChanceSettingMenuItemDescription = data.ChanceSettingMenuItemDescription;
             GoasMenuItemDescription = data.GoasMenuItemDescription;
             YicMenuItemDescription = data.YicMenuItemDescription;
             YellMenuItemDescription = data.YellMenuItemDescription;
@@ -87,6 +91,7 @@ public static class Localization
 
         Normal($"MenuTitle: {MenuTitle}");
         Normal($"SetChanceMenuItem: {SetChanceMenuItem}");
+        Normal($"ChanceSettingMenuItem: {ChanceSettingMenuItem}");
         Normal($"GoasMenuItem: {GoasMenuItem}");
         Normal($"YicMenuItem: {YicMenuItem}");
         Normal($"YellMenuItem: {YellMenuItem}");
@@ -99,6 +104,7 @@ public static class Localization
 
         Normal($"MenuDesc: {MenuDesc}");
         Normal($"SetChanceMenuItemDescription: {SetChanceMenuItemDescription}");
+        Normal($"ChanceSettingMenuItemDescription: {ChanceSettingMenuItemDescription}");
         Normal($"GoasMenuItemDescription: {GoasMenuItemDescription}");
         Normal($"YicMenuItemDescription: {YicMenuItemDescription}");
         Normal($"YellMenuItemDescription: {YellMenuItemDescription}");
@@ -116,37 +122,39 @@ public sealed class JSONStruct
 {
     #region titles
 
-    public string MenuTitle { get; }
-    public string SetChanceMenuItem { get; }
-    public string GoasMenuItem { get; }
-    public string YicMenuItem { get; }
-    public string YellMenuItem { get; }
-    public string RiyMenuItem { get; }
-    public string FleeMenuItem { get; }
-    public string RevMenuItem { get; }
-    public string SafMenuItem { get; }
-    public string SpitMenuItem { get; }
-    public string GoRoMenuItem { get; }
-    public string SaveToIniMenuItem { get; }
+    public string MenuTitle { get; set; }
+    public string SetChanceMenuItem { get; set; }
+    public string ChanceSettingMenuItem { get; set; }
+    public string GoasMenuItem { get; set; }
+    public string YicMenuItem { get; set; }
+    public string YellMenuItem { get; set; }
+    public string RiyMenuItem { get; set; }
+    public string FleeMenuItem { get; set; }
+    public string RevMenuItem { get; set; }
+    public string SafMenuItem { get; set; }
+    public string SpitMenuItem { get; set; }
+    public string GoRoMenuItem { get; set; }
+    public string SaveToIniMenuItem { get; set; }
 
     #endregion
 
     #region Descs
 
-    public string MenuDesc { get; }
-    public string SetChanceMenuItemDescription { get; }
-    public string GoasMenuItemDescription { get; }
-    public string YicMenuItemDescription { get; }
-    public string YellMenuItemDescription { get; }
-    public string RiyMenuItemDescription { get; }
-    public string FleeMenuItemDescription { get; }
-    public string RevMenuItemDescription { get; }
-    public string SafMenuItemDescription { get; }
-    public string SpitMenuItemDescription { get; }
-    public string GoRoMenuItemDescription { get; }
-    public string SaveToIniMenuItemDescription { get; }
+    public string MenuDesc { get; set; }
+    public string SetChanceMenuItemDescription { get; set; }
+    public string ChanceSettingMenuItemDescription { get; set; }
+    public string GoasMenuItemDescription { get; set; }
+    public string YicMenuItemDescription { get; set; }
+    public string YellMenuItemDescription { get; set; }
+    public string RiyMenuItemDescription { get; set; }
+    public string FleeMenuItemDescription { get; set; }
+    public string RevMenuItemDescription { get; set; }
+    public string SafMenuItemDescription { get; set; }
+    public string SpitMenuItemDescription { get; set; }
+    public string GoRoMenuItemDescription { get; set; }
+    public string SaveToIniMenuItemDescription { get; set; }
 
     #endregion
 
-    public string YellingNotiText { get; }
+    public string YellingNotiText { get; set; }
 }
