@@ -42,6 +42,11 @@ A LSPDFR plugin that adds randomized risk and tension to traffic stops by inject
 - [How to Contribute](./CONTRIBUTING.md)
 - [Architecture Overview](./docs/Architecture.md)
 
+
+## Reminder
+<img width="1000" height="525" alt="image" src="https://github.com/user-attachments/assets/d770d7b6-f391-4655-800d-2b994c568f28" />
+
+
 ---
 
 ## 📬 Need Help?
