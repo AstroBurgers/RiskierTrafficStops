@@ -97,12 +97,10 @@ internal class PluginUpdateChecker
 
     private async Task<string> DownloadUpdateTextAsync(Uri url, CancellationToken cts)
     {
-        using (var httpClient = new HttpClient())
-        {
-            httpClient.Timeout = TimeSpan.FromMilliseconds(30000);
+        using var httpClient = new HttpClient();
+        httpClient.Timeout = TimeSpan.FromMilliseconds(30000);
 
-            return await GetStringWithTimeoutAsync(httpClient, url, cts);
-        }
+        return await GetStringWithTimeoutAsync(httpClient, url, cts);
     }
 
     private static void SetTls()
@@ -118,23 +116,17 @@ internal class PluginUpdateChecker
     private static async Task<string> GetStringWithTimeoutAsync(HttpClient client, Uri requestUri,
         CancellationToken cancellationToken)
     {
-        using (var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
-        {
-            cts.CancelAfter(client.Timeout);
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        cts.CancelAfter(client.Timeout);
 
-            SetTls();
+        SetTls();
 
-            using var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
-            using (var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cts.Token))
-            {
-                response.EnsureSuccessStatusCode();
+        using var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+        using var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cts.Token);
+        response.EnsureSuccessStatusCode();
 
-                using (var stream = await response.Content.ReadAsStreamAsync())
-                using (var reader = new StreamReader(stream))
-                {
-                    return await reader.ReadToEndAsync();
-                }
-            }
-        }
+        using var stream = await response.Content.ReadAsStreamAsync();
+        using var reader = new StreamReader(stream);
+        return await reader.ReadToEndAsync();
     }
 }

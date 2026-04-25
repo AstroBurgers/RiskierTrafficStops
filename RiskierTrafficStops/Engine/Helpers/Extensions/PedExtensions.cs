@@ -2,26 +2,10 @@
 
 internal static class PedExtensions
 {
+/*
     internal static bool HasLosOnEntity(this Entity entity, Entity entity2) =>
         NativeFunction.Natives.xFCDFF7B72D23A1AC<bool>(entity, entity2, 17); // HAS_ENTITY_CLEAR_LOS_TO_ENTITY
-
-    internal static void GivePistol(this Ped ped)
-    {
-        if (!ped.IsAvailable()) return;
-        var pedWeapons = ped.Inventory.Weapons;
-        var weapon = ped.Inventory.HasLoadedWeapon
-            ? pedWeapons[Rndm.Next(pedWeapons.Count)]
-            : PistolList[Rndm.Next(PistolList.Length)];
-        Normal($"Giving {ped.Model.Name} {weapon}");
-        if (ped.Inventory.Weapons.Contains(weapon))
-        {
-            ped.Inventory.EquippedWeapon = weapon;
-        }
-        else
-        {
-            ped.Inventory.GiveNewWeapon(weapon, -1, true);
-        }
-    }
+*/
 
     /// <summary>
     /// Handles all relationship group changes
@@ -97,6 +81,24 @@ internal static class PedExtensions
                 GameFiber.Wait(time);
                 var time2 = Rndm.Next(timeBetweenRevs[0], timeBetweenRevs[1]) * 1000;
                 GameFiber.Wait(time2);
+            }
+        }
+
+        internal void GivePistol()
+        {
+            if (!ped.IsAvailable()) return;
+            var pedWeapons = ped.Inventory.Weapons;
+            var weapon = ped.Inventory.HasLoadedWeapon
+                ? pedWeapons[Rndm.Next(pedWeapons.Count)]
+                : PistolList[Rndm.Next(PistolList.Length)];
+            Normal($"Giving {ped.Model.Name} {weapon}");
+            if (ped.Inventory.Weapons.Contains(weapon))
+            {
+                ped.Inventory.EquippedWeapon = weapon;
+            }
+            else
+            {
+                ped.Inventory.GiveNewWeapon(weapon, -1, true);
             }
         }
     }
