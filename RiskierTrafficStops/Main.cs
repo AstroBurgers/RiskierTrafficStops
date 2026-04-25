@@ -179,7 +179,7 @@ public class Main : Plugin
     {
         try
         {
-            PulloverEventHandler.UnsubscribeFromEvents();
+            PulloverEventHandler.UnsubscribeFromEvents(); 
             Normal("Unloaded successfully.");
         }
         catch (Exception ex)
