@@ -39,64 +39,65 @@ internal static class PedExtensions
         RelationshipGroup.Cop.SetRelationshipWith(suspectRelationshipGroup, Relationship.Hate);
     }
 
-    /// <summary>
-    /// Checks if a ped both exists and is alive
-    /// </summary>
     /// <param name="ped"></param>
-    /// <returns></returns>
-    internal static bool IsAvailable(this Ped ped) => ped.Exists() && ped.IsAlive && ped.Model.IsValid;
-
-    /// <summary>
-    /// Makes ped drop their equipped weapon and put their hands up
-    /// </summary>
-    /// <param name="ped"></param>
-    internal static void Surrender(this Ped ped)
+    extension(Ped ped)
     {
-        if (!ped.IsAvailable())
-            return;
+        /// <summary>
+        /// Checks if a ped both exists and is alive
+        /// </summary>
+        /// <returns></returns>
+        internal bool IsAvailable() => ped.Exists() && ped.IsAlive && ped.Model.IsValid;
 
-        if (ped.Inventory.EquippedWeapon is not null && ped.Inventory.EquippedWeapon != "WEAPON_UNARMED")
+        /// <summary>
+        /// Makes ped drop their equipped weapon and put their hands up
+        /// </summary>
+        internal void Surrender()
         {
-            NativeFunction.Natives.x6B7513D9966FBEC0(ped); // SET_PED_DROPS_WEAPON
+            if (!ped.IsAvailable())
+                return;
+
+            if (ped.Inventory.EquippedWeapon is not null && ped.Inventory.EquippedWeapon != "WEAPON_UNARMED")
+            {
+                NativeFunction.Natives.x6B7513D9966FBEC0(ped); // SET_PED_DROPS_WEAPON
+            }
+
+            ped.Tasks.PutHandsUp(-1, MainPlayer);
         }
 
-        ped.Tasks.PutHandsUp(-1, MainPlayer);
+        internal void GiveWeapon()
+        {
+            if (!ped.IsAvailable()) return;
+            var pedWeapons = ped.Inventory.Weapons;
+            var weapon = ped.Inventory.HasLoadedWeapon
+                ? pedWeapons[Rndm.Next(pedWeapons.Count)]
+                : WeaponList[Rndm.Next(WeaponList.Length)];
+            Normal($"Giving {ped.Model.Name} weapon");
+            if (ped.Inventory.Weapons.Contains(weapon))
+            {
+                ped.Inventory.EquippedWeapon = weapon;
+            }
+            else
+            {
+                ped.Inventory.GiveNewWeapon(weapon, -1, true);
+            }
+        }
+
+        /// <summary>
+        /// Makes a ped rev their vehicles engine, the int list parameters each need a minimum and maximum value
+        /// </summary>
+        internal void RevEngine(Vehicle suspectVehicle, int[] timeBetweenRevs,
+            int[] timeForRevsToLast, int totalNumberOfRevs)
+        {
+            Normal("Starting Rev Engine method");
+            for (var i = 0; i < totalNumberOfRevs; i++)
+            {
+                GameFiber.Yield();
+                var time = Rndm.Next(timeForRevsToLast[0], timeForRevsToLast[1]) * 1000;
+                ped.Tasks.PerformDrivingManeuver(suspectVehicle, VehicleManeuver.RevEngine, time);
+                GameFiber.Wait(time);
+                var time2 = Rndm.Next(timeBetweenRevs[0], timeBetweenRevs[1]) * 1000;
+                GameFiber.Wait(time2);
+            }
+        }
     }
-
-    internal static void GiveWeapon(this Ped ped)
-    {
-        if (!ped.IsAvailable()) return;
-        var pedWeapons = ped.Inventory.Weapons;
-        var weapon = ped.Inventory.HasLoadedWeapon
-            ? pedWeapons[Rndm.Next(pedWeapons.Count)]
-            : WeaponList[Rndm.Next(WeaponList.Length)];
-        Normal($"Giving {ped.Model.Name} weapon");
-        if (ped.Inventory.Weapons.Contains(weapon))
-        {
-            ped.Inventory.EquippedWeapon = weapon;
-        }
-        else
-        {
-            ped.Inventory.GiveNewWeapon(weapon, -1, true);
-        }
-    }
-
-    /// <summary>
-    /// Makes a ped rev their vehicles engine, the int list parameters each need a minimum and maximum value
-    /// </summary>
-    internal static void RevEngine(this Ped driver, Vehicle suspectVehicle, int[] timeBetweenRevs,
-        int[] timeForRevsToLast, int totalNumberOfRevs)
-    {
-        Normal("Starting Rev Engine method");
-        for (var i = 0; i < totalNumberOfRevs; i++)
-        {
-            GameFiber.Yield();
-            var time = Rndm.Next(timeForRevsToLast[0], timeForRevsToLast[1]) * 1000;
-            driver.Tasks.PerformDrivingManeuver(suspectVehicle, VehicleManeuver.RevEngine, time);
-            GameFiber.Wait(time);
-            var time2 = Rndm.Next(timeBetweenRevs[0], timeBetweenRevs[1]) * 1000;
-            GameFiber.Wait(time2);
-        }
-    }
-
 }

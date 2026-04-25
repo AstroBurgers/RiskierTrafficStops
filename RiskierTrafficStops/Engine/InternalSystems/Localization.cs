@@ -15,7 +15,6 @@ public static class Localization
     public static string YellMenuItem { get; private set; }
     public static string RiyMenuItem { get; private set; }
     public static string FleeMenuItem { get; private set; }
-    public static string RevMenuItem { get; private set; }
     public static string SafMenuItem { get; private set; }
     public static string GoRoMenuItem { get; private set; }
     public static string SaveToIniMenuItem { get; private set; }
@@ -27,7 +26,6 @@ public static class Localization
     public static string YellMenuItemDescription { get; private set; }
     public static string RiyMenuItemDescription { get; private set; }
     public static string FleeMenuItemDescription { get; private set; }
-    public static string RevMenuItemDescription { get; private set; }
     public static string SafMenuItemDescription { get; private set; }
     public static string GoRoMenuItemDescription { get; private set; }
     public static string SaveToIniMenuItemDescription { get; private set; }
@@ -62,7 +60,6 @@ public static class Localization
             YellMenuItem = data.YellMenuItem;
             RiyMenuItem = data.RiyMenuItem;
             FleeMenuItem = data.FleeMenuItem;
-            RevMenuItem = data.RevMenuItem;
             SafMenuItem = data.SafMenuItem;
             GoRoMenuItem = data.GoRoMenuItem;
             SaveToIniMenuItem = data.SaveToIniMenuItem;
@@ -74,7 +71,6 @@ public static class Localization
             YellMenuItemDescription = data.YellMenuItemDescription;
             RiyMenuItemDescription = data.RiyMenuItemDescription;
             FleeMenuItemDescription = data.FleeMenuItemDescription;
-            RevMenuItemDescription = data.RevMenuItemDescription;
             SafMenuItemDescription = data.SafMenuItemDescription;
             GoRoMenuItemDescription = data.GoRoMenuItemDescription;
             SaveToIniMenuItemDescription = data.SaveToIniMenuItemDescription;
@@ -88,7 +84,6 @@ public static class Localization
         Normal($"YellMenuItem: {YellMenuItem}");
         Normal($"RiyMenuItem: {RiyMenuItem}");
         Normal($"FleeMenuItem: {FleeMenuItem}");
-        Normal($"RevMenuItem: {RevMenuItem}");
         Normal($"SafMenuItem: {SafMenuItem}");
         Normal($"SaveToIniMenuItem: {SaveToIniMenuItem}");
 
@@ -99,7 +94,6 @@ public static class Localization
         Normal($"YellMenuItemDescription: {YellMenuItemDescription}");
         Normal($"RiyMenuItemDescription: {RiyMenuItemDescription}");
         Normal($"FleeMenuItemDescription: {FleeMenuItemDescription}");
-        Normal($"RevMenuItemDescription: {RevMenuItemDescription}");
         Normal($"SafMenuItemDescription: {SafMenuItemDescription}");
         Normal($"SaveToIniMenuItemDescription: {SaveToIniMenuItemDescription}");
         Normal($"YellingNotiText: {YellingNotiText}");

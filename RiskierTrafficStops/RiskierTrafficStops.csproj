@@ -94,7 +94,6 @@
     <Compile Include="Engine\InternalSystems\Processing.cs" />
     <Compile Include="Engine\InternalSystems\PulloverEventHandler.cs" />
     <Compile Include="Engine\InternalSystems\PluginUpdateChecker.cs" />
-    <Compile Include="Engine\InternalSystems\DependencyVersionChecker.cs" />
     <Compile Include="Engine\InternalSystems\Settings\IniReflector.cs" />
     <Compile Include="Engine\InternalSystems\Settings\Settings.cs" />
     <Compile Include="GlobalUsings.cs" />
@@ -103,7 +102,6 @@
     <Compile Include="Mod\Outcomes\GetOutAndShoot.cs" />
     <Compile Include="Mod\Outcomes\GetOutRO.cs" />
     <Compile Include="Mod\Outcomes\Ramming.cs" />
-    <Compile Include="Mod\Outcomes\Revving.cs" />
     <Compile Include="Mod\Outcomes\ShootAndFlee.cs" />
     <Compile Include="Mod\Outcomes\Yelling.cs" />
     <Compile Include="Main.cs" />

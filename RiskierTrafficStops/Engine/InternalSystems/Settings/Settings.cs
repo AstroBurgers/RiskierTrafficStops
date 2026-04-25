@@ -45,7 +45,6 @@ internal static class Settings
         AllOutcomes.Add((UserConfig.GetOutAndShootEnabled, typeof(GetOutAndShoot)));
         AllOutcomes.Add((UserConfig.RamEnabled, typeof(Ramming)));
         AllOutcomes.Add((UserConfig.FleeEnabled, typeof(Flee)));
-        AllOutcomes.Add((UserConfig.RevEnabled, typeof(Revving)));
         AllOutcomes.Add((UserConfig.YellEnabled, typeof(Yelling)));
         AllOutcomes.Add((UserConfig.ShootAndFleeEnabled, typeof(ShootAndFlee)));
         AllOutcomes.Add((UserConfig.GetOutROEnabled, typeof(GetOutRo)));

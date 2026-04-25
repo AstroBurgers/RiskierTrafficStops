@@ -95,7 +95,6 @@ internal class SuspectRiskProfile
         [
             (typeof(GetOutRo), 50),
             (typeof(Yelling), 30),
-            (typeof(Revving), 20)
         ],
         [ERiskClassification.Violent] =
         [

@@ -26,9 +26,6 @@ internal static class ConfigMenu
     private static readonly UIMenuListScrollerItem<bool> FleeOutcomeEnabled =
         new(FleeMenuItem, FleeMenuItemDescription, [true, false]);
 
-    private static readonly UIMenuListScrollerItem<bool> RevOutcomeEnabled =
-        new(RevMenuItem, RevMenuItemDescription, [true, false]);
-
     private static readonly UIMenuListScrollerItem<bool> SafOutcomeEnabled =
         new(SafMenuItem, SafMenuItemDescription, [true, false]);
     
@@ -66,7 +63,7 @@ internal static class ConfigMenu
 
         MainMenu.AddItems(SetChance, ChanceSetting, SafOutcomeEnabled, GoasOutcomeEnabled,
             RiyOutcomeEnabled,
-            FleeOutcomeEnabled, RevOutcomeEnabled, YellOutcomeEnabled, GoRoEnabled, SaveToIni);
+            FleeOutcomeEnabled, YellOutcomeEnabled, GoRoEnabled, SaveToIni);
         SaveToIni.BackColor = Color.Green;
 
         MainMenu.OnItemSelect +=
@@ -91,7 +88,6 @@ internal static class ConfigMenu
         GoasOutcomeEnabled.SelectedItem = UserConfig.GetOutAndShootEnabled;
         RiyOutcomeEnabled.SelectedItem = UserConfig.RamEnabled;
         FleeOutcomeEnabled.SelectedItem = UserConfig.FleeEnabled;
-        RevOutcomeEnabled.SelectedItem = UserConfig.RevEnabled;
         SafOutcomeEnabled.SelectedItem = UserConfig.ShootAndFleeEnabled;
         GoRoEnabled.SelectedItem = UserConfig.GetOutROEnabled;
         Normal("Assigned Values");
@@ -105,7 +101,6 @@ internal static class ConfigMenu
         Settings.IniReflector.WriteSingle("GetOutAndShootEnabled", GoasOutcomeEnabled.SelectedItem);
         Settings.IniReflector.WriteSingle("RamEnabled", RiyOutcomeEnabled.SelectedItem);
         Settings.IniReflector.WriteSingle("FleeEnabled", FleeOutcomeEnabled.SelectedItem);
-        Settings.IniReflector.WriteSingle("RevEnabled", RevOutcomeEnabled.SelectedItem);
         Settings.IniReflector.WriteSingle("YellEnabled", YellOutcomeEnabled.SelectedItem);
         Settings.IniReflector.WriteSingle("ShootAndFleeEnabled", SafOutcomeEnabled.SelectedItem);
         Settings.IniReflector.WriteSingle("GetOutROEnabled", GoRoEnabled.SelectedItem);
