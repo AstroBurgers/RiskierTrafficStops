@@ -118,7 +118,7 @@ public class Main : Plugin
             try
             {
                 var installedVersion = CurrentAssembly.GetName().Version?.ToString(3) ?? "Unknown";
-                string onlineVersion = e.LatestVersion.ToString();
+                var onlineVersion = e.LatestVersion.ToString();
 
                 Normal($"Online Version: {onlineVersion} | Installed Version: {installedVersion}");
 
