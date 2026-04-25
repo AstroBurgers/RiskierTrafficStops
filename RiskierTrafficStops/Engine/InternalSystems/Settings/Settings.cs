@@ -47,9 +47,7 @@ internal static class Settings
         AllOutcomes.Add((UserConfig.FleeEnabled, typeof(Flee)));
         AllOutcomes.Add((UserConfig.RevEnabled, typeof(Revving)));
         AllOutcomes.Add((UserConfig.YellEnabled, typeof(Yelling)));
-        AllOutcomes.Add((UserConfig.YellInCarEnabled, typeof(YellInCar)));
         AllOutcomes.Add((UserConfig.ShootAndFleeEnabled, typeof(ShootAndFlee)));
-        AllOutcomes.Add((UserConfig.SpittingEnabled, typeof(Spitting)));
         AllOutcomes.Add((UserConfig.GetOutROEnabled, typeof(GetOutRo)));
         
         OutcomeChooser.EnabledOutcomes = AllOutcomes.Where(i => i.enabled).Select(i => i.outcome).ToList();
@@ -90,14 +88,8 @@ internal class Config
     public bool YellEnabled;
     
     [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
-    public bool YellInCarEnabled;
-    
-    [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
     public bool ShootAndFleeEnabled;
-    
-    [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
-    public bool SpittingEnabled;
-
+  
     [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
     public bool GetOutROEnabled;
 

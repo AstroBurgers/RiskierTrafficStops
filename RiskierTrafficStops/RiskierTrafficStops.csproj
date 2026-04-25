@@ -24,7 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>latestmajor</LangVersion>
+    <LangVersion>15</LangVersion>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     <DocumentationFile></DocumentationFile>
   </PropertyGroup>
@@ -58,10 +58,10 @@
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="RAGENativeUI">
-      <HintPath>C:\Users\steve\Desktop\References\RAGENativeUI.dll</HintPath>
+      <HintPath>..\..\..\..\..\References\RAGENativeUI.dll</HintPath>
     </Reference>
-    <Reference Include="RagePluginHook">
-      <HintPath>..\..\..\..\..\References\RagePluginHook.dll</HintPath>
+    <Reference Include="RagePluginHook, Version=0.0.0.0, Culture=neutral, processorArchitecture=Amd64">
+      <HintPath>..\packages\RagePluginHook.1.124.0\lib\net472\RagePluginHook.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -105,8 +105,6 @@
     <Compile Include="Mod\Outcomes\Ramming.cs" />
     <Compile Include="Mod\Outcomes\Revving.cs" />
     <Compile Include="Mod\Outcomes\ShootAndFlee.cs" />
-    <Compile Include="Mod\Outcomes\Spitting.cs" />
-    <Compile Include="Mod\Outcomes\YellInCar.cs" />
     <Compile Include="Mod\Outcomes\Yelling.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

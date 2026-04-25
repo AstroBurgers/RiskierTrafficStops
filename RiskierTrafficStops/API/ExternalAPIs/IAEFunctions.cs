@@ -4,14 +4,14 @@ namespace RiskierTrafficStops.API.ExternalAPIs;
 
 internal static class IaeFunctions
 {
-    private const string Logmsg = "Immersive Ambient Events cannot be found, user might not have it installed";
+    private const string LogMessage = "Immersive Ambient Events cannot be found, user might not have it installed";
 
     /// <summary>
     /// Checks if an entity is being used by a normal IAE event
     /// </summary>
     /// <param name="entity"></param>
     /// <returns></returns>
-    internal static bool IsPedUsedByAmbientEvent(Entity entity)
+    private static bool IsPedUsedByAmbientEvent(Entity entity)
     {
         try
         {
@@ -19,12 +19,12 @@ internal static class IaeFunctions
         }
         catch (FileNotFoundException)
         {
-            Normal(Logmsg);
+            Normal(LogMessage);
             return false;
         }
         catch (Exception)
         {
-            Normal(Logmsg);
+            Normal(LogMessage);
             return false;
         }
     }
@@ -34,7 +34,7 @@ internal static class IaeFunctions
     /// </summary>
     /// <param name="entity"></param>
     /// <returns></returns>
-    internal static bool IsPedUsedByBoloEvent(Entity entity)
+    private static bool IsPedUsedByBoloEvent(Entity entity)
     {
         try
         {
@@ -42,35 +42,33 @@ internal static class IaeFunctions
         }
         catch (FileNotFoundException)
         {
-            Normal(Logmsg);
+            Normal(LogMessage);
             return false;
         }
         catch (Exception)
         {
-            Normal(Logmsg);
+            Normal(LogMessage);
             return false;
         }
     }
 
-    internal static bool IaeEventCheck()
+    private static bool IaeEventCheck()
     {
         try
         {
-            if (ImmersiveAmbientEvents.API.EventAPI.CheckIfEventIsRunning(ImmersiveAmbientEvents.API.EventAPI.Events.StreetRacing))
-            {
-                Normal("Pullover is a part of an IAE street racing event, aborting RTS events...");
-                return false;
-            }
-            return true;
+            if (ImmersiveAmbientEvents.API.EventAPI.GetActiveEvent() is not ImmersiveAmbientEvents.API.EventAPI
+                    .ActiveEvent.StreetRacing) return true;
+            Normal("Pullover is a part of an IAE street racing event, aborting RTS events...");
+            return false;
         }
         catch (FileNotFoundException)
         {
-            Normal(Logmsg);
+            Normal(LogMessage);
             return false;
         }
         catch (Exception)
         {
-            Normal(Logmsg);
+            Normal(LogMessage);
             return false;
         }
     }
@@ -99,12 +97,12 @@ internal static class IaeFunctions
         }
         catch (FileNotFoundException)
         {
-            Normal(Logmsg);
+            Normal(LogMessage);
             return true;
         }
         catch (Exception)
         {
-            Normal(Logmsg);
+            Normal(LogMessage);
             return true;
         }
     }

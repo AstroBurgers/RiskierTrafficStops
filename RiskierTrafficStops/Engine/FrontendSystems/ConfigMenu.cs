@@ -17,9 +17,6 @@ internal static class ConfigMenu
     private static readonly UIMenuListScrollerItem<bool> GoasOutcomeEnabled =
         new(GoasMenuItem, GoasMenuItemDescription, [true, false]);
 
-    private static readonly UIMenuListScrollerItem<bool> YicOutcomeEnabled =
-        new(YicMenuItem, YicMenuItemDescription, [true, false]);
-
     private static readonly UIMenuListScrollerItem<bool> YellOutcomeEnabled =
         new(YellMenuItem, YellMenuItemDescription, [true, false]);
 
@@ -34,9 +31,6 @@ internal static class ConfigMenu
 
     private static readonly UIMenuListScrollerItem<bool> SafOutcomeEnabled =
         new(SafMenuItem, SafMenuItemDescription, [true, false]);
-
-    private static readonly UIMenuListScrollerItem<bool> SpitEnabled = new(SpitMenuItem, SpitMenuItemDescription,
-        [true, false]);
     
     private static readonly UIMenuListScrollerItem<bool> GoRoEnabled = new(GoRoMenuItem, GoRoMenuItemDescription,
         [true, false]);
@@ -70,9 +64,9 @@ internal static class ConfigMenu
 
         Normal("Adding Items to Menu");
 
-        MainMenu.AddItems(SetChance, ChanceSetting, SafOutcomeEnabled, GoasOutcomeEnabled, YicOutcomeEnabled,
+        MainMenu.AddItems(SetChance, ChanceSetting, SafOutcomeEnabled, GoasOutcomeEnabled,
             RiyOutcomeEnabled,
-            FleeOutcomeEnabled, RevOutcomeEnabled, YellOutcomeEnabled, SpitEnabled, GoRoEnabled, SaveToIni);
+            FleeOutcomeEnabled, RevOutcomeEnabled, YellOutcomeEnabled, GoRoEnabled, SaveToIni);
         SaveToIni.BackColor = Color.Green;
 
         MainMenu.OnItemSelect +=
@@ -95,12 +89,10 @@ internal static class ConfigMenu
         ChanceSetting.SelectedItem = UserConfig.ChanceSetting;
         YellOutcomeEnabled.SelectedItem = UserConfig.YellEnabled;
         GoasOutcomeEnabled.SelectedItem = UserConfig.GetOutAndShootEnabled;
-        YicOutcomeEnabled.SelectedItem = UserConfig.YellInCarEnabled;
         RiyOutcomeEnabled.SelectedItem = UserConfig.RamEnabled;
         FleeOutcomeEnabled.SelectedItem = UserConfig.FleeEnabled;
         RevOutcomeEnabled.SelectedItem = UserConfig.RevEnabled;
         SafOutcomeEnabled.SelectedItem = UserConfig.ShootAndFleeEnabled;
-        SpitEnabled.SelectedItem = UserConfig.SpittingEnabled;
         GoRoEnabled.SelectedItem = UserConfig.GetOutROEnabled;
         Normal("Assigned Values");
     }
@@ -115,9 +107,7 @@ internal static class ConfigMenu
         Settings.IniReflector.WriteSingle("FleeEnabled", FleeOutcomeEnabled.SelectedItem);
         Settings.IniReflector.WriteSingle("RevEnabled", RevOutcomeEnabled.SelectedItem);
         Settings.IniReflector.WriteSingle("YellEnabled", YellOutcomeEnabled.SelectedItem);
-        Settings.IniReflector.WriteSingle("YellInCarEnabled", YicOutcomeEnabled.SelectedItem);
         Settings.IniReflector.WriteSingle("ShootAndFleeEnabled", SafOutcomeEnabled.SelectedItem);
-        Settings.IniReflector.WriteSingle("SpittingEnabled", SpitEnabled.SelectedItem);
         Settings.IniReflector.WriteSingle("GetOutROEnabled", GoRoEnabled.SelectedItem);
         Normal("Finished Appending to INI");
 

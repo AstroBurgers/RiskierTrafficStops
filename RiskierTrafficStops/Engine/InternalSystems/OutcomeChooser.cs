@@ -56,8 +56,7 @@ internal static class OutcomeChooser
             
             var filteredOutcomes = EnabledOutcomes
                 .Where(o => !onPulloverStarted ||
-                            o != typeof(GetOutAndShoot) && o != typeof(Yelling) && o != typeof(GetOutRo) &&
-                            o != typeof(Spitting))
+                            o != typeof(GetOutAndShoot) && o != typeof(Yelling) && o != typeof(GetOutRo))
                 .ToList();
 
             switch (filteredOutcomes.Count)

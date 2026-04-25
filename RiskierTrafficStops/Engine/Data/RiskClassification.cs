@@ -8,7 +8,6 @@ namespace RiskierTrafficStops.Engine.Data;
 
 internal enum ERiskClassification
 {
-    Safe,
     Neutral,
     Violent
 }
@@ -82,20 +81,16 @@ internal class SuspectRiskProfile
     internal ERiskClassification WeightedClassification(Random rng)
     {
         var total = ViolentScore + NeutralScore + SafeScore;
+        if (total <= 0)
+            throw new InvalidOperationException("Total weight must be greater than 0.");
+
         var roll = rng.Next(0, total);
 
-        if (roll < ViolentScore)
-            return ERiskClassification.Violent;
-        return roll < ViolentScore + NeutralScore ? ERiskClassification.Neutral : ERiskClassification.Safe;
+        return roll < ViolentScore ? ERiskClassification.Violent : ERiskClassification.Neutral;
     }
 
     private static readonly Dictionary<ERiskClassification, List<(Type OutcomeType, int Weight)>> OutcomeWeights = new()
     {
-        [ERiskClassification.Safe] =
-        [
-            (typeof(YellInCar), 70),
-            (typeof(Spitting), 30)
-        ],
         [ERiskClassification.Neutral] =
         [
             (typeof(GetOutRo), 50),
@@ -121,8 +116,8 @@ internal class SuspectRiskProfile
 
         if (filtered.Count == 0)
         {
-            Normal($"No enabled outcomes for classification {classification}, using fallback");
-            return typeof(YellInCar); // or a safer neutral fallback
+            Normal($"No enabled outcomes for classification {classification}, returning null");
+            return null;
         }
 
         var totalWeight = filtered.Sum(x => x.Weight);
@@ -137,7 +132,7 @@ internal class SuspectRiskProfile
         }
 
         if (filtered.Count != 0) return filtered[filtered.Count - 1].OutcomeType;
-        Normal($"Filtered outcomes for classification {classification} was empty, using fallback");
-        return typeof(YellInCar);
+        Normal($"Filtered outcomes for classification {classification} was empty, returning null");
+        return null;
     }
 }

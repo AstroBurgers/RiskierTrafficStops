@@ -111,15 +111,6 @@ Selected for Neutral classification:
 
 ---
 
-### Safe Outcomes
-
-Selected for Safe classification:
-
-- `YellInCar`
-- `Spitting`
-
----
-
 ## Notes
 
 - The final classification is selected using a weighted random roll based on the total scores for each category.
