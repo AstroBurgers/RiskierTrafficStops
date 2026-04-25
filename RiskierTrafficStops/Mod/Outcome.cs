@@ -25,8 +25,8 @@ internal abstract class Outcome
         if (peds.Count == 0)
             CleanupOutcome(false);
     }
-    
-    internal static bool MeetsRequirements(LHandle handle)
+
+    private static bool MeetsRequirements(LHandle handle)
     {
         if (GetSuspectAndSuspectVehicle(handle, out Suspect, out SuspectVehicle) &&
             Functions.GetCurrentPullover() != null) return true;
