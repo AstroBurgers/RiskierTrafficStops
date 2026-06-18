@@ -26,12 +26,15 @@ internal sealed class GetOutAndShoot : Outcome, IProccessing
             _pedsInVehicle = SuspectVehicle.Occupants.ToList();
         }
 
-        if (_pedsInVehicle.Count < 1) {
+        if (_pedsInVehicle.Count < 1)
+        {
+            Normal("No peds found in suspect vehicle — aborting.");
             CleanupOutcome(true);
             return;
         }
-        
-        RemoveIgnoredPedsAndBlockEvents(ref _pedsInVehicle);
+
+        if (!RemoveIgnoredPedsAndBlockEvents(ref _pedsInVehicle))
+            return;
         
         SetRelationshipGroups(SuspectRelateGroup);
 

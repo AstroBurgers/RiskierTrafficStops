@@ -25,7 +25,6 @@ internal sealed class GetOutRo : Outcome, IProccessing
     private static readonly GunOutcomes[] AllGunOutcomes =
         (GunOutcomes[])Enum.GetValues(typeof(GunOutcomes));
 
-    // Instance field
     private List<Ped> _pedsInVehicle = [];
 
     public GetOutRo(LHandle handle) : base(handle)
@@ -57,7 +56,8 @@ internal sealed class GetOutRo : Outcome, IProccessing
             return;
         }
 
-        RemoveIgnoredPedsAndBlockEvents(ref _pedsInVehicle);
+        if (!RemoveIgnoredPedsAndBlockEvents(ref _pedsInVehicle))
+            return;
 
         if (_pedsInVehicle.Count < 1)
         {

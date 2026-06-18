@@ -64,7 +64,7 @@ public static class APIs
         if (pedData == null || vehicleData == null)
             return 0;
 
-        SuspectRiskProfile profile = new SuspectRiskProfile();
+        SuspectRiskProfile profile = new();
         profile.Evaluate(pedData, vehicleData);
 
         return profile.ViolentScore + profile.NeutralScore + profile.SafeScore;
@@ -91,7 +91,7 @@ public static class APIs
         if (pedData == null || vehicleData == null)
             return default;
 
-        SuspectRiskProfile profile = new SuspectRiskProfile();
+        SuspectRiskProfile profile = new();
         profile.Evaluate(pedData, vehicleData);
 
         return new PedRiskSummary(profile.ViolentScore, profile.NeutralScore, profile.SafeScore);

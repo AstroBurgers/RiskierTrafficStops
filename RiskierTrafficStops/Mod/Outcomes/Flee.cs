@@ -4,10 +4,10 @@ internal sealed class Flee : Outcome, IProccessing
 {
     private enum FleeOutcomes
     {
-        Flee        = 0,
-        BurnOut     = 1,
+        Flee = 0,
+        BurnOut = 1,
         LeaveVehicle = 2,
-        Revving     = 3,
+        Revving = 3,
     }
 
     private static readonly FleeOutcomes[] AllFleeOutcomes = (FleeOutcomes[])Enum.GetValues(typeof(FleeOutcomes));
@@ -23,17 +23,19 @@ internal sealed class Flee : Outcome, IProccessing
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));
 
         Normal("Adding all suspects in the vehicle to a list");
-        List<Ped> pedsInVehicle = new List<Ped>();
+        List<Ped> pedsInVehicle = [];
         if (SuspectVehicle.IsAvailable())
             pedsInVehicle = SuspectVehicle.Occupants.ToList();
 
         if (pedsInVehicle.Count < 1)
         {
+            Normal("No peds found in suspect vehicle — aborting.");
             CleanupOutcome(true);
             return;
         }
 
-        RemoveIgnoredPedsAndBlockEvents(ref pedsInVehicle);
+        if (!RemoveIgnoredPedsAndBlockEvents(ref pedsInVehicle))
+            return;
 
         FleeOutcomes chosenFleeOutcome = AllFleeOutcomes.PickRandom();
         Normal($"Chosen flee sub-outcome: {chosenFleeOutcome}");
@@ -68,7 +70,8 @@ internal sealed class Flee : Outcome, IProccessing
                 break;
 
             default:
-                throw new ArgumentOutOfRangeException(nameof(chosenFleeOutcome), chosenFleeOutcome, "Unhandled flee outcome");
+                throw new ArgumentOutOfRangeException(nameof(chosenFleeOutcome), chosenFleeOutcome,
+                    "Unhandled flee outcome");
         }
 
         GameFiberHandling.CleanupFibers();

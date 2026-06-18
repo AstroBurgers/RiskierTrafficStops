@@ -98,7 +98,7 @@ internal static class OutcomeChooser
                 return null;
             }
 
-            SuspectRiskProfile profile = new SuspectRiskProfile();
+            SuspectRiskProfile profile = new();
             profile.Evaluate(suspectData, vehicleData);
 
             ERiskClassification classification = profile.WeightedClassification(new Random(DateTime.Now.Millisecond));
@@ -183,7 +183,7 @@ internal static class OutcomeChooser
 
                 if (pedData is null || vehicleData is null) return false;
 
-                SuspectRiskProfile profile = new SuspectRiskProfile();
+                SuspectRiskProfile profile = new();
                 profile.Evaluate(pedData, vehicleData);
 
                 int totalScore = profile.ViolentScore + profile.NeutralScore + profile.SafeScore;

@@ -51,7 +51,7 @@ internal class PluginUpdateChecker
 
         _currentVersion = _latestVersion = assembly.GetName().Version;
 
-        using CancellationTokenSource cts = new CancellationTokenSource();
+        using CancellationTokenSource cts = new();
         cts.CancelAfter(30000);
 
         _asyncUpdateTask = TTask.Run(() => CheckForUpdatesAsync(cts.Token));
@@ -97,7 +97,7 @@ internal class PluginUpdateChecker
 
     private async Task<string> DownloadUpdateTextAsync(Uri url, CancellationToken cts)
     {
-        using HttpClient httpClient = new HttpClient();
+        using HttpClient httpClient = new();
         httpClient.Timeout = TimeSpan.FromMilliseconds(30000);
 
         return await GetStringWithTimeoutAsync(httpClient, url, cts);
@@ -121,12 +121,12 @@ internal class PluginUpdateChecker
 
         SetTls();
 
-        using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+        using HttpRequestMessage request = new(HttpMethod.Get, requestUri);
         using HttpResponseMessage response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cts.Token);
         response.EnsureSuccessStatusCode();
 
         using Stream stream = await response.Content.ReadAsStreamAsync();
-        using StreamReader reader = new StreamReader(stream);
+        using StreamReader reader = new(stream);
         return await reader.ReadToEndAsync();
     }
 }
