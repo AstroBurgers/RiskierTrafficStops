@@ -51,7 +51,7 @@ internal class PluginUpdateChecker
 
         _currentVersion = _latestVersion = assembly.GetName().Version;
 
-        using var cts = new CancellationTokenSource();
+        using CancellationTokenSource cts = new CancellationTokenSource();
         cts.CancelAfter(30000);
 
         _asyncUpdateTask = TTask.Run(() => CheckForUpdatesAsync(cts.Token));
@@ -73,7 +73,7 @@ internal class PluginUpdateChecker
     {
         try
         {
-            var updateText = await DownloadUpdateTextAsync(_apiUrl, cts);
+            string updateText = await DownloadUpdateTextAsync(_apiUrl, cts);
 
             cts.ThrowIfCancellationRequested();
 
@@ -97,7 +97,7 @@ internal class PluginUpdateChecker
 
     private async Task<string> DownloadUpdateTextAsync(Uri url, CancellationToken cts)
     {
-        using var httpClient = new HttpClient();
+        using HttpClient httpClient = new HttpClient();
         httpClient.Timeout = TimeSpan.FromMilliseconds(30000);
 
         return await GetStringWithTimeoutAsync(httpClient, url, cts);
@@ -116,17 +116,17 @@ internal class PluginUpdateChecker
     private static async Task<string> GetStringWithTimeoutAsync(HttpClient client, Uri requestUri,
         CancellationToken cancellationToken)
     {
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        using CancellationTokenSource cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         cts.CancelAfter(client.Timeout);
 
         SetTls();
 
-        using var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
-        using var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cts.Token);
+        using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+        using HttpResponseMessage response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cts.Token);
         response.EnsureSuccessStatusCode();
 
-        using var stream = await response.Content.ReadAsStreamAsync();
-        using var reader = new StreamReader(stream);
+        using Stream stream = await response.Content.ReadAsStreamAsync();
+        using StreamReader reader = new StreamReader(stream);
         return await reader.ReadToEndAsync();
     }
 }

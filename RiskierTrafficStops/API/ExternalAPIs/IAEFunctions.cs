@@ -83,7 +83,7 @@ internal static class IaeFunctions
         try
         {
             Normal("Performing IAE compatibility check...");
-            var ped = Functions.GetPulloverSuspect(handle);
+            Ped ped = Functions.GetPulloverSuspect(handle);
             if (IsPedUsedByAmbientEvent(ped))
             {
                 return IaeEventCheck();
@@ -93,6 +93,7 @@ internal static class IaeFunctions
                 Normal("Pullover is a part of an IAE BOLO event, aborting RTS events...");
                 return false;
             }
+
             return true;
         }
         catch (FileNotFoundException)

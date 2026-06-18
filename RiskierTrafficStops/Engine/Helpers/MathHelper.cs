@@ -14,12 +14,12 @@ internal static class MathHelper
 
     internal static long GenerateChance()
     {
-        var randomBytes = new byte[8]; // Using 8 bytes for more randomization ig
+        byte[] randomBytes = new byte[8]; // Using 8 bytes for more randomization ig
         ImprovedRandom.GetBytes(randomBytes);
 
-        var randomNumber = BitConverter.ToInt64(randomBytes, 0) & 0x7FFFFFFFFFFFFFFF; // Convert to positive integer
+        long randomNumber = BitConverter.ToInt64(randomBytes, 0) & 0x7FFFFFFFFFFFFFFF; // Convert to positive integer
 
-        var convertedChance = randomNumber % 100;
+        long convertedChance = randomNumber % 100;
 
         return convertedChance;
     }

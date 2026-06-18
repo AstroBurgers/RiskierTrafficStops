@@ -69,7 +69,7 @@ internal sealed class GetOutRo : Outcome, IProccessing
         SetRelationshipGroups(SuspectRelateGroup);
 
         // Get driver out and facing player before branching
-        var driver = _pedsInVehicle[0];
+        Ped driver = _pedsInVehicle[0];
         if (!driver.IsAvailable())
         {
             Normal("Driver is not available — aborting.");
@@ -91,7 +91,7 @@ internal sealed class GetOutRo : Outcome, IProccessing
 
         NativeFunction.Natives.TASK_TURN_PED_TO_FACE_ENTITY(driver, MainPlayer, 750);
 
-        var outcome = AllGoRoOutcomes.PickRandom();
+        GoRoOutcomes outcome = AllGoRoOutcomes.PickRandom();
         Normal($"Chosen GoRo sub-outcome: {outcome}");
 
         switch (outcome)
@@ -117,7 +117,7 @@ internal sealed class GetOutRo : Outcome, IProccessing
     {
         Normal("Starting recording outcome for the driver only.");
 
-        var driver = pedsInVehicle.FirstOrDefault();
+        Ped driver = pedsInVehicle.FirstOrDefault();
         if (driver is null || !driver.IsAvailable())
         {
             Normal("Driver is not available — aborting recording outcome.");
@@ -134,20 +134,20 @@ internal sealed class GetOutRo : Outcome, IProccessing
     {
         Normal("Starting knife outcome");
 
-        var driver = pedsInVehicle.FirstOrDefault(p => p.IsAvailable());
+        Ped driver = pedsInVehicle.FirstOrDefault(p => p.IsAvailable());
         if (driver is null)
         {
             Normal("No available driver for knife outcome — aborting.");
             return;
         }
 
-        var chance = GenerateChance();
+        long chance = GenerateChance();
         if (chance <= 50)
         {
             Normal("Knife outcome: driver only");
             GetPedOutWithKnife(driver);
 
-            foreach (var ped in pedsInVehicle.Where(p => p != driver && p.IsAvailable()))
+            foreach (Ped ped in pedsInVehicle.Where(p => p != driver && p.IsAvailable()))
             {
                 // Passengers flee from the player, not from themselves
                 ped.Tasks.ReactAndFlee(MainPlayer);
@@ -156,7 +156,7 @@ internal sealed class GetOutRo : Outcome, IProccessing
         else
         {
             Normal("Knife outcome: all peds");
-            foreach (var ped in pedsInVehicle.Where(p => p.IsAvailable()))
+            foreach (Ped ped in pedsInVehicle.Where(p => p.IsAvailable()))
             {
                 GetPedOutWithKnife(ped);
             }
@@ -203,23 +203,23 @@ internal sealed class GetOutRo : Outcome, IProccessing
     {
         Normal("Starting gun outcome");
 
-        var driver = pedsInVehicle.FirstOrDefault(p => p.IsAvailable());
+        Ped driver = pedsInVehicle.FirstOrDefault(p => p.IsAvailable());
         if (driver is null)
         {
             Normal("No available driver for gun outcome — aborting.");
             return;
         }
 
-        var gunOutcome = AllGunOutcomes.PickRandom();
+        GunOutcomes gunOutcome = AllGunOutcomes.PickRandom();
         Normal($"Chosen gun sub-outcome: {gunOutcome}");
 
-        var chance = GenerateChance();
+        long chance = GenerateChance();
         if (chance <= 50)
         {
             Normal("Gun outcome: driver only");
             GetPedOutWithGun(driver, gunOutcome);
 
-            foreach (var ped in pedsInVehicle.Where(p => p != driver && p.IsAvailable()))
+            foreach (Ped ped in pedsInVehicle.Where(p => p != driver && p.IsAvailable()))
             {
                 if (ped.IsInAnyVehicle(false))
                 {
@@ -235,7 +235,7 @@ internal sealed class GetOutRo : Outcome, IProccessing
         else
         {
             Normal("Gun outcome: all peds");
-            foreach (var ped in pedsInVehicle.Where(p => p.IsAvailable()))
+            foreach (Ped ped in pedsInVehicle.Where(p => p.IsAvailable()))
             {
                 GetPedOutWithGun(ped, gunOutcome);
             }

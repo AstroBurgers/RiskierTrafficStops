@@ -79,7 +79,7 @@ internal abstract class Outcome
         {
             if (!MeetsRequirements(_trafficStopLHandle)) return;
 
-            var fiber = GameFiber.StartNew(fiberStartMethod);
+            GameFiber fiber = GameFiber.StartNew(fiberStartMethod);
             GameFiberHandling.OutcomeGameFibers.Add(fiber);
         }
         catch (Exception e)

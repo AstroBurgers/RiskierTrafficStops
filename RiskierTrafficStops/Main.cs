@@ -87,7 +87,7 @@ public class Main : Plugin
             // Startup notification
             TryExecute("Startup notification", () =>
             {
-                var loadText = PluginLoadText?.PickRandom() ?? "Loaded!";
+                string loadText = PluginLoadText?.PickRandom() ?? "Loaded!";
                 ShowNotification(loadText);
             });
 
@@ -117,8 +117,8 @@ public class Main : Plugin
         {
             try
             {
-                var installedVersion = CurrentAssembly.GetName().Version?.ToString(3) ?? "Unknown";
-                var onlineVersion = e.LatestVersion.ToString();
+                string installedVersion = CurrentAssembly.GetName().Version?.ToString(3) ?? "Unknown";
+                string onlineVersion = e.LatestVersion.ToString();
 
                 Normal($"Online Version: {onlineVersion} | Installed Version: {installedVersion}");
 
@@ -211,7 +211,7 @@ public class Main : Plugin
     {
         try
         {
-            var unloadText = PluginUnloadText?.PickRandom() ?? "Unloaded.";
+            string unloadText = PluginUnloadText?.PickRandom() ?? "Unloaded.";
             Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~Unload Message",
                 unloadText);
         }

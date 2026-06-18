@@ -2,6 +2,7 @@
 using CommonDataFramework.Modules.PedDatabase;
 using CommonDataFramework.Modules.VehicleDatabase;
 using LSPD_First_Response.Engine.Scripting.Entities;
+using RiskierTrafficStops.Engine.InternalSystems.Settings;
 using RiskierTrafficStops.Mod.Outcomes;
 
 namespace RiskierTrafficStops.Engine.Data;
@@ -29,7 +30,7 @@ internal class SuspectRiskProfile
             return;
         }
         
-        var config = UserConfig;
+        Config config = UserConfig;
 
         switch (suspect.DriversLicenseState)
         {
@@ -53,7 +54,7 @@ internal class SuspectRiskProfile
 
         if (vehicle.HasAnyBOLOs)
         {
-            var boloCount = vehicle.GetAllBOLOs().Length;
+            int boloCount = vehicle.GetAllBOLOs().Length;
             ViolentScore += config.BoloWeightPerCount * boloCount;
             NeutralScore += config.BoloWeightPerCount * boloCount;
         }
@@ -80,11 +81,11 @@ internal class SuspectRiskProfile
 
     internal ERiskClassification WeightedClassification(Random rng)
     {
-        var total = ViolentScore + NeutralScore + SafeScore;
+        int total = ViolentScore + NeutralScore + SafeScore;
         if (total <= 0)
             throw new InvalidOperationException("Total weight must be greater than 0.");
 
-        var roll = rng.Next(0, total);
+        int roll = rng.Next(0, total);
 
         return roll < ViolentScore ? ERiskClassification.Violent : ERiskClassification.Neutral;
     }
@@ -107,9 +108,9 @@ internal class SuspectRiskProfile
 
     internal static Type PickWeightedOutcome(ERiskClassification classification, Random rng)
     {
-        var pool = OutcomeWeights[classification];
+        List<(Type OutcomeType, int Weight)> pool = OutcomeWeights[classification];
 
-        var filtered = pool
+        List<(Type OutcomeType, int Weight)> filtered = pool
             .Where(entry => OutcomeChooser.EnabledOutcomes.Contains(entry.OutcomeType))
             .ToList();
 
@@ -119,11 +120,11 @@ internal class SuspectRiskProfile
             return null;
         }
 
-        var totalWeight = filtered.Sum(x => x.Weight);
-        var roll = rng.Next(0, totalWeight);
+        int totalWeight = filtered.Sum(x => x.Weight);
+        int roll = rng.Next(0, totalWeight);
 
-        var cumulative = 0;
-        foreach (var (outcomeType, weight) in filtered)
+        int cumulative = 0;
+        foreach ((Type outcomeType, int weight) in filtered)
         {
             cumulative += weight;
             if (roll < cumulative)

@@ -15,7 +15,7 @@ internal sealed class ShootAndFlee : Outcome, IProccessing
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));
 
         Normal("Adding all suspects in the vehicle to a list");
-        var pedsInVehicle = new List<Ped>();
+        List<Ped> pedsInVehicle = new List<Ped>();
         if (SuspectVehicle.IsAvailable())
             pedsInVehicle = SuspectVehicle.Occupants?.ToList() ?? [];
 
@@ -33,7 +33,7 @@ internal sealed class ShootAndFlee : Outcome, IProccessing
             return;
         }
 
-        var chance = GenerateChance();
+        long chance = GenerateChance();
         _shouldPedsWaitForPlayer = chance <= 65;
 
         if (chance <= 60)
@@ -53,9 +53,9 @@ internal sealed class ShootAndFlee : Outcome, IProccessing
 
     private void AllSuspects(List<Ped> peds)
     {
-        foreach (var ped in peds.Where(p => p.IsAvailable()))
+        foreach (Ped ped in peds.Where(p => p.IsAvailable()))
         {
-            var capturedPed = ped;
+            Ped capturedPed = ped;
             GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() =>
             {
                 if (!capturedPed.IsAvailable()) return;

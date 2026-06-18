@@ -33,7 +33,7 @@ internal static class OutcomeChooser
         Normal($"DisableRTSForCurrentStop: {DisableRTSForCurrentStop}");
         Normal("Choosing Outcome");
 
-        var filteredOutcomes = EnabledOutcomes
+        List<Type> filteredOutcomes = EnabledOutcomes
             .Where(o => !onPulloverStarted ||
                         o != typeof(GetOutAndShoot) && o != typeof(Yelling) && o != typeof(GetOutRo))
             .ToList();
@@ -82,15 +82,15 @@ internal static class OutcomeChooser
     {
         try
         {
-            var suspect = Functions.GetPulloverSuspect(handle);
+            Ped suspect = Functions.GetPulloverSuspect(handle);
             if (suspect is null || !suspect.Exists() || !suspect.LastVehicle.Exists())
             {
                 Normal("Suspect-based selection: suspect or vehicle not available");
                 return null;
             }
 
-            var suspectData = suspect.GetPedData();
-            var vehicleData = suspect.LastVehicle.GetVehicleData();
+            PedData suspectData = suspect.GetPedData();
+            VehicleData vehicleData = suspect.LastVehicle.GetVehicleData();
 
             if (suspectData is null || vehicleData is null)
             {
@@ -98,11 +98,11 @@ internal static class OutcomeChooser
                 return null;
             }
 
-            var profile = new SuspectRiskProfile();
+            SuspectRiskProfile profile = new SuspectRiskProfile();
             profile.Evaluate(suspectData, vehicleData);
 
-            var classification = profile.WeightedClassification(new Random(DateTime.Now.Millisecond));
-            var outcome = SuspectRiskProfile.PickWeightedOutcome(classification, Rndm);
+            ERiskClassification classification = profile.WeightedClassification(new Random(DateTime.Now.Millisecond));
+            Type outcome = SuspectRiskProfile.PickWeightedOutcome(classification, Rndm);
 
             if (outcome is null)
             {
@@ -136,12 +136,12 @@ internal static class OutcomeChooser
         if (filteredOutcomes.Count == 1)
             return filteredOutcomes[0];
 
-        var availableOutcomes = filteredOutcomes
+        List<Type> availableOutcomes = filteredOutcomes
             .Where(o => o != _lastOutcome)
             .ToList();
 
         // If filtering out the last outcome leaves nothing (e.g. only one type existed), use full list
-        var pool = availableOutcomes.Count > 0 ? availableOutcomes : filteredOutcomes;
+        List<Type> pool = availableOutcomes.Count > 0 ? availableOutcomes : filteredOutcomes;
         return pool[Rndm.Next(pool.Count)];
     }
 
@@ -152,8 +152,8 @@ internal static class OutcomeChooser
     {
         if (EnabledOutcomes.Count == 0) return false;
 
-        var chanceSetting = UserConfig.ChanceSetting;
-        var convertedChance = GenerateChance();
+        ChancesSetting chanceSetting = UserConfig.ChanceSetting;
+        long convertedChance = GenerateChance();
 
         if (chanceSetting == ChancesSetting.EDynamicChance)
         {
@@ -175,18 +175,18 @@ internal static class OutcomeChooser
             {
                 if (!Functions.IsPlayerPerformingPullover()) return false;
 
-                var suspect = Functions.GetPulloverSuspect(handle);
+                Ped suspect = Functions.GetPulloverSuspect(handle);
                 if (suspect is null || !suspect.Exists() || !suspect.LastVehicle.Exists()) return false;
 
-                var pedData = suspect.GetPedData();
-                var vehicleData = suspect.LastVehicle.GetVehicleData();
+                PedData pedData = suspect.GetPedData();
+                VehicleData vehicleData = suspect.LastVehicle.GetVehicleData();
 
                 if (pedData is null || vehicleData is null) return false;
 
-                var profile = new SuspectRiskProfile();
+                SuspectRiskProfile profile = new SuspectRiskProfile();
                 profile.Evaluate(pedData, vehicleData);
 
-                var totalScore = profile.ViolentScore + profile.NeutralScore + profile.SafeScore;
+                int totalScore = profile.ViolentScore + profile.NeutralScore + profile.SafeScore;
                 if (totalScore == 0) return false;
 
                 long suspectChance = Math.Min(totalScore, 100);

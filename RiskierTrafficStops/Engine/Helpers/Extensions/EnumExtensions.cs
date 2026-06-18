@@ -3,15 +3,12 @@
 internal static class EnumExtensions
 {
     // Thanks again, Khori
-    extension<T>(IEnumerable<T> source)
+    internal static T PickRandom<T>(this IEnumerable<T> source)
     {
-        internal T PickRandom()
-        {
-            var list = source.ToList();
-            return list.Any() ? list.PickRandom(1).Single() : default;
-        }
-
-        internal IEnumerable<T> PickRandom(int count) => source.Shuffle().Take(count);
-        internal IEnumerable<T> Shuffle() => source.OrderBy(_ => Guid.NewGuid());
+        List<T> list = source.ToList();
+        return list.Any() ? list.PickRandom(1).Single() : default;
     }
+
+    internal static IEnumerable<T> PickRandom<T>(this IEnumerable<T> source, int count) => source.Shuffle().Take(count);
+    internal static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source) => source.OrderBy(_ => Guid.NewGuid());
 }

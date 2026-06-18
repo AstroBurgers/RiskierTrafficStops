@@ -23,7 +23,7 @@ internal sealed class Flee : Outcome, IProccessing
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));
 
         Normal("Adding all suspects in the vehicle to a list");
-        var pedsInVehicle = new List<Ped>();
+        List<Ped> pedsInVehicle = new List<Ped>();
         if (SuspectVehicle.IsAvailable())
             pedsInVehicle = SuspectVehicle.Occupants.ToList();
 
@@ -35,7 +35,7 @@ internal sealed class Flee : Outcome, IProccessing
 
         RemoveIgnoredPedsAndBlockEvents(ref pedsInVehicle);
 
-        var chosenFleeOutcome = AllFleeOutcomes.PickRandom();
+        FleeOutcomes chosenFleeOutcome = AllFleeOutcomes.PickRandom();
         Normal($"Chosen flee sub-outcome: {chosenFleeOutcome}");
 
         switch (chosenFleeOutcome)
@@ -57,7 +57,7 @@ internal sealed class Flee : Outcome, IProccessing
                 break;
 
             case FleeOutcomes.LeaveVehicle:
-                foreach (var ped in pedsInVehicle.Where(p => p.IsAvailable()))
+                foreach (Ped ped in pedsInVehicle.Where(p => p.IsAvailable()))
                     ped.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen);
 
                 SetupPursuitWithList(true, pedsInVehicle);
@@ -84,7 +84,7 @@ internal sealed class Flee : Outcome, IProccessing
         Normal("Suspect is revving engine");
         Suspect.RevEngine(SuspectVehicle, [2, 4], [2, 4], 2);
 
-        var chance = GenerateChance();
+        long chance = GenerateChance();
         switch (chance)
         {
             case <= 25:
