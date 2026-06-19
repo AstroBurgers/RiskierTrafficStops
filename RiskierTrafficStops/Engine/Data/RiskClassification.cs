@@ -2,13 +2,13 @@
 using CommonDataFramework.Modules.PedDatabase;
 using CommonDataFramework.Modules.VehicleDatabase;
 using LSPD_First_Response.Engine.Scripting.Entities;
+using RiskierTrafficStops.Engine.InternalSystems.Settings;
 using RiskierTrafficStops.Mod.Outcomes;
 
 namespace RiskierTrafficStops.Engine.Data;
 
 internal enum ERiskClassification
 {
-    Safe,
     Neutral,
     Violent
 }
@@ -30,7 +30,7 @@ internal class SuspectRiskProfile
             return;
         }
         
-        var config = UserConfig;
+        Config config = UserConfig;
 
         switch (suspect.DriversLicenseState)
         {
@@ -54,7 +54,7 @@ internal class SuspectRiskProfile
 
         if (vehicle.HasAnyBOLOs)
         {
-            var boloCount = vehicle.GetAllBOLOs().Length;
+            int boloCount = vehicle.GetAllBOLOs().Length;
             ViolentScore += config.BoloWeightPerCount * boloCount;
             NeutralScore += config.BoloWeightPerCount * boloCount;
         }
@@ -81,26 +81,21 @@ internal class SuspectRiskProfile
 
     internal ERiskClassification WeightedClassification(Random rng)
     {
-        var total = ViolentScore + NeutralScore + SafeScore;
-        var roll = rng.Next(0, total);
+        int total = ViolentScore + NeutralScore + SafeScore;
+        if (total <= 0)
+            throw new InvalidOperationException("Total weight must be greater than 0.");
 
-        if (roll < ViolentScore)
-            return ERiskClassification.Violent;
-        return roll < ViolentScore + NeutralScore ? ERiskClassification.Neutral : ERiskClassification.Safe;
+        int roll = rng.Next(0, total);
+
+        return roll < ViolentScore ? ERiskClassification.Violent : ERiskClassification.Neutral;
     }
 
     private static readonly Dictionary<ERiskClassification, List<(Type OutcomeType, int Weight)>> OutcomeWeights = new()
     {
-        [ERiskClassification.Safe] =
-        [
-            (typeof(YellInCar), 70),
-            (typeof(Spitting), 30)
-        ],
         [ERiskClassification.Neutral] =
         [
             (typeof(GetOutRo), 50),
             (typeof(Yelling), 30),
-            (typeof(Revving), 20)
         ],
         [ERiskClassification.Violent] =
         [
@@ -113,23 +108,23 @@ internal class SuspectRiskProfile
 
     internal static Type PickWeightedOutcome(ERiskClassification classification, Random rng)
     {
-        var pool = OutcomeWeights[classification];
+        List<(Type OutcomeType, int Weight)> pool = OutcomeWeights[classification];
 
-        var filtered = pool
+        List<(Type OutcomeType, int Weight)> filtered = pool
             .Where(entry => OutcomeChooser.EnabledOutcomes.Contains(entry.OutcomeType))
             .ToList();
 
         if (filtered.Count == 0)
         {
-            Normal($"No enabled outcomes for classification {classification}, using fallback");
-            return typeof(YellInCar); // or a safer neutral fallback
+            Normal($"No enabled outcomes for classification {classification}, returning null");
+            return null;
         }
 
-        var totalWeight = filtered.Sum(x => x.Weight);
-        var roll = rng.Next(0, totalWeight);
+        int totalWeight = filtered.Sum(x => x.Weight);
+        int roll = rng.Next(0, totalWeight);
 
-        var cumulative = 0;
-        foreach (var (outcomeType, weight) in filtered)
+        int cumulative = 0;
+        foreach ((Type outcomeType, int weight) in filtered)
         {
             cumulative += weight;
             if (roll < cumulative)
@@ -137,7 +132,7 @@ internal class SuspectRiskProfile
         }
 
         if (filtered.Count != 0) return filtered[filtered.Count - 1].OutcomeType;
-        Normal($"Filtered outcomes for classification {classification} was empty, using fallback");
-        return typeof(YellInCar);
+        Normal($"Filtered outcomes for classification {classification} was empty, returning null");
+        return null;
     }
 }

@@ -10,6 +10,8 @@ public class Main : Plugin
 {
     internal static bool OnDuty;
 
+    private static readonly Assembly CurrentAssembly = Assembly.GetExecutingAssembly();
+
     public override void Initialize()
     {
         Normal("Plugin initialized, go on duty to fully load plugin.");
@@ -19,117 +21,203 @@ public class Main : Plugin
     private static void Functions_OnDutyStateChanged(bool onDuty)
     {
         OnDuty = onDuty;
-        if (onDuty && DoesJsonFileExist() && VerifyDependencies())
+
+        if (!onDuty) return;
+
+        if (!DoesJsonFileExist())
         {
-            GameFiber.StartNew(() =>
+            Normal("JSON config file not found — plugin will not load. Please reinstall.");
+            ShowNotification("~r~JSON config file missing!~s~ Please reinstall the plugin.");
+            return;
+        }
+
+        if (!VerifyDependencies())
+        {
+            Normal("Dependency verification failed — plugin will not load.");
+            ShowNotification("~r~Missing dependencies!~s~ Check the LSPDFR console for details.");
+            return;
+        }
+
+        GameFiber.StartNew(LoadPlugin);
+    }
+
+    private static void LoadPlugin()
+    {
+        try
+        {
+            // Wait for CDF to be ready, bail out if it times out
+            Normal("Waiting for CDF to be ready...");
+            GameFiber.WaitUntil(CDFFunctions.IsPluginReady, 30000);
+
+            if (!CDFFunctions.IsPluginReady())
             {
-                // Wait for CDF to load before doing anything else
-                GameFiber.WaitUntil(CDFFunctions.IsPluginReady, 30000);
-                
-                // Reading INI File
-                Normal("Setting up INI File...");
-                IniFileSetup();
-                // Reading Json
-                Normal("Deserializing and reading Json...");
-                ReadJson();
-                // Creating Menu
-                Normal("Creating config menu menu...");
-                ConfigMenu.CreateMenu();
-                // Loading console commands
-                Normal("Adding console commands...");
-                Game.AddConsoleCommands();
-                // Handling ignored peds list
-                Normal("Starting process to handle API lists...");
-                GameFiber.StartNew(Processing.HandleIgnoredPedsList);
-                // Checking for updates
-                Normal("Checking for updates...");
-                new PluginUpdateChecker(Assembly.GetExecutingAssembly()).OnCompleted += (_, e) =>
+                Normal("CDF did not become ready within 30 seconds, aborting load.");
+                ShowNotification("~r~CommonDataFramework timed out.~s~ RTS will not load.");
+                return;
+            }
+
+            // INI setup
+            Normal("Setting up INI file...");
+            TryExecute("INI file setup", IniFileSetup);
+
+            // JSON deserialization
+            Normal("Deserializing and reading JSON...");
+            if (!TryExecute("JSON deserialization", ReadJson))
+            {
+                Normal("JSON deserialization failed. Plugin will not load. Check your JSON file for syntax errors.");
+                ShowNotification("~r~JSON file is invalid!~s~ Check the LSPDFR console for details.");
+                return;
+            }
+
+            // Menu and commands
+            Normal("Creating config menu...");
+            TryExecute("Config menu creation", ConfigMenu.CreateMenu);
+
+            Normal("Adding console commands...");
+            TryExecute("Console commands", Game.AddConsoleCommands);
+
+            // Background processing
+            Normal("Starting process to handle API lists...");
+            GameFiber.StartNew(Processing.HandleIgnoredPedsList);
+
+            // Update check. Non-critical, never block load
+            Normal("Checking for updates...");
+            TryExecute("Update checker", StartUpdateCheck);
+
+            // Startup notification
+            TryExecute("Startup notification", () =>
+            {
+                string loadText = PluginLoadText?.PickRandom() ?? "Loaded!";
+                ShowNotification(loadText);
+            });
+
+            if (DebugMode)
+            {
+                ShowNotification("~y~Debug mode is enabled~s~, please let the developer know.");
+            }
+
+            // Subscribe to events only after everything else is set up
+            PulloverEventHandler.SubscribeToEvents();
+
+            AppDomain.CurrentDomain.DomainUnload += Cleanup;
+            AppDomain.CurrentDomain.UnhandledException += GlobalExceptionHandler;
+
+            Normal("Loaded successfully.");
+        }
+        catch (Exception ex)
+        {
+            Error(new Exception("Critical failure during plugin load", ex));
+            ShowNotification("~r~RTS failed to load!~s~ Check the LSPDFR console for details.");
+        }
+    }
+
+    private static void StartUpdateCheck()
+    {
+        new PluginUpdateChecker(CurrentAssembly).OnCompleted += (_, e) =>
+        {
+            try
+            {
+                string installedVersion = CurrentAssembly.GetName().Version?.ToString(3) ?? "Unknown";
+                string onlineVersion = e.LatestVersion.ToString();
+
+                Normal($"Online Version: {onlineVersion} | Installed Version: {installedVersion}");
+
+                if (e.Failed)
                 {
-                    var updateAvailable = e.UpdateAvailable;
-                    var updateVersion = e.LatestVersion;
-
-                    if (updateAvailable)
-                    {
-                        Game.DisplayNotification("3dtextures",
-                            "mpgroundlogo_cops",
-                            "Riskier Traffic Stops",
-                            "~b~By Astro",
-                            $"Plugin is ~r~out of to date~s~!\n" +
-                            $"Online Version: ~g~{updateVersion}~s~\n" +
-                            $"Installed version: ~y~{Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}~s~\n" +
-                            $"Please update ~r~ASAP~s~!");
-                        Normal(
-                            $"Online Version: {updateVersion} | Installed Version: {Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}");
-                        Normal("Plugin is outdated, please up date to the latest version as soon as possible");
-                    }
-                    else if (!e.Failed)
-                    {
-                        Normal(
-                            $"Online Version: {updateVersion} | Installed Version: {Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}");
-                        Game.DisplayNotification("3dtextures",
-                            "mpgroundlogo_cops",
-                            "Riskier Traffic Stops",
-                            "~b~By Astro",
-                            "Plugin is ~g~up to date!");
-                    }
-                };
-
-                // Displaying startup Notifications
-                Game.DisplayNotification("3dtextures",
-                    "mpgroundlogo_cops",
-                    "Riskier Traffic Stops",
-                    "~b~By Astro",
-                    $"{PluginLoadText.PickRandom()}");
-
-                if (DebugMode)
-                {
-                    Game.DisplayNotification("3dtextures",
-                        "mpgroundlogo_cops",
-                        "Riskier Traffic Stops",
-                        "~b~By Astro",
-                        "Debug mode is enabled, please let the developer know.");
+                    Normal("Update check failed — skipping update notification.");
+                    return;
                 }
 
-                //Subscribes to events
-                PulloverEventHandler.SubscribeToEvents();
+                if (e.UpdateAvailable)
+                {
+                    Normal("Plugin is outdated, please update to the latest version as soon as possible.");
+                    ShowNotification(
+                        $"Plugin is ~r~out of date~s~!\n" +
+                        $"Online Version: ~g~{onlineVersion}~s~\n" +
+                        $"Installed Version: ~y~{installedVersion}~s~\n" +
+                        "Please update ~r~ASAP~s~!");
+                }
+                else
+                {
+                    ShowNotification("Plugin is ~g~up to date!");
+                }
+            }
+            catch (Exception ex)
+            {
+                Error(new Exception("Exception in update check callback", ex));
+            }
+        };
+    }
 
-                AppDomain.CurrentDomain.DomainUnload += Cleanup;
-                AppDomain.CurrentDomain.UnhandledException += GlobalExceptionHandler;
-                Normal("Loaded successfully");
-            });
+    /// <summary>
+    /// Wraps an action in a try/catch, logging any exception without crashing the caller.
+    /// Returns true if the action succeeded, false if it threw.
+    /// </summary>
+    private static bool TryExecute(string stepName, Action action)
+    {
+        try
+        {
+            action();
+            return true;
         }
+        catch (Exception ex)
+        {
+            Error(new Exception($"Non-critical failure during '{stepName}'", ex));
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Displays a notification using the standard RTS header.
+    /// </summary>
+    private static void ShowNotification(string message)
+    {
+        Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~By Astro", message);
     }
 
     private static void Cleanup(object sender, EventArgs e)
     {
-        //Unsubscribes from events
-        PulloverEventHandler.UnsubscribeFromEvents();
-
-        Normal("Unloaded successfully");
+        try
+        {
+            PulloverEventHandler.UnsubscribeFromEvents(); 
+            Normal("Unloaded successfully.");
+        }
+        catch (Exception ex)
+        {
+            Error(new Exception("Exception during cleanup", ex));
+        }
     }
 
     private static void GlobalExceptionHandler(object sender, UnhandledExceptionEventArgs e)
     {
-        // Credit to Khori for this
-        if (e.ExceptionObject is Exception)
+        try
         {
-            // Log or handle the exception here
-            Normal("Global exception caught");
-            Normal($"Terminating={e.IsTerminating}");
+            if (e.ExceptionObject is Exception ex)
+            {
+                Error(new Exception($"Unhandled global exception (Terminating={e.IsTerminating})", ex));
+            }
+            else
+            {
+                Normal($"Global exception thrown but no Exception object was provided (Terminating={e.IsTerminating})");
+            }
         }
-        else
+        catch
         {
-            // It's not an Exception object; handle it accordingly
-            Normal("Global exception thrown but no exception was provided");
+            // Never let the exception handler itself throw
         }
     }
 
     public override void Finally()
     {
-        Game.DisplayNotification("3dtextures",
-            "mpgroundlogo_cops",
-            "Riskier Traffic Stops",
-            "~b~Unload Message",
-            $"{PluginUnloadText.PickRandom()}");
+        try
+        {
+            string unloadText = PluginUnloadText?.PickRandom() ?? "Unloaded.";
+            Game.DisplayNotification("3dtextures", "mpgroundlogo_cops", "Riskier Traffic Stops", "~b~Unload Message",
+                unloadText);
+        }
+        catch
+        {
+            // Finally() must never throw
+        }
     }
 }

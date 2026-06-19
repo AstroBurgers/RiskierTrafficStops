@@ -26,16 +26,19 @@ internal sealed class GetOutAndShoot : Outcome, IProccessing
             _pedsInVehicle = SuspectVehicle.Occupants.ToList();
         }
 
-        if (_pedsInVehicle.Count < 1) {
+        if (_pedsInVehicle.Count < 1)
+        {
+            Normal("No peds found in suspect vehicle — aborting.");
             CleanupOutcome(true);
             return;
         }
-        
-        RemoveIgnoredPedsAndBlockEvents(ref _pedsInVehicle);
+
+        if (!RemoveIgnoredPedsAndBlockEvents(ref _pedsInVehicle))
+            return;
         
         SetRelationshipGroups(SuspectRelateGroup);
 
-        foreach (var ped in _pedsInVehicle.Where(ped => ped.IsAvailable()))
+        foreach (Ped ped in _pedsInVehicle.Where(ped => ped.IsAvailable()))
         {
             ped.GiveWeapon();
             GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(() => GetPedOutOfVehicle(ped)));
@@ -44,7 +47,7 @@ internal sealed class GetOutAndShoot : Outcome, IProccessing
         GameFiber.Wait(7010);
 
         Normal("Choosing outcome from GetOutAndShootOutcomes");
-        var chosenOutcome = _allGoasOutcomes.PickRandom();
+        GetOutAndShootOutcomes chosenOutcome = _allGoasOutcomes.PickRandom();
         Normal($"Chosen Outcome: {chosenOutcome}");
 
         switch (chosenOutcome)
@@ -53,7 +56,7 @@ internal sealed class GetOutAndShoot : Outcome, IProccessing
                 SetupPursuitWithList(true, _pedsInVehicle);
                 break;
             case GetOutAndShootOutcomes.KeepShooting:
-                foreach (var i in _pedsInVehicle.Where(i => i.IsAvailable()))
+                foreach (Ped i in _pedsInVehicle.Where(i => i.IsAvailable()))
                 {
                     Normal("Giving Suspect FightAgainstClosestHatedTarget Task");
                     i.Tasks.FightAgainstClosestHatedTarget(40f, -1);

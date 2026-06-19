@@ -12,18 +12,21 @@ internal sealed class Ramming : Outcome, IProccessing
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));
         Normal("Adding all suspect in the vehicle to a list");
-        var pedsInVehicle = new List<Ped>();
+        List<Ped> pedsInVehicle = [];
         if (SuspectVehicle.IsAvailable()) {
             pedsInVehicle = SuspectVehicle.Occupants.ToList();
         }
 
         if (pedsInVehicle.Count < 1)
         {
+            Normal("No peds found in suspect vehicle — aborting.");
             CleanupOutcome(true);
             return;
         }
+
+        if (!RemoveIgnoredPedsAndBlockEvents(ref pedsInVehicle))
+            return;
         
-        RemoveIgnoredPedsAndBlockEvents(ref pedsInVehicle);        
         if (Suspect.IsAvailable())
         {
             Suspect.Tasks.DriveToPosition(MainPlayer.LastVehicle.Position, 100f, VehicleDrivingFlags.Reverse, 0.1f);

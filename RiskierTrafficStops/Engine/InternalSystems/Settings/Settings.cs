@@ -8,14 +8,13 @@ internal enum ChancesSetting
 {
     EStaticChance,
     ESuspectBased,
-    EDynamicChance,
     ECompoundingChance
 }
 
 internal static class Settings
 {
     internal static readonly Config UserConfig = new();
-    internal static IniReflector<Config> IniReflector = new ("plugins/LSPDFR/RiskierTrafficStops.ini");
+    internal static readonly IniReflector<Config> IniReflector = new ("plugins/LSPDFR/RiskierTrafficStops.ini");
     
     private static readonly List<(bool enabled, Type outcome)> AllOutcomes = [];
     
@@ -45,12 +44,9 @@ internal static class Settings
         AllOutcomes.Add((UserConfig.GetOutAndShootEnabled, typeof(GetOutAndShoot)));
         AllOutcomes.Add((UserConfig.RamEnabled, typeof(Ramming)));
         AllOutcomes.Add((UserConfig.FleeEnabled, typeof(Flee)));
-        AllOutcomes.Add((UserConfig.RevEnabled, typeof(Revving)));
         AllOutcomes.Add((UserConfig.YellEnabled, typeof(Yelling)));
-        AllOutcomes.Add((UserConfig.YellInCarEnabled, typeof(YellInCar)));
         AllOutcomes.Add((UserConfig.ShootAndFleeEnabled, typeof(ShootAndFlee)));
-        AllOutcomes.Add((UserConfig.SpittingEnabled, typeof(Spitting)));
-        AllOutcomes.Add((UserConfig.GetOutROEnabled, typeof(GetOutRo)));
+        AllOutcomes.Add((UserConfig.GetOutRoEnabled, typeof(GetOutRo)));
         
         OutcomeChooser.EnabledOutcomes = AllOutcomes.Where(i => i.enabled).Select(i => i.outcome).ToList();
 
@@ -84,22 +80,13 @@ internal class Config
     public bool FleeEnabled;
     
     [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
-    public bool RevEnabled;
-    
-    [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
     public bool YellEnabled;
     
     [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
-    public bool YellInCarEnabled;
-    
-    [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
     public bool ShootAndFleeEnabled;
-    
+  
     [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
-    public bool SpittingEnabled;
-
-    [IniReflectorValue(sectionName: "Outcome_Configuration", defaultValue: true)]
-    public bool GetOutROEnabled;
+    public bool GetOutRoEnabled;
 
     // Risk weightings for chancing system
     

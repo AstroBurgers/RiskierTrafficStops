@@ -2,26 +2,10 @@
 
 internal static class PedExtensions
 {
-    internal static bool HasLosOnEntity(this Entity entity, Entity entity2) =>
-        NativeFunction.Natives.xFCDFF7B72D23A1AC<bool>(entity, entity2, 17); // HAS_ENTITY_CLEAR_LOS_TO_ENTITY
-
-    internal static void GivePistol(this Ped ped)
-    {
-        if (!ped.IsAvailable()) return;
-        var pedWeapons = ped.Inventory.Weapons;
-        var weapon = ped.Inventory.HasLoadedWeapon
-            ? pedWeapons[Rndm.Next(pedWeapons.Count)]
-            : PistolList[Rndm.Next(PistolList.Length)];
-        Normal($"Giving {ped.Model.Name} {weapon}");
-        if (ped.Inventory.Weapons.Contains(weapon))
-        {
-            ped.Inventory.EquippedWeapon = weapon;
-        }
-        else
-        {
-            ped.Inventory.GiveNewWeapon(weapon, -1, true);
-        }
-    }
+    /*
+        internal static bool HasLosOnEntity(this Entity entity, Entity entity2) =>
+            NativeFunction.Natives.xFCDFF7B72D23A1AC<bool>(entity, entity2, 17); // HAS_ENTITY_CLEAR_LOS_TO_ENTITY
+    */
 
     /// <summary>
     /// Handles all relationship group changes
@@ -46,10 +30,9 @@ internal static class PedExtensions
     /// <returns></returns>
     internal static bool IsAvailable(this Ped ped) => ped.Exists() && ped.IsAlive && ped.Model.IsValid;
 
-    /// <summary>
+    /*/// <summary>
     /// Makes ped drop their equipped weapon and put their hands up
     /// </summary>
-    /// <param name="ped"></param>
     internal static void Surrender(this Ped ped)
     {
         if (!ped.IsAvailable())
@@ -61,13 +44,13 @@ internal static class PedExtensions
         }
 
         ped.Tasks.PutHandsUp(-1, MainPlayer);
-    }
+    }*/
 
     internal static void GiveWeapon(this Ped ped)
     {
         if (!ped.IsAvailable()) return;
-        var pedWeapons = ped.Inventory.Weapons;
-        var weapon = ped.Inventory.HasLoadedWeapon
+        WeaponDescriptorCollection pedWeapons = ped.Inventory.Weapons;
+        WeaponDescriptor weapon = ped.Inventory.HasLoadedWeapon
             ? pedWeapons[Rndm.Next(pedWeapons.Count)]
             : WeaponList[Rndm.Next(WeaponList.Length)];
         Normal($"Giving {ped.Model.Name} weapon");
@@ -84,19 +67,36 @@ internal static class PedExtensions
     /// <summary>
     /// Makes a ped rev their vehicles engine, the int list parameters each need a minimum and maximum value
     /// </summary>
-    internal static void RevEngine(this Ped driver, Vehicle suspectVehicle, int[] timeBetweenRevs,
+    internal static void RevEngine(this Ped ped, Vehicle suspectVehicle, int[] timeBetweenRevs,
         int[] timeForRevsToLast, int totalNumberOfRevs)
     {
         Normal("Starting Rev Engine method");
-        for (var i = 0; i < totalNumberOfRevs; i++)
+        for (int i = 0; i < totalNumberOfRevs; i++)
         {
             GameFiber.Yield();
-            var time = Rndm.Next(timeForRevsToLast[0], timeForRevsToLast[1]) * 1000;
-            driver.Tasks.PerformDrivingManeuver(suspectVehicle, VehicleManeuver.RevEngine, time);
+            int time = Rndm.Next(timeForRevsToLast[0], timeForRevsToLast[1]) * 1000;
+            ped.Tasks.PerformDrivingManeuver(suspectVehicle, VehicleManeuver.RevEngine, time);
             GameFiber.Wait(time);
-            var time2 = Rndm.Next(timeBetweenRevs[0], timeBetweenRevs[1]) * 1000;
+            int time2 = Rndm.Next(timeBetweenRevs[0], timeBetweenRevs[1]) * 1000;
             GameFiber.Wait(time2);
         }
     }
 
+    internal static void GivePistol(this Ped ped)
+    {
+        if (!ped.IsAvailable()) return;
+        WeaponDescriptorCollection pedWeapons = ped.Inventory.Weapons;
+        WeaponDescriptor weapon = ped.Inventory.HasLoadedWeapon
+            ? pedWeapons[Rndm.Next(pedWeapons.Count)]
+            : PistolList[Rndm.Next(PistolList.Length)];
+        Normal($"Giving {ped.Model.Name} {weapon}");
+        if (ped.Inventory.Weapons.Contains(weapon))
+        {
+            ped.Inventory.EquippedWeapon = weapon;
+        }
+        else
+        {
+            ped.Inventory.GiveNewWeapon(weapon, -1, true);
+        }
+    }
 }

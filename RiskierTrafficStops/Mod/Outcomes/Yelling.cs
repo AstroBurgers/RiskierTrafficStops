@@ -28,7 +28,7 @@ internal sealed class Yelling : Outcome, IProccessing
         InvokeEvent(RTSEventType.Start);
         GameFiberHandling.OutcomeGameFibers.Add(GameFiber.StartNew(Start));
         Normal("Adding all suspect in the vehicle to a list");
-        var pedsInVehicle = new List<Ped>();
+        List<Ped> pedsInVehicle = new();
         if (SuspectVehicle.IsAvailable())
         {
             pedsInVehicle = SuspectVehicle.Occupants.ToList();
@@ -36,11 +36,13 @@ internal sealed class Yelling : Outcome, IProccessing
 
         if (pedsInVehicle.Count < 1)
         {
+            Normal("No peds found in suspect vehicle — aborting.");
             CleanupOutcome(true);
             return;
         }
 
-        RemoveIgnoredPedsAndBlockEvents(ref pedsInVehicle);
+        if (!RemoveIgnoredPedsAndBlockEvents(ref pedsInVehicle))
+            return;
 
         Normal("Making Suspect Leave Vehicle");
         Suspect.Tasks.LeaveVehicle(LeaveVehicleFlags.LeaveDoorOpen).WaitForCompletion(30000);
@@ -50,7 +52,7 @@ internal sealed class Yelling : Outcome, IProccessing
         Normal("Making suspect Yell at Player");
         const int timesToSpeak = 2;
 
-        for (var i = 0; i < timesToSpeak; i++)
+        for (int i = 0; i < timesToSpeak; i++)
         {
             Normal($"Making Suspect Yell, time: {i}");
             Suspect.PlayAmbientSpeech(VoiceLines[Rndm.Next(VoiceLines.Length)]);

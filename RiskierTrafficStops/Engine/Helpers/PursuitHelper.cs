@@ -16,11 +16,11 @@ internal static class PursuitHelper
             Functions.ForceEndCurrentPullover();
         }
 
-        var pursuitLHandle = Functions.CreatePursuit();
+        LHandle pursuitLHandle = Functions.CreatePursuit();
 
         Functions.SetPursuitIsActiveForPlayer(pursuitLHandle, true);
 
-        for (var i = suspects.Length - 1; i >= 0; i--)
+        for (int i = suspects.Length - 1; i >= 0; i--)
         {
             if (!suspects[i].Exists())
             {
@@ -47,11 +47,11 @@ internal static class PursuitHelper
             Functions.ForceEndCurrentPullover();
         }
 
-        var pursuitLHandle = Functions.CreatePursuit();
+        LHandle pursuitLHandle = Functions.CreatePursuit();
 
         Functions.SetPursuitIsActiveForPlayer(pursuitLHandle, true);
 
-        for (var i = suspectList.Count - 1; i >= 0; i--)
+        for (int i = suspectList.Count - 1; i >= 0; i--)
         {
             GameFiber.Yield();
             if (!suspectList[i].IsAvailable()) continue;
@@ -69,11 +69,11 @@ internal static class PursuitHelper
             Functions.ForceEndCurrentPullover();
         }
 
-        var pursuitLHandle = Functions.CreatePursuit();
+        LHandle pursuitLHandle = Functions.CreatePursuit();
 
         Functions.SetPursuitIsActiveForPlayer(pursuitLHandle, true);
 
-        for (var i = suspectList.Length - 1; i >= 0; i--)
+        for (int i = suspectList.Length - 1; i >= 0; i--)
         {
             GameFiber.Yield();
             if (!suspectList[i].IsAvailable()) continue;
@@ -90,7 +90,7 @@ internal static class PursuitHelper
         {
             static float GenerateRandomFloat() => (float)Math.Round((float)(Rndm.NextDouble() * (2.0 - 0.1) + 0.1), 1);
 
-            var attributes = Functions.GetPedPursuitAttributes(suspect);
+            PedPursuitAttributes attributes = Functions.GetPedPursuitAttributes(suspect);
 
             attributes.MinDrivingSpeed = MphToMps(Rndm.Next(35, 60));
             attributes.MaxDrivingSpeed = MphToMps(Rndm.Next(61, 201));

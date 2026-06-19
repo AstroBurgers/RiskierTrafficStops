@@ -11,6 +11,9 @@ internal enum RTSEventType
     End
 }
 
+/// <summary>
+/// Contains API functions to interact with RiskierTrafficStops
+/// </summary>
 public static class APIs
 {
     /// <summary>
@@ -30,12 +33,12 @@ public static class APIs
     /// <param name="peds">Peds to be ignored</param>
     public static void DisableRTSForPeds(params Ped[] peds)
     {
-        foreach (var ped in peds.ToList().Where(ped => ped.IsAvailable()))
+        foreach (Ped ped in peds.ToList().Where(ped => ped.IsAvailable()))
         {
             Outcome.PedsToIgnore.Add(ped);
         }
 
-        foreach (var ped in Outcome.PedsToIgnore.Where(ped => !ped.IsAvailable()).ToList())
+        foreach (Ped ped in Outcome.PedsToIgnore.Where(ped => !ped.IsAvailable()).ToList())
         {
             Outcome.PedsToIgnore.Remove(ped);
         }
@@ -55,13 +58,13 @@ public static class APIs
         if (!suspect.Exists())
             return 0;
 
-        var pedData = suspect.GetPedData();
-        var vehicleData = suspect.LastVehicle?.GetVehicleData();
+        PedData pedData = suspect.GetPedData();
+        VehicleData vehicleData = suspect.LastVehicle?.GetVehicleData();
 
         if (pedData == null || vehicleData == null)
             return 0;
 
-        var profile = new SuspectRiskProfile();
+        SuspectRiskProfile profile = new();
         profile.Evaluate(pedData, vehicleData);
 
         return profile.ViolentScore + profile.NeutralScore + profile.SafeScore;
@@ -82,18 +85,21 @@ public static class APIs
         if (!suspect.Exists())
             return default;
 
-        var pedData = suspect.GetPedData();
-        var vehicleData = suspect.LastVehicle?.GetVehicleData();
+        PedData pedData = suspect.GetPedData();
+        VehicleData vehicleData = suspect.LastVehicle?.GetVehicleData();
 
         if (pedData == null || vehicleData == null)
             return default;
 
-        var profile = new SuspectRiskProfile();
+        SuspectRiskProfile profile = new();
         profile.Evaluate(pedData, vehicleData);
 
         return new PedRiskSummary(profile.ViolentScore, profile.NeutralScore, profile.SafeScore);
     }
     
+    /// <summary>
+    /// Delegate function for events
+    /// </summary>
     public delegate void RTSEvent();
 
     /// <summary>

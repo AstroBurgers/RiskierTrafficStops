@@ -12,21 +12,27 @@ internal abstract class Outcome
 
     internal static readonly List<Ped> PedsToIgnore = [];
 
-    internal static void RemoveIgnoredPedsAndBlockEvents(ref List<Ped> peds)
+    internal static bool RemoveIgnoredPedsAndBlockEvents(ref List<Ped> peds)
     {
         if (Suspect.IsAvailable() && PedsToIgnore.Contains(Suspect))
         {
             CleanupOutcome(true);
+            return false;
         }
-        
+
         peds.RemoveAll(ped => ped.IsAvailable() && PedsToIgnore.Contains(ped));
         peds.ForEach(ped => ped.BlockPermanentEvents = true);
-        
+
         if (peds.Count == 0)
+        {
             CleanupOutcome(false);
+            return false;
+        }
+
+        return true;
     }
-    
-    internal static bool MeetsRequirements(LHandle handle)
+
+    private static bool MeetsRequirements(LHandle handle)
     {
         if (GetSuspectAndSuspectVehicle(handle, out Suspect, out SuspectVehicle) &&
             Functions.GetCurrentPullover() != null) return true;
@@ -79,7 +85,7 @@ internal abstract class Outcome
         {
             if (!MeetsRequirements(_trafficStopLHandle)) return;
 
-            var fiber = GameFiber.StartNew(fiberStartMethod);
+            GameFiber fiber = GameFiber.StartNew(fiberStartMethod);
             GameFiberHandling.OutcomeGameFibers.Add(fiber);
         }
         catch (Exception e)

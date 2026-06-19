@@ -16,8 +16,8 @@ internal static class Logger
         Game.LogTrivial($"[ERROR] Type: {ex.GetType().FullName}");
         Game.LogTrivial($"[ERROR] Stack Trace: {ex.StackTrace}");
 
-        var inner = ex.InnerException;
-        var depth = 1;
+        Exception inner = ex.InnerException;
+        int depth = 1;
         while (inner != null)
         {
             Game.LogTrivial($"[ERROR] Inner Exception (Depth {depth}): {inner.GetType().FullName} - {inner.Message}");
