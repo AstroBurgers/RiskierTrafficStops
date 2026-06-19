@@ -41,8 +41,8 @@
     <DocumentationFile>bin\Release\RiskierTrafficStops.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CommonDataFramework">
-      <HintPath>C:\References\CommonDataFramework.dll</HintPath>
+    <Reference Include="CommonDataFramework, Version=1.0.0.10, Culture=neutral, processorArchitecture=Amd64">
+      <HintPath>..\packages\CommonDataFramework.1.0.0.10\lib\net48\CommonDataFramework.dll</HintPath>
     </Reference>
     <Reference Include="Costura, Version=6.2.0.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
       <HintPath>..\packages\Costura.Fody.6.2.0\lib\netstandard2.0\Costura.dll</HintPath>
@@ -57,8 +57,8 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="RAGENativeUI">
-      <HintPath>..\..\..\..\..\References\RAGENativeUI.dll</HintPath>
+    <Reference Include="RAGENativeUI, Version=1.9.3.0, Culture=neutral, processorArchitecture=Amd64">
+      <HintPath>..\packages\RAGENativeUI.1.9.3\lib\net472\RAGENativeUI.dll</HintPath>
     </Reference>
     <Reference Include="RagePluginHook, Version=0.0.0.0, Culture=neutral, processorArchitecture=Amd64">
       <HintPath>..\packages\RagePluginHook.1.124.0\lib\net472\RagePluginHook.dll</HintPath>
