@@ -30,7 +30,7 @@ internal static class PedExtensions
     /// <returns></returns>
     internal static bool IsAvailable(this Ped ped) => ped.Exists() && ped.IsAlive && ped.Model.IsValid;
 
-    /// <summary>
+    /*/// <summary>
     /// Makes ped drop their equipped weapon and put their hands up
     /// </summary>
     internal static void Surrender(this Ped ped)
@@ -44,7 +44,7 @@ internal static class PedExtensions
         }
 
         ped.Tasks.PutHandsUp(-1, MainPlayer);
-    }
+    }*/
 
     internal static void GiveWeapon(this Ped ped)
     {

@@ -89,7 +89,7 @@ internal static class ConfigMenu
         RiyOutcomeEnabled.SelectedItem = UserConfig.RamEnabled;
         FleeOutcomeEnabled.SelectedItem = UserConfig.FleeEnabled;
         SafOutcomeEnabled.SelectedItem = UserConfig.ShootAndFleeEnabled;
-        GoRoEnabled.SelectedItem = UserConfig.GetOutROEnabled;
+        GoRoEnabled.SelectedItem = UserConfig.GetOutRoEnabled;
         Normal("Assigned Values");
     }
 

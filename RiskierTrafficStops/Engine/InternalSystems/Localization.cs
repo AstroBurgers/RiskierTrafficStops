@@ -111,7 +111,6 @@ public sealed class JSONStruct
     public string YellMenuItem { get; set; }
     public string RiyMenuItem { get; set; }
     public string FleeMenuItem { get; set; }
-    public string RevMenuItem { get; set; }
     public string SafMenuItem { get; set; }
     public string GoRoMenuItem { get; set; }
     public string SaveToIniMenuItem { get; set; }
@@ -127,7 +126,6 @@ public sealed class JSONStruct
     public string YellMenuItemDescription { get; set; }
     public string RiyMenuItemDescription { get; set; }
     public string FleeMenuItemDescription { get; set; }
-    public string RevMenuItemDescription { get; set; }
     public string SafMenuItemDescription { get; set; }
     public string GoRoMenuItemDescription { get; set; }
     public string SaveToIniMenuItemDescription { get; set; }
