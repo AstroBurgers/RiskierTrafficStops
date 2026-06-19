@@ -8,7 +8,6 @@ internal enum ChancesSetting
 {
     EStaticChance,
     ESuspectBased,
-    EDynamicChance,
     ECompoundingChance
 }
 

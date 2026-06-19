@@ -158,12 +158,6 @@ internal static class OutcomeChooser
         ChancesSetting chanceSetting = UserConfig.ChanceSetting;
         long convertedChance = GenerateChance();
 
-        if (chanceSetting == ChancesSetting.EDynamicChance)
-        {
-            ChancesSetting[] chanceSettings = [ChancesSetting.EStaticChance, ChancesSetting.EDynamicChance];
-            chanceSetting = chanceSettings.PickRandom();
-        }
-
         switch (chanceSetting)
         {
             case ChancesSetting.EStaticChance:
@@ -198,15 +192,6 @@ internal static class OutcomeChooser
                 Normal($"Should Event Happen: {convertedChance < suspectChance}");
 
                 return convertedChance < suspectChance;
-            }
-
-            case ChancesSetting.EDynamicChance:
-            {
-                Normal("Chance: " + convertedChance);
-
-                return GenerateChance() % 2 == 0
-                    ? convertedChance < UserConfig.Chance
-                    : convertedChance < _currentChance;
             }
 
             default:

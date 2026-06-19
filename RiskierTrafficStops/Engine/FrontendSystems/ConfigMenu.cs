@@ -12,8 +12,7 @@ internal static class ConfigMenu
         SetChanceMenuItemDescription, 0, 100, 1);
 
     private static readonly UIMenuListScrollerItem<ChancesSetting> ChanceSetting = new(ChanceSettingMenuItem,
-        ChanceSettingMenuItemDescription, [ChancesSetting.EStaticChance, ChancesSetting.ECompoundingChance, ChancesSetting.ESuspectBased, ChancesSetting.EDynamicChance
-        ]);
+        ChanceSettingMenuItemDescription, [ChancesSetting.EStaticChance, ChancesSetting.ECompoundingChance, ChancesSetting.ESuspectBased]);
     private static readonly UIMenuListScrollerItem<bool> GoasOutcomeEnabled =
         new(GoasMenuItem, GoasMenuItemDescription, [true, false]);
 
