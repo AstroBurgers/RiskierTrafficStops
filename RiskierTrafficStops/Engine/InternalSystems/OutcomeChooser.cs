@@ -131,10 +131,13 @@ internal static class OutcomeChooser
     /// </summary>
     private static Type PickOutcome(List<Type> filteredOutcomes)
     {
-        if (filteredOutcomes.Count == 0) return null;
-
-        if (filteredOutcomes.Count == 1)
-            return filteredOutcomes[0];
+        switch (filteredOutcomes.Count)
+        {
+            case 0:
+                return null;
+            case 1:
+                return filteredOutcomes[0];
+        }
 
         List<Type> availableOutcomes = filteredOutcomes
             .Where(o => o != _lastOutcome)
@@ -197,6 +200,15 @@ internal static class OutcomeChooser
                 return convertedChance < suspectChance;
             }
 
+            case ChancesSetting.EDynamicChance:
+            {
+                Normal("Chance: " + convertedChance);
+
+                return GenerateChance() % 2 == 0
+                    ? convertedChance < UserConfig.Chance
+                    : convertedChance < _currentChance;
+            }
+            
             default:
                 throw new ArgumentOutOfRangeException(nameof(chanceSetting), chanceSetting, "Unhandled chance setting");
         }
