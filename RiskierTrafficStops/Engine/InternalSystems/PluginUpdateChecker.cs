@@ -51,10 +51,11 @@ internal class PluginUpdateChecker
 
         _currentVersion = _latestVersion = assembly.GetName().Version;
 
-        using CancellationTokenSource cts = new();
+        CancellationTokenSource cts = new();
         cts.CancelAfter(30000);
 
-        _asyncUpdateTask = TTask.Run(() => CheckForUpdatesAsync(cts.Token));
+        _asyncUpdateTask = TTask.Run(() => CheckForUpdatesAsync(cts.Token))
+            .ContinueWith(_ => cts.Dispose());
 
         GameFiber.StartNew(WaitFiber);
     }
