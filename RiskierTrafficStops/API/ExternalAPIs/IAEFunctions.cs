@@ -6,6 +6,8 @@ internal static class IaeFunctions
 {
     private const string LogMessage = "Immersive Ambient Events cannot be found, user might not have it installed";
 
+    private static readonly bool IaeAvailable = File.Exists("Plugins/LSPDFR/ImmersiveAmbientEvents.dll");
+
     /// <summary>
     /// Checks if an entity is being used by a normal IAE event
     /// </summary>
@@ -13,20 +15,10 @@ internal static class IaeFunctions
     /// <returns></returns>
     private static bool IsPedUsedByAmbientEvent(Entity entity)
     {
-        try
-        {
-            return ImmersiveAmbientEvents.API.EventAPI.IsEntityUsedByAnyEvent(entity);
-        }
-        catch (FileNotFoundException)
-        {
-            Normal(LogMessage);
-            return false;
-        }
-        catch (Exception)
-        {
-            Normal(LogMessage);
-            return false;
-        }
+        if (IaeAvailable) return ImmersiveAmbientEvents.API.EventAPI.IsEntityUsedByAnyEvent(entity);
+        Normal(LogMessage);
+        return false;
+
     }
 
     /// <summary>
@@ -36,42 +28,22 @@ internal static class IaeFunctions
     /// <returns></returns>
     private static bool IsPedUsedByBoloEvent(Entity entity)
     {
-        try
-        {
-            return ImmersiveAmbientEvents.API.BoloEventAPI.IsEntityUsedByAnyBOLOEvent(entity);
-        }
-        catch (FileNotFoundException)
-        {
-            Normal(LogMessage);
-            return false;
-        }
-        catch (Exception)
-        {
-            Normal(LogMessage);
-            return false;
-        }
+        if (IaeAvailable) return ImmersiveAmbientEvents.API.BoloEventAPI.IsEntityUsedByAnyBOLOEvent(entity);
+        Normal(LogMessage);
+        return false;
     }
 
     private static bool IaeEventCheck()
     {
-        try
-        {
-            if (ImmersiveAmbientEvents.API.EventAPI.GetActiveEvent() is not ImmersiveAmbientEvents.API.EventAPI
-                    .ActiveEvent.StreetRacing) return true;
-            Normal("Pullover is a part of an IAE street racing event, aborting RTS events...");
-            return false;
-        }
-        catch (FileNotFoundException)
-        {
-            Normal(LogMessage);
-            return false;
-        }
-        catch (Exception)
-        {
-            Normal(LogMessage);
-            return false;
-        }
+        if (!IaeAvailable) return false;
+
+        if (ImmersiveAmbientEvents.API.EventAPI.GetActiveEvent() is not ImmersiveAmbientEvents.API.EventAPI
+                .ActiveEvent.StreetRacing) return true;
+
+        Normal("Pullover is a part of an IAE street racing event, aborting RTS events...");
+        return false;
     }
+
 
     /// <summary>
     /// Handles all compatibility checks for IAE, returns true if it passes the checks
@@ -80,31 +52,17 @@ internal static class IaeFunctions
     /// <returns></returns>
     internal static bool IaeCompatibilityCheck(LHandle handle)
     {
-        try
-        {
-            Normal("Performing IAE compatibility check...");
-            Ped ped = Functions.GetPulloverSuspect(handle);
-            if (IsPedUsedByAmbientEvent(ped))
-            {
-                return IaeEventCheck();
-            }
-            else if (IsPedUsedByBoloEvent(ped))
-            {
-                Normal("Pullover is a part of an IAE BOLO event, aborting RTS events...");
-                return false;
-            }
+        if (!IaeAvailable) return true;
 
-            return true;
-        }
-        catch (FileNotFoundException)
-        {
-            Normal(LogMessage);
-            return true;
-        }
-        catch (Exception)
-        {
-            Normal(LogMessage);
-            return true;
-        }
+        Normal("Performing IAE compatibility check...");
+        Ped ped = Functions.GetPulloverSuspect(handle);
+
+        if (IsPedUsedByAmbientEvent(ped))
+            return IaeEventCheck();
+
+        if (!IsPedUsedByBoloEvent(ped)) return true;
+
+        Normal("Pullover is a part of an IAE BOLO event, aborting RTS events...");
+        return false;
     }
 }

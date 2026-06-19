@@ -208,7 +208,7 @@ internal static class OutcomeChooser
                     ? convertedChance < UserConfig.Chance
                     : convertedChance < _currentChance;
             }
-            
+
             default:
                 throw new ArgumentOutOfRangeException(nameof(chanceSetting), chanceSetting, "Unhandled chance setting");
         }
